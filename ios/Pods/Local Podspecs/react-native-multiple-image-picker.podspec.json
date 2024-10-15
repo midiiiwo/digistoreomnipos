@@ -1,0 +1,34 @@
+{
+  "name": "react-native-multiple-image-picker",
+  "version": "1.0.0",
+  "summary": "react-native-multiple-image-picker enables application to pick images and videos from multiple smart album in iOS/Android, similar to the current facebook app.",
+  "homepage": "https://github.com/baronha/react-native-multiple-image-picker#readme",
+  "license": "MIT",
+  "authors": "Baron Ha. <baronn.ha@gmail.com> (https://github.com/baronha)",
+  "platforms": {
+    "ios": "10.0"
+  },
+  "source": {
+    "git": "https://github.com/baronha/react-native-multiple-image-picker.git",
+    "tag": "1.0.0"
+  },
+  "swift_versions": "5.0",
+  "source_files": "ios/**/*.{h,m,mm,swift,lproj}",
+  "resource_bundles": {
+    "MultipleImagePicker": [
+      "ios/**/*.xib"
+    ]
+  },
+  "dependencies": {
+    "React-Core": [
+
+    ],
+    "TLPhotoPicker": [
+      "2.1.9"
+    ],
+    "CropViewController": [
+      "2.6.1"
+    ]
+  },
+  "swift_version": "5.0"
+}

@@ -1,0 +1,58 @@
+[
+    {
+        "merged": "com.ipayghpostablet.app-merged_res-53:/mipmap-xxhdpi_ic_launcher_round.png.flat",
+        "source": "com.ipayghpostablet.app-main-55:/mipmap-xxhdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "com.ipayghpostablet.app-merged_res-53:/mipmap-hdpi_ic_launcher.png.flat",
+        "source": "com.ipayghpostablet.app-main-55:/mipmap-hdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.ipayghpostablet.app-merged_res-53:/mipmap-mdpi_ic_launcher_round.png.flat",
+        "source": "com.ipayghpostablet.app-main-55:/mipmap-mdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "com.ipayghpostablet.app-merged_res-53:/mipmap-mdpi_ic_launcher.png.flat",
+        "source": "com.ipayghpostablet.app-main-55:/mipmap-mdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.ipayghpostablet.app-merged_res-53:/mipmap-xhdpi_ic_launcher_round.png.flat",
+        "source": "com.ipayghpostablet.app-main-55:/mipmap-xhdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "com.ipayghpostablet.app-merged_res-53:/drawable_launch_screen.png.flat",
+        "source": "com.ipayghpostablet.app-main-55:/drawable/launch_screen.png"
+    },
+    {
+        "merged": "com.ipayghpostablet.app-merged_res-53:/mipmap-xxxhdpi_ic_launcher_round.png.flat",
+        "source": "com.ipayghpostablet.app-main-55:/mipmap-xxxhdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "com.ipayghpostablet.app-merged_res-53:/drawable_rn_edit_text_material.xml.flat",
+        "source": "com.ipayghpostablet.app-main-55:/drawable/rn_edit_text_material.xml"
+    },
+    {
+        "merged": "com.ipayghpostablet.app-merged_res-53:/layout_launch_screen.xml.flat",
+        "source": "com.ipayghpostablet.app-main-55:/layout/launch_screen.xml"
+    },
+    {
+        "merged": "com.ipayghpostablet.app-merged_res-53:/raw_danish_bicycle_bell.mp3.flat",
+        "source": "com.ipayghpostablet.app-main-55:/raw/danish_bicycle_bell.mp3"
+    },
+    {
+        "merged": "com.ipayghpostablet.app-merged_res-53:/mipmap-xxxhdpi_ic_launcher.png.flat",
+        "source": "com.ipayghpostablet.app-main-55:/mipmap-xxxhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.ipayghpostablet.app-merged_res-53:/mipmap-hdpi_ic_launcher_round.png.flat",
+        "source": "com.ipayghpostablet.app-main-55:/mipmap-hdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "com.ipayghpostablet.app-merged_res-53:/mipmap-xxhdpi_ic_launcher.png.flat",
+        "source": "com.ipayghpostablet.app-main-55:/mipmap-xxhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.ipayghpostablet.app-merged_res-53:/mipmap-xhdpi_ic_launcher.png.flat",
+        "source": "com.ipayghpostablet.app-main-55:/mipmap-xhdpi/ic_launcher.png"
+    }
+]

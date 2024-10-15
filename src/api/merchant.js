@@ -1,0 +1,416 @@
+import { Api, loginApi, productApi } from './axiosInstance';
+
+export function getAccountBalance(user_merchant_account) {
+  return Api.get(`accounts/${user_merchant_account}/balance`);
+}
+
+export function getReportSummary(merchant, userLogin, startDate, endDate) {
+  return Api.get(
+    `/reports/analytics/merchant/summary/${merchant}${
+      userLogin === undefined ? '' : '/' + userLogin
+    }/${startDate}/${endDate}`,
+  );
+}
+
+export function getAccountList(user_merchant_account) {
+  return Api.get(`accounts/balance/topup/property/${user_merchant_account}`);
+}
+
+export function getTransferFundsAccount(user_merchant_account) {
+  return Api.get(`accounts/${user_merchant_account}/transfer/balance`);
+}
+
+export function getAccountStatementHistory(merchant, startDate, endDate) {
+  return Api.get(
+    `accounts/merchant/${merchant}/statement/${startDate}/${endDate}`,
+  );
+}
+
+export function getFundsTransferHistory(merchant, startDate, endDate) {
+  return Api.get(
+    `merchants/${merchant}/funds/transferred/${startDate}/${endDate}`,
+  );
+}
+
+export function getAirtimeHistory(merchant, userId, admin, startDate, endDate) {
+  if (admin) {
+    return Api.get(`/topups/merchant/${merchant}/${startDate}/${endDate}`);
+  } else {
+    return Api.get(`/topups/merchant/user/${userId}/${startDate}/${endDate}`);
+  }
+}
+
+export function BillPaymentHistory(
+  merchant,
+  userId,
+  admin,
+  startDate,
+  endDate,
+) {
+  if (admin) {
+    return Api.get(
+      `/paybills/bills/merchant/${merchant}/${startDate}/${endDate}`,
+    );
+  } else {
+    return Api.get(
+      `/paybills/bills/merchant/user/${userId}/${startDate}/${endDate}`,
+    );
+  }
+}
+
+export function getInvoiceHistory(merchant, startDate, endDate) {
+  return Api.get(`/merchants/${merchant}/invoice/${startDate}/${endDate}`);
+}
+
+export function InternetHistory(merchant, userId, admin, startDate, endDate) {
+  if (admin) {
+    return Api.get(
+      `/paybills/internet/merchant/${merchant}/${startDate}/${endDate}`,
+    );
+  } else {
+    return Api.get(
+      `/paybills/internet/merchant/user/${userId}/${startDate}/${endDate}`,
+    );
+  }
+}
+
+export function SendMoneyHistory(merchant, userId, admin, startDate, endDate) {
+  if (admin) {
+    return Api.get(
+      `/merchants/${merchant}/send/payment/${startDate}/${endDate}`,
+    );
+  } else {
+    return Api.get(
+      `/merchants/${merchant}/user/${userId}/send/payment/${startDate}/${endDate}`,
+    );
+  }
+}
+
+export function PaymentHistory(merchant, userId, admin, startDate, endDate) {
+  if (admin) {
+    return Api.get(`/merchants/${merchant}/payment/${startDate}/${endDate}`);
+  } else {
+    return Api.get(
+      `/merchants/${merchant}/user/${userId}/payment/${startDate}/${endDate}`,
+    );
+  }
+}
+
+export function getTransactionDetails(user_merchant_receivable, id) {
+  return Api.get(
+    `paybills/payment/transaction/${user_merchant_receivable}/${id}`,
+  );
+}
+
+export function getStoreDeliveryConfig(merchant) {
+  return Api.get(
+    `https://manage.ipaygh.com/apidev/v1/gateway/orders/merchant/options/${merchant}`,
+  );
+}
+
+export function getCustomerDetails(merchant, customerId) {
+  return Api.get(`customers/merchant/${merchant}/customer/${customerId}`);
+}
+
+export function getPushNotifications() {
+  return Api.get('/merchants/payment/push/notification/records');
+}
+
+export function getMerchantCustomerOrders(
+  merchant,
+  customerPhone,
+  startDate,
+  endDate,
+) {
+  return Api.get(
+    `/orders/order/process/${merchant}/customer/${customerPhone}/list/${startDate}/${endDate}`,
+  );
+}
+
+export function getTodoList(merchant) {
+  return Api.get(`/merchants/onboard/${merchant}/todo/list`);
+}
+
+export function addMoneyStatus(invoiceId) {
+  return Api.get(`accounts/adjust/balance/status/${invoiceId}`);
+}
+
+export function getGrossSalesStats(merchant, userLogin, startDate, endDate) {
+  return Api.get(
+    `/reports/analytics/merchant/gross/sales/${merchant}${
+      userLogin !== undefined ? `/${userLogin}` : ''
+    }/${startDate}/${endDate}`,
+  );
+}
+
+export function getOrderStats(merchant, startDate, endDate) {
+  return Api.get(
+    `/reports/analytics/merchant/product/sales/${merchant}/${startDate}/${endDate}`,
+  );
+}
+
+export function getPreactiveState(merchant) {
+  return Api.get(`/merchants/onboard/${merchant}/preactive`);
+}
+
+export function getActivavtionStep(merchant) {
+  return Api.get(`/merchants/${merchant}/setup/activation/step`);
+}
+
+export function getCurrentActivationStep(merchant) {
+  return Api.get(`/merchants/${merchant}/setup/activation/step`);
+}
+
+export function getReceiptDetails(merchant) {
+  return Api.get(`/merchants/receipt/${merchant}`);
+}
+
+export function getOnboardingRequirements() {
+  return loginApi.get('/merchants/onboard/requirements');
+}
+
+export function getMerchantUserDetails(merchant) {
+  return Api.get(`/users/merchant/${merchant}`);
+}
+
+export function getMerchantUserRoles(merchant) {
+  return Api.get(`/groups/merchant/${merchant}`);
+}
+
+export function verifyMerchantUserUsername(username) {
+  return Api.get(`/users/merchant/verify/user/${username}`);
+}
+
+export function getMerchantUserOutlets(merchant, userId) {
+  return Api.get(`/outlets/merchant/${merchant}/user/${userId}/outlets/list`);
+}
+
+export function getMerchantTaxes(merchant) {
+  return Api.get(`taxes/tax/${merchant}/list`);
+}
+
+export function getTaxById(id) {
+  return Api.get(`/taxes/tax/${id}`);
+}
+
+export function getOutletDetails(id) {
+  return Api.get(`/outlets/${id}`);
+}
+
+export function getMerchantRoute(merchant) {
+  return Api.get(`/orders/delivery/route/${merchant}/list`);
+}
+
+export function getMerchantRiders(merchant) {
+  return Api.get(`/orders/delivery/rider/${merchant}/list`);
+}
+
+export function getOnlineStoreDetails(merchant) {
+  return Api.get(`stores/merchant/${merchant}/store/online`);
+}
+
+export function getShortcodeDetails(merchant) {
+  return Api.get(`stores/merchant/${merchant}/store/ussd`);
+}
+
+export function verifyStoreAlias(storeAlias) {
+  return Api.get(`stores/merchant/store/verify/alias/${storeAlias}`);
+}
+
+export function getMerchantDetails(merchant) {
+  return Api.get(`/merchants/${merchant}`);
+}
+
+/********************* Mutations ***********************/
+
+export function AddTax(payload) {
+  return Api.post('/taxes/tax', payload);
+}
+
+export function updateTax(payload) {
+  return Api.put('/taxes/tax', payload);
+}
+
+export function deleteTax(id, user) {
+  return Api.put(`/taxes/tax/${id}/${user}`);
+}
+
+export function changeTaxStatus(payload) {
+  return Api.put('/taxes/tax/availability/status', payload);
+}
+
+export function mapMerchantOutletsToUser(payload) {
+  return Api.post('/outlets/merchant/user/outlets/mapping', payload);
+}
+
+export function createMerchantUser(payload) {
+  return Api.post('/users', payload);
+}
+
+export function updateMerchantUser(payload) {
+  return Api.put('/users', payload);
+}
+
+export function addWallet(payload) {
+  return Api.post('accounts/balance/topup/property', payload);
+}
+
+export function deleteWalletAccount(user_merchant_account, mobileNumber) {
+  return Api.delete(
+    `accounts/balance/topup/property/${user_merchant_account}/${mobileNumber}`,
+  );
+}
+
+export function requestTransferFunds(payload) {
+  return Api.post('accounts/transfer/balance/mobile', payload);
+}
+
+export function getCustomerAnalytics(payload) {
+  return Api.post('/reports/analytics/merchant/summary/customers', payload);
+}
+
+export function addMoneyToWallet(payload) {
+  return Api.post('accounts/adjust/balance/mobile', payload);
+}
+
+export function getOnboardingOtp(payload) {
+  return loginApi.post('merchants/onboard/otp', payload);
+}
+
+export function verifyOnboardingOtp(payload) {
+  return loginApi.put('merchants/onboard/otp', payload);
+}
+
+export function onBoardMerchant(payload) {
+  return loginApi.post('/merchants/onboard/merchant', payload);
+}
+
+export function activeWalletAccount(payload) {
+  return Api.put('accounts/balance/topup/property/validate', payload);
+}
+
+export function cancelFundsTransfer(payload) {
+  return Api.put('/paybills/payment/disbursement/unsettle', payload);
+}
+
+export function addCustomer(payload) {
+  return Api.post('/customers/merchant/customer', payload);
+}
+
+export function addPersonalDetails(payload) {
+  return productApi.post('/merchants/onboard/activate/contact', payload);
+}
+
+export function addBusinessDetails(payload) {
+  return productApi.post('/merchants/onboard/activate/business', payload);
+}
+
+export function addSettlementDetails(payload) {
+  return Api.post('/merchants/onboard/activate/settlement', payload);
+}
+
+export function editCustomer(payload) {
+  return Api.put('/customers/merchant/customer', payload);
+}
+
+export function editCustomerLocation(payload) {
+  return Api.put('/customers/customer/location', payload);
+}
+
+export function sendResetCode(payload) {
+  return Api.put('/customers/customer', payload);
+}
+
+export function requestActivation(payload) {
+  return Api.post('/merchants/onboard/activate/request', payload);
+}
+
+export function salesInsights(payload) {
+  return Api.post('/reports/analytics/merchant/summary/sales', payload);
+}
+
+export function productAnalytics(payload) {
+  return Api.post('/reports/analytics/merchant/summary/products', payload);
+}
+
+export function addReceipt(payload) {
+  return Api.post('/merchants/receipt', payload);
+}
+
+export function editReceipt(payload) {
+  return Api.put('/merchants/receipt', payload);
+}
+
+export function deleteReceipt(receiptId, mod_by) {
+  return Api.delete(`/merchants/receipt/${receiptId}/${mod_by}`);
+}
+
+export function addOutlet(payload) {
+  return productApi.post('/outlets', payload);
+}
+
+export function updateOutlet(payload) {
+  return productApi.put('/outlets', payload);
+}
+
+export function addMerchantDeliveryRoute(payload) {
+  return Api.post('/orders/delivery/route', payload);
+}
+
+export function setupMerchantDeliveryConfigOption(payload) {
+  return Api.put('/orders/merchant/options/delivery', payload);
+}
+
+export function addMerchantRider(payload) {
+  return Api.post('orders/delivery/rider', payload);
+}
+
+export function deleteMerchantDeliveryRoute(id) {
+  return Api.delete(`/orders/delivery/route/${id}`);
+}
+
+export function deleteRider(payload) {
+  return Api.put('orders/delivery/rider/remove', payload);
+}
+
+export function setupStoreOrShortcode(payload) {
+  return productApi.post('/stores/merchant/store', payload);
+}
+
+export function updateStoreOrShortcode(payload) {
+  return Api.put('/stores/merchant/store', payload);
+}
+
+export function removeStoreOrLandingBanner(payload) {
+  return Api.put('/stores/merchant/store/image/remove', payload);
+}
+
+export function changeStoreStatus(payload) {
+  return Api.put('/stores/merchant/store/status', payload);
+}
+
+export function deleteMerchantStore(payload) {
+  return Api.delete(`/stores/merchant/store/${payload.id}`);
+}
+
+export function deleteMerchantUser(payload) {
+  return Api.delete(`/user/${payload.id}`);
+}
+
+export function updateProfile(payload) {
+  return productApi.post('merchants/merchant/profile/update', payload);
+}
+
+export function replaceStoreBanner(payload) {
+  return productApi.post('/stores/merchant/store/image/replace', payload);
+}
+
+export function deleteMerchantAccount(payload) {
+  return Api.delete(
+    `/merchants/close/account/${payload.merchant}/${payload.user}`,
+  );
+}
+
+export function requestGenericOtp(payload) {
+  return Api.post('/push/notification/otp', payload);
+}

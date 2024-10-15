@@ -1,0 +1,759 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.ipayghpostablet"
+4    android:versionCode="9030"
+5    android:versionName="1.1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="21"
+9        android:targetSdkVersion="31" />
+10
+11    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+11-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/debug/AndroidManifest.xml:5:5-77
+11-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/debug/AndroidManifest.xml:5:22-75
+12
+13    <uses-feature
+13-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:4:5-6:36
+14        android:name="android.hardware.camera"
+14-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:5:9-47
+15        android:required="false" />
+15-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:6:9-33
+16
+17    <uses-permission android:name="android.permission.INTERNET" />
+17-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:8:5-67
+17-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:8:22-64
+18    <uses-permission android:name="android.permission.CAMERA" />
+18-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:9:5-65
+18-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:9:22-62
+19    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" /> <!-- Include this only if you are planning to use the camera roll -->
+19-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:10:5-80
+19-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:10:22-78
+20    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- Include this only if you are planning to use the microphone for video recording -->
+20-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:13:5-80
+20-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:13:22-77
+21    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+21-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:16:5-70
+21-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:16:22-68
+22    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+22-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:17:6-82
+22-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:17:23-79
+23    <uses-permission android:name="android.permission.VIBRATE" />
+23-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:18:5-66
+23-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:18:22-63
+24    <uses-permission
+24-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:19:5-95
+25        android:name="android.permission.BLUETOOTH"
+25-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:19:22-65
+26        android:maxSdkVersion="30" />
+26-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:19:66-92
+27    <uses-permission
+27-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:20:5-101
+28        android:name="android.permission.BLUETOOTH_ADMIN"
+28-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:20:22-71
+29        android:maxSdkVersion="30" />
+29-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:20:72-98
+30    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+30-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:21:5-73
+30-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:21:22-70
+31    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+31-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:22:5-76
+31-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:22:22-73
+32    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+32-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:23:5-76
+32-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:23:22-74
+33    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+33-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:24:5-78
+33-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:24:22-76
+34    <uses-permission android:name="com.pax.permission.PRINTER" />
+34-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:25:5-65
+34-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:25:22-63
+35    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+35-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:26:5-79
+35-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:26:22-76
+36    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+36-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:27:5-81
+36-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:27:22-78
+37    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+37-->[com.facebook.flipper:flipper:0.125.0] /Users/wedamanewenah/.gradle/caches/transforms-3/002f6ba51fe66958ba96fd0a3c0641be/transformed/jetified-flipper-0.125.0/AndroidManifest.xml:16:5-76
+37-->[com.facebook.flipper:flipper:0.125.0] /Users/wedamanewenah/.gradle/caches/transforms-3/002f6ba51fe66958ba96fd0a3c0641be/transformed/jetified-flipper-0.125.0/AndroidManifest.xml:16:22-73
+38    <uses-permission android:name="android.permission.WAKE_LOCK" />
+38-->[:react-native-firebase_messaging] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@react-native-firebase/messaging/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:10:5-68
+38-->[:react-native-firebase_messaging] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@react-native-firebase/messaging/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:10:22-65
+39    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+39-->[:react-native-firebase_messaging] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@react-native-firebase/messaging/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:11:5-79
+39-->[:react-native-firebase_messaging] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@react-native-firebase/messaging/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:11:22-76
+40    <uses-permission android:name="android.permission.WRITE_MEDIA_STORAGE" />
+40-->[:baronha_react-native-multiple-image-picker] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@baronha/react-native-multiple-image-picker/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:11:5-78
+40-->[:baronha_react-native-multiple-image-picker] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@baronha/react-native-multiple-image-picker/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:11:22-75
+41    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+41-->[:baronha_react-native-multiple-image-picker] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@baronha/react-native-multiple-image-picker/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:12:5-73
+41-->[:baronha_react-native-multiple-image-picker] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@baronha/react-native-multiple-image-picker/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:12:22-70
+42    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+42-->[:baronha_react-native-multiple-image-picker] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@baronha/react-native-multiple-image-picker/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:13:5-80
+42-->[:baronha_react-native-multiple-image-picker] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@baronha/react-native-multiple-image-picker/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:13:22-77
+43    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+43-->[:baronha_react-native-multiple-image-picker] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@baronha/react-native-multiple-image-picker/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:14:5-82
+43-->[:baronha_react-native-multiple-image-picker] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@baronha/react-native-multiple-image-picker/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:14:22-79
+44    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /> <!-- Android 13 -->
+44-->[:baronha_react-native-multiple-image-picker] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@baronha/react-native-multiple-image-picker/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:15:5-77
+44-->[:baronha_react-native-multiple-image-picker] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@baronha/react-native-multiple-image-picker/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:15:22-74
+45    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+45-->[:baronha_react-native-multiple-image-picker] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@baronha/react-native-multiple-image-picker/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:22:5-76
+45-->[:baronha_react-native-multiple-image-picker] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@baronha/react-native-multiple-image-picker/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:22:22-73
+46    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+46-->[:baronha_react-native-multiple-image-picker] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@baronha/react-native-multiple-image-picker/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:23:5-75
+46-->[:baronha_react-native-multiple-image-picker] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@baronha/react-native-multiple-image-picker/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:23:22-72
+47    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" /> <!-- Required to to download files without a notification -->
+47-->[:baronha_react-native-multiple-image-picker] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@baronha/react-native-multiple-image-picker/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:24:5-75
+47-->[:baronha_react-native-multiple-image-picker] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@baronha/react-native-multiple-image-picker/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:24:22-72
+48    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
+48-->[:react-native-blob-util] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-blob-util/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:34:5-88
+48-->[:react-native-blob-util] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-blob-util/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:34:22-85
+49
+50    <uses-feature
+50-->[:react-native-camera] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-camera/android/build/intermediates/merged_manifest/generalDebug/AndroidManifest.xml:14:5-16:36
+51        android:name="android.hardware.camera.autofocus"
+51-->[:react-native-camera] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-camera/android/build/intermediates/merged_manifest/generalDebug/AndroidManifest.xml:15:9-57
+52        android:required="false" />
+52-->[:react-native-camera] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-camera/android/build/intermediates/merged_manifest/generalDebug/AndroidManifest.xml:16:9-33
+53
+54    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+54-->[:react-native-keychain] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-keychain/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:9:5-72
+54-->[:react-native-keychain] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-keychain/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:9:22-69
+55    <uses-permission android:name="android.permission.USE_FINGERPRINT" /> <!-- Required by older versions of Google Play services to create IID tokens -->
+55-->[:react-native-keychain] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-keychain/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:10:5-74
+55-->[:react-native-keychain] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-keychain/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:10:22-71
+56    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+56-->[com.google.firebase:firebase-messaging:23.1.1] /Users/wedamanewenah/.gradle/caches/transforms-3/e8d7b4f96ee4184125293b78ecd15ef0/transformed/jetified-firebase-messaging-23.1.1/AndroidManifest.xml:28:5-82
+56-->[com.google.firebase:firebase-messaging:23.1.1] /Users/wedamanewenah/.gradle/caches/transforms-3/e8d7b4f96ee4184125293b78ecd15ef0/transformed/jetified-firebase-messaging-23.1.1/AndroidManifest.xml:28:22-79
+57    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
+57-->[com.google.android.gms:play-services-measurement-api:21.2.0] /Users/wedamanewenah/.gradle/caches/transforms-3/6df00588d605a777d215bd63de6aa6e6/transformed/jetified-play-services-measurement-api-21.2.0/AndroidManifest.xml:25:5-79
+57-->[com.google.android.gms:play-services-measurement-api:21.2.0] /Users/wedamanewenah/.gradle/caches/transforms-3/6df00588d605a777d215bd63de6aa6e6/transformed/jetified-play-services-measurement-api-21.2.0/AndroidManifest.xml:25:22-76
+58    <uses-permission android:name="com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE" /> <!-- for android -->
+58-->[com.google.android.gms:play-services-measurement:21.2.0] /Users/wedamanewenah/.gradle/caches/transforms-3/1d993407d583bba998b6b97f8536729d/transformed/jetified-play-services-measurement-21.2.0/AndroidManifest.xml:26:5-110
+58-->[com.google.android.gms:play-services-measurement:21.2.0] /Users/wedamanewenah/.gradle/caches/transforms-3/1d993407d583bba998b6b97f8536729d/transformed/jetified-play-services-measurement-21.2.0/AndroidManifest.xml:26:22-107
+59    <!-- <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS"/> -->
+60    <!-- <uses-permission android:name="com.android.launcher.permission.WRITE_SETTINGS"/> -->
+61    <!-- <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" /> -->
+62    <!-- <uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT" /> -->
+63    <!-- for Samsung -->
+64    <uses-permission android:name="com.sec.android.provider.badge.permission.READ" />
+64-->[me.leolin:ShortcutBadger:1.1.22] /Users/wedamanewenah/.gradle/caches/transforms-3/f0731d716ace5a4913dc1c927ea42544/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:19:5-86
+64-->[me.leolin:ShortcutBadger:1.1.22] /Users/wedamanewenah/.gradle/caches/transforms-3/f0731d716ace5a4913dc1c927ea42544/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:19:22-83
+65    <uses-permission android:name="com.sec.android.provider.badge.permission.WRITE" /> <!-- for htc -->
+65-->[me.leolin:ShortcutBadger:1.1.22] /Users/wedamanewenah/.gradle/caches/transforms-3/f0731d716ace5a4913dc1c927ea42544/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:20:5-87
+65-->[me.leolin:ShortcutBadger:1.1.22] /Users/wedamanewenah/.gradle/caches/transforms-3/f0731d716ace5a4913dc1c927ea42544/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:20:22-84
+66    <uses-permission android:name="com.htc.launcher.permission.READ_SETTINGS" />
+66-->[me.leolin:ShortcutBadger:1.1.22] /Users/wedamanewenah/.gradle/caches/transforms-3/f0731d716ace5a4913dc1c927ea42544/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:23:5-81
+66-->[me.leolin:ShortcutBadger:1.1.22] /Users/wedamanewenah/.gradle/caches/transforms-3/f0731d716ace5a4913dc1c927ea42544/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:23:22-78
+67    <uses-permission android:name="com.htc.launcher.permission.UPDATE_SHORTCUT" /> <!-- for sony -->
+67-->[me.leolin:ShortcutBadger:1.1.22] /Users/wedamanewenah/.gradle/caches/transforms-3/f0731d716ace5a4913dc1c927ea42544/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:24:5-83
+67-->[me.leolin:ShortcutBadger:1.1.22] /Users/wedamanewenah/.gradle/caches/transforms-3/f0731d716ace5a4913dc1c927ea42544/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:24:22-80
+68    <uses-permission android:name="com.sonyericsson.home.permission.BROADCAST_BADGE" />
+68-->[me.leolin:ShortcutBadger:1.1.22] /Users/wedamanewenah/.gradle/caches/transforms-3/f0731d716ace5a4913dc1c927ea42544/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:27:5-88
+68-->[me.leolin:ShortcutBadger:1.1.22] /Users/wedamanewenah/.gradle/caches/transforms-3/f0731d716ace5a4913dc1c927ea42544/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:27:22-85
+69    <uses-permission android:name="com.sonymobile.home.permission.PROVIDER_INSERT_BADGE" /> <!-- for apex -->
+69-->[me.leolin:ShortcutBadger:1.1.22] /Users/wedamanewenah/.gradle/caches/transforms-3/f0731d716ace5a4913dc1c927ea42544/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:28:5-92
+69-->[me.leolin:ShortcutBadger:1.1.22] /Users/wedamanewenah/.gradle/caches/transforms-3/f0731d716ace5a4913dc1c927ea42544/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:28:22-89
+70    <uses-permission android:name="com.anddoes.launcher.permission.UPDATE_COUNT" /> <!-- for solid -->
+70-->[me.leolin:ShortcutBadger:1.1.22] /Users/wedamanewenah/.gradle/caches/transforms-3/f0731d716ace5a4913dc1c927ea42544/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:31:5-84
+70-->[me.leolin:ShortcutBadger:1.1.22] /Users/wedamanewenah/.gradle/caches/transforms-3/f0731d716ace5a4913dc1c927ea42544/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:31:22-81
+71    <uses-permission android:name="com.majeur.launcher.permission.UPDATE_BADGE" /> <!-- for huawei -->
+71-->[me.leolin:ShortcutBadger:1.1.22] /Users/wedamanewenah/.gradle/caches/transforms-3/f0731d716ace5a4913dc1c927ea42544/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:34:5-83
+71-->[me.leolin:ShortcutBadger:1.1.22] /Users/wedamanewenah/.gradle/caches/transforms-3/f0731d716ace5a4913dc1c927ea42544/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:34:22-80
+72    <uses-permission android:name="com.huawei.android.launcher.permission.CHANGE_BADGE" />
+72-->[me.leolin:ShortcutBadger:1.1.22] /Users/wedamanewenah/.gradle/caches/transforms-3/f0731d716ace5a4913dc1c927ea42544/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:37:5-91
+72-->[me.leolin:ShortcutBadger:1.1.22] /Users/wedamanewenah/.gradle/caches/transforms-3/f0731d716ace5a4913dc1c927ea42544/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:37:22-88
+73    <uses-permission android:name="com.huawei.android.launcher.permission.READ_SETTINGS" />
+73-->[me.leolin:ShortcutBadger:1.1.22] /Users/wedamanewenah/.gradle/caches/transforms-3/f0731d716ace5a4913dc1c927ea42544/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:38:5-92
+73-->[me.leolin:ShortcutBadger:1.1.22] /Users/wedamanewenah/.gradle/caches/transforms-3/f0731d716ace5a4913dc1c927ea42544/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:38:22-89
+74    <uses-permission android:name="com.huawei.android.launcher.permission.WRITE_SETTINGS" /> <!-- for ZUK -->
+74-->[me.leolin:ShortcutBadger:1.1.22] /Users/wedamanewenah/.gradle/caches/transforms-3/f0731d716ace5a4913dc1c927ea42544/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:39:5-93
+74-->[me.leolin:ShortcutBadger:1.1.22] /Users/wedamanewenah/.gradle/caches/transforms-3/f0731d716ace5a4913dc1c927ea42544/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:39:22-90
+75    <uses-permission android:name="android.permission.READ_APP_BADGE" /> <!-- for OPPO -->
+75-->[me.leolin:ShortcutBadger:1.1.22] /Users/wedamanewenah/.gradle/caches/transforms-3/f0731d716ace5a4913dc1c927ea42544/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:42:5-73
+75-->[me.leolin:ShortcutBadger:1.1.22] /Users/wedamanewenah/.gradle/caches/transforms-3/f0731d716ace5a4913dc1c927ea42544/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:42:22-70
+76    <uses-permission android:name="com.oppo.launcher.permission.READ_SETTINGS" />
+76-->[me.leolin:ShortcutBadger:1.1.22] /Users/wedamanewenah/.gradle/caches/transforms-3/f0731d716ace5a4913dc1c927ea42544/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:45:5-82
+76-->[me.leolin:ShortcutBadger:1.1.22] /Users/wedamanewenah/.gradle/caches/transforms-3/f0731d716ace5a4913dc1c927ea42544/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:45:22-79
+77    <uses-permission android:name="com.oppo.launcher.permission.WRITE_SETTINGS" /> <!-- for EvMe -->
+77-->[me.leolin:ShortcutBadger:1.1.22] /Users/wedamanewenah/.gradle/caches/transforms-3/f0731d716ace5a4913dc1c927ea42544/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:46:5-83
+77-->[me.leolin:ShortcutBadger:1.1.22] /Users/wedamanewenah/.gradle/caches/transforms-3/f0731d716ace5a4913dc1c927ea42544/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:46:22-80
+78    <uses-permission android:name="me.everything.badger.permission.BADGE_COUNT_READ" />
+78-->[me.leolin:ShortcutBadger:1.1.22] /Users/wedamanewenah/.gradle/caches/transforms-3/f0731d716ace5a4913dc1c927ea42544/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:49:5-88
+78-->[me.leolin:ShortcutBadger:1.1.22] /Users/wedamanewenah/.gradle/caches/transforms-3/f0731d716ace5a4913dc1c927ea42544/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:49:22-85
+79    <uses-permission android:name="me.everything.badger.permission.BADGE_COUNT_WRITE" />
+79-->[me.leolin:ShortcutBadger:1.1.22] /Users/wedamanewenah/.gradle/caches/transforms-3/f0731d716ace5a4913dc1c927ea42544/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:50:5-89
+79-->[me.leolin:ShortcutBadger:1.1.22] /Users/wedamanewenah/.gradle/caches/transforms-3/f0731d716ace5a4913dc1c927ea42544/transformed/jetified-ShortcutBadger-1.1.22/AndroidManifest.xml:50:22-86
+80
+81    <application
+81-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:28:5-62:19
+82        android:name="com.ipayghpostablet.MainApplication"
+82-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:29:7-38
+83        android:allowBackup="false"
+83-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:33:7-34
+84        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+84-->[androidx.core:core:1.7.0] /Users/wedamanewenah/.gradle/caches/transforms-3/f651b2db7fea139e8a2848c61e5708b1/transformed/core-1.7.0/AndroidManifest.xml:24:18-86
+85        android:debuggable="true"
+86        android:icon="@mipmap/ic_launcher"
+86-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:31:7-41
+87        android:label="@string/app_name"
+87-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:30:7-39
+88        android:requestLegacyExternalStorage="true"
+88-->[:baronha_react-native-multiple-image-picker] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@baronha/react-native-multiple-image-picker/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:26:18-61
+89        android:roundIcon="@mipmap/ic_launcher_round"
+89-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:32:7-52
+90        android:theme="@style/AppTheme"
+90-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:34:7-38
+91        android:usesCleartextTraffic="true" >
+91-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/debug/AndroidManifest.xml:8:9-44
+92        <activity
+92-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/debug/AndroidManifest.xml:11:9-111
+93            android:name="com.facebook.react.devsupport.DevSettingsActivity"
+93-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/debug/AndroidManifest.xml:11:19-83
+94            android:exported="false" />
+94-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/debug/AndroidManifest.xml:11:84-108
+95        <activity
+95-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:35:7-48:18
+96            android:name="com.ipayghpostablet.MainActivity"
+96-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:36:9-37
+97            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize|uiMode"
+97-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:38:9-118
+98            android:exported="true"
+98-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:42:9-32
+99            android:label="@string/app_name"
+99-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:37:9-41
+100            android:launchMode="singleTask"
+100-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:39:9-40
+101            android:screenOrientation="landscape"
+101-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:41:9-46
+102            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" >
+102-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:40:9-66
+103            <intent-filter>
+103-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:44:9-47:25
+104                <action android:name="android.intent.action.MAIN" />
+104-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:45:13-65
+104-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:45:21-62
+105
+106                <category android:name="android.intent.category.LAUNCHER" />
+106-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:46:13-73
+106-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:46:23-70
+107            </intent-filter>
+108        </activity>
+109
+110        <meta-data
+110-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:49:7-50:42
+111            android:name="com.dieam.reactnativepushnotification.notification_foreground"
+111-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:49:19-95
+112            android:value="false" /> <!-- Change the resource name to your App's accent color - or any other color you want -->
+112-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:50:19-40
+113        <meta-data
+113-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:52:7-53:44
+114            android:name="com.dieam.reactnativepushnotification.notification_color"
+114-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:52:19-90
+115            android:resource="@color/white" /> <!-- or @android:color/{name} to use a standard color -->
+115-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:53:11-42
+116        <service
+116-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:55:7-61:17
+117            android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationListenerService"
+117-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:56:11-105
+118            android:exported="false" >
+118-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:57:11-35
+119            <intent-filter>
+119-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:58:11-60:27
+120                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+120-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:59:15-76
+120-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:59:23-73
+121            </intent-filter>
+122        </service>
+123        <service
+123-->[:react-native-firebase_messaging] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@react-native-firebase/messaging/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:14:9-16:40
+124            android:name="io.invertase.firebase.messaging.ReactNativeFirebaseMessagingHeadlessService"
+124-->[:react-native-firebase_messaging] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@react-native-firebase/messaging/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:15:13-103
+125            android:exported="false" />
+125-->[:react-native-firebase_messaging] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@react-native-firebase/messaging/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:16:13-37
+126        <service
+126-->[:react-native-firebase_messaging] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@react-native-firebase/messaging/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:17:9-23:19
+127            android:name="io.invertase.firebase.messaging.ReactNativeFirebaseMessagingService"
+127-->[:react-native-firebase_messaging] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@react-native-firebase/messaging/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:18:13-95
+128            android:exported="false" >
+128-->[:react-native-firebase_messaging] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@react-native-firebase/messaging/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:19:13-37
+129            <intent-filter>
+129-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:58:11-60:27
+130                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+130-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:59:15-76
+130-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:59:23-73
+131            </intent-filter>
+132        </service>
+133
+134        <receiver
+134-->[:react-native-firebase_messaging] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@react-native-firebase/messaging/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:25:9-32:20
+135            android:name="io.invertase.firebase.messaging.ReactNativeFirebaseMessagingReceiver"
+135-->[:react-native-firebase_messaging] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@react-native-firebase/messaging/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:26:13-96
+136            android:exported="true"
+136-->[:react-native-firebase_messaging] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@react-native-firebase/messaging/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:27:13-36
+137            android:permission="com.google.android.c2dm.permission.SEND" >
+137-->[:react-native-firebase_messaging] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@react-native-firebase/messaging/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:28:13-73
+138            <intent-filter>
+138-->[:react-native-firebase_messaging] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@react-native-firebase/messaging/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:29:13-31:29
+139                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+139-->[:react-native-firebase_messaging] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@react-native-firebase/messaging/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:30:17-81
+139-->[:react-native-firebase_messaging] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@react-native-firebase/messaging/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:30:25-78
+140            </intent-filter>
+141        </receiver>
+142
+143        <meta-data
+143-->[:react-native-firebase_messaging] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@react-native-firebase/messaging/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:34:9-36:36
+144            android:name="firebase_messaging_auto_init_enabled"
+144-->[:react-native-firebase_messaging] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@react-native-firebase/messaging/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:35:13-64
+145            android:value="true" />
+145-->[:react-native-firebase_messaging] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@react-native-firebase/messaging/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:36:13-33
+146        <meta-data
+146-->[:react-native-firebase_messaging] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@react-native-firebase/messaging/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:37:9-39:32
+147            android:name="com.google.firebase.messaging.default_notification_channel_id"
+147-->[:react-native-firebase_messaging] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@react-native-firebase/messaging/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:38:13-89
+148            android:value="" />
+148-->[:react-native-firebase_messaging] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@react-native-firebase/messaging/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:39:13-29
+149        <meta-data
+149-->[:react-native-firebase_messaging] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@react-native-firebase/messaging/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:40:9-42:47
+150            android:name="com.google.firebase.messaging.default_notification_color"
+150-->[:react-native-firebase_messaging] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@react-native-firebase/messaging/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:41:13-84
+151            android:resource="@color/white" />
+151-->[:react-native-firebase_messaging] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@react-native-firebase/messaging/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:42:13-44
+152        <meta-data
+152-->[:react-native-firebase_app] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@react-native-firebase/app/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:11:9-13:36
+153            android:name="app_data_collection_default_enabled"
+153-->[:react-native-firebase_app] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@react-native-firebase/app/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:12:13-63
+154            android:value="true" />
+154-->[:react-native-firebase_app] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@react-native-firebase/app/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:13:13-33
+155
+156        <service
+156-->[:react-native-firebase_app] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@react-native-firebase/app/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:15:9-23:19
+157            android:name="com.google.firebase.components.ComponentDiscoveryService"
+157-->[:react-native-firebase_app] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@react-native-firebase/app/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:16:13-84
+158            android:directBootAware="true"
+158-->[:react-native-firebase_app] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@react-native-firebase/app/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:17:13-43
+159            android:exported="false" >
+159-->[:react-native-firebase_app] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@react-native-firebase/app/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:18:13-37
+160            <meta-data
+160-->[:react-native-firebase_app] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@react-native-firebase/app/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:20:13-22:85
+161                android:name="com.google.firebase.components:io.invertase.firebase.app.ReactNativeFirebaseAppRegistrar"
+161-->[:react-native-firebase_app] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@react-native-firebase/app/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:21:17-120
+162                android:value="com.google.firebase.components.ComponentRegistrar" />
+162-->[:react-native-firebase_app] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@react-native-firebase/app/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:22:17-82
+163            <meta-data
+163-->[com.google.firebase:firebase-messaging:23.1.1] /Users/wedamanewenah/.gradle/caches/transforms-3/e8d7b4f96ee4184125293b78ecd15ef0/transformed/jetified-firebase-messaging-23.1.1/AndroidManifest.xml:55:13-57:85
+164                android:name="com.google.firebase.components:com.google.firebase.messaging.FirebaseMessagingRegistrar"
+164-->[com.google.firebase:firebase-messaging:23.1.1] /Users/wedamanewenah/.gradle/caches/transforms-3/e8d7b4f96ee4184125293b78ecd15ef0/transformed/jetified-firebase-messaging-23.1.1/AndroidManifest.xml:56:17-119
+165                android:value="com.google.firebase.components.ComponentRegistrar" />
+165-->[com.google.firebase:firebase-messaging:23.1.1] /Users/wedamanewenah/.gradle/caches/transforms-3/e8d7b4f96ee4184125293b78ecd15ef0/transformed/jetified-firebase-messaging-23.1.1/AndroidManifest.xml:57:17-82
+166            <meta-data
+166-->[com.google.firebase:firebase-datatransport:18.1.7] /Users/wedamanewenah/.gradle/caches/transforms-3/59c079580fdb195643c95fbe84dce710/transformed/jetified-firebase-datatransport-18.1.7/AndroidManifest.xml:27:13-29:85
+167                android:name="com.google.firebase.components:com.google.firebase.datatransport.TransportRegistrar"
+167-->[com.google.firebase:firebase-datatransport:18.1.7] /Users/wedamanewenah/.gradle/caches/transforms-3/59c079580fdb195643c95fbe84dce710/transformed/jetified-firebase-datatransport-18.1.7/AndroidManifest.xml:28:17-115
+168                android:value="com.google.firebase.components.ComponentRegistrar" />
+168-->[com.google.firebase:firebase-datatransport:18.1.7] /Users/wedamanewenah/.gradle/caches/transforms-3/59c079580fdb195643c95fbe84dce710/transformed/jetified-firebase-datatransport-18.1.7/AndroidManifest.xml:29:17-82
+169            <meta-data
+169-->[com.google.android.gms:play-services-measurement-api:21.2.0] /Users/wedamanewenah/.gradle/caches/transforms-3/6df00588d605a777d215bd63de6aa6e6/transformed/jetified-play-services-measurement-api-21.2.0/AndroidManifest.xml:31:13-33:85
+170                android:name="com.google.firebase.components:com.google.firebase.analytics.connector.internal.AnalyticsConnectorRegistrar"
+170-->[com.google.android.gms:play-services-measurement-api:21.2.0] /Users/wedamanewenah/.gradle/caches/transforms-3/6df00588d605a777d215bd63de6aa6e6/transformed/jetified-play-services-measurement-api-21.2.0/AndroidManifest.xml:32:17-139
+171                android:value="com.google.firebase.components.ComponentRegistrar" />
+171-->[com.google.android.gms:play-services-measurement-api:21.2.0] /Users/wedamanewenah/.gradle/caches/transforms-3/6df00588d605a777d215bd63de6aa6e6/transformed/jetified-play-services-measurement-api-21.2.0/AndroidManifest.xml:33:17-82
+172            <meta-data
+172-->[com.google.firebase:firebase-installations:17.1.1] /Users/wedamanewenah/.gradle/caches/transforms-3/400b8f3d06591ebc9f128b56924e5585/transformed/jetified-firebase-installations-17.1.1/AndroidManifest.xml:17:13-19:85
+173                android:name="com.google.firebase.components:com.google.firebase.installations.FirebaseInstallationsRegistrar"
+173-->[com.google.firebase:firebase-installations:17.1.1] /Users/wedamanewenah/.gradle/caches/transforms-3/400b8f3d06591ebc9f128b56924e5585/transformed/jetified-firebase-installations-17.1.1/AndroidManifest.xml:18:17-127
+174                android:value="com.google.firebase.components.ComponentRegistrar" />
+174-->[com.google.firebase:firebase-installations:17.1.1] /Users/wedamanewenah/.gradle/caches/transforms-3/400b8f3d06591ebc9f128b56924e5585/transformed/jetified-firebase-installations-17.1.1/AndroidManifest.xml:19:17-82
+175        </service>
+176
+177        <provider
+177-->[:react-native-firebase_app] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@react-native-firebase/app/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:25:9-29:38
+178            android:name="io.invertase.firebase.app.ReactNativeFirebaseAppInitProvider"
+178-->[:react-native-firebase_app] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@react-native-firebase/app/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:26:13-88
+179            android:authorities="com.ipayghpostablet.reactnativefirebaseappinitprovider"
+179-->[:react-native-firebase_app] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@react-native-firebase/app/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:27:13-86
+180            android:exported="false"
+180-->[:react-native-firebase_app] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@react-native-firebase/app/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:28:13-37
+181            android:initOrder="99" />
+181-->[:react-native-firebase_app] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@react-native-firebase/app/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:29:13-35
+182        <provider
+182-->[:react-native-blob-util] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-blob-util/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:37:9-45:20
+183            android:name="com.ReactNativeBlobUtil.Utils.FileProvider"
+183-->[:react-native-blob-util] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-blob-util/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:38:13-70
+184            android:authorities="com.ipayghpostablet.provider"
+184-->[:react-native-blob-util] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-blob-util/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:39:13-60
+185            android:exported="false"
+185-->[:react-native-blob-util] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-blob-util/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:40:13-37
+186            android:grantUriPermissions="true" >
+186-->[:react-native-blob-util] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-blob-util/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:41:13-47
+187            <meta-data
+187-->[:react-native-blob-util] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-blob-util/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:42:13-44:58
+188                android:name="android.support.FILE_PROVIDER_PATHS"
+188-->[:react-native-blob-util] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-blob-util/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:43:17-67
+189                android:resource="@xml/provider_paths" />
+189-->[:react-native-blob-util] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-blob-util/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:44:17-55
+190        </provider>
+191        <provider
+191-->[:react-native-image-picker] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-image-picker/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:10:9-18:20
+192            android:name="com.imagepicker.ImagePickerProvider"
+192-->[:react-native-image-picker] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-image-picker/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:11:13-63
+193            android:authorities="com.ipayghpostablet.imagepickerprovider"
+193-->[:react-native-image-picker] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-image-picker/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:12:13-71
+194            android:exported="false"
+194-->[:react-native-image-picker] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-image-picker/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:13:13-37
+195            android:grantUriPermissions="true" >
+195-->[:react-native-image-picker] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-image-picker/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:14:13-47
+196            <meta-data
+196-->[:react-native-blob-util] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-blob-util/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:42:13-44:58
+197                android:name="android.support.FILE_PROVIDER_PATHS"
+197-->[:react-native-blob-util] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-blob-util/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:43:17-67
+198                android:resource="@xml/imagepicker_provider_paths" />
+198-->[:react-native-blob-util] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-blob-util/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:44:17-55
+199        </provider>
+200        <provider
+200-->[:react-native-share] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-share/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:10:9-18:20
+201            android:name="cl.json.RNShareFileProvider"
+201-->[:react-native-share] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-share/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:11:13-55
+202            android:authorities="com.ipayghpostablet.rnshare.fileprovider"
+202-->[:react-native-share] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-share/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:12:13-72
+203            android:exported="false"
+203-->[:react-native-share] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-share/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:13:13-37
+204            android:grantUriPermissions="true" >
+204-->[:react-native-share] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-share/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:14:13-47
+205            <meta-data
+205-->[:react-native-blob-util] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-blob-util/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:42:13-44:58
+206                android:name="android.support.FILE_PROVIDER_PATHS"
+206-->[:react-native-blob-util] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-blob-util/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:43:17-67
+207                android:resource="@xml/share_download_paths" />
+207-->[:react-native-blob-util] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-blob-util/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:44:17-55
+208        </provider>
+209
+210        <receiver
+210-->[com.google.firebase:firebase-messaging:23.1.1] /Users/wedamanewenah/.gradle/caches/transforms-3/e8d7b4f96ee4184125293b78ecd15ef0/transformed/jetified-firebase-messaging-23.1.1/AndroidManifest.xml:31:9-38:20
+211            android:name="com.google.firebase.iid.FirebaseInstanceIdReceiver"
+211-->[com.google.firebase:firebase-messaging:23.1.1] /Users/wedamanewenah/.gradle/caches/transforms-3/e8d7b4f96ee4184125293b78ecd15ef0/transformed/jetified-firebase-messaging-23.1.1/AndroidManifest.xml:32:13-78
+212            android:exported="true"
+212-->[com.google.firebase:firebase-messaging:23.1.1] /Users/wedamanewenah/.gradle/caches/transforms-3/e8d7b4f96ee4184125293b78ecd15ef0/transformed/jetified-firebase-messaging-23.1.1/AndroidManifest.xml:33:13-36
+213            android:permission="com.google.android.c2dm.permission.SEND" >
+213-->[com.google.firebase:firebase-messaging:23.1.1] /Users/wedamanewenah/.gradle/caches/transforms-3/e8d7b4f96ee4184125293b78ecd15ef0/transformed/jetified-firebase-messaging-23.1.1/AndroidManifest.xml:34:13-73
+214            <intent-filter>
+214-->[:react-native-firebase_messaging] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@react-native-firebase/messaging/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:29:13-31:29
+215                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+215-->[:react-native-firebase_messaging] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@react-native-firebase/messaging/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:30:17-81
+215-->[:react-native-firebase_messaging] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/@react-native-firebase/messaging/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:30:25-78
+216            </intent-filter>
+217        </receiver>
+218        <!--
+219             FirebaseMessagingService performs security checks at runtime,
+220             but set to not exported to explicitly avoid allowing another app to call it.
+221        -->
+222        <service
+222-->[com.google.firebase:firebase-messaging:23.1.1] /Users/wedamanewenah/.gradle/caches/transforms-3/e8d7b4f96ee4184125293b78ecd15ef0/transformed/jetified-firebase-messaging-23.1.1/AndroidManifest.xml:44:9-51:19
+223            android:name="com.google.firebase.messaging.FirebaseMessagingService"
+223-->[com.google.firebase:firebase-messaging:23.1.1] /Users/wedamanewenah/.gradle/caches/transforms-3/e8d7b4f96ee4184125293b78ecd15ef0/transformed/jetified-firebase-messaging-23.1.1/AndroidManifest.xml:45:13-82
+224            android:directBootAware="true"
+224-->[com.google.firebase:firebase-messaging:23.1.1] /Users/wedamanewenah/.gradle/caches/transforms-3/e8d7b4f96ee4184125293b78ecd15ef0/transformed/jetified-firebase-messaging-23.1.1/AndroidManifest.xml:46:13-43
+225            android:exported="false" >
+225-->[com.google.firebase:firebase-messaging:23.1.1] /Users/wedamanewenah/.gradle/caches/transforms-3/e8d7b4f96ee4184125293b78ecd15ef0/transformed/jetified-firebase-messaging-23.1.1/AndroidManifest.xml:47:13-37
+226            <intent-filter android:priority="-500" >
+226-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:58:11-60:27
+227                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+227-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:59:15-76
+227-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:59:23-73
+228            </intent-filter>
+229        </service>
+230        <service
+230-->[com.google.android.gms:play-services-mlkit-barcode-scanning:16.2.0] /Users/wedamanewenah/.gradle/caches/transforms-3/3930449463b8f46813062c4ad431cdb0/transformed/jetified-play-services-mlkit-barcode-scanning-16.2.0/AndroidManifest.xml:9:9-15:19
+231            android:name="com.google.mlkit.common.internal.MlKitComponentDiscoveryService"
+231-->[com.google.android.gms:play-services-mlkit-barcode-scanning:16.2.0] /Users/wedamanewenah/.gradle/caches/transforms-3/3930449463b8f46813062c4ad431cdb0/transformed/jetified-play-services-mlkit-barcode-scanning-16.2.0/AndroidManifest.xml:10:13-91
+232            android:directBootAware="true"
+232-->[com.google.mlkit:common:17.2.0] /Users/wedamanewenah/.gradle/caches/transforms-3/45d6b30f47cacbe68d7d7a12ba03fa64/transformed/jetified-common-17.2.0/AndroidManifest.xml:17:13-43
+233            android:exported="false" >
+233-->[com.google.android.gms:play-services-mlkit-barcode-scanning:16.2.0] /Users/wedamanewenah/.gradle/caches/transforms-3/3930449463b8f46813062c4ad431cdb0/transformed/jetified-play-services-mlkit-barcode-scanning-16.2.0/AndroidManifest.xml:11:13-37
+234            <meta-data
+234-->[com.google.android.gms:play-services-mlkit-barcode-scanning:16.2.0] /Users/wedamanewenah/.gradle/caches/transforms-3/3930449463b8f46813062c4ad431cdb0/transformed/jetified-play-services-mlkit-barcode-scanning-16.2.0/AndroidManifest.xml:12:13-14:85
+235                android:name="com.google.firebase.components:com.google.mlkit.vision.barcode.internal.BarcodeRegistrar"
+235-->[com.google.android.gms:play-services-mlkit-barcode-scanning:16.2.0] /Users/wedamanewenah/.gradle/caches/transforms-3/3930449463b8f46813062c4ad431cdb0/transformed/jetified-play-services-mlkit-barcode-scanning-16.2.0/AndroidManifest.xml:13:17-120
+236                android:value="com.google.firebase.components.ComponentRegistrar" />
+236-->[com.google.android.gms:play-services-mlkit-barcode-scanning:16.2.0] /Users/wedamanewenah/.gradle/caches/transforms-3/3930449463b8f46813062c4ad431cdb0/transformed/jetified-play-services-mlkit-barcode-scanning-16.2.0/AndroidManifest.xml:14:17-82
+237            <meta-data
+237-->[com.google.android.gms:play-services-mlkit-face-detection:16.2.0] /Users/wedamanewenah/.gradle/caches/transforms-3/e784668b7f352e9f294e1604c13c1d54/transformed/jetified-play-services-mlkit-face-detection-16.2.0/AndroidManifest.xml:12:13-14:85
+238                android:name="com.google.firebase.components:com.google.mlkit.vision.face.internal.FaceRegistrar"
+238-->[com.google.android.gms:play-services-mlkit-face-detection:16.2.0] /Users/wedamanewenah/.gradle/caches/transforms-3/e784668b7f352e9f294e1604c13c1d54/transformed/jetified-play-services-mlkit-face-detection-16.2.0/AndroidManifest.xml:13:17-114
+239                android:value="com.google.firebase.components.ComponentRegistrar" />
+239-->[com.google.android.gms:play-services-mlkit-face-detection:16.2.0] /Users/wedamanewenah/.gradle/caches/transforms-3/e784668b7f352e9f294e1604c13c1d54/transformed/jetified-play-services-mlkit-face-detection-16.2.0/AndroidManifest.xml:14:17-82
+240            <meta-data
+240-->[com.google.android.gms:play-services-mlkit-text-recognition:16.3.0] /Users/wedamanewenah/.gradle/caches/transforms-3/694ef6250f74877ed3264f725a883d4c/transformed/jetified-play-services-mlkit-text-recognition-16.3.0/AndroidManifest.xml:12:13-14:85
+241                android:name="com.google.firebase.components:com.google.mlkit.vision.text.internal.TextRegistrar"
+241-->[com.google.android.gms:play-services-mlkit-text-recognition:16.3.0] /Users/wedamanewenah/.gradle/caches/transforms-3/694ef6250f74877ed3264f725a883d4c/transformed/jetified-play-services-mlkit-text-recognition-16.3.0/AndroidManifest.xml:13:17-114
+242                android:value="com.google.firebase.components.ComponentRegistrar" />
+242-->[com.google.android.gms:play-services-mlkit-text-recognition:16.3.0] /Users/wedamanewenah/.gradle/caches/transforms-3/694ef6250f74877ed3264f725a883d4c/transformed/jetified-play-services-mlkit-text-recognition-16.3.0/AndroidManifest.xml:14:17-82
+243            <meta-data
+243-->[com.google.mlkit:vision-common:16.5.0] /Users/wedamanewenah/.gradle/caches/transforms-3/a90153fab0be2f0a1c807cbb83a1af73/transformed/jetified-vision-common-16.5.0/AndroidManifest.xml:12:13-14:85
+244                android:name="com.google.firebase.components:com.google.mlkit.vision.common.internal.VisionCommonRegistrar"
+244-->[com.google.mlkit:vision-common:16.5.0] /Users/wedamanewenah/.gradle/caches/transforms-3/a90153fab0be2f0a1c807cbb83a1af73/transformed/jetified-vision-common-16.5.0/AndroidManifest.xml:13:17-124
+245                android:value="com.google.firebase.components.ComponentRegistrar" />
+245-->[com.google.mlkit:vision-common:16.5.0] /Users/wedamanewenah/.gradle/caches/transforms-3/a90153fab0be2f0a1c807cbb83a1af73/transformed/jetified-vision-common-16.5.0/AndroidManifest.xml:14:17-82
+246            <meta-data
+246-->[com.google.mlkit:common:17.2.0] /Users/wedamanewenah/.gradle/caches/transforms-3/45d6b30f47cacbe68d7d7a12ba03fa64/transformed/jetified-common-17.2.0/AndroidManifest.xml:20:13-22:85
+247                android:name="com.google.firebase.components:com.google.mlkit.common.internal.CommonComponentRegistrar"
+247-->[com.google.mlkit:common:17.2.0] /Users/wedamanewenah/.gradle/caches/transforms-3/45d6b30f47cacbe68d7d7a12ba03fa64/transformed/jetified-common-17.2.0/AndroidManifest.xml:21:17-120
+248                android:value="com.google.firebase.components.ComponentRegistrar" />
+248-->[com.google.mlkit:common:17.2.0] /Users/wedamanewenah/.gradle/caches/transforms-3/45d6b30f47cacbe68d7d7a12ba03fa64/transformed/jetified-common-17.2.0/AndroidManifest.xml:22:17-82
+249        </service>
+250
+251        <provider
+251-->[com.google.mlkit:common:17.2.0] /Users/wedamanewenah/.gradle/caches/transforms-3/45d6b30f47cacbe68d7d7a12ba03fa64/transformed/jetified-common-17.2.0/AndroidManifest.xml:9:9-13:38
+252            android:name="com.google.mlkit.common.internal.MlKitInitProvider"
+252-->[com.google.mlkit:common:17.2.0] /Users/wedamanewenah/.gradle/caches/transforms-3/45d6b30f47cacbe68d7d7a12ba03fa64/transformed/jetified-common-17.2.0/AndroidManifest.xml:10:13-78
+253            android:authorities="com.ipayghpostablet.mlkitinitprovider"
+253-->[com.google.mlkit:common:17.2.0] /Users/wedamanewenah/.gradle/caches/transforms-3/45d6b30f47cacbe68d7d7a12ba03fa64/transformed/jetified-common-17.2.0/AndroidManifest.xml:11:13-69
+254            android:exported="false"
+254-->[com.google.mlkit:common:17.2.0] /Users/wedamanewenah/.gradle/caches/transforms-3/45d6b30f47cacbe68d7d7a12ba03fa64/transformed/jetified-common-17.2.0/AndroidManifest.xml:12:13-37
+255            android:initOrder="99" />
+255-->[com.google.mlkit:common:17.2.0] /Users/wedamanewenah/.gradle/caches/transforms-3/45d6b30f47cacbe68d7d7a12ba03fa64/transformed/jetified-common-17.2.0/AndroidManifest.xml:13:13-35
+256
+257        <service
+257-->[com.google.android.datatransport:transport-backend-cct:3.1.8] /Users/wedamanewenah/.gradle/caches/transforms-3/d62e098fbec33992b61135aa4a1f5916/transformed/jetified-transport-backend-cct-3.1.8/AndroidManifest.xml:28:9-34:19
+258            android:name="com.google.android.datatransport.runtime.backends.TransportBackendDiscovery"
+258-->[com.google.android.datatransport:transport-backend-cct:3.1.8] /Users/wedamanewenah/.gradle/caches/transforms-3/d62e098fbec33992b61135aa4a1f5916/transformed/jetified-transport-backend-cct-3.1.8/AndroidManifest.xml:29:13-103
+259            android:exported="false" >
+259-->[com.google.android.datatransport:transport-backend-cct:3.1.8] /Users/wedamanewenah/.gradle/caches/transforms-3/d62e098fbec33992b61135aa4a1f5916/transformed/jetified-transport-backend-cct-3.1.8/AndroidManifest.xml:30:13-37
+260            <meta-data
+260-->[com.google.android.datatransport:transport-backend-cct:3.1.8] /Users/wedamanewenah/.gradle/caches/transforms-3/d62e098fbec33992b61135aa4a1f5916/transformed/jetified-transport-backend-cct-3.1.8/AndroidManifest.xml:31:13-33:39
+261                android:name="backend:com.google.android.datatransport.cct.CctBackendFactory"
+261-->[com.google.android.datatransport:transport-backend-cct:3.1.8] /Users/wedamanewenah/.gradle/caches/transforms-3/d62e098fbec33992b61135aa4a1f5916/transformed/jetified-transport-backend-cct-3.1.8/AndroidManifest.xml:32:17-94
+262                android:value="cct" />
+262-->[com.google.android.datatransport:transport-backend-cct:3.1.8] /Users/wedamanewenah/.gradle/caches/transforms-3/d62e098fbec33992b61135aa4a1f5916/transformed/jetified-transport-backend-cct-3.1.8/AndroidManifest.xml:33:17-36
+263        </service>
+264        <service
+264-->[com.google.android.datatransport:transport-runtime:3.1.8] /Users/wedamanewenah/.gradle/caches/transforms-3/7eef26c8787e60081d7aa79b4dcb6596/transformed/jetified-transport-runtime-3.1.8/AndroidManifest.xml:26:9-30:19
+265            android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.JobInfoSchedulerService"
+265-->[com.google.android.datatransport:transport-runtime:3.1.8] /Users/wedamanewenah/.gradle/caches/transforms-3/7eef26c8787e60081d7aa79b4dcb6596/transformed/jetified-transport-runtime-3.1.8/AndroidManifest.xml:27:13-117
+266            android:exported="false"
+266-->[com.google.android.datatransport:transport-runtime:3.1.8] /Users/wedamanewenah/.gradle/caches/transforms-3/7eef26c8787e60081d7aa79b4dcb6596/transformed/jetified-transport-runtime-3.1.8/AndroidManifest.xml:28:13-37
+267            android:permission="android.permission.BIND_JOB_SERVICE" >
+267-->[com.google.android.datatransport:transport-runtime:3.1.8] /Users/wedamanewenah/.gradle/caches/transforms-3/7eef26c8787e60081d7aa79b4dcb6596/transformed/jetified-transport-runtime-3.1.8/AndroidManifest.xml:29:13-69
+268        </service>
+269
+270        <receiver
+270-->[com.google.android.datatransport:transport-runtime:3.1.8] /Users/wedamanewenah/.gradle/caches/transforms-3/7eef26c8787e60081d7aa79b4dcb6596/transformed/jetified-transport-runtime-3.1.8/AndroidManifest.xml:32:9-34:40
+271            android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.AlarmManagerSchedulerBroadcastReceiver"
+271-->[com.google.android.datatransport:transport-runtime:3.1.8] /Users/wedamanewenah/.gradle/caches/transforms-3/7eef26c8787e60081d7aa79b4dcb6596/transformed/jetified-transport-runtime-3.1.8/AndroidManifest.xml:33:13-132
+272            android:exported="false" />
+272-->[com.google.android.datatransport:transport-runtime:3.1.8] /Users/wedamanewenah/.gradle/caches/transforms-3/7eef26c8787e60081d7aa79b4dcb6596/transformed/jetified-transport-runtime-3.1.8/AndroidManifest.xml:34:13-37
+273
+274        <provider
+274-->[com.google.firebase:firebase-common:20.3.0] /Users/wedamanewenah/.gradle/caches/transforms-3/77a5f02c18b10ca7055589c85344356c/transformed/jetified-firebase-common-20.3.0/AndroidManifest.xml:25:9-30:39
+275            android:name="com.google.firebase.provider.FirebaseInitProvider"
+275-->[com.google.firebase:firebase-common:20.3.0] /Users/wedamanewenah/.gradle/caches/transforms-3/77a5f02c18b10ca7055589c85344356c/transformed/jetified-firebase-common-20.3.0/AndroidManifest.xml:26:13-77
+276            android:authorities="com.ipayghpostablet.firebaseinitprovider"
+276-->[com.google.firebase:firebase-common:20.3.0] /Users/wedamanewenah/.gradle/caches/transforms-3/77a5f02c18b10ca7055589c85344356c/transformed/jetified-firebase-common-20.3.0/AndroidManifest.xml:27:13-72
+277            android:directBootAware="true"
+277-->[com.google.firebase:firebase-common:20.3.0] /Users/wedamanewenah/.gradle/caches/transforms-3/77a5f02c18b10ca7055589c85344356c/transformed/jetified-firebase-common-20.3.0/AndroidManifest.xml:28:13-43
+278            android:exported="false"
+278-->[com.google.firebase:firebase-common:20.3.0] /Users/wedamanewenah/.gradle/caches/transforms-3/77a5f02c18b10ca7055589c85344356c/transformed/jetified-firebase-common-20.3.0/AndroidManifest.xml:29:13-37
+279            android:initOrder="100" />
+279-->[com.google.firebase:firebase-common:20.3.0] /Users/wedamanewenah/.gradle/caches/transforms-3/77a5f02c18b10ca7055589c85344356c/transformed/jetified-firebase-common-20.3.0/AndroidManifest.xml:30:13-36
+280        <provider
+280-->[io.github.lucksiege:pictureselector:v3.10.9] /Users/wedamanewenah/.gradle/caches/transforms-3/70356867c2a975c7d62c379c93835bb0/transformed/jetified-pictureselector-v3.10.9/AndroidManifest.xml:10:9-18:20
+281            android:name="com.luck.picture.lib.basic.PictureFileProvider"
+281-->[io.github.lucksiege:pictureselector:v3.10.9] /Users/wedamanewenah/.gradle/caches/transforms-3/70356867c2a975c7d62c379c93835bb0/transformed/jetified-pictureselector-v3.10.9/AndroidManifest.xml:11:13-74
+282            android:authorities="com.ipayghpostablet.luckProvider"
+282-->[io.github.lucksiege:pictureselector:v3.10.9] /Users/wedamanewenah/.gradle/caches/transforms-3/70356867c2a975c7d62c379c93835bb0/transformed/jetified-pictureselector-v3.10.9/AndroidManifest.xml:12:13-64
+283            android:exported="false"
+283-->[io.github.lucksiege:pictureselector:v3.10.9] /Users/wedamanewenah/.gradle/caches/transforms-3/70356867c2a975c7d62c379c93835bb0/transformed/jetified-pictureselector-v3.10.9/AndroidManifest.xml:13:13-37
+284            android:grantUriPermissions="true" >
+284-->[io.github.lucksiege:pictureselector:v3.10.9] /Users/wedamanewenah/.gradle/caches/transforms-3/70356867c2a975c7d62c379c93835bb0/transformed/jetified-pictureselector-v3.10.9/AndroidManifest.xml:14:13-47
+285            <meta-data
+285-->[:react-native-blob-util] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-blob-util/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:42:13-44:58
+286                android:name="android.support.FILE_PROVIDER_PATHS"
+286-->[:react-native-blob-util] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-blob-util/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:43:17-67
+287                android:resource="@xml/ps_file_paths" />
+287-->[:react-native-blob-util] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-blob-util/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:44:17-55
+288        </provider>
+289
+290        <service
+290-->[io.github.lucksiege:pictureselector:v3.10.9] /Users/wedamanewenah/.gradle/caches/transforms-3/70356867c2a975c7d62c379c93835bb0/transformed/jetified-pictureselector-v3.10.9/AndroidManifest.xml:20:9-23:56
+291            android:name="com.luck.picture.lib.service.ForegroundService"
+291-->[io.github.lucksiege:pictureselector:v3.10.9] /Users/wedamanewenah/.gradle/caches/transforms-3/70356867c2a975c7d62c379c93835bb0/transformed/jetified-pictureselector-v3.10.9/AndroidManifest.xml:21:13-74
+292            android:enabled="true"
+292-->[io.github.lucksiege:pictureselector:v3.10.9] /Users/wedamanewenah/.gradle/caches/transforms-3/70356867c2a975c7d62c379c93835bb0/transformed/jetified-pictureselector-v3.10.9/AndroidManifest.xml:22:13-35
+293            android:foregroundServiceType="location" />
+293-->[io.github.lucksiege:pictureselector:v3.10.9] /Users/wedamanewenah/.gradle/caches/transforms-3/70356867c2a975c7d62c379c93835bb0/transformed/jetified-pictureselector-v3.10.9/AndroidManifest.xml:23:13-53
+294
+295        <activity
+295-->[io.github.lucksiege:pictureselector:v3.10.9] /Users/wedamanewenah/.gradle/caches/transforms-3/70356867c2a975c7d62c379c93835bb0/transformed/jetified-pictureselector-v3.10.9/AndroidManifest.xml:25:9-29:20
+296            android:name="com.luck.picture.lib.basic.PictureSelectorSupporterActivity"
+296-->[io.github.lucksiege:pictureselector:v3.10.9] /Users/wedamanewenah/.gradle/caches/transforms-3/70356867c2a975c7d62c379c93835bb0/transformed/jetified-pictureselector-v3.10.9/AndroidManifest.xml:26:13-87
+297            android:configChanges="orientation|keyboardHidden|screenSize"
+297-->[io.github.lucksiege:pictureselector:v3.10.9] /Users/wedamanewenah/.gradle/caches/transforms-3/70356867c2a975c7d62c379c93835bb0/transformed/jetified-pictureselector-v3.10.9/AndroidManifest.xml:27:13-74
+298            android:theme="@style/Base.Theme.NoActionBar" >
+298-->[io.github.lucksiege:pictureselector:v3.10.9] /Users/wedamanewenah/.gradle/caches/transforms-3/70356867c2a975c7d62c379c93835bb0/transformed/jetified-pictureselector-v3.10.9/AndroidManifest.xml:28:13-58
+299        </activity>
+300        <activity
+300-->[io.github.lucksiege:pictureselector:v3.10.9] /Users/wedamanewenah/.gradle/caches/transforms-3/70356867c2a975c7d62c379c93835bb0/transformed/jetified-pictureselector-v3.10.9/AndroidManifest.xml:30:9-34:20
+301            android:name="com.luck.picture.lib.basic.PictureSelectorTransparentActivity"
+301-->[io.github.lucksiege:pictureselector:v3.10.9] /Users/wedamanewenah/.gradle/caches/transforms-3/70356867c2a975c7d62c379c93835bb0/transformed/jetified-pictureselector-v3.10.9/AndroidManifest.xml:31:13-89
+302            android:configChanges="orientation|keyboardHidden|screenSize"
+302-->[io.github.lucksiege:pictureselector:v3.10.9] /Users/wedamanewenah/.gradle/caches/transforms-3/70356867c2a975c7d62c379c93835bb0/transformed/jetified-pictureselector-v3.10.9/AndroidManifest.xml:32:13-74
+303            android:theme="@style/Picture.Theme.Translucent" >
+303-->[io.github.lucksiege:pictureselector:v3.10.9] /Users/wedamanewenah/.gradle/caches/transforms-3/70356867c2a975c7d62c379c93835bb0/transformed/jetified-pictureselector-v3.10.9/AndroidManifest.xml:33:13-61
+304        </activity>
+305        <activity
+305-->[io.github.lucksiege:ucrop:v3.10.9] /Users/wedamanewenah/.gradle/caches/transforms-3/3b5cb66bb22c6f176795e27170a3d67e/transformed/jetified-ucrop-v3.10.9/AndroidManifest.xml:10:9-14:72
+306            android:name="com.yalantis.ucrop.UCropActivity"
+306-->[io.github.lucksiege:ucrop:v3.10.9] /Users/wedamanewenah/.gradle/caches/transforms-3/3b5cb66bb22c6f176795e27170a3d67e/transformed/jetified-ucrop-v3.10.9/AndroidManifest.xml:11:13-60
+307            android:configChanges="orientation|keyboardHidden|screenSize"
+307-->[io.github.lucksiege:ucrop:v3.10.9] /Users/wedamanewenah/.gradle/caches/transforms-3/3b5cb66bb22c6f176795e27170a3d67e/transformed/jetified-ucrop-v3.10.9/AndroidManifest.xml:12:13-74
+308            android:screenOrientation="portrait"
+308-->[io.github.lucksiege:ucrop:v3.10.9] /Users/wedamanewenah/.gradle/caches/transforms-3/3b5cb66bb22c6f176795e27170a3d67e/transformed/jetified-ucrop-v3.10.9/AndroidManifest.xml:13:13-49
+309            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+309-->[io.github.lucksiege:ucrop:v3.10.9] /Users/wedamanewenah/.gradle/caches/transforms-3/3b5cb66bb22c6f176795e27170a3d67e/transformed/jetified-ucrop-v3.10.9/AndroidManifest.xml:14:13-69
+310        <activity
+310-->[io.github.lucksiege:ucrop:v3.10.9] /Users/wedamanewenah/.gradle/caches/transforms-3/3b5cb66bb22c6f176795e27170a3d67e/transformed/jetified-ucrop-v3.10.9/AndroidManifest.xml:15:9-19:72
+311            android:name="com.yalantis.ucrop.UCropMultipleActivity"
+311-->[io.github.lucksiege:ucrop:v3.10.9] /Users/wedamanewenah/.gradle/caches/transforms-3/3b5cb66bb22c6f176795e27170a3d67e/transformed/jetified-ucrop-v3.10.9/AndroidManifest.xml:16:13-68
+312            android:configChanges="orientation|keyboardHidden|screenSize"
+312-->[io.github.lucksiege:ucrop:v3.10.9] /Users/wedamanewenah/.gradle/caches/transforms-3/3b5cb66bb22c6f176795e27170a3d67e/transformed/jetified-ucrop-v3.10.9/AndroidManifest.xml:17:13-74
+313            android:screenOrientation="portrait"
+313-->[io.github.lucksiege:ucrop:v3.10.9] /Users/wedamanewenah/.gradle/caches/transforms-3/3b5cb66bb22c6f176795e27170a3d67e/transformed/jetified-ucrop-v3.10.9/AndroidManifest.xml:18:13-49
+314            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+314-->[io.github.lucksiege:ucrop:v3.10.9] /Users/wedamanewenah/.gradle/caches/transforms-3/3b5cb66bb22c6f176795e27170a3d67e/transformed/jetified-ucrop-v3.10.9/AndroidManifest.xml:19:13-69
+315        <activity
+315-->[io.github.lucksiege:camerax:v3.10.9] /Users/wedamanewenah/.gradle/caches/transforms-3/31714d69a383304d6d7c1ef2812dd18d/transformed/jetified-camerax-v3.10.9/AndroidManifest.xml:10:9-13:61
+316            android:name="com.luck.lib.camerax.PictureCameraActivity"
+316-->[io.github.lucksiege:camerax:v3.10.9] /Users/wedamanewenah/.gradle/caches/transforms-3/31714d69a383304d6d7c1ef2812dd18d/transformed/jetified-camerax-v3.10.9/AndroidManifest.xml:11:13-70
+317            android:configChanges="orientation|keyboardHidden|screenSize"
+317-->[io.github.lucksiege:camerax:v3.10.9] /Users/wedamanewenah/.gradle/caches/transforms-3/31714d69a383304d6d7c1ef2812dd18d/transformed/jetified-camerax-v3.10.9/AndroidManifest.xml:12:13-74
+318            android:theme="@style/Base.Theme.NoActionBar" />
+318-->[io.github.lucksiege:camerax:v3.10.9] /Users/wedamanewenah/.gradle/caches/transforms-3/31714d69a383304d6d7c1ef2812dd18d/transformed/jetified-camerax-v3.10.9/AndroidManifest.xml:13:13-58
+319
+320        <meta-data
+320-->[com.github.bumptech.glide:okhttp3-integration:4.12.0] /Users/wedamanewenah/.gradle/caches/transforms-3/73fc8caa6c647895444cba14e56878be/transformed/jetified-okhttp3-integration-4.12.0/AndroidManifest.xml:11:9-13:43
+321            android:name="com.bumptech.glide.integration.okhttp3.OkHttpGlideModule"
+321-->[com.github.bumptech.glide:okhttp3-integration:4.12.0] /Users/wedamanewenah/.gradle/caches/transforms-3/73fc8caa6c647895444cba14e56878be/transformed/jetified-okhttp3-integration-4.12.0/AndroidManifest.xml:12:13-84
+322            android:value="GlideModule" />
+322-->[com.github.bumptech.glide:okhttp3-integration:4.12.0] /Users/wedamanewenah/.gradle/caches/transforms-3/73fc8caa6c647895444cba14e56878be/transformed/jetified-okhttp3-integration-4.12.0/AndroidManifest.xml:13:13-40
+323
+324        <activity
+324-->[com.google.android.gms:play-services-auth:20.3.0] /Users/wedamanewenah/.gradle/caches/transforms-3/b6ef10deeae45d8a21453fa630450488/transformed/jetified-play-services-auth-20.3.0/AndroidManifest.xml:23:9-27:75
+325            android:name="com.google.android.gms.auth.api.signin.internal.SignInHubActivity"
+325-->[com.google.android.gms:play-services-auth:20.3.0] /Users/wedamanewenah/.gradle/caches/transforms-3/b6ef10deeae45d8a21453fa630450488/transformed/jetified-play-services-auth-20.3.0/AndroidManifest.xml:24:13-93
+326            android:excludeFromRecents="true"
+326-->[com.google.android.gms:play-services-auth:20.3.0] /Users/wedamanewenah/.gradle/caches/transforms-3/b6ef10deeae45d8a21453fa630450488/transformed/jetified-play-services-auth-20.3.0/AndroidManifest.xml:25:13-46
+327            android:exported="false"
+327-->[com.google.android.gms:play-services-auth:20.3.0] /Users/wedamanewenah/.gradle/caches/transforms-3/b6ef10deeae45d8a21453fa630450488/transformed/jetified-play-services-auth-20.3.0/AndroidManifest.xml:26:13-37
+328            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+328-->[com.google.android.gms:play-services-auth:20.3.0] /Users/wedamanewenah/.gradle/caches/transforms-3/b6ef10deeae45d8a21453fa630450488/transformed/jetified-play-services-auth-20.3.0/AndroidManifest.xml:27:13-72
+329        <!--
+330            Service handling Google Sign-In user revocation. For apps that do not integrate with
+331            Google Sign-In, this service will never be started.
+332        -->
+333        <service
+333-->[com.google.android.gms:play-services-auth:20.3.0] /Users/wedamanewenah/.gradle/caches/transforms-3/b6ef10deeae45d8a21453fa630450488/transformed/jetified-play-services-auth-20.3.0/AndroidManifest.xml:33:9-37:51
+334            android:name="com.google.android.gms.auth.api.signin.RevocationBoundService"
+334-->[com.google.android.gms:play-services-auth:20.3.0] /Users/wedamanewenah/.gradle/caches/transforms-3/b6ef10deeae45d8a21453fa630450488/transformed/jetified-play-services-auth-20.3.0/AndroidManifest.xml:34:13-89
+335            android:exported="true"
+335-->[com.google.android.gms:play-services-auth:20.3.0] /Users/wedamanewenah/.gradle/caches/transforms-3/b6ef10deeae45d8a21453fa630450488/transformed/jetified-play-services-auth-20.3.0/AndroidManifest.xml:35:13-36
+336            android:permission="com.google.android.gms.auth.api.signin.permission.REVOCATION_NOTIFICATION"
+336-->[com.google.android.gms:play-services-auth:20.3.0] /Users/wedamanewenah/.gradle/caches/transforms-3/b6ef10deeae45d8a21453fa630450488/transformed/jetified-play-services-auth-20.3.0/AndroidManifest.xml:36:13-107
+337            android:visibleToInstantApps="true" />
+337-->[com.google.android.gms:play-services-auth:20.3.0] /Users/wedamanewenah/.gradle/caches/transforms-3/b6ef10deeae45d8a21453fa630450488/transformed/jetified-play-services-auth-20.3.0/AndroidManifest.xml:37:13-48
+338
+339        <activity
+339-->[com.google.android.gms:play-services-base:18.0.1] /Users/wedamanewenah/.gradle/caches/transforms-3/28023fbe5663560dcf8c981ea4aafe5b/transformed/jetified-play-services-base-18.0.1/AndroidManifest.xml:20:9-22:45
+340            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+340-->[com.google.android.gms:play-services-base:18.0.1] /Users/wedamanewenah/.gradle/caches/transforms-3/28023fbe5663560dcf8c981ea4aafe5b/transformed/jetified-play-services-base-18.0.1/AndroidManifest.xml:20:19-85
+341            android:exported="false"
+341-->[com.google.android.gms:play-services-base:18.0.1] /Users/wedamanewenah/.gradle/caches/transforms-3/28023fbe5663560dcf8c981ea4aafe5b/transformed/jetified-play-services-base-18.0.1/AndroidManifest.xml:22:19-43
+342            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+342-->[com.google.android.gms:play-services-base:18.0.1] /Users/wedamanewenah/.gradle/caches/transforms-3/28023fbe5663560dcf8c981ea4aafe5b/transformed/jetified-play-services-base-18.0.1/AndroidManifest.xml:21:19-78
+343
+344        <receiver
+344-->[com.google.android.gms:play-services-measurement:21.2.0] /Users/wedamanewenah/.gradle/caches/transforms-3/1d993407d583bba998b6b97f8536729d/transformed/jetified-play-services-measurement-21.2.0/AndroidManifest.xml:29:9-33:20
+345            android:name="com.google.android.gms.measurement.AppMeasurementReceiver"
+345-->[com.google.android.gms:play-services-measurement:21.2.0] /Users/wedamanewenah/.gradle/caches/transforms-3/1d993407d583bba998b6b97f8536729d/transformed/jetified-play-services-measurement-21.2.0/AndroidManifest.xml:30:13-85
+346            android:enabled="true"
+346-->[com.google.android.gms:play-services-measurement:21.2.0] /Users/wedamanewenah/.gradle/caches/transforms-3/1d993407d583bba998b6b97f8536729d/transformed/jetified-play-services-measurement-21.2.0/AndroidManifest.xml:31:13-35
+347            android:exported="false" >
+347-->[com.google.android.gms:play-services-measurement:21.2.0] /Users/wedamanewenah/.gradle/caches/transforms-3/1d993407d583bba998b6b97f8536729d/transformed/jetified-play-services-measurement-21.2.0/AndroidManifest.xml:32:13-37
+348        </receiver>
+349
+350        <service
+350-->[com.google.android.gms:play-services-measurement:21.2.0] /Users/wedamanewenah/.gradle/caches/transforms-3/1d993407d583bba998b6b97f8536729d/transformed/jetified-play-services-measurement-21.2.0/AndroidManifest.xml:35:9-38:40
+351            android:name="com.google.android.gms.measurement.AppMeasurementService"
+351-->[com.google.android.gms:play-services-measurement:21.2.0] /Users/wedamanewenah/.gradle/caches/transforms-3/1d993407d583bba998b6b97f8536729d/transformed/jetified-play-services-measurement-21.2.0/AndroidManifest.xml:36:13-84
+352            android:enabled="true"
+352-->[com.google.android.gms:play-services-measurement:21.2.0] /Users/wedamanewenah/.gradle/caches/transforms-3/1d993407d583bba998b6b97f8536729d/transformed/jetified-play-services-measurement-21.2.0/AndroidManifest.xml:37:13-35
+353            android:exported="false" />
+353-->[com.google.android.gms:play-services-measurement:21.2.0] /Users/wedamanewenah/.gradle/caches/transforms-3/1d993407d583bba998b6b97f8536729d/transformed/jetified-play-services-measurement-21.2.0/AndroidManifest.xml:38:13-37
+354        <service
+354-->[com.google.android.gms:play-services-measurement:21.2.0] /Users/wedamanewenah/.gradle/caches/transforms-3/1d993407d583bba998b6b97f8536729d/transformed/jetified-play-services-measurement-21.2.0/AndroidManifest.xml:39:9-43:72
+355            android:name="com.google.android.gms.measurement.AppMeasurementJobService"
+355-->[com.google.android.gms:play-services-measurement:21.2.0] /Users/wedamanewenah/.gradle/caches/transforms-3/1d993407d583bba998b6b97f8536729d/transformed/jetified-play-services-measurement-21.2.0/AndroidManifest.xml:40:13-87
+356            android:enabled="true"
+356-->[com.google.android.gms:play-services-measurement:21.2.0] /Users/wedamanewenah/.gradle/caches/transforms-3/1d993407d583bba998b6b97f8536729d/transformed/jetified-play-services-measurement-21.2.0/AndroidManifest.xml:41:13-35
+357            android:exported="false"
+357-->[com.google.android.gms:play-services-measurement:21.2.0] /Users/wedamanewenah/.gradle/caches/transforms-3/1d993407d583bba998b6b97f8536729d/transformed/jetified-play-services-measurement-21.2.0/AndroidManifest.xml:42:13-37
+358            android:permission="android.permission.BIND_JOB_SERVICE" />
+358-->[com.google.android.gms:play-services-measurement:21.2.0] /Users/wedamanewenah/.gradle/caches/transforms-3/1d993407d583bba998b6b97f8536729d/transformed/jetified-play-services-measurement-21.2.0/AndroidManifest.xml:43:13-69
+359
+360        <meta-data
+360-->[com.google.android.gms:play-services-basement:18.1.0] /Users/wedamanewenah/.gradle/caches/transforms-3/21de5bc89aa8ed59393713d1dbae652f/transformed/jetified-play-services-basement-18.1.0/AndroidManifest.xml:21:9-23:69
+361            android:name="com.google.android.gms.version"
+361-->[com.google.android.gms:play-services-basement:18.1.0] /Users/wedamanewenah/.gradle/caches/transforms-3/21de5bc89aa8ed59393713d1dbae652f/transformed/jetified-play-services-basement-18.1.0/AndroidManifest.xml:22:13-58
+362            android:value="@integer/google_play_services_version" />
+362-->[com.google.android.gms:play-services-basement:18.1.0] /Users/wedamanewenah/.gradle/caches/transforms-3/21de5bc89aa8ed59393713d1dbae652f/transformed/jetified-play-services-basement-18.1.0/AndroidManifest.xml:23:13-66
+363
+364        <provider
+364-->[androidx.emoji2:emoji2:1.0.0] /Users/wedamanewenah/.gradle/caches/transforms-3/3b477a69d8efc426f1db01439429be02/transformed/jetified-emoji2-1.0.0/AndroidManifest.xml:26:9-34:20
+365            android:name="androidx.startup.InitializationProvider"
+365-->[androidx.emoji2:emoji2:1.0.0] /Users/wedamanewenah/.gradle/caches/transforms-3/3b477a69d8efc426f1db01439429be02/transformed/jetified-emoji2-1.0.0/AndroidManifest.xml:27:13-67
+366            android:authorities="com.ipayghpostablet.androidx-startup"
+366-->[androidx.emoji2:emoji2:1.0.0] /Users/wedamanewenah/.gradle/caches/transforms-3/3b477a69d8efc426f1db01439429be02/transformed/jetified-emoji2-1.0.0/AndroidManifest.xml:28:13-68
+367            android:exported="false" >
+367-->[androidx.emoji2:emoji2:1.0.0] /Users/wedamanewenah/.gradle/caches/transforms-3/3b477a69d8efc426f1db01439429be02/transformed/jetified-emoji2-1.0.0/AndroidManifest.xml:29:13-37
+368            <meta-data
+368-->[androidx.emoji2:emoji2:1.0.0] /Users/wedamanewenah/.gradle/caches/transforms-3/3b477a69d8efc426f1db01439429be02/transformed/jetified-emoji2-1.0.0/AndroidManifest.xml:31:13-33:52
+369                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+369-->[androidx.emoji2:emoji2:1.0.0] /Users/wedamanewenah/.gradle/caches/transforms-3/3b477a69d8efc426f1db01439429be02/transformed/jetified-emoji2-1.0.0/AndroidManifest.xml:32:17-75
+370                android:value="androidx.startup" />
+370-->[androidx.emoji2:emoji2:1.0.0] /Users/wedamanewenah/.gradle/caches/transforms-3/3b477a69d8efc426f1db01439429be02/transformed/jetified-emoji2-1.0.0/AndroidManifest.xml:33:17-49
+371            <meta-data
+371-->[androidx.lifecycle:lifecycle-process:2.4.0] /Users/wedamanewenah/.gradle/caches/transforms-3/8d3e5d9590e6ff92507314f3b7b9d1e3/transformed/jetified-lifecycle-process-2.4.0/AndroidManifest.xml:31:13-33:52
+372                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+372-->[androidx.lifecycle:lifecycle-process:2.4.0] /Users/wedamanewenah/.gradle/caches/transforms-3/8d3e5d9590e6ff92507314f3b7b9d1e3/transformed/jetified-lifecycle-process-2.4.0/AndroidManifest.xml:32:17-78
+373                android:value="androidx.startup" />
+373-->[androidx.lifecycle:lifecycle-process:2.4.0] /Users/wedamanewenah/.gradle/caches/transforms-3/8d3e5d9590e6ff92507314f3b7b9d1e3/transformed/jetified-lifecycle-process-2.4.0/AndroidManifest.xml:33:17-49
+374        </provider>
+375
+376        <service
+376-->[androidx.camera:camera-camera2:1.2.0-alpha01] /Users/wedamanewenah/.gradle/caches/transforms-3/9fb1d5b463faa6817389f0be9587357c/transformed/jetified-camera-camera2-1.2.0-alpha01/AndroidManifest.xml:26:9-35:19
+377            android:name="androidx.camera.core.impl.MetadataHolderService"
+377-->[androidx.camera:camera-camera2:1.2.0-alpha01] /Users/wedamanewenah/.gradle/caches/transforms-3/9fb1d5b463faa6817389f0be9587357c/transformed/jetified-camera-camera2-1.2.0-alpha01/AndroidManifest.xml:27:13-75
+378            android:enabled="false"
+378-->[androidx.camera:camera-camera2:1.2.0-alpha01] /Users/wedamanewenah/.gradle/caches/transforms-3/9fb1d5b463faa6817389f0be9587357c/transformed/jetified-camera-camera2-1.2.0-alpha01/AndroidManifest.xml:28:13-36
+379            android:exported="false" >
+379-->[androidx.camera:camera-camera2:1.2.0-alpha01] /Users/wedamanewenah/.gradle/caches/transforms-3/9fb1d5b463faa6817389f0be9587357c/transformed/jetified-camera-camera2-1.2.0-alpha01/AndroidManifest.xml:29:13-37
+380            <meta-data
+380-->[androidx.camera:camera-camera2:1.2.0-alpha01] /Users/wedamanewenah/.gradle/caches/transforms-3/9fb1d5b463faa6817389f0be9587357c/transformed/jetified-camera-camera2-1.2.0-alpha01/AndroidManifest.xml:32:13-34:89
+381                android:name="androidx.camera.core.impl.MetadataHolderService.DEFAULT_CONFIG_PROVIDER"
+381-->[androidx.camera:camera-camera2:1.2.0-alpha01] /Users/wedamanewenah/.gradle/caches/transforms-3/9fb1d5b463faa6817389f0be9587357c/transformed/jetified-camera-camera2-1.2.0-alpha01/AndroidManifest.xml:33:17-103
+382                android:value="androidx.camera.camera2.Camera2Config$DefaultProvider" />
+382-->[androidx.camera:camera-camera2:1.2.0-alpha01] /Users/wedamanewenah/.gradle/caches/transforms-3/9fb1d5b463faa6817389f0be9587357c/transformed/jetified-camera-camera2-1.2.0-alpha01/AndroidManifest.xml:34:17-86
+383        </service> <!-- The activities will be merged into the manifest of the hosting app. -->
+384        <activity
+384-->[com.google.android.play:core-common:2.0.2] /Users/wedamanewenah/.gradle/caches/transforms-3/a8de8245a91ec8e782e54aa87e464110/transformed/jetified-core-common-2.0.2/AndroidManifest.xml:14:9-18:65
+385            android:name="com.google.android.play.core.common.PlayCoreDialogWrapperActivity"
+385-->[com.google.android.play:core-common:2.0.2] /Users/wedamanewenah/.gradle/caches/transforms-3/a8de8245a91ec8e782e54aa87e464110/transformed/jetified-core-common-2.0.2/AndroidManifest.xml:15:13-93
+386            android:exported="false"
+386-->[com.google.android.play:core-common:2.0.2] /Users/wedamanewenah/.gradle/caches/transforms-3/a8de8245a91ec8e782e54aa87e464110/transformed/jetified-core-common-2.0.2/AndroidManifest.xml:16:13-37
+387            android:stateNotNeeded="true"
+387-->[com.google.android.play:core-common:2.0.2] /Users/wedamanewenah/.gradle/caches/transforms-3/a8de8245a91ec8e782e54aa87e464110/transformed/jetified-core-common-2.0.2/AndroidManifest.xml:17:13-42
+388            android:theme="@style/Theme.PlayCore.Transparent" />
+388-->[com.google.android.play:core-common:2.0.2] /Users/wedamanewenah/.gradle/caches/transforms-3/a8de8245a91ec8e782e54aa87e464110/transformed/jetified-core-common-2.0.2/AndroidManifest.xml:18:13-62
+389    </application>
+390
+391</manifest>

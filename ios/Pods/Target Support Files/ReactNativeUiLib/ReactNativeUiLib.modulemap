@@ -1,0 +1,6 @@
+framework module ReactNativeUiLib {
+  umbrella header "ReactNativeUiLib-umbrella.h"
+
+  export *
+  module * { export * }
+}

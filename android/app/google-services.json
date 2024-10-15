@@ -1,0 +1,118 @@
+{
+  "project_info": {
+    "project_number": "510887086279",
+    "project_id": "digistore-355008",
+    "storage_bucket": "digistore-355008.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:510887086279:android:bf608df1d23d50bb32d6e2",
+        "android_client_info": {
+          "package_name": "com.ipayghana"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "510887086279-grcsq5bgv2teeqi3c9ffchdi4e135mp7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyChtN3BSe6GwQ6AFEwPsIEQaVBcBpWC3dg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "510887086279-grcsq5bgv2teeqi3c9ffchdi4e135mp7.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "510887086279-fjfdloo84ums6qpsjd2nnbjoco5i53uv.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.starbiteapp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:510887086279:android:bdc43fac8de786e332d6e2",
+        "android_client_info": {
+          "package_name": "com.ipayghpostablet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "510887086279-grcsq5bgv2teeqi3c9ffchdi4e135mp7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyChtN3BSe6GwQ6AFEwPsIEQaVBcBpWC3dg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "510887086279-grcsq5bgv2teeqi3c9ffchdi4e135mp7.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "510887086279-fjfdloo84ums6qpsjd2nnbjoco5i53uv.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.starbiteapp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:510887086279:android:61401a63a3d76d0632d6e2",
+        "android_client_info": {
+          "package_name": "com.ipayghpostablet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "510887086279-grcsq5bgv2teeqi3c9ffchdi4e135mp7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyChtN3BSe6GwQ6AFEwPsIEQaVBcBpWC3dg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "510887086279-grcsq5bgv2teeqi3c9ffchdi4e135mp7.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "510887086279-fjfdloo84ums6qpsjd2nnbjoco5i53uv.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.starbiteapp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

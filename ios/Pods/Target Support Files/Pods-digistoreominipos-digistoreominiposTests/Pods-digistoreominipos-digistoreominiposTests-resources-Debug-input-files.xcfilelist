@@ -1,0 +1,6 @@
+${PODS_ROOT}/Target Support Files/Pods-digistoreominipos-digistoreominiposTests/Pods-digistoreominipos-digistoreominiposTests-resources.sh
+${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle
+${PODS_CONFIGURATION_BUILD_DIR}/CropViewController/TOCropViewControllerBundle.bundle
+${PODS_ROOT}/TLPhotoPicker/TLPhotoPicker/TLPhotoPickerController.bundle
+${PODS_CONFIGURATION_BUILD_DIR}/TLPhotoPicker/TLPhotoPicker.bundle
+${PODS_CONFIGURATION_BUILD_DIR}/react-native-multiple-image-picker/MultipleImagePicker.bundle

@@ -1,0 +1,42 @@
+diff --git a/node_modules/@twotalltotems/react-native-otp-input/dist/index.js b/node_modules/@twotalltotems/react-native-otp-input/dist/index.js
+index c90384a..877f05c 100644
+--- a/node_modules/@twotalltotems/react-native-otp-input/dist/index.js
++++ b/node_modules/@twotalltotems/react-native-otp-input/dist/index.js
+@@ -1,8 +1,9 @@
+ import React, { Component } from 'react';
+-import { View, TextInput, TouchableWithoutFeedback, Clipboard, Keyboard, Platform, I18nManager, } from 'react-native';
++import { View, TextInput, TouchableWithoutFeedback, Keyboard, Platform, I18nManager, } from 'react-native';
+ import styles from './styles';
+ import { isAutoFillSupported } from './helpers/device';
+ import { codeToArray } from './helpers/codeToArray';
++import Clipboard from '@react-native-community/clipboard';
+ export default class OTPInputView extends Component {
+     constructor(props) {
+         super(props);
+@@ -154,7 +155,10 @@ export default class OTPInputView extends Component {
+     }
+     componentDidMount() {
+         this.copyCodeFromClipBoardOnAndroid();
+-        this.bringUpKeyBoardIfNeeded();
++        // this.bringUpKeyBoardIfNeeded();
++        setTimeout(()=>{
++            this.bringUpKeyBoardIfNeeded();
++        },0)
+         this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this.handleKeyboardDidHide);
+     }
+     componentWillUnmount() {
+@@ -164,6 +168,14 @@ export default class OTPInputView extends Component {
+         }
+         (_a = this.keyboardDidHideListener) === null || _a === void 0 ? void 0 : _a.remove();
+     }
++    focusField = (index) => {
++    if (index < this.fields.length && this.fields[index]) {
++        this.fields[index].focus()
++        this.setState({
++            selectedIndex: index
++        })
++    }
++    }
+     render() {
+         const { pinCount, style, clearInputs } = this.props;
+         const digits = this.getDigits();

@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleDisplayName</key>
+	<string>digistoreomnipos</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>1.0</string>
+	<key>CFBundleName</key>
+	<string>$(PRODUCT_NAME)</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>6.0.1</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>16</string>
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.finance</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>itms-apps</string>
+	</array>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>localhost</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+			</dict>
+		</dict>
+	</dict>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Play custom notification for your orders</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Access to bluetooth is required to connect to printer</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>Access to bluetooth is required to connect to printer</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>Access to Calender is required to select date</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Access to camera is required to capture photo for profile, outlet image, business identifications, and products </string>
+	<key>NSContactsUsageDescription</key>
+	<string>Access to Contacts is required to select contact information</string>
+	<key>NSFileProviderDomainUsageDescription</key>
+	<string>Access to files is required to choose business documents </string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>GPS data is required to set you delivery address</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>GPS data is required to set you delivery address</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>GPS data is required to set you delivery address</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Access to microphone is required when using camera</string>
+	<key>NSMotionUsageDescription</key>
+	<string>Access to motion is required when using camera</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Access to Photos library is required to select photo for profile, outlet image, business identifications, and products </string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Access to Photos library is required to select photo for profile, outlet image, business identifications, and products </string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Inter-Black.otf</string>
+		<string>Inter-Bold.otf</string>
+		<string>Inter-ExtraBold.otf</string>
+		<string>Inter-ExtraLight.otf</string>
+		<string>Inter-Light.otf</string>
+		<string>Inter-Medium.otf</string>
+		<string>Inter-Regular.otf</string>
+		<string>Inter-SemiBold.otf</string>
+		<string>Inter-Thin.otf</string>
+		<string>Inter-V.ttf</string>
+		<string>StardosStencil-Bold.ttf</string>
+		<string>StardosStencil-Regular.ttf</string>
+		<string>JetBrainsMono-Bold.ttf</string>
+		<string>JetBrainsMono-Medium.ttf</string>
+		<string>JetBrainsMono-Regular.ttf</string>
+		<string>JetBrainsMono-SemiBold.ttf</string>
+		<string>Helvetica-Bold.ttf</string>
+		<string>Helvetica.ttf</string>
+		<string>SourceSansPro-Bold.ttf</string>
+		<string>SourceSansPro-Regular.ttf</string>
+		<string>SourceSansPro-SemiBold.ttf</string>
+		<string>DroidSerif-Bold.ttf</string>
+		<string>DroidSerif-BoldItalic.ttf</string>
+		<string>DroidSerif-Italic.ttf</string>
+		<string>DroidSerif.ttf</string>
+		<string>IBMPlexMono-Bold.ttf</string>
+		<string>IBMPlexMono-BoldItalic.ttf</string>
+		<string>IBMPlexMono-ExtraLight.ttf</string>
+		<string>IBMPlexMono-ExtraLightItalic.ttf</string>
+		<string>IBMPlexMono-Italic.ttf</string>
+		<string>IBMPlexMono-Light.ttf</string>
+		<string>IBMPlexMono-LightItalic.ttf</string>
+		<string>IBMPlexMono-Medium.ttf</string>
+		<string>IBMPlexMono-MediumItalic.ttf</string>
+		<string>IBMPlexMono-Regular.ttf</string>
+		<string>IBMPlexMono-SemiBold.ttf</string>
+		<string>IBMPlexMono-SemiBoldItalic.ttf</string>
+		<string>IBMPlexMono-Thin.ttf</string>
+		<string>IBMPlexMono-ThinItalic.ttf</string>
+		<string>SFProDisplay-Medium.ttf</string>
+		<string>SFProDisplay-Regular.ttf</string>
+		<string>SFProDisplay-Semibold.ttf</string>
+		<string>Readexpro[HEXP,wght].ttf</string>
+		<string>ReadexPro-bold.ttf</string>
+		<string>ReadexPro-Light.ttf</string>
+		<string>ReadexPro-Medium.ttf</string>
+		<string>Lato-Bold.ttf</string>
+		<string>Lato-Regular.ttf</string>
+		<string>Lato-Black.ttf</string>
+		<string>Lato-Heavy.ttf</string>
+		<string>Lato-Medium.ttf</string>
+		<string>Lato-Semibold.ttf</string>
+		<string>Proxima Nova Alt Bold.otf</string>
+		<string>Proxima Nova Alt Light.otf</string>
+		<string>Proxima Nova Alt Thin.otf</string>
+		<string>Proxima Nova Black.otf</string>
+		<string>Proxima Nova Bold.otf</string>
+		<string>Proxima Nova Extrabold.otf</string>
+		<string>Proxima Nova Thin.otf</string>
+		<string>ProximaNova-Regular.otf</string>
+		<string>ProximaNova-Medium.otf</string>
+		<string>ProximaNova-Semibold.otf</string>
+		<string>ReadexPro-Regular.ttf</string>
+		<string>Inconsolata_Expanded-Bold.ttf</string>
+		<string>Inconsolata_Expanded-Medium.ttf</string>
+		<string>Inconsolata_Expanded-Regular.ttf</string>
+		<string>Inconsolata_Expanded-SemiBold.ttf</string>
+		<string>Inconsolata_ExtraCondensed-Black.ttf</string>
+		<string>NunitoSans_7pt_Expanded-Black.ttf</string>
+		<string>NunitoSans_7pt_Expanded-Bold.ttf</string>
+		<string>NunitoSans_7pt_Expanded-Medium.ttf</string>
+		<string>NunitoSans_7pt_Expanded-Regular.ttf</string>
+		<string>NunitoSans_7pt_Expanded-SemiBold.ttf</string>
+		<string>OpenSans-Bold.ttf</string>
+		<string>OpenSans-ExtraBold.ttf</string>
+		<string>OpenSans-Medium.ttf</string>
+		<string>OpenSans-Regular.ttf</string>
+		<string>OpenSans-SemiBold.ttf</string>
+		<string>ProximaNova-Extrabld.ttf</string>
+		<string>ProximaNova-Regular.ttf</string>
+		<string>ProximaNova-Semibold.ttf</string>
+		<string>Roboto-Black.ttf</string>
+		<string>Roboto-Bold.ttf</string>
+		<string>Roboto-Medium.ttf</string>
+		<string>Roboto-Regular.ttf</string>
+		<string>Gotham-Bold.otf</string>
+		<string>GothamBook.ttf</string>
+		<string>GothamLight.ttf</string>
+		<string>GothamMedium.ttf</string>
+		<string>Gotham-Black.otf</string>
+		<string>GothamBold.ttf</string>
+		<string>SQ Market Bold Bold.ttf</string>
+		<string>SQ Market Medium Medium.ttf</string>
+		<string>SQ Market Regular Regular.ttf</string>
+	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
+	</array>
+	<key>UILaunchStoryboardName</key>
+	<string>Launch Screen.storyboard</string>
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>armv7</string>
+	</array>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
+</dict>
+</plist>

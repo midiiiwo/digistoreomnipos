@@ -1,0 +1,6 @@
+framework module react_native_segmented_control {
+  umbrella header "react-native-segmented-control-umbrella.h"
+
+  export *
+  module * { export * }
+}
