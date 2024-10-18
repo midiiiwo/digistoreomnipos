@@ -1,0 +1,157 @@
+-keep class androidx.camera.core.impl.MetadataHolderService { <init>(); }
+-keep class androidx.core.app.CoreComponentFactory { <init>(); }
+-keep class androidx.startup.InitializationProvider { <init>(); }
+-keep class cl.json.RNShareFileProvider { <init>(); }
+-keep class com.ReactNativeBlobUtil.Utils.FileProvider { <init>(); }
+-keep class com.dieam.reactnativepushnotification.modules.RNPushNotificationListenerService { <init>(); }
+-keep class com.facebook.react.devsupport.DevSettingsActivity { <init>(); }
+-keep class com.google.android.datatransport.runtime.backends.TransportBackendDiscovery { <init>(); }
+-keep class com.google.android.datatransport.runtime.scheduling.jobscheduling.AlarmManagerSchedulerBroadcastReceiver { <init>(); }
+-keep class com.google.android.datatransport.runtime.scheduling.jobscheduling.JobInfoSchedulerService { <init>(); }
+-keep class com.google.android.gms.auth.api.signin.RevocationBoundService { <init>(); }
+-keep class com.google.android.gms.auth.api.signin.internal.SignInHubActivity { <init>(); }
+-keep class com.google.android.gms.common.api.GoogleApiActivity { <init>(); }
+-keep class com.google.android.gms.measurement.AppMeasurementJobService { <init>(); }
+-keep class com.google.android.gms.measurement.AppMeasurementReceiver { <init>(); }
+-keep class com.google.android.gms.measurement.AppMeasurementService { <init>(); }
+-keep class com.google.android.play.core.common.PlayCoreDialogWrapperActivity { <init>(); }
+-keep class com.google.firebase.components.ComponentDiscoveryService { <init>(); }
+-keep class com.google.firebase.iid.FirebaseInstanceIdReceiver { <init>(); }
+-keep class com.google.firebase.messaging.FirebaseMessagingService { <init>(); }
+-keep class com.google.firebase.provider.FirebaseInitProvider { <init>(); }
+-keep class com.google.mlkit.common.internal.MlKitComponentDiscoveryService { <init>(); }
+-keep class com.google.mlkit.common.internal.MlKitInitProvider { <init>(); }
+-keep class com.imagepicker.ImagePickerProvider { <init>(); }
+-keep class com.ipayghpostablet.MainActivity { <init>(); }
+-keep class com.ipayghpostablet.MainApplication { <init>(); }
+-keep class com.luck.lib.camerax.PictureCameraActivity { <init>(); }
+-keep class com.luck.picture.lib.basic.PictureFileProvider { <init>(); }
+-keep class com.luck.picture.lib.basic.PictureSelectorSupporterActivity { <init>(); }
+-keep class com.luck.picture.lib.basic.PictureSelectorTransparentActivity { <init>(); }
+-keep class com.luck.picture.lib.service.ForegroundService { <init>(); }
+-keep class com.yalantis.ucrop.UCropActivity { <init>(); }
+-keep class com.yalantis.ucrop.UCropMultipleActivity { <init>(); }
+-keep class io.invertase.firebase.app.ReactNativeFirebaseAppInitProvider { <init>(); }
+-keep class io.invertase.firebase.messaging.ReactNativeFirebaseMessagingHeadlessService { <init>(); }
+-keep class io.invertase.firebase.messaging.ReactNativeFirebaseMessagingReceiver { <init>(); }
+-keep class io.invertase.firebase.messaging.ReactNativeFirebaseMessagingService { <init>(); }
+-keep class android.widget.Space { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class androidx.appcompat.app.AlertController$RecycleListView { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class androidx.appcompat.view.menu.ActionMenuItemView { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class androidx.appcompat.view.menu.ExpandedMenuView { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class androidx.appcompat.view.menu.ListMenuItemView { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class androidx.appcompat.widget.ActionBarContainer { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class androidx.appcompat.widget.ActionBarContextView { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class androidx.appcompat.widget.ActionBarOverlayLayout { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class androidx.appcompat.widget.ActionMenuView { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class androidx.appcompat.widget.ActivityChooserView$InnerLayout { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class androidx.appcompat.widget.AlertDialogLayout { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class androidx.appcompat.widget.ButtonBarLayout { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class androidx.appcompat.widget.ContentFrameLayout { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class androidx.appcompat.widget.DialogTitle { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class androidx.appcompat.widget.FitWindowsFrameLayout { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class androidx.appcompat.widget.FitWindowsLinearLayout { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class androidx.appcompat.widget.SearchView$SearchAutoComplete { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class androidx.appcompat.widget.Toolbar { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class androidx.appcompat.widget.ViewStubCompat { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class androidx.camera.view.PreviewView { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class androidx.constraintlayout.widget.ConstraintLayout { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class androidx.coordinatorlayout.widget.CoordinatorLayout { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class androidx.core.widget.NestedScrollView { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class androidx.recyclerview.widget.RecyclerView { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class com.google.android.material.appbar.MaterialToolbar { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class com.google.android.material.button.MaterialButton { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class com.google.android.material.chip.Chip { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class com.google.android.material.chip.ChipGroup { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class com.google.android.material.datepicker.MaterialCalendarGridView { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class com.google.android.material.internal.BaselineLayout { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class com.google.android.material.internal.CheckableImageButton { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class com.google.android.material.internal.NavigationMenuItemView { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class com.google.android.material.internal.NavigationMenuView { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class com.google.android.material.snackbar.Snackbar$SnackbarLayout { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class com.google.android.material.snackbar.SnackbarContentLayout { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class com.google.android.material.textfield.TextInputEditText { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class com.google.android.material.textfield.TextInputLayout { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class com.google.android.material.textview.MaterialTextView { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class com.luck.lib.camerax.widget.CaptureLayout { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class com.luck.lib.camerax.widget.FocusImageView { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class com.luck.picture.lib.magical.MagicalView { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class com.luck.picture.lib.photoview.PhotoView { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class com.luck.picture.lib.widget.BottomNavBar { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class com.luck.picture.lib.widget.CompleteSelectView { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class com.luck.picture.lib.widget.MarqueeTextView { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class com.luck.picture.lib.widget.MediumBoldTextView { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class com.luck.picture.lib.widget.PreviewBottomNavBar { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class com.luck.picture.lib.widget.PreviewTitleBar { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class com.luck.picture.lib.widget.RecyclerPreloadView { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class com.luck.picture.lib.widget.RoundCornerRelativeLayout { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class com.luck.picture.lib.widget.SquareRelativeLayout { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class com.luck.picture.lib.widget.TitleBar { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class com.reactnativecommunity.picker.CheckedTextViewImpl { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class com.reactnativecommunity.picker.TextViewImpl { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class com.wix.reactnativeuilib.wheelpicker.ThemedNumberPicker { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class com.yalantis.ucrop.view.GestureCropImageView { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class com.yalantis.ucrop.view.OverlayView { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class com.yalantis.ucrop.view.UCropView { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class com.yalantis.ucrop.view.widget.AspectRatioTextView { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class com.yalantis.ucrop.view.widget.HorizontalProgressWheelView { <init>(android.content.Context, android.util.AttributeSet); }
+

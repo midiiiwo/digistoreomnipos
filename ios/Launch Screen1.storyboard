@@ -22,7 +22,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" fixedFrame="YES" image="LaunchScreen" translatesAutoresizingMaskIntoConstraints="NO" id="drc-XJ-aQr">
-                                <rect key="frame" x="0.0" y="0.0" width="1376" height="1032"/>
+                                <rect key="frame" x="0.0" y="-8" width="1376" height="1040"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                         </subviews>
@@ -37,7 +37,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="455.66860465116275" y="30.813953488372093"/>
+            <point key="canvasLocation" x="453.05232558139534" y="28.488372093023255"/>
         </scene>
     </scenes>
     <resources>

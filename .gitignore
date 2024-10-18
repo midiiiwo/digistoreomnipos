@@ -1,1 +1,22 @@
 node_modules
+# Ignore node_modules folder
+
+
+# Ignore logs
+logs/
+*.log
+npm-debug.log*
+
+# Ignore build output directories
+build/
+dist/
+
+# Ignore environment variables files
+.env
+
+# Ignore iOS/Android build folders in React Native
+
+
+# Ignore system files
+.DS_Store
+
