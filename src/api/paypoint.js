@@ -39,6 +39,10 @@ export function getRecentPaypointTransactions(
   );
 }
 
+export function getBankList(supervisor) {
+  return Api.get(`/paybills/payment/banks/list/${supervisor}`);
+}
+
 /*********mutations************/
 
 export function paybill(payload) {

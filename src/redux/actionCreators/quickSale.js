@@ -56,7 +56,6 @@ export const setTempProduct = product => {
 };
 
 export const setQuickSaleInAction = status => {
-  console.log('quuuuuuu', status);
   return {
     type: ActionTypes.SET_QUICK_SALE_IN_ACTION,
     payload: status,

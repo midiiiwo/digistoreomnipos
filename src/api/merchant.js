@@ -1,14 +1,22 @@
-import { Api, loginApi, productApi } from './axiosInstance';
+import { Api, deliveryApi, loginApi, productApi } from './axiosInstance';
 
 export function getAccountBalance(user_merchant_account) {
   return Api.get(`accounts/${user_merchant_account}/balance`);
 }
 
-export function getReportSummary(merchant, userLogin, startDate, endDate) {
+export function getLookupCustomer(search_value) {
+  return Api.get(`/customers/verify/${search_value}`);
+}
+
+export function getReportSummary(
+  merchant,
+  userLogin,
+  start_date,
+  end_date,
+  isAdmin = true,
+) {
   return Api.get(
-    `/reports/analytics/merchant/summary/${merchant}${
-      userLogin === undefined ? '' : '/' + userLogin
-    }/${startDate}/${endDate}`,
+    `/reports/analytics/merchant/summary/dashboard/${merchant}/${userLogin}/${start_date}/${end_date}/${isAdmin}`,
   );
 }
 
@@ -86,6 +94,14 @@ export function SendMoneyHistory(merchant, userId, admin, startDate, endDate) {
   }
 }
 
+export function Smshistory(merchant, userId, admin, start, end) {
+  if (admin) {
+    return Api.get(`/smssend/bulk/merchant/${merchant}/${start}/${end}`);
+  } else {
+    return Api.get(`/smssend/bulk/user/${userId}/${start}/${end}`);
+  }
+}
+
 export function PaymentHistory(merchant, userId, admin, startDate, endDate) {
   if (admin) {
     return Api.get(`/merchants/${merchant}/payment/${startDate}/${endDate}`);
@@ -103,9 +119,7 @@ export function getTransactionDetails(user_merchant_receivable, id) {
 }
 
 export function getStoreDeliveryConfig(merchant) {
-  return Api.get(
-    `https://manage.ipaygh.com/apidev/v1/gateway/orders/merchant/options/${merchant}`,
-  );
+  return Api.get(`orders/merchant/options/${merchant}`);
 }
 
 export function getCustomerDetails(merchant, customerId) {
@@ -201,8 +215,10 @@ export function getMerchantRoute(merchant) {
   return Api.get(`/orders/delivery/route/${merchant}/list`);
 }
 
-export function getMerchantRiders(merchant) {
-  return Api.get(`/orders/delivery/rider/${merchant}/list`);
+export function getMerchantRiders(merchant, outlet) {
+  return deliveryApi.get(
+    `admin/company/${merchant}/ridersAvailableForDelivery/${outlet}`,
+  );
 }
 
 export function getOnlineStoreDetails(merchant) {
@@ -350,7 +366,7 @@ export function addOutlet(payload) {
 }
 
 export function updateOutlet(payload) {
-  return productApi.put('/outlets', payload);
+  return productApi.post('/outlets/update/mobile', payload);
 }
 
 export function addMerchantDeliveryRoute(payload) {
@@ -359,6 +375,10 @@ export function addMerchantDeliveryRoute(payload) {
 
 export function setupMerchantDeliveryConfigOption(payload) {
   return Api.put('/orders/merchant/options/delivery', payload);
+}
+
+export function createMerchantDeliveryConfigOption(payload) {
+  return Api.post('/orders/merchant/options', payload);
 }
 
 export function addMerchantRider(payload) {
@@ -411,6 +431,22 @@ export function deleteMerchantAccount(payload) {
   );
 }
 
+export function deleteOutlet(payload) {
+  return Api.delete(`outlets/${payload.outlet_id}/${payload.mod_by}`);
+}
+
 export function requestGenericOtp(payload) {
   return Api.post('/push/notification/otp', payload);
+}
+
+export function requestPinOtp(payload) {
+  return loginApi.post('/push/notification/otp', payload);
+}
+
+export function checkInvoiceStatus(payload) {
+  return Api.post('/paybills/gateway/payment/management/invoice', payload);
+}
+
+export function logout(payload) {
+  return Api.put('/logout', payload);
 }

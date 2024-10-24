@@ -39,9 +39,12 @@ export const quickSaleReducer = (
       return { ...state, quickSaleInAction: action.payload };
     }
     case ActionTypes.APPLY_QUICK_SALE_DISCOUNT:
+      console.log('actioooooooo', action);
+      console.log('stattatatatata', state.subTotal);
       const newAmount = Number(
         (state.subTotal - Number(action.payload)).toFixed(2),
       );
+      console.log('newewrerwrwerwr', newAmount);
       return {
         ...state,
         subTotal: newAmount < 0 ? 0 : newAmount,

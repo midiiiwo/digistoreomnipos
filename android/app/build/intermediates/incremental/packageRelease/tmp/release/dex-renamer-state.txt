@@ -1,7 +1,0 @@
-#Wed Oct 16 14:25:13 GMT 2024
-base.1=/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/build/intermediates/dex/release/minifyReleaseWithR8/classes2.dex
-path.1=classes2.dex
-base.0=/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/build/intermediates/dex/release/minifyReleaseWithR8/classes.dex
-renamed.1=classes2.dex
-renamed.0=classes.dex
-path.0=classes.dex

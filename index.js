@@ -4,15 +4,9 @@
 import React from 'react';
 import { AppRegistry } from 'react-native';
 import messaging from '@react-native-firebase/messaging';
-import SoundPlayer from 'react-native-sound-player';
 import App from './App';
 import { name as appName } from './app.json';
-import RequiresConnection from 'react-native-offline-mode';
-import {
-  firebaseBackgroundMessage,
-  showLocalNotification,
-} from './src/utils/pushNotification';
-import Offline from './src/containers/Offline';
+import { showLocalNotification } from './src/utils/pushNotification';
 import DeviceInfo from 'react-native-device-info';
 
 // showLocalNotification;

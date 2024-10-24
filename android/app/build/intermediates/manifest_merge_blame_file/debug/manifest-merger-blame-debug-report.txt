@@ -193,7 +193,7 @@
 83        android:allowBackup="false"
 83-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:33:7-34
 84        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
-84-->[androidx.core:core:1.7.0] /Users/wedamanewenah/.gradle/caches/transforms-3/f651b2db7fea139e8a2848c61e5708b1/transformed/core-1.7.0/AndroidManifest.xml:24:18-86
+84-->[androidx.core:core:1.8.0] /Users/wedamanewenah/.gradle/caches/transforms-3/79870f32b463b8f926cf984784c1c468/transformed/core-1.8.0/AndroidManifest.xml:24:18-86
 85        android:debuggable="true"
 86        android:icon="@mipmap/ic_launcher"
 86-->/Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/android/app/src/main/AndroidManifest.xml:31:7-41

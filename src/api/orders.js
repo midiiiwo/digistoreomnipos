@@ -28,12 +28,12 @@ export function updateKitchenStaffOrder(payload) {
   return Api.put('/orders/order/process/backoffice/status', payload);
 }
 
-export function getAllOrders_(payload) {
-  return Api.post('/orders/order/process/user/list', payload);
-}
-
 export function getAllOrderNonAdmin(payload) {
   return Api.post('orders/order/process/outlet/list', payload);
+}
+
+export function getAllOrders_(payload) {
+  return Api.post('/orders/order/process/user/list', payload);
 }
 
 export function updateOrderStatus(payload) {

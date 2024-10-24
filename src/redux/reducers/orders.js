@@ -5,9 +5,9 @@ const date = new Date();
 
 export const ordersReducer = (
   state = {
-    startDate: new Date(date.getFullYear(), date.getMonth(), 1),
+    startDate: new Date(),
     endDate: new Date(),
-    range: null,
+    range: { label: 'Today', value: 'today' },
     orderOutlet: { label: 'ALL', value: 'ALL' },
   },
   action,
@@ -25,7 +25,7 @@ export const ordersReducer = (
         endDate: new Date(),
         range: null,
       };
-    case ActionTypes.ORDER_OUTLET:
+    case ActionTypes.SET_ORDER_OUTLET:
       return { ...state, orderOutlet: action.payload };
     default:
       return state;

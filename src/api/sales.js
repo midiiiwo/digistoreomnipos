@@ -93,6 +93,10 @@ export function sendTransactionNotification(payload) {
   return Api.post('/push/transaction/notification', payload);
 }
 
+export function sendInvoiceNotification(payload) {
+  return Api.post('/sell/sell/send-notification', payload);
+}
+
 export function verifySaleOtp(payload) {
   return Api.put('/push/notification/otp/verify', payload);
 }

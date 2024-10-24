@@ -1,18 +1,8 @@
 {
     "logs": [
         {
-            "outputFile": "com.ipayghpostablet.app-mergeDebugResources-51:/values-v16/values-v16.xml",
+            "outputFile": "com.ipayghpostablet.app-mergeDebugResources-53:/values-v16/values-v16.xml",
             "map": [
-                {
-                    "source": "/Users/wedamanewenah/.gradle/caches/transforms-3/f651b2db7fea139e8a2848c61e5708b1/transformed/core-1.7.0/res/values-v16/values-v16.xml",
-                    "from": {
-                        "startLines": "2",
-                        "startColumns": "4",
-                        "startOffsets": "55",
-                        "endColumns": "65",
-                        "endOffsets": "116"
-                    }
-                },
                 {
                     "source": "/Users/wedamanewenah/.gradle/caches/transforms-3/495803858fdd5ec2b028adadd349ac3e/transformed/appcompat-1.4.2/res/values-v16/values-v16.xml",
                     "from": {
@@ -30,6 +20,16 @@
                         "endLines": "6",
                         "endColumns": "12",
                         "endOffsets": "289"
+                    }
+                },
+                {
+                    "source": "/Users/wedamanewenah/.gradle/caches/transforms-3/79870f32b463b8f926cf984784c1c468/transformed/core-1.8.0/res/values-v16/values-v16.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "65",
+                        "endOffsets": "116"
                     }
                 }
             ]

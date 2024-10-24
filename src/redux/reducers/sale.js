@@ -50,6 +50,8 @@ export const saleReducer = (
         subTotal: Number((state.subTotal + action.payload.amount).toFixed(2)),
         totalItems: state.totalItems + 1,
       };
+    case ActionTypes.SET_ORDER_TAXES:
+      return { ...state, orderCheckoutTaxes: action.payload };
     case ActionTypes.DELETE_ITEM_FROM_CART:
       const filteredCart = state.cart.filter(
         item => item.id !== action.payload,
@@ -98,8 +100,6 @@ export const saleReducer = (
       return { ...state, subTotal: Number(action.payload.toFixed(2)) };
     case ActionTypes.UPDATE_SUBTOTAL_FROM_CART:
       return { ...state, subTotal: Number(action.payload.toFixed(2)) };
-    case ActionTypes.SET_ORDER_TAXES:
-      return { ...state, orderCheckoutTaxes: action.payload };
     case ActionTypes.UPDATE_CART_ITEM_QUANTITY:
       const cartItems = state.cart.map(c => {
         if (c.id === action.payload.id) {
@@ -113,9 +113,6 @@ export const saleReducer = (
         cart: cartItems,
         totalItems: state.totalItems + action.payload.by,
       };
-
-    case ActionTypes.SET_DELIVERY_NOTE:
-      return { ...state, deliveryNote: action.payload };
 
     case ActionTypes.APPLY_DISCOUNT:
       const { discountType, quantity } = action.payload;
@@ -181,10 +178,13 @@ export const saleReducer = (
       return { ...state, addTaxes: action.payload };
     case ActionTypes.SET_ORDER_NOTE:
       return { ...state, orderNotes: action.payload };
+    case ActionTypes.SET_DELIVERY_NOTE:
+      return { ...state, deliveryNote: action.payload };
     case ActionTypes.SET_PAYMENT_CHANNEL:
       return { ...state, paymentChannel: action.payload };
     case ActionTypes.RESET_STATE:
       return {
+        ...state,
         customer: null,
         cart: [],
         subTotal: 0,
@@ -200,6 +200,9 @@ export const saleReducer = (
         addTaxes: true,
         orderNotes: '',
         paymentChannel: null,
+        deliveryNote: '',
+        deliveryDueDate: new Date(),
+        orderDate: new Date(),
       };
     case ActionTypes.ORDER_DATE:
       return { ...state, orderDate: action.payload };

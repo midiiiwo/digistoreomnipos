@@ -51,7 +51,7 @@ import ViewProductDetails from '../containers/ViewProductDetails';
 import OrderDetails from '../containers/OrderDetails';
 import OrderReceipt from '../containers/OrderReceipt';
 import DiscountQr from '../containers/DiscountQr';
-import { hasUserSetPinCode } from '@haskkor/react-native-pincode';
+import PINCode, { hasUserSetPinCode } from '@haskkor/react-native-pincode';
 import { AppState } from 'react-native';
 import Signup from '../containers/Signup';
 import NewUserPhone from '../containers/NewUserPhone';
@@ -116,10 +116,62 @@ import DeliveryLocation from '../containers/DeliveryLocation';
 import ManageNotifications from '../containers/ManageNotification';
 import Profile from '../containers/Profile';
 import ProfileLocationSelect from '../containers/ProfileLocationSelect';
+import Siren from 'react-native-siren';
+import { Platform } from 'react-native';
 import Account from '../containers/Account';
 import SalesChannels from '../containers/SalesChannels';
 import Logout from '../containers/Logout';
-import LoginAuthorization from '../containers/LoginAuthorization';
+// import More from '../containers/More';
+// import EventDetail from '../containers/EventDetail';
+// // import { createSharedElementStackNavigator } from 'react-navigation-shared-element';
+// import Status from '../containers/Status';
+// import Qr from '../containers/Qr';
+// import CreateEvent from '../containers/CreateEvent';
+// import EditEvent from '../containers/EditEvent';
+// import EventTickets from '../containers/EventTickets';
+// import AddEventTicket from '../containers/AddEventTicket';
+// import TicketDetails from '../containers/TicketDetails';
+// import EditEventTicket from '../containers/EditEventTicket';
+// import ResetPassOtp from '../containers/ResetPassOtp';
+// import AddProductVariants from '../containers/AddProductVariants';
+// import EditProductVariants from '../containers/EditProductVariants';
+import SessionExpired from '../components/Modals/SessionExpired';
+import { useAxiosErrorResponseInterceptor } from '../hooks/useAxiosErrorResponseInterceptor';
+import { useInitInterceptor } from '../hooks/useInitInterceptor';
+// import SellTicketEvents from '../containers/SellTicketEvents';
+// import SellEventDetails from '../containers/SellEventDetails';
+// import SellTicket from '../containers/SellTicket';
+// import SellTicketStatus from '../containers/SellTicketStatus';
+// import TicketSoldHistory from '../containers/TicketSoldHistory';
+// import TicketSoldDetails from '../containers/TicketSoldDetails';
+// import CreateInvoice from '../containers/CreateInvoice';
+// import InvoiceInventory from '../containers/InvoiceInventory';
+// import InvoiceCustomerSelect from '../containers/InvoiceCustomerSelect';
+// import InvoiceDelivery from '../containers/InvoiceDelivery';
+// import InvoiceDiscount from '../containers/InvoiceDiscount';
+// import InvoicePreview from '../containers/InvoicePreview';
+// import InvoicePaymentSend from '../containers/InvoicePaymentSend';
+// import InvoiceQuikeSale from '../containers/InvoiceQuickSale';
+// import InvoiceOrderPreview from '../containers/InvoiceOrderPreview';
+// import SendInvoiceHeader from '../components/SendInvoiceHeader';
+// import SendEmailInvoice from '../containers/SendEmailInvoice';
+import LoginAuthorizationOtp from '../containers/LoginAuthorizationOtp';
+// import InvoiceDetails from '../containers/InvoiceDetails';
+// import PaypointTransactions from '../containers/PaypointTransactionDetails';
+// import ExpensesHistory from '../containers/ExpensesHistory';
+// import ExpensesCategories from '../containers/ExpensesCategories';
+// import CreateExpenseCategory from '../containers/CreateExpenseCategory';
+// import CreateExpense from '../containers/CreateExpense';
+// import Suppliers from '../containers/Suppliers';
+// import CreateSupplier from '../containers/AddSupplier';
+// import ExpensesHeader from '../components/ExpensesHeader';
+// import ExpensesCategoriesLov from '../containers/ExpenseCategoryLov';
+// import SendMoneyBank from '../containers/SendMoneyBank';
+// import SmsHistory from '../containers/SmsHistory';
+// import UssdOffline from '../containers/UssdOffline';
+// import SmsDetails from '../containers/SmsDetails';
+// import Invoices from '../containers/Invoices';
+// import InvoicesHeader from '../components/InvoicesHeader';
 
 const Stack = createNativeStackNavigator();
 
@@ -128,15 +180,41 @@ function HomeStackNavigator() {
   const { auth, firstLaunch } = useSelector(state => state.auth);
   const { setPinState } = useActionCreator();
   const appState = React.useRef(AppState.currentState);
+  const [sessionStatus, setSessionStatus] = React.useState(false);
 
   React.useEffect(() => {
     SplashScreen.hide();
   }, []);
 
+  const { error, ejectInterceptor } =
+    useAxiosErrorResponseInterceptor(sessionStatus);
+  const { ejectReqInterceptor } = useInitInterceptor({ sessionStatus });
+
+  React.useEffect(() => {
+    (async () => {
+      if (error && auth) {
+        if (error.response && error.response.status === 401) {
+          const { data } = error.response;
+          if (data.error === true) {
+            setSessionStatus(true);
+            ejectInterceptor();
+            ejectReqInterceptor();
+          }
+        }
+      }
+    })();
+  }, [error, auth, ejectInterceptor, ejectReqInterceptor]);
+
   React.useEffect(() => {
     (async () => {
       await messaging().subscribeToTopic('announcement');
     })();
+  }, []);
+
+  React.useEffect(() => {
+    if (Platform.OS === 'ios') {
+      Siren.promptUser();
+    }
   }, []);
 
   const showEnterPinLock = React.useCallback(async () => {
@@ -147,22 +225,24 @@ function HomeStackNavigator() {
       setPinState({ pinStatus: 'choose', showPin: true });
     }
   }, [setPinState]);
+
   React.useEffect(() => {
     (async () => {
       // await AsyncStorage.removeItem('user');
       const user_ = await AsyncStorage.getItem('user');
-
-      if ((JSON.parse(user_) && JSON.parse(user_).sid) || auth) {
-        const parsedUser = JSON.parse(user_);
-        setCurrentUser({
-          ...parsedUser,
-          merchant: parsedUser.user_merchant_id,
-          outlet: parsedUser.user_merchant_group_id,
-        });
-        setAuth(true);
-      } else {
-        setAuth(false);
-      }
+      try {
+        if ((JSON.parse(user_) && JSON.parse(user_).sid) || auth) {
+          const parsedUser = JSON.parse(user_);
+          setCurrentUser({
+            ...parsedUser,
+            merchant: parsedUser.user_merchant_id,
+            outlet: parsedUser.user_merchant_group_id,
+          });
+          setAuth(true);
+        } else {
+          setAuth(false);
+        }
+      } catch (error) { }
     })();
   }, [auth, setAuth, setCurrentUser]);
 
@@ -170,7 +250,7 @@ function HomeStackNavigator() {
     showEnterPinLock();
   }, [showEnterPinLock, auth]);
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     (async () => {
       const launchStatus = await AsyncStorage.getItem('launchStatus');
       console.log('laaaaa', launchStatus);
@@ -182,6 +262,19 @@ function HomeStackNavigator() {
       }
     })();
   }, [setFirstLaunch]);
+
+  // React.useEffect(() => {
+  //   (async () => {
+  //     const version = await VersionCheck.getLatestVersion();
+  //     console.log('versiononoiononr', version);
+  //   })();
+  // }, []);
+
+  // React.useLayoutEffect(() => {
+  //   (async () => {
+  //     await hasUserSetPinCode();
+  //   })();
+  // }, []);
 
   React.useEffect(() => {
     const subscription = AppState.addEventListener('change', nextAppState => {
@@ -204,6 +297,14 @@ function HomeStackNavigator() {
     return <></>;
   }
 
+  // if (!appStateVisible || appStateVisible !== 'active') {
+  //   return <></>;
+  // }
+
+  // console.log('pppppppppppppppp', pinState);
+
+  console.log('ffffffffff', firstLaunch);
+  console.log('ccccccc', auth);
   return (
     <>
       {
@@ -215,6 +316,19 @@ function HomeStackNavigator() {
                 component={Login}
                 options={{
                   header: () => null,
+                }}
+              />
+              <Stack.Screen
+                name="Login OTP"
+                component={LoginAuthorizationOtp}
+                options={{
+                  header: ({ navigation }) => (
+                    <InventoryHeader
+                      navigation={navigation}
+                      addCustomer={false}
+                      mainHeader={{ paddingVertical: 36 }}
+                    />
+                  ),
                 }}
               />
               <Stack.Screen
@@ -251,6 +365,19 @@ function HomeStackNavigator() {
                 }}
               />
               <Stack.Screen
+                name="Reset Otp"
+                component={ResetPassOtp}
+                options={{
+                  header: ({ navigation }) => (
+                    <InventoryHeader
+                      navigation={navigation}
+                      addCustomer={false}
+                      mainHeader={{ paddingVertical: 36 }}
+                    />
+                  ),
+                }}
+              />
+              <Stack.Screen
                 name="NewUserPhone"
                 component={NewUserPhone}
                 options={{ header: () => null }}
@@ -265,19 +392,6 @@ function HomeStackNavigator() {
                       navigation={navigation}
                       addCustomer={false}
                       mainHeader={{ paddingVertical: 10 }}
-                    />
-                  ),
-                }}
-              />
-              <Stack.Screen
-                name="Login OTP"
-                component={LoginAuthorization}
-                options={{
-                  header: ({ navigation }) => (
-                    <InventoryHeader
-                      navigation={navigation}
-                      addCustomer={false}
-                      mainHeader={{ paddingVertical: 36 }}
                     />
                   ),
                 }}
@@ -298,19 +412,6 @@ function HomeStackNavigator() {
               <Stack.Screen
                 name="Reset Pass"
                 component={ResetPass}
-                options={{
-                  header: ({ navigation }) => (
-                    <InventoryHeader
-                      navigation={navigation}
-                      addCustomer={false}
-                      mainHeader={{ paddingVertical: 36 }}
-                    />
-                  ),
-                }}
-              />
-              <Stack.Screen
-                name="Login OTP"
-                component={LoginAuthorization}
                 options={{
                   header: ({ navigation }) => (
                     <InventoryHeader
@@ -375,7 +476,7 @@ function HomeStackNavigator() {
             <>
               {/* <Stack.Screen
                 name="Dashboard"
-                component={Home}
+                component={BottomTab}
                 options={{ header: () => null }}
               /> */}
               <Stack.Screen
@@ -385,9 +486,7 @@ function HomeStackNavigator() {
                   header: props => (
                     <InventoryHeader
                       // prevScreen={props.back.title}
-                      mainHeader={{ backgroundColor: '#F1F5F9' }}
                       navigation={props.navigation}
-                      showBack={false}
                     />
                   ),
                 }}
@@ -440,6 +539,22 @@ function HomeStackNavigator() {
                   ),
                 }}
               />
+              {/* <Stack.Screen
+                name="Paypoint Transaction"
+                component={PaypointTransactions}
+                options={{
+                  header: props => (
+                    <InventoryHeader
+                      // prevScreen={props.back.title}
+                      navigation={props.navigation}
+                      addCustomer={false}
+                      mainHeader={{
+                        justifyContent: 'center',
+                      }}
+                    />
+                  ),
+                }}
+              /> */}
 
               <Stack.Screen
                 name="Send Money History"
@@ -494,6 +609,15 @@ function HomeStackNavigator() {
                   ),
                 }}
               />
+              {/* <Stack.Screen
+                name="Invoices"
+                component={Invoices}
+                options={{
+                  header: props => (
+                    <InvoicesHeader navigation={props.navigation} />
+                  ),
+                }}
+              /> */}
               <Stack.Screen
                 name="Invoice History"
                 component={InvoiceHistory}
@@ -511,6 +635,23 @@ function HomeStackNavigator() {
                   ),
                 }}
               />
+              {/* <Stack.Screen
+                name="Estimate History"
+                component={InvoiceHistory}
+                options={{
+                  header: props => (
+                    <InventoryHeader
+                      // prevScreen={props.back.title}
+                      navigation={props.navigation}
+                      addCustomer={false}
+                      mainHeader={{
+                        justifyContent: 'center',
+                      }}
+                      title="Estimates"
+                    />
+                  ),
+                }}
+              /> */}
 
               <Stack.Screen
                 name="Outlets"
@@ -612,7 +753,7 @@ function HomeStackNavigator() {
                       mainHeader={{
                         justifyContent: 'center',
                       }}
-                      // title="Product Options"
+                    // title="Product Options"
                     />
                   ),
                 }}
@@ -639,6 +780,7 @@ function HomeStackNavigator() {
                     <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
+                      mainHeader={{ backgroundColor: '#F5F5F5' }}
                     />
                   ),
                 }}
@@ -672,8 +814,11 @@ function HomeStackNavigator() {
                   header: props => (
                     <ReceiptHeader
                       navigation={props.navigation}
-                      text="Orders"
+                      text="Go Back"
                       navigateTo="Orders"
+                      onNavigate={() => {
+                        props.navigation.goBack();
+                      }}
                     />
                   ),
                 }}
@@ -806,6 +951,23 @@ function HomeStackNavigator() {
                   ),
                 }}
               />
+              {/* <Stack.Screen
+                name="Send Money Bank"
+                component={SendMoneyBank}
+                options={{
+                  header: props => (
+                    <InventoryHeader
+                      // prevScreen={props.back.title}
+                      navigation={props.navigation}
+                      addCustomer={false}
+                      mainHeader={{
+                        paddingVertical: 28,
+                        backgroundColor: '#fff',
+                      }}
+                    />
+                  ),
+                }}
+              /> */}
               <Stack.Screen
                 name="Send Money"
                 component={SendMoneyDetails}
@@ -870,11 +1032,45 @@ function HomeStackNavigator() {
                       mainHeader={{
                         justifyContent: 'center',
                       }}
-                      // title="Outflows"
+                    // title="Outflows"
                     />
                   ),
                 }}
               />
+              {/* <Stack.Screen
+                name="Sms History"
+                component={SmsHistory}
+                options={{
+                  header: props => (
+                    <InventoryHeader
+                      // prevScreen={props.back.title}
+                      navigation={props.navigation}
+                      addCustomer={false}
+                      mainHeader={{
+                        justifyContent: 'center',
+                      }}
+                    // title="Outflows"
+                    />
+                  ),
+                }}
+              />
+              <Stack.Screen
+                name="Sms Details"
+                component={SmsDetails}
+                options={{
+                  header: props => (
+                    <InventoryHeader
+                      // prevScreen={props.back.title}
+                      navigation={props.navigation}
+                      addCustomer={false}
+                      mainHeader={{
+                        justifyContent: 'center',
+                      }}
+                    // title="Outflows"
+                    />
+                  ),
+                }}
+              /> */}
               <Stack.Screen
                 name="Inflows"
                 component={Inflows}
@@ -887,7 +1083,7 @@ function HomeStackNavigator() {
                       mainHeader={{
                         justifyContent: 'center',
                       }}
-                      // title="Inflows"
+                    // title="Inflows"
                     />
                   ),
                 }}
@@ -933,6 +1129,40 @@ function HomeStackNavigator() {
                   ),
                 }}
               />
+              {/* <Stack.Screen
+                name="Add Product Variants"
+                component={AddProductVariants}
+                options={{
+                  header: props => (
+                    <InventoryHeader
+                      // prevScreen={props.back.title}
+                      navigation={props.navigation}
+                      addCustomer={false}
+                      mainHeader={{
+                        justifyContent: 'center',
+                      }}
+                      title="Add product variants"
+                    />
+                  ),
+                }}
+              />
+              <Stack.Screen
+                name="Edit Product Variants"
+                component={EditProductVariants}
+                options={{
+                  header: props => (
+                    <InventoryHeader
+                      // prevScreen={props.back.title}
+                      navigation={props.navigation}
+                      addCustomer={false}
+                      mainHeader={{
+                        justifyContent: 'center',
+                      }}
+                      title="Edit product variants"
+                    />
+                  ),
+                }}
+              /> */}
               <Stack.Screen
                 name="Add Outlet"
                 component={AddOutlet}
@@ -996,7 +1226,7 @@ function HomeStackNavigator() {
                       mainHeader={{
                         justifyContent: 'center',
                       }}
-                      // title="Manage Store"
+                    // title="Manage Store"
                     />
                   ),
                 }}
@@ -1031,7 +1261,7 @@ function HomeStackNavigator() {
                       mainHeader={{
                         justifyContent: 'center',
                       }}
-                      // title="Manage Shortcode"
+                    // title="Manage Shortcode"
                     />
                   ),
                 }}
@@ -1191,6 +1421,20 @@ function HomeStackNavigator() {
                   ),
                 }}
               />
+              {/* <Stack.Screen
+                name="More"
+                component={More}
+                options={{
+                  header: props => (
+                    <InventoryHeader
+                      // prevScreen={props.back.title}
+                      navigation={props.navigation}
+                      addCustomer={false}
+                      mainHeader={{ backgroundColor: '#fff' }}
+                    />
+                  ),
+                }}
+              /> */}
               <Stack.Screen
                 name="Tickets"
                 component={Ticket}
@@ -1200,11 +1444,135 @@ function HomeStackNavigator() {
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
-                      mainHeader={{ backgroundColor: '#F9F9F9' }}
+                      mainHeader={{ backgroundColor: '#fff' }}
                     />
                   ),
                 }}
               />
+              {/* <Stack.Screen
+                name="Event Detail"
+                component={EventDetail}
+                options={{
+                  header: props => null,
+                }}
+              />
+              <Stack.Screen
+                name="Create Event"
+                component={CreateEvent}
+                options={{
+                  header: ({ navigation }) => (
+                    <InventoryHeader
+                      // prevScreen={props.back.title}
+                      navigation={navigation}
+                      addCustomer={false}
+                      mainHeader={{ backgroundColor: '#fff' }}
+                      title="Create Event"
+                    />
+                  ),
+                }}
+              />
+              <Stack.Screen
+                name="Edit Event"
+                component={EditEvent}
+                options={{
+                  header: ({ navigation }) => (
+                    <InventoryHeader
+                      // prevScreen={props.back.title}
+                      navigation={navigation}
+                      addCustomer={false}
+                      mainHeader={{ backgroundColor: '#fff' }}
+                      title="Edit Event"
+                    />
+                  ),
+                }}
+              />
+              <Stack.Screen
+                name="Add Event Ticket"
+                component={AddEventTicket}
+                options={{
+                  header: ({ navigation }) => (
+                    <InventoryHeader
+                      // prevScreen={props.back.title}
+                      navigation={navigation}
+                      addCustomer={false}
+                      mainHeader={{ backgroundColor: '#fff' }}
+                      title="Add Ticket"
+                    />
+                  ),
+                }}
+              />
+              <Stack.Screen
+                name="Edit Event Ticket"
+                component={EditEventTicket}
+                options={{
+                  header: ({ navigation }) => (
+                    <InventoryHeader
+                      // prevScreen={props.back.title}
+                      navigation={navigation}
+                      addCustomer={false}
+                      mainHeader={{ backgroundColor: '#fff' }}
+                      title="Edit Ticket"
+                    />
+                  ),
+                }}
+              />
+              <Stack.Screen
+                name="Event Tickets"
+                component={EventTickets}
+                options={{
+                  header: ({ navigation }) => (
+                    <InventoryHeader
+                      // prevScreen={props.back.title}
+                      navigation={navigation}
+                      addCustomer={false}
+                      mainHeader={{ backgroundColor: '#fff' }}
+                      title="Event Tickets"
+                    />
+                  ),
+                }}
+              />
+              <Stack.Screen
+                name="Ticket Details"
+                component={TicketDetails}
+                options={{
+                  header: ({ navigation }) => (
+                    <InventoryHeader
+                      // prevScreen={props.back.title}
+                      navigation={navigation}
+                      addCustomer={false}
+                      mainHeader={{ backgroundColor: '#2268BD' }}
+                    />
+                  ),
+                }}
+              />
+              <Stack.Screen
+                name="Qr"
+                component={Qr}
+                options={{
+                  header: ({ navigation }) => (
+                    <InventoryHeader
+                      // prevScreen={props.back.title}
+                      navigation={navigation}
+                      addCustomer={false}
+                      mainHeader={{ backgroundColor: '#fff' }}
+                    />
+                  ),
+                }}
+              />
+              <Stack.Screen
+                name="Status"
+                component={Status}
+                options={{
+                  header: ({ navigation }) => (
+                    <InventoryHeader
+                      // prevScreen={props.back.title}
+                      navigation={navigation}
+                      addCustomer={false}
+                      mainHeader={{ backgroundColor: '#fff' }}
+                    />
+                  ),
+                }}
+              /> */}
               <Stack.Screen
                 name="Bill Receipt"
                 component={BillReceipt}
@@ -1256,6 +1624,23 @@ function HomeStackNavigator() {
                   ),
                 }}
               />
+              {/* <Stack.Screen
+                name="Ussd Offline"
+                component={UssdOffline}
+                options={{
+                  header: props => (
+                    <InventoryHeader
+                      // prevScreen={props.back.title}
+                      navigation={props.navigation}
+                      addCustomer={false}
+                      mainHeader={{
+                        justifyContent: 'center',
+                      }}
+                      title="Ussd Offline"
+                    />
+                  ),
+                }}
+              /> */}
               <Stack.Screen
                 name="Send Money Receipt"
                 component={SendMoneyReceipt}
@@ -1399,7 +1784,7 @@ function HomeStackNavigator() {
                       mainHeader={{
                         justifyContent: 'center',
                       }}
-                      // title="Order Details"
+                    // title="Order Details"
                     />
                   ),
                 }}
@@ -1569,11 +1954,11 @@ function HomeStackNavigator() {
                       mainHeader={{
                         justifyContent: 'center',
                       }}
-                      // rightComponentText="Edit Customer"
-                      // rightComponentFunction={() =>
-                      //   props.navigation.navigate('Edit Customer')
-                      // }
-                      // title="Edit Category"
+                    // rightComponentText="Edit Customer"
+                    // rightComponentFunction={() =>
+                    //   props.navigation.navigate('Edit Customer')
+                    // }
+                    // title="Edit Category"
                     />
                   ),
                 }}
@@ -1675,7 +2060,7 @@ function HomeStackNavigator() {
                       mainHeader={{
                         justifyContent: 'center',
                       }}
-                      // title="Configure Receipt"
+                    // title="Configure Receipt"
                     />
                   ),
                 }}
@@ -1692,7 +2077,7 @@ function HomeStackNavigator() {
                       mainHeader={{
                         justifyContent: 'center',
                       }}
-                      // title="Manage Users"
+                    // title="Manage Users"
                     />
                   ),
                 }}
@@ -1709,7 +2094,7 @@ function HomeStackNavigator() {
                       mainHeader={{
                         justifyContent: 'center',
                       }}
-                      // title="Manage Taxes"
+                    // title="Manage Taxes"
                     />
                   ),
                 }}
@@ -1812,7 +2197,7 @@ function HomeStackNavigator() {
                         justifyContent: 'center',
                         backgroundColor: '#F7F8FA',
                       }}
-                      // title="Settings"
+                    // title="Settings"
                     />
                   ),
                 }}
@@ -1830,7 +2215,7 @@ function HomeStackNavigator() {
                         justifyContent: 'center',
                         backgroundColor: '#F7F8FA',
                       }}
-                      // title="Settings"
+                    // title="Settings"
                     />
                   ),
                 }}
@@ -1848,7 +2233,7 @@ function HomeStackNavigator() {
                         justifyContent: 'center',
                         backgroundColor: '#F7F8FA',
                       }}
-                      // title="Settings"
+                    // title="Settings"
                     />
                   ),
                 }}
@@ -1884,10 +2269,362 @@ function HomeStackNavigator() {
                   ),
                 }}
               />
+              {/* <Stack.Screen
+                name="Sell Ticket Events"
+                component={SellTicketEvents}
+                options={{
+                  header: props => (
+                    <InventoryHeader
+                      // prevScreen={props.back.title}
+                      navigation={props.navigation}
+                      addCustomer={false}
+                      mainHeader={{
+                        justifyContent: 'center',
+                      }}
+                      title="Events"
+                    />
+                  ),
+                }}
+              />
+              <Stack.Screen
+                name="Sell Ticket"
+                component={SellTicket}
+                options={{
+                  header: props => (
+                    <InventoryHeader
+                      // prevScreen={props.back.title}
+                      navigation={props.navigation}
+                      addCustomer={false}
+                      mainHeader={{
+                        justifyContent: 'center',
+                      }}
+                      title="Sell Ticket"
+                    />
+                  ),
+                }}
+              />
+              <Stack.Screen
+                name="Sell Event Details"
+                component={SellEventDetails}
+                options={{
+                  header: props => null,
+                }}
+              />
+              <Stack.Screen
+                name="Sell Ticket Status"
+                component={SellTicketStatus}
+                options={{
+                  header: props => (
+                    <InventoryHeader
+                      // prevScreen={props.back.title}
+                      navigation={props.navigation}
+                      addCustomer={false}
+                      mainHeader={{
+                        justifyContent: 'center',
+                      }}
+                      title="Purchase Status"
+                    />
+                  ),
+                }}
+              />
+              <Stack.Screen
+                name="Ticket Sold History"
+                component={TicketSoldHistory}
+                options={{
+                  header: props => (
+                    <InventoryHeader
+                      // prevScreen={props.back.title}
+                      navigation={props.navigation}
+                      addCustomer={false}
+                      mainHeader={{
+                        justifyContent: 'center',
+                      }}
+                      title="Ticket Purchases"
+                    />
+                  ),
+                }}
+              />
+              <Stack.Screen
+                name="Ticket Sold Details"
+                component={TicketSoldDetails}
+                options={{
+                  header: props => (
+                    <InventoryHeader
+                      // prevScreen={props.back.title}
+                      navigation={props.navigation}
+                      addCustomer={false}
+                      mainHeader={{
+                        justifyContent: 'center',
+                      }}
+                      title="Ticket Details"
+                    />
+                  ),
+                }}
+              />
+              <Stack.Screen
+                name="Create Invoice"
+                component={CreateInvoice}
+                options={{
+                  header: props => null,
+                }}
+              />
+              <Stack.Screen
+                name="Invoice Customer"
+                component={InvoiceCustomerSelect}
+                options={{
+                  header: props => null,
+                }}
+              />
+              <Stack.Screen
+                name="Invoice Inventory"
+                component={InvoiceInventory}
+                options={{
+                  header: props => (
+                    <InventoryHeader
+                      // prevScreen={props.back.title}
+                      navigation={props.navigation}
+                      addCustomer={false}
+                      mainHeader={{
+                        justifyContent: 'center',
+                      }}
+                      title=""
+                    />
+                  ),
+                }}
+              />
+              <Stack.Screen
+                name="Invoice QuickSale"
+                component={InvoiceQuikeSale}
+                options={{
+                  header: props => (
+                    <InventoryHeader
+                      // prevScreen={props.back.title}
+                      navigation={props.navigation}
+                      addCustomer={false}
+                      mainHeader={{
+                        justifyContent: 'center',
+                      }}
+                    // title="Inventory"
+                    />
+                  ),
+                }}
+              />
+              <Stack.Screen
+                name="Invoice Discount"
+                component={InvoiceDiscount}
+                options={{
+                  header: props => (
+                    <InventoryHeader
+                      // prevScreen={props.back.title}
+                      navigation={props.navigation}
+                      addCustomer={false}
+                      mainHeader={{
+                        justifyContent: 'center',
+                      }}
+                    // title="Inventory"
+                    />
+                  ),
+                }}
+              />
+              <Stack.Screen
+                name="Invoice Delivery"
+                component={InvoiceDelivery}
+                options={{
+                  header: props => (
+                    <InventoryHeader
+                      // prevScreen={props.back.title}
+                      navigation={props.navigation}
+                      addCustomer={false}
+                      mainHeader={{
+                        justifyContent: 'center',
+                      }}
+                    // title="Inventory"
+                    />
+                  ),
+                }}
+              />
+              <Stack.Screen
+                name="Invoice Preview"
+                component={InvoicePreview}
+                options={{
+                  header: props => (
+                    <InventoryHeader
+                      // prevScreen={props.back.title}
+                      navigation={props.navigation}
+                      addCustomer={false}
+                      mainHeader={{
+                        justifyContent: 'center',
+                      }}
+                      title="Preview"
+                    />
+                  ),
+                }}
+              />
+              <Stack.Screen
+                name="Invoice Details"
+                component={InvoiceDetails}
+                options={{
+                  header: props => (
+                    <InventoryHeader
+                      // prevScreen={props.back.title}
+                      navigation={props.navigation}
+                      addCustomer={false}
+                      mainHeader={{
+                        justifyContent: 'center',
+                      }}
+                    />
+                  ),
+                }}
+              />
+              <Stack.Screen
+                name="Send Invoice"
+                component={InvoicePaymentSend}
+                options={{
+                  header: () => <SendInvoiceHeader navigateTo="Invoices" />,
+                }}
+              />
+              <Stack.Screen
+                name="Send Email Invoice"
+                component={SendEmailInvoice}
+                options={{
+                  header: props => (
+                    <InventoryHeader
+                      navigation={props.navigation}
+                      addCustomer={false}
+                      mainHeader={{
+                        justifyContent: 'center',
+                      }}
+                      title="Send Email"
+                    />
+                  ),
+                }}
+              />
+              <Stack.Screen
+                name="Invoice Order"
+                component={InvoiceOrderPreview}
+                options={{
+                  header: props => (
+                    <InventoryHeader
+                      // prevScreen={props.back.title}
+                      navigation={props.navigation}
+                      addCustomer={false}
+                      mainHeader={{
+                        justifyContent: 'center',
+                      }}
+                      title="Preview"
+                    />
+                  ),
+                }}
+              />
+              <Stack.Screen
+                name="Expenses"
+                component={ExpensesHistory}
+                options={{
+                  header: props => (
+                    <ExpensesHeader navigation={props.navigation} />
+                  ),
+                }}
+              />
+              <Stack.Screen
+                name="Expenses Category"
+                component={ExpensesCategories}
+                options={{
+                  header: props => (
+                    <InventoryHeader
+                      // prevScreen={props.back.title}
+                      navigation={props.navigation}
+                      addCustomer={false}
+                      mainHeader={{
+                        justifyContent: 'center',
+                      }}
+                      title="Expenses Category"
+                    />
+                  ),
+                }}
+              />
+              <Stack.Screen
+                name="Expenses Category Lov"
+                component={ExpensesCategoriesLov}
+                options={{
+                  header: props => (
+                    <InventoryHeader
+                      // prevScreen={props.back.title}
+                      navigation={props.navigation}
+                      addCustomer={false}
+                      mainHeader={{
+                        justifyContent: 'center',
+                      }}
+                      title="Expenses Category"
+                    />
+                  ),
+                }}
+              />
+              <Stack.Screen
+                name="Create Expense Category"
+                component={CreateExpenseCategory}
+                options={{
+                  header: props => (
+                    <InventoryHeader
+                      // prevScreen={props.back.title}
+                      navigation={props.navigation}
+                      addCustomer={false}
+                      mainHeader={{
+                        justifyContent: 'center',
+                      }}
+                      title="Expense Category"
+                    />
+                  ),
+                }}
+              />
+              <Stack.Screen
+                name="Create Expense"
+                component={CreateExpense}
+                options={{
+                  header: props => (
+                    <InventoryHeader
+                      // prevScreen={props.back.title}
+                      navigation={props.navigation}
+                      addCustomer={false}
+                      mainHeader={{
+                        justifyContent: 'center',
+                      }}
+                      title={'Expense'}
+                    />
+                  ),
+                }}
+              />
+              <Stack.Screen
+                name="Suppliers"
+                component={Suppliers}
+                options={{
+                  header: props => null,
+                }}
+              />
+              <Stack.Screen
+                name="Add Supplier"
+                component={CreateSupplier}
+                options={{
+                  header: props => (
+                    <InventoryHeader
+                      // prevScreen={props.back.title}
+                      navigation={props.navigation}
+                      addCustomer={false}
+                      mainHeader={{
+                        justifyContent: 'center',
+                      }}
+                      title="Add Supplier"
+                    />
+                  ),
+                }}
+              /> */}
             </>
           )}
         </Stack.Navigator>
       }
+      <SessionExpired
+        sessionStatus={sessionStatus}
+        toggleSessionStatus={setSessionStatus}
+      />
     </>
   );
 }

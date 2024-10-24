@@ -11,6 +11,8 @@ import { saleReducer } from './reducers/sale';
 import { productsReducer } from './reducers/products';
 import { ordersReducer } from './reducers/orders';
 import { merchantReducer } from './reducers/merchant';
+import { invoicingReducer } from './reducers/invoicing';
+import { expensesReducer } from './reducers/expenses';
 
 const reducer = combineReducers({
   quickSale: quickSaleReducer,
@@ -21,6 +23,8 @@ const reducer = combineReducers({
   orders: ordersReducer,
   merchant: merchantReducer,
   transactions: transactionsReducer,
+  invoice: invoicingReducer,
+  expenses: expensesReducer,
 });
 
 const store = configureStore({

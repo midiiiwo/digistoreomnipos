@@ -23,7 +23,7 @@ export const orderDateRange = range => {
 
 export const setOrderOutlet = outlet => {
   return {
-    type: ActionTypes.ORDER_OUTLET,
+    type: ActionTypes.SET_ORDER_OUTLET,
     payload: outlet,
   };
 };

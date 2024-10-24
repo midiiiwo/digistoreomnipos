@@ -305,7 +305,7 @@ export async function firebaseBackgroundMessage(message) {
       JSON.stringify(initNotification),
     );
   } else {
-    const notifs = JSON.parse(cachedNotifications);
+    const notifs = JSON.parse(cachedNotifications || '{}');
     notifs.unshift({
       title,
       body,

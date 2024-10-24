@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.ipayghpostablet.app-mergeDebugResources-51:/values-en-rUS/values-en-rUS.xml",
+            "outputFile": "com.ipayghpostablet.app-mergeDebugResources-53:/values-en-rUS/values-en-rUS.xml",
             "map": [
                 {
                     "source": "/Users/wedamanewenah/.gradle/caches/transforms-3/70356867c2a975c7d62c379c93835bb0/transformed/jetified-pictureselector-v3.10.9/res/values-en-rUS/values-en-rUS.xml",

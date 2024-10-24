@@ -1,10 +1,8 @@
 /* eslint-disable react-native/no-inline-styles */
 import { NavigationContainer } from '@react-navigation/native';
 import React from 'react';
-import { Platform } from 'react-native';
+import { Alert, Platform, UIManager } from 'react-native';
 import { SheetProvider } from 'react-native-actions-sheet';
-// import { ApplicationProvider } from '@ui-kitten/components';
-// import * as eva from '@eva-design/eva';
 import { Provider, useSelector } from 'react-redux';
 import { QueryClientProvider } from 'react-query';
 import { ToastProvider } from 'react-native-toast-notifications';
@@ -15,10 +13,12 @@ LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs(); //Ignore all log notifications
 import NetInfo from '@react-native-community/netinfo';
 import { onlineManager } from 'react-query';
+// import JailMonkey from 'jail-monkey';
+// import RNExit from 'react-native-exit-app';
 
 import './src/components/BottomSheets/Sheets';
 
-// import RootNavigation from './src/navigation/DrawerNavigation';
+import RootNavigation from './src/navigation/DrawerNavigation';
 import { store } from './src/redux/store';
 import { queryClient } from './src/react-query';
 import PushNotification, { Importance } from 'react-native-push-notification';
@@ -26,10 +26,10 @@ import { AlertNotificationRoot } from 'react-native-alert-notification';
 import CodePush from 'react-native-code-push';
 import Spinner from 'react-native-loading-spinner-overlay';
 
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import RootStack from './src/navigation/RootStack';
-import { enableFreeze } from 'react-native-screens';
-// import CustomStatusBar from './src/components/StatusBar';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { enableScreens } from 'react-native-screens';
+enableScreens(true);
 
 // if (Platform.OS === 'android') {
 PushNotification.createChannel(
@@ -77,7 +77,13 @@ let CodePushOptions = {
   mandatoryInstallMode: CodePush.InstallMode.IMMEDIATE,
 };
 
-enableFreeze(true);
+if (Platform.OS === 'android') {
+  if (UIManager.setLayoutAnimationEnabledExperimental) {
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+  }
+}
+
+// To see all the requests in the chrome Dev tools in the network tab.
 
 const App = ({ navigation }) => {
   // const { setFcmToken } = useActionCreator();
@@ -129,6 +135,16 @@ const App = ({ navigation }) => {
   }, []);
 
   // React.useEffect(() => {
+  //   if (JailMonkey.isJailBroken()) {
+  //     Alert.alert(
+  //       'Rooted Device Detected',
+  //       'You cannot use this app on a rooted device',
+  //       [{ text: 'OK', onPress: () => RNExit.exitApp() }],
+  //     );
+  //   }
+  // }, []);
+
+  // React.useEffect(() => {
   //   (async () => {
   //     await messaging().registerDeviceForRemoteMessages();
   //     console.log('device registered for remote messaging');
@@ -141,40 +157,34 @@ const App = ({ navigation }) => {
     state => state.merchant,
   );
 
-  console.log('ovvvvvvvvvvvvvvv', overlayLoading);
-
   return (
     <AlertNotificationRoot theme="light">
-      <SafeAreaProvider>
-        <QueryClientProvider client={queryClient}>
-          <ToastProvider offsetTop={Platform.OS === 'ios' ? 60 : 40}>
-            {/* <SafeAreaView style={styles.main} mode="padding"> */}
-            {/* <TourGuideProvider
-            androidStatusBarVisible={true}
-            verticalOffset={Platform.OS === 'ios' ? -45 : 0}> */}
-            {/* <CustomStatusBar backgroundColor="#666" /> */}
-            <SheetProvider>
-              <MenuProvider>
-                <RootStack />
-                <Spinner
-                  visible={overlayLoading}
-                  textContent={'Logging out'}
-                  textStyle={{ color: '#fff' }}
-                  overlayColor="rgba(0, 0, 0, 0.5)"
-                />
-                <Spinner
-                  visible={overlayLoggingIn}
-                  textContent={'Logging In'}
-                  textStyle={{ color: '#fff' }}
-                  overlayColor="rgba(0, 0, 0, 0.5)"
-                />
-              </MenuProvider>
-            </SheetProvider>
-            {/* </TourGuideProvider> */}
-            {/* </SafeAreaView> */}
-          </ToastProvider>
-        </QueryClientProvider>
-      </SafeAreaProvider>
+      <QueryClientProvider client={queryClient}>
+        <ToastProvider
+          offsetTop={Platform.OS === 'ios' ? 60 : 40}
+          style={{ zIndex: 10000000000 }}>
+          <SheetProvider>
+            <MenuProvider>
+              <RootNavigation />
+              <Spinner
+                cancelable
+                visible={overlayLoading}
+                textContent={'Logging out'}
+                textStyle={{ color: '#fff' }}
+                overlayColor="rgba(0, 0, 0, 0.5)"
+              />
+              <Spinner
+                visible={overlayLoggingIn}
+                textContent={'Logging In'}
+                textStyle={{ color: '#fff' }}
+                overlayColor="rgba(0, 0, 0, 0.5)"
+              />
+            </MenuProvider>
+          </SheetProvider>
+          {/* </TourGuideProvider> */}
+          {/* </SafeAreaView> */}
+        </ToastProvider>
+      </QueryClientProvider>
     </AlertNotificationRoot>
   );
 };
@@ -184,7 +194,9 @@ const Root = () => {
     <SafeAreaProvider>
       <NavigationContainer>
         <Provider store={store}>
-          <App />
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <App />
+          </GestureHandlerRootView>
         </Provider>
       </NavigationContainer>
     </SafeAreaProvider>

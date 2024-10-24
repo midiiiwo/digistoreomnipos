@@ -1,25 +1,8 @@
 {
     "logs": [
         {
-            "outputFile": "com.ipayghpostablet.app-mergeDebugResources-51:/values-en-rXC/values-en-rXC.xml",
+            "outputFile": "com.ipayghpostablet.app-mergeDebugResources-53:/values-en-rXC/values-en-rXC.xml",
             "map": [
-                {
-                    "source": "/Users/wedamanewenah/.gradle/caches/transforms-3/f651b2db7fea139e8a2848c61e5708b1/transformed/core-1.7.0/res/values-en-rXC/values-en-rXC.xml",
-                    "from": {
-                        "startLines": "2",
-                        "startColumns": "4",
-                        "startOffsets": "55",
-                        "endColumns": "203",
-                        "endOffsets": "254"
-                    },
-                    "to": {
-                        "startLines": "42",
-                        "startColumns": "4",
-                        "startOffsets": "8386",
-                        "endColumns": "203",
-                        "endOffsets": "8585"
-                    }
-                },
                 {
                     "source": "/Users/wedamanewenah/.gradle/caches/transforms-3/495803858fdd5ec2b028adadd349ac3e/transformed/appcompat-1.4.2/res/values-en-rXC/values-en-rXC.xml",
                     "from": {
@@ -52,6 +35,23 @@
                         "startOffsets": "5528,5737,5930,6149,6381,6622,6852,7073,7306,7508,7737,7978",
                         "endColumns": "208,192,218,231,240,229,220,232,201,228,240,221",
                         "endOffsets": "5732,5925,6144,6376,6617,6847,7068,7301,7503,7732,7973,8195"
+                    }
+                },
+                {
+                    "source": "/Users/wedamanewenah/.gradle/caches/transforms-3/79870f32b463b8f926cf984784c1c468/transformed/core-1.8.0/res/values-en-rXC/values-en-rXC.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "203",
+                        "endOffsets": "254"
+                    },
+                    "to": {
+                        "startLines": "42",
+                        "startColumns": "4",
+                        "startOffsets": "8386",
+                        "endColumns": "203",
+                        "endOffsets": "8585"
                     }
                 }
             ]

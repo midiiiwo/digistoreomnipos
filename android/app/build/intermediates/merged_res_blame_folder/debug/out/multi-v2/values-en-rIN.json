@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.ipayghpostablet.app-mergeDebugResources-51:/values-en-rIN/values-en-rIN.xml",
+            "outputFile": "com.ipayghpostablet.app-mergeDebugResources-53:/values-en-rIN/values-en-rIN.xml",
             "map": [
                 {
                     "source": "/Users/wedamanewenah/.gradle/caches/transforms-3/495803858fdd5ec2b028adadd349ac3e/transformed/appcompat-1.4.2/res/values-en-rIN/values-en-rIN.xml",
@@ -21,7 +21,7 @@
                     }
                 },
                 {
-                    "source": "/Users/wedamanewenah/.gradle/caches/transforms-3/f651b2db7fea139e8a2848c61e5708b1/transformed/core-1.7.0/res/values-en-rIN/values-en-rIN.xml",
+                    "source": "/Users/wedamanewenah/.gradle/caches/transforms-3/79870f32b463b8f926cf984784c1c468/transformed/core-1.8.0/res/values-en-rIN/values-en-rIN.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
