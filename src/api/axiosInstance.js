@@ -7,10 +7,6 @@ import { store } from '../redux/store';
 const appId = 'IPAYMOBILEPOS';
 const appKey = 'F73ldggm8KZP35N48t3OVbTaoOpaOlLy';
 
-const DELIVERY_USER_ID = '88c34fdd-de3f-43f6-89e4-a19c97070d21';
-const DELIVERY_API_TOKEN =
-  'W1h0YLL35bN3UZlG9V38bQ/nXnAsEHN9K5l97Ra7Gern3o8l6UQNmLOUYdvYADnWyoxq0uN4ZIuVaw/1qrrRgA==';
-
 export async function appSecret(timeStamp) {
   const message = appId + ':' + timeStamp;
   const messageArrayBuffer =
@@ -24,8 +20,6 @@ export async function appSecret(timeStamp) {
     RNSimpleCrypto.utils.convertArrayBufferToHex(signatureArrayBuffer);
   return signatureHex;
 }
-
-const DELIVERY_BASE_URI = 'https://deliveriesapi.ipaygh.com/';
 
 // const baseURL =
 //   process.env.NODE_ENV === 'development'
@@ -41,57 +35,38 @@ export const Api = axios.create({
   baseURL,
 });
 
-export const deliveryApi = axios.create({
-  baseURL: DELIVERY_BASE_URI,
-});
-
-deliveryApi.interceptors.request.use(
+Api.interceptors.request.use(
   async request => {
-    //@ts-ignore
+    let timestamp = moment().format('x');
+    const secret = await appSecret(timestamp);
+    const user =
+      (await retrievePersistedData('user')) || store.getState().auth.user;
+    // const token = await AsyncStorage.getItem('fcmToken');
+    // if (request.data) {
+    //   request.data.notify_device = token;
+    // }
+
     request.headers = {
       ...request.headers,
-      'Content-Type': 'application/json',
-      api_token: DELIVERY_API_TOKEN,
-      user_id: DELIVERY_USER_ID,
-      apitoken: DELIVERY_API_TOKEN,
-      userid: DELIVERY_USER_ID,
+      Authentication: secret,
+      Time: timestamp,
+      Application: appId,
+      Accept: 'application/json',
+      'Content-Type': 'application/x-www-form-urlencoded',
+      Sid: user.sid,
     };
+
+    const formBody = [];
+    for (let i in request.data) {
+      const key = encodeURIComponent(i);
+      const value = encodeURIComponent(request.data[i]);
+      formBody.push(key + '=' + value);
+    }
+    request.data = formBody.join('&');
     return request;
   },
   error => Promise.reject(error),
 );
-
-// Api.interceptors.request.use(
-//   async request => {
-//     let timestamp = moment().format('x');
-//     const secret = await appSecret(timestamp);
-//     const user = await retrievePersistedData('user');
-//     // const token = await AsyncStorage.getItem('fcmToken');
-//     // if (request.data) {
-//     //   request.data.notify_device = token;
-//     // }
-
-//     request.headers = {
-//       ...request.headers,
-//       Authentication: secret,
-//       Time: timestamp,
-//       Application: appId,
-//       Accept: 'application/json',
-//       'Content-Type': 'application/x-www-form-urlencoded',
-//       Sid: user.sid,
-//     };
-
-//     const formBody = [];
-//     for (let i in request.data) {
-//       const key = encodeURIComponent(i);
-//       const value = encodeURIComponent(request.data[i]);
-//       formBody.push(key + '=' + value);
-//     }
-//     request.data = formBody.join('&');
-//     return request;
-//   },
-//   error => Promise.reject(error),
-// );
 
 export const loginApi = axios.create({
   baseURL,
@@ -101,6 +76,7 @@ loginApi.interceptors.request.use(
   async request => {
     let timestamp = moment().format('x');
     const secret = await appSecret(timestamp);
+    // const user = await retrievePersistedData('user');
     request.headers = {
       ...request.headers,
       Authentication: secret,
@@ -131,6 +107,7 @@ productApi.interceptors.request.use(
     let timestamp = moment().format('x');
     const secret = await appSecret(timestamp);
     const user = await retrievePersistedData('user');
+    console.log('request datarttatatatatatata', request.data);
     request.headers = {
       ...request.headers,
       Authentication: secret,
@@ -145,11 +122,10 @@ productApi.interceptors.request.use(
       formBody.append(i, request.data[i]);
     }
     request.data = formBody;
-
     return request;
   },
   error => {
-    console.log('therererere', error);
+    console.log('erererererererere', error);
     Promise.reject(error);
   },
 );
@@ -163,6 +139,10 @@ apiDemo.interceptors.request.use(
     let timestamp = moment().format('x');
     const secret = await appSecret(timestamp);
     const user = await retrievePersistedData('user');
+    // const token = await AsyncStorage.getItem('fcmToken');
+    // if (request.data) {
+    //   request.data.notify_device = token;
+    // }
 
     request.headers = {
       ...request.headers,
@@ -184,37 +164,5 @@ apiDemo.interceptors.request.use(
     return request;
   },
   error => Promise.reject(error),
-);
-
-export const editProductApi = axios.create({
-  baseURL,
-});
-
-editProductApi.interceptors.request.use(
-  async request => {
-    let timestamp = moment().format('x');
-    const secret = await appSecret(timestamp);
-    const user = await retrievePersistedData('user');
-    request.headers = {
-      ...request.headers,
-      Authentication: secret,
-      Time: timestamp,
-      Application: appId,
-      Accept: 'application/json',
-      'Content-Type': 'aapplication/json',
-      Sid: user.sid,
-    };
-    // const formBody = new FormData();
-    // for (let i in request.data) {
-    //   formBody.append(i, request.data[i]);
-    // }
-    // request.data = formBody;
-
-    return request;
-  },
-  error => {
-    console.log('therererere', error);
-    Promise.reject(error);
-  },
 );
 

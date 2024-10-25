@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
 import { StyleSheet, View, Pressable } from 'react-native';
-import BackIcon from '../../assets/icons/arrow-back.svg';
+import ProfileIcon from '../../assets/icons/profile-circle.svg';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import { useSelector } from 'react-redux';
 import { useActionCreator } from '../hooks/useActionCreator';
@@ -15,9 +15,18 @@ const ProductsHeader = ({ navigation }) => {
 
   return (
     <View style={[styles.headerMain, { paddingTop: top + 10 }]}>
-      <Pressable style={styles.back} onPress={() => navigation.goBack()}>
-        <BackIcon height={20} width={20} stroke="#21438F" />
+      <Pressable
+        onPress={() => {
+          navigation.openDrawer();
+        }}
+        style={{
+          backgroundColor: '#fff',
+          borderRadius: 60,
+          padding: 10,
+        }}>
+        <ProfileIcon height={28} width={27} stroke="#30475e" />
       </Pressable>
+
       <View style={styles.segmentedControlWrapper}>
         <SegmentedControl
           values={tabValues}
@@ -52,7 +61,9 @@ const styles = StyleSheet.create({
     width: 300,
   },
   segmentedControlWrapper: {
-    marginRight: 'auto',
+    marginLeft: 400,
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   activeText: {
     fontSize: 18,

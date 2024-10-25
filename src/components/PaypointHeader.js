@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
 import { StyleSheet, View, Pressable } from 'react-native';
-import BackIcon from '../../assets/icons/arrow-back-light.svg';
+import ProfileIcon from '../../assets/icons/profile-circle.svg';
 import { SheetManager } from 'react-native-actions-sheet';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import { useActionCreator } from '../hooks/useActionCreator';
@@ -16,8 +16,22 @@ const PaypointHeader = ({ navigation, prevScreen }) => {
   return (
     <View style={[styles.main, { paddingTop: top + 12 }]}>
       <View style={styles.headerMain}>
-        <Pressable style={styles.back} onPress={() => navigation.goBack()}>
-          <BackIcon height={18} width={18} stroke="#fff" />
+        <Pressable
+          onPress={() => {
+            navigation.openDrawer();
+          }}
+          style={{
+            backgroundColor: '#fff',
+            borderRadius: 60,
+            padding: 10,
+            flexDirection: 'row',
+            alignItems: 'center',
+            position: 'absolute',
+            left: 12,
+            // backgroundColor: 'red',
+            padding: 14,
+          }}>
+          <ProfileIcon height={28} width={27} stroke="#30475e" />
         </Pressable>
         <View
           style={styles.segmentedControlWrapper}
@@ -89,3 +103,4 @@ const styles = StyleSheet.create({
 
 export default PaypointHeader;
 
+// style={styles.back}

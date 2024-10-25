@@ -13,16 +13,26 @@ const Drawer = createDrawerNavigator();
 export default function DrawerNavigation() {
   return (
     <Drawer.Navigator
-      initialRouteName="Home"
+      iinitialRouteName="Home"
       screenOptions={{
-        header: () => null,
         swipeEnabled: false,
-        drawerStyle: {
-          width: Dimensions.get('window').width * 0.7,
+        drawerLabelStyle: {
+          marginLeft: -10,
+          fontFamily: 'ReadexPro-Medium',
+          fontSize: 12,
+        },
+        drawerInactiveTintColor: '#526D82',
+        drawerActiveBackgroundColor: '#3F70F4',
+        drawerActiveTintColor: '#fff',
+        drawerItemStyle: {
+          borderRadius: 10,
+          paddingHorizontal: 12,
+          paddingVertical: -10,
+          height: Dimensions.get('window').height * 0.065,
         },
       }}
       drawerContent={props => <RightDrawer {...props} />}>
-      <Drawer.Screen name="HomeDrawer" component={HomeStackNavigator} />
+      <Drawer.Screen name="Home" component={HomeStackNavigator} options={{ header: () => null, }} />
     </Drawer.Navigator>
   );
 }
