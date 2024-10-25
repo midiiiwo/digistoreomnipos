@@ -47,6 +47,7 @@ const mapChannelToPayment = {
   QRPAY: 'GHQR',
   CREDITBAL: 'Store Credit',
   DEBITBAL: 'Pay Later',
+  OFFLINE: 'Ussd Offline',
 };
 
 const mapSalesChannelToName = {
@@ -79,7 +80,7 @@ const OrderDetails = props => {
     useGetMerchantDetails(user.merchant);
 
   const [kitchenStaffItems, setKitchenStaffItems] = React.useState();
-  const ordersNonAdmin_ = useGetOrdersNonAdmin(() => {});
+  const ordersNonAdmin_ = useGetOrdersNonAdmin(() => { });
 
   const navigation = useNavigation();
 
@@ -144,21 +145,16 @@ const OrderDetails = props => {
   // if (item.payment_type === 'PAYLATER' && item.payment_status !== 'Cancelled') {
   //   item.order_status = 'TO BE PAID LATER';
   // }
-  const config = (config_ && config_.data && config_.data.data) || {};
-  const orderItems = (itemList && itemList.data && itemList.data.data) || [];
+  const config = config_?.data?.data || {};
+  const orderItems = itemList?.data?.data || [];
   const orderNotSuccessful =
-    item &&
-    (item.order_status === 'NEW' ||
-      item.order_status === 'UNPAID' ||
-      item.order_status === 'PAYMENT_FAILED' ||
-      item.order_status === 'PENDING' ||
-      item.order_status === 'PAYMENT_CANCELLED');
+    item?.order_status === 'NEW' ||
+    item?.order_status === 'UNPAID' ||
+    item?.order_status === 'PAYMENT_FAILED' ||
+    item?.order_status === 'PENDING' ||
+    item?.order_status === 'PAYMENT_CANCELLED';
 
-  const merchantDetails =
-    (merchantDetails_ && merchantDetails_.data && merchantDetails_.data.data) ||
-    {};
-
-  console.log(item);
+  const merchantDetails = merchantDetails_?.data?.data || {};
 
   if (!item) {
     return (
@@ -287,15 +283,15 @@ const OrderDetails = props => {
                       {
                         backgroundColor:
                           item &&
-                          item.order_status &&
-                          item.order_status !== 'NEW' &&
-                          item.order_status !== 'PENDING' &&
-                          item.order_status !== 'FAILED' &&
-                          item.order_status !== 'PAYMENT_CANCELLED' &&
-                          item.order_status !== 'DECLINED' &&
-                          item.order_status !== 'PAYMENT_FAILED' &&
-                          item.order_status !== 'VOID' &&
-                          item.order_status !== 'PAYMENT_DEFERRED'
+                            item.order_status &&
+                            item.order_status !== 'NEW' &&
+                            item.order_status !== 'PENDING' &&
+                            item.order_status !== 'FAILED' &&
+                            item.order_status !== 'PAYMENT_CANCELLED' &&
+                            item.order_status !== 'DECLINED' &&
+                            item.order_status !== 'PAYMENT_FAILED' &&
+                            item.order_status !== 'VOID' &&
+                            item.order_status !== 'PAYMENT_DEFERRED'
                             ? '#87C4C9'
                             : '#FD8A8A',
                       },
@@ -317,12 +313,12 @@ const OrderDetails = props => {
                       {
                         backgroundColor:
                           item &&
-                          item.delivery_status &&
-                          item.delivery_status === 'DELIVERED'
+                            item.delivery_status &&
+                            item.delivery_status === 'DELIVERED'
                             ? '#87C4C9'
                             : item && item.delivery_status === 'PENDING'
-                            ? '#FD8A8A'
-                            : '#FD8A8A',
+                              ? '#FD8A8A'
+                              : '#FD8A8A',
                       },
                     ]}
                   />
@@ -333,9 +329,9 @@ const OrderDetails = props => {
                     ? 'Undelivered'
                     : 'Undelivered'} */}
                     {item &&
-                    item.delivery_status &&
-                    (item.delivery_status === 'PENDING' ||
-                      item.delivery_status === 'CANCELLED')
+                      item.delivery_status &&
+                      (item.delivery_status === 'PENDING' ||
+                        item.delivery_status === 'CANCELLED')
                       ? 'UNDELIVERED'
                       : 'DELIVERED'}
                   </Text>
@@ -350,11 +346,9 @@ const OrderDetails = props => {
               <Text style={styles.change}>Update status</Text>
             </Pressable> */}
             <View>
-              {item &&
-                item.order_status &&
-                item.order_status !== 'COMPLETED' &&
-                item.delivery_type !== 'WALK-IN' &&
-                item.order_status !== 'VOID' && (
+              {item?.order_status !== 'COMPLETED' &&
+                item?.delivery_type !== 'WALK-IN' &&
+                item?.order_status !== 'VOID' && (
                   <View style={{ alignItems: 'center' }}>
                     <Pressable
                       style={styles.channelWrapper}
@@ -365,63 +359,56 @@ const OrderDetails = props => {
                       }>
                       <Text style={styles.channel}>Update Order Status</Text>
                     </Pressable>
-                    {/* <PrimaryButton
-                    style={[styles.btn, { width: '100%', marginTop: 12 }]}
-                    handlePress={() =>
-                      SheetManager.show('orderStatus', { payload: item })
-                    }>
-                    Update order status
-                  </PrimaryButton> */}
                   </View>
                 )}
             </View>
             <View>
-              {item &&
-                item.payment_channel &&
-                item.delivery_status &&
-                item.order_status &&
-                item.delivery_status !== 'DELIVERED' &&
-                (item.payment_channel === 'CASH' ||
-                  item.payment_channel === 'CREDITBAL' ||
-                  item.payment_channel === 'DEBITBAL' ||
-                  item.payment_channel === 'OFFMOMO' ||
-                  item.payment_channel === 'OFFCARD') &&
-                item.order_status !== 'VOID' &&
-                item.order_status !== 'PAYMENT_CANCELLED' &&
-                item.order_status !== 'PAYMENT_FAILED' && (
+              {item?.delivery_status !== 'DELIVERED' &&
+                (item?.payment_channel === 'CASH' ||
+                  item?.payment_channel === 'CREDITBAL' ||
+                  item?.payment_channel === 'DEBITBAL' ||
+                  item?.payment_channel === 'OFFMOMO' ||
+                  item?.payment_channel === 'OFFCARD' ||
+                  item?.payment_type === 'PAYLATER' ||
+                  item?.payment_type === 'INVOICE') &&
+                item?.order_status !== 'VOID' &&
+                item?.order_status !== 'PAYMENT_CANCELLED' &&
+                item?.order_status !== 'PAYMENT_FAILED' && (
                   <View style={{ alignItems: 'center' }}>
-                    <Pressable
-                      style={[
-                        styles.channelWrapper,
-                        { borderColor: '#F31559' },
-                      ]}
-                      onPress={() =>
-                        Alert.alert(
-                          'Cancel Order',
-                          'Are you sure you want to cancel order?',
-                          [
-                            {
-                              text: 'NO',
-                              onPress: () => console.log('Cancel Pressed'),
-                              style: 'cancel',
-                            },
-                            {
-                              text: 'CANCEL ORDER',
-                              onPress: () => {
-                                voidOrder.mutate({
-                                  merchant: user.merchant,
-                                  no: item.order_no,
-                                  mod_by: user.login,
-                                });
+                    {user?.user_permissions?.includes('VOID_ORDER') && (
+                      <Pressable
+                        style={[
+                          styles.channelWrapper,
+                          { borderColor: '#F31559' },
+                        ]}
+                        onPress={() =>
+                          Alert.alert(
+                            'Cancel Order',
+                            'Are you sure you want to cancel order?',
+                            [
+                              {
+                                text: 'NO',
+                                onPress: () => console.log('Cancel Pressed'),
+                                style: 'cancel',
                               },
-                            },
-                          ],
-                        )
-                      }>
-                      <Text style={[styles.channel, { color: '#F31559' }]}>
-                        {voidOrder.isLoading ? 'Processing' : 'Cancel Order'}
-                      </Text>
-                    </Pressable>
+                              {
+                                text: 'CANCEL ORDER',
+                                onPress: () => {
+                                  voidOrder.mutate({
+                                    merchant: user.merchant,
+                                    no: item.order_no,
+                                    mod_by: user.login,
+                                  });
+                                },
+                              },
+                            ],
+                          )
+                        }>
+                        <Text style={[styles.channel, { color: '#F31559' }]}>
+                          {voidOrder.isLoading ? 'Processing' : 'Cancel Order'}
+                        </Text>
+                      </Pressable>
+                    )}
                     {/* <PrimaryButton
                     style={[styles.btn, { width: '100%', marginTop: 12 }]}
                     handlePress={() =>
@@ -433,7 +420,7 @@ const OrderDetails = props => {
                 )}
             </View>
             {item?.payment_type === 'PAYLATER' &&
-              item?.order_status === 'PAYMENT_DEFERRED' && (
+              item?.payment_status === 'Deferred' && (
                 <View style={{ alignItems: 'center' }}>
                   <Pressable
                     style={[styles.channelWrapper, { borderColor: '#615EFC' }]}
@@ -522,28 +509,108 @@ const OrderDetails = props => {
                     if (!i) {
                       return;
                     }
+                    let extras = i?.order_item_xtras;
+                    let removables = i?.order_item_removables;
+
+                    try {
+                      extras = JSON.parse(extras);
+                      removables = JSON.parse(removables);
+                    } catch (error) { }
+
+                    console.log('extras', extras);
                     return (
-                      <View style={styles.taxMain} key={i && i.order_item}>
-                        <Text
-                          style={[
-                            styles.taxLabel,
-                            {
-                              width: '30%',
-                              overflow: 'hidden',
-                              // backgroundColor: 'red',
-                              paddingHorizontal: 0,
-                            },
-                          ]}>
-                          {i && i.order_item}
-                          {i &&
-                          i.order_item_properties &&
-                          i.order_item_properties.length > 0
-                            ? ` (${i.order_item_properties
+                      <View style={styles.taxMain} key={i?.order_item}>
+                        <View style={{ width: '40%' }}>
+                          <Text
+                            style={[
+                              styles.taxLabel,
+                              {
+                                overflow: 'hidden',
+                                paddingHorizontal: 0,
+                              },
+                            ]}>
+                            {i?.order_item}
+                            {i?.order_item_properties &&
+                              i?.order_item_properties.length > 0
+                              ? ` (${i.order_item_properties
                                 .split(',')
                                 .map(prop => prop.trim().split(':')[1])
                                 .toString()})`
-                            : ''}
-                        </Text>
+                              : ''}
+                          </Text>
+                          {Object.values(extras).length > 0 && (
+                            <View>
+                              <Text
+                                style={[
+                                  styles.taxLabel,
+                                  {
+                                    overflow: 'hidden',
+                                    // backgroundColor: 'red',
+                                    paddingHorizontal: 0,
+                                    textDecorationStyle: 'solid',
+                                    textDecorationLine: 'underline',
+                                    fontWeight: '800',
+                                    marginVertical: 4,
+                                  },
+                                ]}>
+                                Extras
+                              </Text>
+                              <Text
+                                style={[
+                                  styles.taxLabel,
+                                  {
+                                    overflow: 'hidden',
+                                    // backgroundColor: 'red',
+                                    paddingHorizontal: 0,
+                                  },
+                                ]}>
+                                {Object.values(extras)
+                                  .map(extra => {
+                                    if (extra) {
+                                      return extra?.order_extra;
+                                    }
+                                  })
+                                  .toString()}
+                              </Text>
+                            </View>
+                          )}
+                          {Object.values(removables).length > 0 && (
+                            <View>
+                              <Text
+                                style={[
+                                  styles.taxLabel,
+                                  {
+                                    overflow: 'hidden',
+                                    // backgroundColor: 'red',
+                                    paddingHorizontal: 0,
+                                    textDecorationStyle: 'solid',
+                                    textDecorationLine: 'underline',
+                                    fontWeight: '800',
+                                    marginVertical: 4,
+                                  },
+                                ]}>
+                                Removables
+                              </Text>
+                              <Text
+                                style={[
+                                  styles.taxLabel,
+                                  {
+                                    overflow: 'hidden',
+                                    // backgroundColor: 'red',
+                                    paddingHorizontal: 0,
+                                  },
+                                ]}>
+                                {Object.values(removables)
+                                  .map(removable => {
+                                    if (removable) {
+                                      return removable?.order_removable;
+                                    }
+                                  })
+                                  .toString()}
+                              </Text>
+                            </View>
+                          )}
+                        </View>
                         <Text style={styles.taxAmount}>
                           Qty: {i && i.order_item_qty}
                         </Text>
@@ -758,8 +825,8 @@ const OrderDetails = props => {
                   style={[styles.taxMain, { justifyContent: 'flex-start' }]}>
                   <Text style={styles.taxLabel}>
                     {item &&
-                    item.customer_contact &&
-                    item.customer_contact.length > 0
+                      item.customer_contact &&
+                      item.customer_contact.length > 0
                       ? item.customer_contact
                       : 'No contact'}
                   </Text>
@@ -769,8 +836,8 @@ const OrderDetails = props => {
                   style={[styles.taxMain, { justifyContent: 'flex-start' }]}>
                   <Text style={styles.taxLabel}>
                     {item &&
-                    item.customer_email &&
-                    item.customer_email.length > 0
+                      item.customer_email &&
+                      item.customer_email.length > 0
                       ? item.customer_email
                       : 'No email'}
                   </Text>
@@ -781,65 +848,64 @@ const OrderDetails = props => {
           </View>
         )}
       </ScrollView>
-      {((item && item.payment_type && item.payment_type === 'INVOICE') ||
-        (item &&
-          item.payment_type &&
-          item.payment_type !== 'INVOICE' &&
-          !orderNotSuccessful)) && (
-        <View style={styles.btnWrapper}>
-          <PrimaryButton
-            style={[styles.btn, { flex: 1 }]}
-            handlePress={() => {
-              if (
-                item &&
-                item.payment_type &&
-                item.payment_type === 'INVOICE'
-              ) {
-                props.navigation.navigate('Invoice Order', {
-                  data: item,
-                  cart: orderItems || [],
-                  merchantDetails,
-                  invoiceId: item?.external_invoice,
-                });
-              } else {
-                props.navigation.navigate('Order Receipt', {
-                  item,
-                  itemList: orderItems || [],
-                });
-              }
-            }}>
-            {item && item.payment_type && item.payment_type === 'INVOICE'
-              ? 'Send Invoice'
-              : 'Send Receipt'}
-          </PrimaryButton>
-          <View style={{ marginHorizontal: 3 }} />
-          <PrimaryButton
-            style={[styles.btn, { flex: 1, backgroundColor: '#30475e' }]}
-            handlePress={() => {
-              captureRef(ref, {
-                format: 'png',
-                result: 'base64',
-              }).then(async uri => {
-                try {
-                  const res = await Share.open(
-                    {
-                      title: 'Share receipt',
-                      url: 'data:image/png;base64,' + uri,
-                    },
-                    {},
-                  );
-                  if (res.success) {
-                    toast.show('Share success');
-                  }
-                } catch (error) {
-                  // toast.show('Share unsuccessfu');
+      {(item?.payment_type === 'INVOICE' ||
+        (item?.payment_type !== 'INVOICE' && !orderNotSuccessful)) && (
+          <View style={styles.btnWrapper}>
+            <PrimaryButton
+              style={[styles.btn, { flex: 1 }]}
+              handlePress={() => {
+                if (
+                  item?.payment_type === 'INVOICE' &&
+                  item?.order_status !== 'PAID' &&
+                  item?.order_status !== 'COMPLETED'
+                ) {
+                  props.navigation.navigate('Invoice Order', {
+                    data: item,
+                    cart: orderItems || [],
+                    merchantDetails,
+                    invoiceId: item?.external_invoice,
+                  });
+                } else {
+                  props.navigation.navigate('Order Receipt', {
+                    item,
+                    itemList: orderItems || [],
+                  });
                 }
-              });
-            }}>
-            Share Order
-          </PrimaryButton>
-        </View>
-      )}
+              }}>
+              {item?.payment_type === 'INVOICE' &&
+                item?.order_status !== 'PAID' &&
+                item?.order_status !== 'COMPLETED'
+                ? 'Send Invoice'
+                : 'Send Receipt'}
+            </PrimaryButton>
+            <View style={{ marginHorizontal: 3 }} />
+            <PrimaryButton
+              style={[styles.btn, { flex: 1, backgroundColor: '#30475e' }]}
+              handlePress={() => {
+                captureRef(ref, {
+                  format: 'png',
+                  result: 'base64',
+                }).then(async uri => {
+                  try {
+                    const res = await Share.open(
+                      {
+                        title: 'Share receipt',
+                        url: 'data:image/png;base64,' + uri,
+                      },
+                      {},
+                    );
+                    if (res.success) {
+                      toast.show('Share success');
+                    }
+                  } catch (error) {
+                    // toast.show('Share unsuccessfu');
+                  }
+                });
+              }}>
+              Share Order
+            </PrimaryButton>
+          </View>
+        )}
       <AddBalanceInstructions
         invoice={$invoice}
         paymentInstructions={balanceInstructions}
@@ -867,7 +933,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scroll: {
-    paddingBottom: Dimensions.get('window').height * 0.14,
+    paddingBottom: Dimensions.get('window').height * 0.1,
     backgroundColor: '#fff',
   },
   done: {

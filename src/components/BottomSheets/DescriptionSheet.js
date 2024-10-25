@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {
   StyleSheet,
@@ -13,13 +12,8 @@ import { useActionCreator } from '../../hooks/useActionCreator';
 import ToggleSwitch from 'toggle-switch-react-native';
 import { Pressable } from 'react-native';
 // import { Picker } from '@react-native-picker/picker';
-import DeliverySheet from './DeliverySheet';
-import DropDownPicker from 'react-native-dropdown-picker';
-import { useGetOutletCategories } from '../../hooks/useGetOutletCategories';
 import { useAddCategoryProduct } from '../../hooks/useAddCategoryProduct';
 import PrimaryButton from '../PrimaryButton';
-import _ from 'lodash';
-import Lottie from 'lottie-react-native';
 import { Picker as RNPicker } from 'react-native-ui-lib';
 import Picker from '../Picker';
 import { useGetAllProductsCategories } from '../../hooks/useGetAllProductsCategories';
@@ -31,15 +25,14 @@ function DescriptionSheet(props) {
   const [save, setSave] = React.useState(false);
   // const [open, setOpen] = React.useState(false);
   // const [value, setValue] = React.useState(null);
-  const [id, setId] = React.useState();
   const [category, setCategory] = React.useState();
   const [success, setSuccess] = React.useState(false);
   const { user } = useSelector(state => state.auth);
   const toast = useToast();
   const { setTempProduct } = useActionCreator();
-  const [showError, setShowError] = React.useState(false);
+  const [showError, _] = React.useState(false);
   const [saveStatus, setSaveStatus] = React.useState();
-  const { data, isLoading } = useGetAllProductsCategories(user.merchant);
+  const { data } = useGetAllProductsCategories(user.merchant);
   // useGetAllProductsCategories
   const mutation = useAddCategoryProduct(i => {
     if (i.status === 0 && i.id) {
@@ -101,11 +94,14 @@ function DescriptionSheet(props) {
       id={props.sheetId}
       statusBarTranslucent={true}
       drawUnderStatusBar={false}
-      gestureEnabled={true}
+      gestureEnabled={false}
       containerStyle={styles.containerStyle}
       indicatorStyle={styles.indicatorStyle}
       springOffset={50}
-      snapPoints={['93']}
+      openAnimationConfig={{
+        bounciness: 0,
+      }}
+      // snapPoints={['93']}
       defaultOverlayOpacity={0.3}>
       <View style={styles.main}>
         <View style={styles.header}>
@@ -116,7 +112,7 @@ function DescriptionSheet(props) {
             <Text style={styles.done}>Done</Text>
           </Pressable>
         </View>
-        {user.user_permissions.includes('ADDPROD') && (
+        {/* {user.user_permissions.includes('ADDPROD') && (
           <View style={styles.radioWrapper}>
             <ToggleSwitch
               isOn={save}
@@ -168,7 +164,8 @@ function DescriptionSheet(props) {
                   desc: description,
                   price: amount,
                   quantity: 1,
-                  category: category && JSON.parse(category.value).id,
+                  category:
+                    category && category.value && JSON.parse(category.value).id,
                   tag: 'NORMAL',
                   merchant: user.merchant,
                   mod_by: user.merchant,
@@ -179,7 +176,7 @@ function DescriptionSheet(props) {
               {btnChild}
             </PrimaryButton>
           </View>
-        )}
+        )} */}
         <View style={styles.inputWrapper}>
           <TextInput
             style={[
@@ -192,7 +189,7 @@ function DescriptionSheet(props) {
             ]}
             multiline
             textAlignVertical="top"
-            autoFocus
+            // autoFocus
             value={description}
             onChangeText={text => addDescription(text)}
             placeholder="Enter item description here..."
@@ -265,8 +262,10 @@ const styles = StyleSheet.create({
     // width: '80%',
   },
   label: {
-    fontFamily: 'Inter-Regular',
+    fontFamily: 'SFProDisplay-Regular',
     color: '#30475E',
+    letterSpacing: 0.3,
+    fontSize: 15,
   },
   labelStyle: {
     fontFamily: 'Inter-Regular',
@@ -281,9 +280,10 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.3,
   },
   mainText: {
-    fontFamily: 'Inter-Medium',
-    fontSize: 17,
+    fontFamily: 'SFProDisplay-Medium',
+    fontSize: 16,
     color: '#30475E',
+    letterSpacing: 0.3,
   },
   radioWrapper: {
     paddingHorizontal: 16,
@@ -317,13 +317,14 @@ const styles = StyleSheet.create({
     color: '#000',
 
     marginTop: 12,
-    fontFamily: 'Inter-Medium',
+    fontFamily: 'SFProDisplay-Regular',
     fontSize: 16,
     // backgroundColor: 'rgba(159, 201, 243, 0.08)',
     borderColor: '#ddd',
     borderWidth: 0.8,
     borderBottomColor: 'rgba(25, 66, 216, 1)',
     borderBottomWidth: 1.5,
+    letterSpacing: 0.3,
   },
   save: {
     fontFamily: 'Inter-Regular',

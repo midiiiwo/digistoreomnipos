@@ -1,13 +1,6 @@
-/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable prettier/prettier */
 import React from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  Pressable,
-  ScrollView,
-  Dimensions,
-} from 'react-native';
+import { StyleSheet, View, Text, Pressable, ScrollView } from 'react-native';
 import ActionSheet from 'react-native-actions-sheet';
 import { SheetManager } from 'react-native-actions-sheet';
 import { useSelector } from 'react-redux';
@@ -38,31 +31,38 @@ function InventoryOutlet(props) {
       openAnimationConfig={{ bounciness: 0 }}
       springOffset={50}
       defaultOverlayOpacity={0.3}>
-      <View style={[styles.main, { width: '100%' }]}>
+      <View style={styles.main}>
         <View style={styles.header}>
           <Text style={styles.mainText}>Select Outlet</Text>
         </View>
-        <ScrollView style={{ width: '100%' }}>
-          {((data && data.data && data.data.data) || []).map(outlet => {
-            if (outlet) {
-              return (
-                <Pressable
-                  key={outlet.outlet_id}
-                  style={styles.channelType}
-                  onPress={() => handleSelect(outlet)}>
-                  <Text style={styles.channelText}>{outlet.outlet_name}</Text>
-                  {outlet.outlet_id === inventoryOutlet.outlet_id && (
-                    <Check
-                      style={styles.caret}
-                      height={24}
-                      width={24}
-                      stroke="#3C79F5"
-                    />
-                  )}
-                </Pressable>
-              );
-            }
-          })}
+        <ScrollView>
+          {((data && data.data && data.data.data) || [])
+            .filter(
+              i =>
+                i &&
+                user.user_assigned_outlets &&
+                user.user_assigned_outlets.includes(i.outlet_id),
+            )
+            .map(outlet => {
+              if (outlet) {
+                return (
+                  <Pressable
+                    key={outlet.outlet_id}
+                    style={styles.channelType}
+                    onPress={() => handleSelect(outlet)}>
+                    <Text style={styles.channelText}>{outlet.outlet_name}</Text>
+                    {outlet.outlet_id === inventoryOutlet.outlet_id && (
+                      <Check
+                        style={styles.caret}
+                        height={24}
+                        width={24}
+                        stroke="#3C79F5"
+                      />
+                    )}
+                  </Pressable>
+                );
+              }
+            })}
         </ScrollView>
       </View>
     </ActionSheet>
@@ -72,13 +72,12 @@ function InventoryOutlet(props) {
 const styles = StyleSheet.create({
   containerStyle: {
     marginBottom: 0,
-    width: Dimensions.get('window').width * 0.6,
   },
   // indicatorStyle: {
   //   display: 'none',
   // },
   caret: {
-    marginLeft: 18,
+    marginLeft: 'auto',
   },
   header: {
     flexDirection: 'row',
@@ -88,8 +87,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.3,
   },
   mainText: {
-    fontFamily: 'ReadexPro-Medium',
-    fontSize: 18,
+    fontFamily: 'SFProDisplay-Medium',
+    fontSize: 17,
     color: '#30475E',
     letterSpacing: 0.3,
   },
@@ -114,10 +113,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
   },
   channelText: {
-    fontFamily: 'ReadexPro-Regular',
-    fontSize: 16.8,
+    fontFamily: 'SFProDisplay-Regular',
+    fontSize: 16.4,
     color: '#30475E',
   },
 });
 
 export default InventoryOutlet;
+

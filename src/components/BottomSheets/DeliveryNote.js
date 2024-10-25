@@ -1,12 +1,6 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  // TouchableOpacity,
-  TextInput,
-} from 'react-native';
+import { StyleSheet, View, Text, TextInput } from 'react-native';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import { useSelector } from 'react-redux';
 import { useActionCreator } from '../../hooks/useActionCreator';
@@ -15,21 +9,21 @@ import { Pressable } from 'react-native';
 function DeliveryNote(props) {
   const { deliveryNote } = useSelector(state => state.sale);
   const { setDeliveryNote } = useActionCreator();
-  // const { user } = useSelector(state => state.auth);
 
   return (
     <ActionSheet
       id={props.sheetId}
       statusBarTranslucent={false}
       drawUnderStatusBar={false}
-      gestureEnabled={false}
+      gestureEnabled={true}
       containerStyle={styles.containerStyle}
       indicatorStyle={styles.indicatorStyle}
       springOffset={50}
+      openAnimationConfig={{ bounciness: 0 }}
       defaultOverlayOpacity={0.3}>
       <View style={styles.main}>
         <View style={styles.header}>
-          <Text style={styles.mainText}>Add Delivery Notes</Text>
+          <Text style={styles.mainText}>Add delivery notes</Text>
           <Pressable
             style={styles.doneWrapper}
             onPress={() => SheetManager.hide('deliveryNote')}>
@@ -42,11 +36,11 @@ function DeliveryNote(props) {
             style={styles.input}
             multiline
             textAlignVertical="top"
-            autoFocus
+            // autoFocus
             value={deliveryNote}
             onChangeText={text => setDeliveryNote(text)}
             placeholder="Add delivery note here..."
-            placeholderTextColor="#bbb"
+            placeholderTextColor="#888"
           />
         </View>
       </View>
@@ -82,15 +76,15 @@ const styles = StyleSheet.create({
   },
   mainText: {
     fontFamily: 'SFProDisplay-Medium',
-    fontSize: 19,
+    fontSize: 17,
     color: '#30475E',
-    letterSpacing: -0.1,
+    letterSpacing: 0.3,
   },
   done: {
     fontFamily: 'SFProDisplay-Medium',
     color: '#1942D8',
-    fontSize: 18,
-    letterSpacing: -0.1,
+    fontSize: 15,
+    letterSpacing: 0.3,
   },
   doneWrapper: {
     position: 'absolute',
@@ -105,10 +99,10 @@ const styles = StyleSheet.create({
     padding: 12,
   },
   input: {
-    height: '50%',
+    height: '40%',
     padding: 18,
     color: '#30475e',
-    fontSize: 20,
+    fontSize: 15,
     fontFamily: 'SFProDisplay-Regular',
     marginTop: 12,
     borderColor: '#ddd',
@@ -116,7 +110,6 @@ const styles = StyleSheet.create({
     borderBottomColor: 'rgba(25, 66, 216, 1)',
     borderBottomWidth: 1.5,
     paddingVertical: 22,
-    paddingTop: 22,
   },
 });
 

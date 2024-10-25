@@ -2,13 +2,12 @@
 /* eslint-disable react-native/no-inline-styles */
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import React from 'react';
-import { StyleSheet, View, Text, TextInput, Pressable } from 'react-native';
+import { StyleSheet, View, Pressable } from 'react-native';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import { useSelector } from 'react-redux';
 
 import { useApplyDiscountCode } from '../../hooks/useApplyDiscountCode';
 import { useActionCreator } from '../../hooks/useActionCreator';
-import ButtonLargeBottom from '../ButtonLargeBottom';
 import { useToast } from 'react-native-toast-notifications';
 import { Input } from './EditCategorySheet';
 import PrimaryButton from '../PrimaryButton';

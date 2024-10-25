@@ -40,26 +40,28 @@ function TransferFilter(props) {
       track.current = true;
       return;
     }
-    // console.log('starttttt', JSON.parse(range.value).meta);
-    if (JSON.parse(tRange.value).meta) {
-      setTStartDate(
-        moment()
-          .startOf(JSON.parse(tRange.value).value)
-          .subtract(1, JSON.parse(tRange.value).meta)
-          .toDate(),
-      );
-      setTEndDate(
-        moment()
-          .startOf(JSON.parse(tRange.value).value)
-          .subtract(1, 'day')
-          .toDate(),
-      );
-      return;
-    }
-    setTStartDate(moment().startOf(JSON.parse(tRange.value).value).toDate());
+    try {
+      // console.log('starttttt', JSON.parse(range.value).meta);
+      if (JSON.parse(tRange.value).meta) {
+        setTStartDate(
+          moment()
+            .startOf(JSON.parse(tRange.value).value)
+            .subtract(1, JSON.parse(tRange.value).meta)
+            .toDate(),
+        );
+        setTEndDate(
+          moment()
+            .startOf(JSON.parse(tRange.value).value)
+            .subtract(1, 'day')
+            .toDate(),
+        );
+        return;
+      }
+      setTStartDate(moment().startOf(JSON.parse(tRange.value).value).toDate());
 
-    // setSummaryEndDate(new Date());
-    setTEndDate(moment().endOf(JSON.parse(tRange.value).value).toDate());
+      // setSummaryEndDate(new Date());
+      setTEndDate(moment().endOf(JSON.parse(tRange.value).value).toDate());
+    } catch (error) {}
   }, [tRange, setTStartDate, setTEndDate]);
 
   return (

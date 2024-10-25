@@ -1,7 +1,6 @@
 import React from 'react';
-import { StyleSheet, View, Text, Pressable, ScrollView } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import ActionSheet from 'react-native-actions-sheet';
-import { SheetManager } from 'react-native-actions-sheet';
 import { useSelector } from 'react-redux';
 import { DateTimePicker } from 'react-native-ui-lib';
 import { Picker as RNPicker } from 'react-native-ui-lib';
@@ -40,25 +39,27 @@ function AirtimeFilterSheet(props) {
       return;
     }
     // console.log('starttttt', JSON.parse(range.value).meta);
-    if (JSON.parse(aRange.value).meta) {
-      setAStartDate(
-        moment()
-          .startOf(JSON.parse(aRange.value).value)
-          .subtract(1, JSON.parse(aRange.value).meta)
-          .toDate(),
-      );
-      setAEndDate(
-        moment()
-          .startOf(JSON.parse(aRange.value).value)
-          .subtract(1, 'day')
-          .toDate(),
-      );
-      return;
-    }
-    setAStartDate(moment().startOf(JSON.parse(aRange.value).value).toDate());
+    try {
+      if (JSON.parse(aRange.value).meta) {
+        setAStartDate(
+          moment()
+            .startOf(JSON.parse(aRange.value).value)
+            .subtract(1, JSON.parse(aRange.value).meta)
+            .toDate(),
+        );
+        setAEndDate(
+          moment()
+            .startOf(JSON.parse(aRange.value).value)
+            .subtract(1, 'day')
+            .toDate(),
+        );
+        return;
+      }
+      setAStartDate(moment().startOf(JSON.parse(aRange.value).value).toDate());
 
-    // setSummaryEndDate(new Date());
-    setAEndDate(moment().endOf(JSON.parse(aRange.value).value).toDate());
+      // setSummaryEndDate(new Date());
+      setAEndDate(moment().endOf(JSON.parse(aRange.value).value).toDate());
+    } catch (error) {}
   }, [aRange, setAStartDate, setAEndDate]);
 
   return (

@@ -21,7 +21,7 @@ function EmailSheet(props) {
     tran_type: 'ORDER',
     notify_type: 'EMAIL',
     merchant: user.merchant,
-    mod_by: 'CUSTOMER',
+    mod_by: user.login,
     tracking_email: 'pherut@gmail.com',
     tracking_url: 'http://buy.digistoreafrica.com',
   };

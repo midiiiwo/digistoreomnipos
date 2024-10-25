@@ -13,6 +13,7 @@ const HeaderInventory = ({
   navigation,
   backgroundColor,
   showNotificationIcon = false,
+  showCustomerOutlet = false,
 }) => {
   const { outlet } = useSelector(state => state.auth);
   const { customer } = useSelector(state => state.sale);
@@ -44,75 +45,79 @@ const HeaderInventory = ({
           <ProfileIcon height={28} width={27} stroke="#30475e" />
         </Pressable>
       </ShadowedView>
-      <View
-        style={{
-          marginLeft: 'auto',
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
-        {customer ? (
-          <Pressable
-            style={[
-              styles.headerTextWrapper,
-              {
-                flexDirection: 'row',
-                alignItems: 'center',
-              },
-            ]}
-            onPress={() => navigation.navigate('Customer Select')}>
-            <User height={20} width={20} fill="#fff" />
-            <Text
-              numberOfLines={1}
-              style={[
-                styles.headerText,
-                {
-                  marginLeft: 3,
-                  maxWidth: '84%',
-                  textAlign: 'right',
-                  color: '#fff',
-                },
-              ]}>
-              {customer.customer_name}
-            </Text>
-          </Pressable>
-        ) : (
-          <Pressable
-            style={styles.headerTextWrapper}
-            onPress={() => navigation.navigate('Customer Select')}>
-            <Text style={styles.headerText}>Add Customer</Text>
-          </Pressable>
-        )}
-        <ShadowedView
-          style={shadowStyle({
-            opacity: 0.1,
-            radius: 1.5,
-            offset: [0, 0],
-          })}>
-          <Pressable
-            onPress={() => navigation.navigate('Outlets')}
+      {showCustomerOutlet && (
+        <>
+          <View
             style={{
+              marginLeft: 'auto',
               flexDirection: 'row',
-              justifyContent: 'center',
               alignItems: 'center',
-              backgroundColor: '#fff',
-              paddingHorizontal: 14,
-              paddingVertical: 8,
-              borderRadius: 30,
+              justifyContent: 'center',
             }}>
-            <Text
-              style={{
-                fontFamily: 'ReadexPro-Medium',
-                color: '#304753',
-                fontSize: 16,
-              }}>
-              {outlet && outlet.outlet_name}
-            </Text>
-            <ArrowLeftShort style={{ marginLeft: 2 }} height={18} width={18} />
-          </Pressable>
-        </ShadowedView>
-      </View>
+            {customer ? (
+              <Pressable
+                style={[
+                  styles.headerTextWrapper,
+                  {
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  },
+                ]}
+                onPress={() => navigation.navigate('Customer Select')}>
+                <User height={20} width={20} fill="#fff" />
+                <Text
+                  numberOfLines={1}
+                  style={[
+                    styles.headerText,
+                    {
+                      marginLeft: 3,
+                      maxWidth: '84%',
+                      textAlign: 'right',
+                      color: '#fff',
+                    },
+                  ]}>
+                  {customer.customer_name}
+                </Text>
+              </Pressable>
+            ) : (
+              <Pressable
+                style={styles.headerTextWrapper}
+                onPress={() => navigation.navigate('Customer Select')}>
+                <Text style={styles.headerText}>Add Customer</Text>
+              </Pressable>
+            )}
+            <ShadowedView
+              style={shadowStyle({
+                opacity: 0.1,
+                radius: 1.5,
+                offset: [0, 0],
+              })}>
+              <Pressable
+                onPress={() => navigation.navigate('Outlets')}
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  backgroundColor: '#fff',
+                  paddingHorizontal: 14,
+                  paddingVertical: 8,
+                  borderRadius: 30,
+                }}>
+                <Text
+                  style={{
+                    fontFamily: 'ReadexPro-Medium',
+                    color: '#304753',
+                    fontSize: 16,
+                  }}>
+                  {outlet && outlet.outlet_name}
+                </Text>
+                <ArrowLeftShort style={{ marginLeft: 2 }} height={18} width={18} />
+              </Pressable>
+            </ShadowedView>
+          </View>
+        </>)}
     </View>
+
   );
 };
 

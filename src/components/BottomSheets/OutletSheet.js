@@ -4,7 +4,6 @@ import { StyleSheet, View, Text, Pressable, FlatList } from 'react-native';
 import ActionSheet from 'react-native-actions-sheet';
 import { SheetManager } from 'react-native-actions-sheet';
 
-import CaretRight from '../../../assets/icons/cart-right.svg';
 import { useActionCreator } from '../../hooks/useActionCreator';
 import { useSelector } from 'react-redux';
 import { useGetMerchantOutlets } from '../../hooks/useGetMerchantOutlets';
@@ -13,13 +12,8 @@ import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 
 function OutletSheet(props) {
   const { user } = useSelector(state => state.auth);
-  const {
-    data,
-    refetch: refetchOutlet,
-    isFetching: isOutletFetching,
-  } = useGetMerchantOutlets(user.user_merchant_id);
-  const { resetCart } = useActionCreator();
-  const { channel } = useSelector(state => state.quickSale);
+  const { data } = useGetMerchantOutlets(user.user_merchant_id);
+
   const { setCurrentUser, setCurrentOutlet } = useActionCreator();
   return (
     <ActionSheet

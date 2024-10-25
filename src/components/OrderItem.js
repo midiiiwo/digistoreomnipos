@@ -22,6 +22,7 @@ const mapChannelToPayment = {
   DEBITBAL: 'Pay Later',
   INVOICE: 'Invoice',
   NEW: 'Unknown',
+  OFFLINE: 'Ussd Offline',
 };
 
 const mapSalesChannelToName = {
@@ -42,6 +43,8 @@ const mapSalesChannelToName = {
   IOSMOBILE: 'Starbite IOS',
   'ANDROID APP': 'Starbite Android',
   'IOS APP': 'Starbite IOS',
+  GLOVO: 'Glovo',
+  BOLT: 'Bolt',
 };
 
 const ImageItem = ({ order_source }) => {
@@ -102,7 +105,7 @@ const ImageItem = ({ order_source }) => {
       )}
       {order_source === 'WHATSAPP' && (
         <Image
-          source={require('../../assets/images/whatsapp.png')}
+          source={require('../../assets/images/whatsapp.webp')}
           style={[styles.img, { borderRadius: 100 }]}
         />
       )}
@@ -184,8 +187,8 @@ const OrderItem = ({ item, navigation }) => {
                 styles.name,
                 {
                   fontFamily: 'ReadexPro-Medium',
-                  fontSize: 20,
-                  marginBottom: 4,
+                  fontSize: 15.5,
+                  marginBottom: 7,
                 },
               ]}
               numberOfLines={1}>
@@ -195,10 +198,10 @@ const OrderItem = ({ item, navigation }) => {
               style={[
                 styles.name,
                 {
-                  fontFamily: 'ReadexPro-Medium',
-                  fontSize: 16,
+                  fontFamily: 'ReadexPro-Regular',
+                  fontSize: 13,
                   color: '#9DB2BF',
-                  marginBottom: 4,
+                  marginBottom: 3,
                 },
               ]}
               numberOfLines={1}>
@@ -210,8 +213,8 @@ const OrderItem = ({ item, navigation }) => {
                 styles.name,
 
                 {
-                  fontFamily: 'ReadexPro-Medium',
-                  fontSize: 16,
+                  fontFamily: 'ReadexPro-Regular',
+                  fontSize: 13,
                   color: '#9DB2BF',
                   marginBottom: 12,
                 },
@@ -224,7 +227,6 @@ const OrderItem = ({ item, navigation }) => {
           style={{
             flexDirection: 'row',
             alignItems: 'center',
-            // backgroundColor: 'red',
             marginTop: 'auto',
           }}>
           <ImageItem order_source={item.order_source} />
@@ -234,7 +236,7 @@ const OrderItem = ({ item, navigation }) => {
               {
                 marginLeft: 6,
                 fontFamily: 'ReadexPro-Regular',
-                fontSize: 16,
+                fontSize: 14,
                 letterSpacing: 0.2,
               },
             ]}
@@ -258,10 +260,16 @@ const OrderItem = ({ item, navigation }) => {
       </View>
       <View style={styles.status}>
         <Text style={[styles.count, { textAlign: 'right' }]}>
-          GHS{' '}
+          <Text style={{ fontSize: 12 }}>GHS</Text>{' '}
           {Number(item.total_amount) == 0 && Number(item.order_discount) != 0
-            ? Math.abs(Number(item.order_discount))
-            : item.total_amount}
+            ? new Intl.NumberFormat('en-US', {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            }).format(Math.abs(Number(item.order_discount)))
+            : new Intl.NumberFormat('en-US', {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            }).format(Number(item.total_amount))}
         </Text>
         <View style={[styles.statusWrapper, { alignSelf: 'flex-end' }]}>
           <View
@@ -270,13 +278,14 @@ const OrderItem = ({ item, navigation }) => {
               {
                 backgroundColor:
                   item.order_status !== 'NEW' &&
-                  item.order_status !== 'PENDING' &&
-                  item.order_status !== 'FAILED' &&
-                  item.order_status !== 'PAYMENT_CANCELLED' &&
-                  item.order_status !== 'DECLINED' &&
-                  item.order_status !== 'PAYMENT_FAILED' &&
-                  item.order_status !== 'VOID' &&
-                  item.order_status !== 'PAYMENT_DEFERRED'
+                    item.order_status !== 'PENDING' &&
+                    item.order_status !== 'FAILED' &&
+                    item.order_status !== 'PAYMENT_CANCELLED' &&
+                    item.order_status !== 'DECLINED' &&
+                    item.order_status !== 'PAYMENT_FAILED' &&
+                    item.order_status !== 'VOID' &&
+                    item.order_status !== 'PAYMENT_DEFERRED' &&
+                    item?.payment_status !== 'Deferred'
                     ? '#87C4C9'
                     : '#FD8A8A',
               },
@@ -284,14 +293,15 @@ const OrderItem = ({ item, navigation }) => {
           />
           <Text style={styles.orderStatus}>
             {item &&
-            item.order_status !== 'NEW' &&
-            item.order_status !== 'PENDING' &&
-            item.order_status !== 'FAILED' &&
-            item.order_status !== 'PAYMENT_CANCELLED' &&
-            item.order_status !== 'DECLINED' &&
-            item.order_status !== 'PAYMENT_FAILED' &&
-            item.order_status !== 'CANCELLED' &&
-            item.order_status !== 'PAYMENT_DEFERRED'
+              item.order_status !== 'NEW' &&
+              item.order_status !== 'PENDING' &&
+              item.order_status !== 'FAILED' &&
+              item.order_status !== 'PAYMENT_CANCELLED' &&
+              item.order_status !== 'DECLINED' &&
+              item.order_status !== 'PAYMENT_FAILED' &&
+              item.order_status !== 'CANCELLED' &&
+              item.order_status !== 'PAYMENT_DEFERRED' &&
+              item?.payment_status !== 'Deferred'
               ? item.order_status === 'VOID'
                 ? 'Void'
                 : 'Paid'
@@ -307,8 +317,8 @@ const OrderItem = ({ item, navigation }) => {
                   item.delivery_status === 'DELIVERED'
                     ? '#87C4C9'
                     : item.delivery_status === 'PENDING'
-                    ? '#FD8A8A'
-                    : '#FD8A8A',
+                      ? '#FD8A8A'
+                      : '#FD8A8A',
               },
             ]}
           />
@@ -316,8 +326,8 @@ const OrderItem = ({ item, navigation }) => {
             {item.delivery_status === 'DELIVERED'
               ? 'Delivered'
               : item.delivery_status === 'PENDING'
-              ? 'Undelivered'
-              : 'Undelivered'}
+                ? 'Undelivered'
+                : 'Undelivered'}
           </Text>
         </View>
       </View>
@@ -329,12 +339,15 @@ export default OrderItem;
 
 const styles = StyleSheet.create({
   wrapper: {
+    // paddingHorizontal: 14,
+    // paddingTop: 12,
     flexDirection: 'row',
     paddingVertical: 12,
     backgroundColor: '#fff',
     marginBottom: 4,
-    paddingHorizontal: 22,
+    paddingHorizontal: 14,
     borderRadius: 6,
+    paddingRight: 12,
     // alignItems: 'center',
   },
   listWrapper: {
@@ -346,8 +359,8 @@ const styles = StyleSheet.create({
   },
   count: {
     fontFamily: 'ReadexPro-Medium',
-    color: '#6D8299',
-    fontSize: 18,
+    color: '#2D4356',
+    fontSize: 16,
     marginBottom: 6,
     // marginTop: 8,
   },
@@ -357,12 +370,10 @@ const styles = StyleSheet.create({
   orderStatus: {
     fontFamily: 'ReadexPro-Medium',
     color: '#30475e',
-    fontSize: 16,
-    letterSpacing: 0.3,
   },
   statusIndicator: {
-    height: 12,
-    width: 12,
+    height: 8,
+    width: 8,
     borderRadius: 100,
     marginRight: 4,
   },
@@ -370,29 +381,21 @@ const styles = StyleSheet.create({
     height: 24,
     width: 24,
     borderRadius: 4,
-    // marginVertical: 6,
-    // marginTop: 6,
-    // marginRight: 10,
-    // alignSelf: 'flex-start',
-    // backgroundColor: 'green',
   },
   statusWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: 29,
-    paddingHorizontal: 10,
-    paddingRight: 14,
-    paddingVertical: 6,
+    borderRadius: 15,
+    paddingHorizontal: 7,
+    paddingRight: 8,
+    paddingVertical: 4,
     backgroundColor: '#f9f9f9',
     alignSelf: 'flex-end',
     marginTop: 'auto',
-    // position: 'absolute',
-    // right: 18,
   },
   name: {
-    fontFamily: 'SFProDisplay-Medium',
+    fontFamily: 'ReadexPro-Medium',
     color: '#30475e',
-    // marginBottom: 0,
-    fontSize: 18,
+    fontSize: 15,
   },
 });

@@ -505,7 +505,6 @@
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				E38CF4E8C7B531406ED4D3AD /* [CP] Embed Pods Frameworks */,
 				C0BC77EC7E98A287AD927FC9 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
@@ -528,7 +527,6 @@
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				1AFD29501EB65CFA64919543 /* [CP] Embed Pods Frameworks */,
 				F12F29F2E9C1F5E6449F314E /* [CP] Copy Pods Resources */,
 				A6D6D94A434D60B21D5062C2 /* [CP-User] [RNFB] Core Configuration */,
 			);
@@ -723,23 +721,6 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"../node_modules/react-native/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"../node_modules/react-native/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
 		};
-		1AFD29501EB65CFA64919543 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-digistoreominipos/Pods-digistoreominipos-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-digistoreominipos/Pods-digistoreominipos-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-digistoreominipos/Pods-digistoreominipos-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		7B83E779F5676E992EF25284 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -812,23 +793,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-digistoreominipos-digistoreominiposTests/Pods-digistoreominipos-digistoreominiposTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		E38CF4E8C7B531406ED4D3AD /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-digistoreominipos-digistoreominiposTests/Pods-digistoreominipos-digistoreominiposTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-digistoreominipos-digistoreominiposTests/Pods-digistoreominipos-digistoreominiposTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-digistoreominipos-digistoreominiposTests/Pods-digistoreominipos-digistoreominiposTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		F12F29F2E9C1F5E6449F314E /* [CP] Copy Pods Resources */ = {

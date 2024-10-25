@@ -11,16 +11,6 @@ import {
   TextInput,
 } from 'react-native';
 import { useSelector } from 'react-redux';
-
-import { useGetAllOrders } from '../hooks/useGetAllOrders';
-import Loading from '../components/Loading';
-// import SegmentedControl from '@react-native-segmented-control/segmented-control';
-import OrderItem from '../components/OrderItem';
-import moment from 'moment';
-import { useGetMerchantOutlets } from '../hooks/useGetMerchantOutlets';
-import { isArray } from 'lodash';
-import CaretDown from '../../assets/icons/caret-down.svg';
-
 import {
   Menu,
   MenuOptions,
@@ -28,19 +18,46 @@ import {
   MenuTrigger,
 } from 'react-native-popup-menu';
 
+import Loading from '../components/Loading';
+// import SegmentedControl from '@react-native-segmented-control/segmented-control';
+import CaretDown from '../../assets/icons/caret-down.svg';
+import OrderItem from '../components/OrderItem';
+import moment from 'moment';
+import { useGetOrders } from '../hooks/useGetOrders';
+import { SheetManager } from 'react-native-actions-sheet';
+import { useGetMerchantOutlets } from '../hooks/useGetMerchantOutlets';
+import { isArray, upperCase } from 'lodash';
+import { handleSearch } from '../utils/shared';
+
 const Orders = ({ navigation }) => {
   const { user } = useSelector(state => state.auth);
   const { startDate, endDate, orderOutlet } = useSelector(
     state => state.orders,
   );
-  const [searchTerm, setSearchTerm] = React.useState('');
-  const [orders, setOrders] = React.useState();
-  const ordersHistory = useGetAllOrders(setOrders);
-  const tabValues = ['Paid', 'Outstanding Payments', 'Pending', 'Completed'];
-  const { data, isLoading } = useGetMerchantOutlets(user.merchant);
-  const [orderStatus, setOrderStatus] = React.useState('Paid');
 
+  const { data, isLoading } = useGetMerchantOutlets(user.merchant);
+  const [searchTerm, setSearchTerm] = React.useState('');
+  // const { data, isLoading, isFetching, refetch } = useGetAllOrders(
+  //   moment(startDate).format('DD-MM-YYYY'),
+  //   moment(endDate).format('DD-MM-YYYY'),
+  //   user.merchant,
+  //   user.user_merchant_group === 'Administrators',
+  // );
+  const [orders, setOrders] = React.useState();
+  const [orderStatus, setOrderStatus] = React.useState('Confirmed');
+  const tabValues = [
+    'All',
+    'Confirmed',
+    'Pending',
+    'Ready For Pickup',
+    'Ready For Delivery',
+    'Deliveries Ongoing',
+    'Completed',
+  ];
   const [openMenu, setOpenMenu] = React.useState(false);
+  // const ordersNonAdmin_ = useGetAllOrders(setOrdersNonAdmin);
+
+  const ordersHistory = useGetOrders(setOrders);
 
   // React.useEffect(() => {
   //   const unsubscribe = navigation.addListener('focus', () => {
@@ -61,10 +78,25 @@ const Orders = ({ navigation }) => {
       }
       return false;
     });
+    // if (user.user_merchant_group === 'Administrators') {
+    //   refetch();
+    //   return;
+    // }
+    // let outletList = '';
+    // for (let outlet of user.user_assigned_outlets) {
+    //   outletList = outlet;
+    // }
+
+    // ordersNonAdmin_.mutate({
+    //   merchant: user.merchant,
+    //   outlet: user.outlet,
+    //   end_date: moment(endDate).format('DD-MM-YYYY'),
+    //   start_date: moment(startDate).format('DD-MM-YYYY'),
+    // });
 
     let outlet = orderOutlet && orderOutlet.value;
     if (!outlet || outlet === 'ALL') {
-      outlet = outlets.map(i => {
+      outlet = outlets?.map(i => {
         if (!i) {
           return;
         }
@@ -75,7 +107,7 @@ const Orders = ({ navigation }) => {
     if (typeof outlet === 'object' && isArray(outlet)) {
       try {
         outlet = outlet.toString();
-      } catch (error) {}
+      } catch (error) { }
     }
 
     ordersHistory.mutate({
@@ -87,63 +119,167 @@ const Orders = ({ navigation }) => {
       isAdmin: user.user_merchant_group === 'Administrators',
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [startDate, endDate, orderOutlet]);
+  }, [startDate, endDate, orderStatus, orderOutlet]);
 
-  if (
-    orders &&
-    orders.data &&
-    orders.data.filter(i => i != null).length === 0
-  ) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: '#fff',
-          paddingTop: Dimensions.get('window').height * 0.1,
-        }}>
-        <Text
-          style={{
-            fontFamily: 'ReadexPro-bold',
-            fontSize: 18,
-            color: '#30475e',
-          }}>
-          You have no orders recorded
-        </Text>
-        <Text
-          style={{
-            fontFamily: 'ReadexPro-Medium',
-            fontSize: 15,
-            color: '#748DA6',
-            marginTop: 10,
-          }}>
-          Create your first order
-        </Text>
-        <Pressable
-          style={[
-            styles.btn,
-            {
-              marginTop: 14,
-              backgroundColor: '#rgba(25, 66, 216, 0.9)',
-            },
-          ]}
-          onPress={async () => {
-            navigation.navigate('Inventory');
-          }}>
-          <Text style={styles.signin}>Create Order</Text>
-        </Pressable>
-      </View>
-    );
-  }
+  //put isFetching
+  // if (isLoading || isFetching) {
+  //   return <Loading />;pay
+  // }
+
+  // if (
+  //   orders &&
+  //   orders.data &&
+  //   orders.data.filter(i => i != null).length === 0
+  // ) {
+  //   return (
+  //     <View
+  //       style={{
+  //         flex: 1,
+  //         justifyContent: 'center',
+  //         alignItems: 'center',
+  //         backgroundColor: '#fff',
+  //       }}>
+  //       <Text
+  //         style={{
+  //           fontFamily: 'ReadexPro-Medium',
+  //           fontSize: 16,
+  //           color: '#30475e',
+  //         }}>
+  //         You have no orders recorded
+  //       </Text>
+
+  //       <Pressable
+  //         style={[
+  //           styles.btn,
+  //           {
+  //             marginTop: 14,
+  //             backgroundColor: '#rgba(25, 66, 216, 0.9)',
+  //           },
+  //         ]}
+  //         onPress={async () => {
+  //           navigation.navigate('Inventory');
+  //         }}>
+  //         <Text style={styles.signin}>Create Order</Text>
+  //       </Pressable>
+  //       <Pressable
+  //         style={[
+  //           styles.btn,
+  //           {
+  //             marginTop: 14,
+  //             backgroundColor: '#35A29F',
+  //           },
+  //         ]}
+  //         onPress={() => {
+  //           SheetManager.show('orderDate');
+  //         }}>
+  //         <Text style={styles.signin}>Change Filter</Text>
+  //       </Pressable>
+  //     </View>
+  //   );
+  // }
+
+  // const filteredOrdersByUser = React.useMemo(
+  //   () =>
+  //     orders?.data?.filter(o => {
+  //       return upperCase(orderStatus) === 'ALL'
+  //         ? true
+  //         : upperCase(orderStatus) === 'CONFIRMED'
+  //         ? [
+  //             'PAID',
+  //             'COMPLETED',
+  //             'PICKUP_READY',
+  //             'BACKOFF_PROCCESSING',
+  //             'BACKOFF_PROCCESSED',
+  //             'DISPATCHED',
+  //             'PAYMENT_DEFERRED',
+  //             'PAYMENT_PARTIAL',
+  //           ].includes(o?.order_status)
+  //         : upperCase(orderStatus) === 'PENDING'
+  //         ? ![
+  //             'PAID',
+  //             'COMPLETED',
+  //             'PICKUP_READY',
+  //             'BACKOFF_PROCCESSING',
+  //             'BACKOFF_PROCCESSED',
+  //             'DISPATCHED',
+  //           ].includes(o?.order_status)
+  //         : upperCase(orderStatus) === 'COMPLETED'
+  //         ? ['COMPLETED'].includes(o?.order_status)
+  //         : upperCase(orderStatus) === 'OUTSTANDING PAYMENTS'
+  //         ? ['PAYMENT_DEFERRED'].includes(o?.order_status)
+  //         : false;
+  //     }),
+  //   [orders?.data, orderStatus],
+  // );
+
+  const filteredOrdersByUser = React.useMemo(
+    () =>
+      orders?.data?.filter(o => {
+        return upperCase(orderStatus) === 'ALL'
+          ? true
+          : upperCase(orderStatus) === 'CONFIRMED'
+            ? [
+              'PAID',
+              'COMPLETED',
+              'PICKUP_READY',
+              'BACKOFF_PROCCESSING',
+              'BACKOFF_PROCCESSED',
+              'DISPATCHED',
+              'PAYMENT_DEFERRED',
+            ].includes(o?.order_status)
+            : upperCase(orderStatus) === 'PENDING'
+              ? ![
+                'PAID',
+                'COMPLETED',
+                'PICKUP_READY',
+                'BACKOFF_PROCCESSING',
+                'BACKOFF_PROCCESSED',
+                'DISPATCHED',
+              ].includes(o?.order_status)
+              : upperCase(orderStatus) === 'COMPLETED'
+                ? ['COMPLETED'].includes(o?.order_status)
+                : upperCase(orderStatus) === 'READY FOR PICKUP'
+                  ? ['PICKUP_READY'].includes(o?.order_status) &&
+                  o?.delivery_type === 'PICKUP'
+                  : upperCase(orderStatus) === 'READY FOR DELIVERY'
+                    ? ['PENDING'].includes(o?.delivery_status) &&
+                    o?.delivery_rider === null &&
+                    o?.delivery_type === 'DELIVERY' &&
+                    [
+                      'PAID',
+                      'COMPLETED',
+                      'PICKUP_READY',
+                      'BACKOFF_PROCCESSING',
+                      'BACKOFF_PROCCESSED',
+                      'DISPATCHED',
+                      'PAYMENT_DEFERRED',
+                    ].includes(o?.order_status)
+                    : upperCase(orderStatus) === 'DELIVERIES ONGOING'
+                      ? ['PENDING', 'PICKED_UP_ITEM'].includes(o?.delivery_status) &&
+                      o?.delivery_rider !== null &&
+                      o?.delivery_type === 'DELIVERY' &&
+                      [
+                        'PAID',
+                        'COMPLETED',
+                        'PICKUP_READY',
+                        'PICKED_UP_ITEM',
+                        'BACKOFF_PROCCESSING',
+                        'BACKOFF_PROCCESSED',
+                        'DISPATCHED',
+                      ].includes(o?.order_status)
+                      : upperCase(orderStatus) === o?.order_status;
+      }),
+    [orders?.data, orderStatus],
+  );
 
   return (
     <View style={styles.main}>
-      <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
+      {/* <CustomStatusBar backgroundColor="#f9f9f9" /> */}
+      <View>
         <TextInput
           style={{
             height: 50,
-            flex: 1,
+            width: '100%',
             borderBottomColor: '#3572EF',
             borderBottomWidth: 1.8,
             fontFamily: 'ReadexPro-Regular',
@@ -155,7 +291,9 @@ const Orders = ({ navigation }) => {
           value={searchTerm}
           onChangeText={setSearchTerm}
         />
-        <View style={{ marginRight: 16, marginLeft: 20 }}>
+      </View>
+      <View style={styles.segmentedControlWrapper}>
+        <View style={{ marginRight: 16 }}>
           <Menu opened={openMenu} onBackdropPress={() => setOpenMenu(false)}>
             <MenuTrigger
               onPress={() => setOpenMenu(!openMenu)}
@@ -176,7 +314,7 @@ const Orders = ({ navigation }) => {
                     style={{
                       color: '#30475e',
                       fontFamily: 'ReadexPro-Medium',
-                      fontSize: 16.5,
+                      fontSize: 14.5,
                     }}>
                     {orderStatus}
                   </Text>
@@ -213,8 +351,6 @@ const Orders = ({ navigation }) => {
             </MenuOptions>
           </Menu>
         </View>
-      </View>
-      <View style={styles.segmentedControlWrapper}>
         {/* <SegmentedControl
           values={tabValues}
           selectedIndex={segment}
@@ -251,37 +387,43 @@ const Orders = ({ navigation }) => {
                     justifyContent: 'center',
                     alignItems: 'center',
                     height: '100%',
-                    paddingTop: Dimensions.get('window').height * 0.2,
+                    paddingTop: Dimensions.get('window').height * 0.1,
+                    backgroundColor: '#fff',
                   }}>
                   <Text
                     style={{
-                      fontFamily: 'ReadexPro-bold',
-                      fontSize: 18,
+                      fontFamily: 'ReadexPro-Medium',
+                      fontSize: 16,
                       color: '#30475e',
                     }}>
                     You have no orders recorded
                   </Text>
-                  <Text
-                    style={{
-                      fontFamily: 'ReadexPro-Medium',
-                      fontSize: 15,
-                      color: '#748DA6',
-                      marginTop: 10,
-                    }}>
-                    Create your first order
-                  </Text>
+
                   <Pressable
                     style={[
                       styles.btn,
                       {
                         marginTop: 14,
-                        backgroundColor: '#rgba(25, 66, 216, 0.9)',
+                        backgroundColor: 'rgba(25, 66, 216, 0.9)',
                       },
                     ]}
-                    onPress={async () => {
+                    onPress={() => {
                       navigation.navigate('Inventory');
                     }}>
                     <Text style={styles.signin}>Create Order</Text>
+                  </Pressable>
+                  <Pressable
+                    style={[
+                      styles.btn,
+                      {
+                        marginTop: 14,
+                        backgroundColor: '#35A29F',
+                      },
+                    ]}
+                    onPress={() => {
+                      SheetManager.show('orderDate');
+                    }}>
+                    <Text style={styles.signin}>Change Filter</Text>
                   </Pressable>
                 </View>
               );
@@ -301,59 +443,19 @@ const Orders = ({ navigation }) => {
                 }}
               />
             }
-            contentContainerStyle={styles.list}
-            data={orders && orders.data}
+            // contentContainerStyle={{ flex: 1 }}
+            data={handleSearch(searchTerm, filteredOrdersByUser)}
             keyExtractor={(item, index) => {
               if (!item) {
                 return index;
               }
               return item.order_no;
             }}
-            renderItem={({ item, index }) => {
-              if (!item) {
+            renderItem={({ item }) => {
+              if (!item?.order_status) {
                 return <></>;
               }
-              // if (item.payment_channel === 'PAYLATER') {
-              //   item = {
-              //     ...item,
-              //     order_status: 'TO BE PAID LATER',
-              //   };
-              // }
 
-              if (
-                orderStatus === 'Paid' &&
-                item.order_status !== 'PAID' &&
-                item.order_status !== 'COMPLETED' &&
-                item.order_status !== 'PICKUP_READY' &&
-                item.order_status !== 'BACKOFF_PROCCESSING' &&
-                item.order_status !== 'CANCELLED' &&
-                item.order_status !== 'DISPATCHED'
-              ) {
-                return <></>;
-              }
-              if (
-                orderStatus === 'Pending' &&
-                (item.order_status === 'PAID' ||
-                  item.order_status === 'COMPLETED' ||
-                  item.order_status === 'DELIVERED' ||
-                  item.order_status === 'BACKOFF_PROCCESSING' ||
-                  item.order_status === 'PICKUP_READY' ||
-                  item.order_status === 'DISPATCHED')
-              ) {
-                return <></>;
-              }
-              if (
-                orderStatus === 'Completed' &&
-                item.order_status !== 'COMPLETED'
-              ) {
-                return <></>;
-              }
-              if (
-                orderStatus === 'Outstanding Payments' &&
-                item.order_status !== 'PAYMENT_DEFERRED'
-              ) {
-                return <></>;
-              }
               return (
                 <OrderItem
                   item={item}
@@ -394,12 +496,12 @@ const styles = StyleSheet.create({
     marginTop: 6,
     paddingVertical: 16,
     borderRadius: 5,
-    width: '40%',
+    width: '80%',
   },
   signin: {
     color: '#fff',
     fontFamily: 'ReadexPro-Medium',
-    fontSize: 16,
+    fontSize: 15,
   },
   listWrapper: {
     flex: 1,
@@ -434,7 +536,7 @@ const styles = StyleSheet.create({
     // right: 18,
   },
   name: {
-    fontFamily: 'ReadexPro-Medium',
+    fontFamily: 'SFProDisplay-Medium',
     color: '#30475e',
     marginBottom: 2,
     fontSize: 16,
@@ -454,9 +556,9 @@ const styles = StyleSheet.create({
   },
   segmentedControlWrapper: {
     // marginRight: 'auto',
-    alignSelf: 'center',
+    // alignSelf: 'center',
     flexDirection: 'row',
-    justifyContent: 'center',
+    // justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: 5,
     // paddingLeft: 8,
@@ -468,17 +570,17 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   arbitrary: {
-    height: 60,
+    height: 44,
     flex: 1,
   },
   activeText: {
-    fontSize: 20,
+    fontSize: 14,
     color: '#fff',
     fontFamily: 'ReadexPro-Medium',
     fontWeight: '100',
   },
   inactiveText: {
-    fontSize: 20,
+    fontSize: 14,
     color: '#30475e',
     fontFamily: 'ReadexPro-Medium',
     fontWeight: '100',
@@ -515,7 +617,7 @@ const styles = StyleSheet.create({
     marginLeft: 'auto',
   },
   count: {
-    fontFamily: 'ReadexPro-Medium',
+    fontFamily: 'SFProDisplay-Medium',
     color: '#30475e',
     fontSize: 15,
     // marginTop: 8,

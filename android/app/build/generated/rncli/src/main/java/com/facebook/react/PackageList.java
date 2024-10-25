@@ -39,8 +39,12 @@ import com.microsoft.appcenter.reactnative.appcenter.AppCenterReactNativePackage
 import com.microsoft.appcenter.reactnative.analytics.AppCenterReactNativeAnalyticsPackage;
 // appcenter-crashes
 import com.microsoft.appcenter.reactnative.crashes.AppCenterReactNativeCrashesPackage;
+// jail-monkey
+import com.gantix.JailMonkey.JailMonkeyPackage;
 // lottie-react-native
 import com.airbnb.android.react.lottie.LottiePackage;
+// react-native-action-sheet
+import com.actionsheet.ActionSheetPackage;
 // react-native-blob-util
 import com.ReactNativeBlobUtil.ReactNativeBlobUtilPackage;
 // react-native-camera
@@ -53,10 +57,14 @@ import com.microsoft.codepush.react.CodePush;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 // react-native-document-picker
 import com.reactnativedocumentpicker.DocumentPickerPackage;
+// react-native-exit-app
+import com.github.wumke.RNExitApp.RNExitAppPackage;
 // react-native-fast-image
 import com.dylanvann.fastimage.FastImageViewPackage;
 // react-native-fast-shadow
 import com.reactnativefastshadow.FastShadowPackage;
+// react-native-file-viewer
+import com.vinzscam.reactnativefileviewer.RNFileViewerPackage;
 // react-native-fs
 import com.rnfs.RNFSPackage;
 // react-native-gesture-handler
@@ -83,8 +91,12 @@ import com.swmansion.reanimated.ReanimatedPackage;
 import com.th3rdwave.safeareacontext.SafeAreaContextPackage;
 // react-native-screens
 import com.swmansion.rnscreens.RNScreensPackage;
+// react-native-select-contact
+import com.streem.selectcontact.SelectContactPackage;
 // react-native-share
 import cl.json.RNSharePackage;
+// react-native-shared-element
+import com.ijzerenhein.sharedelement.RNSharedElementPackage;
 // react-native-simple-crypto
 import com.pedrouid.crypto.RNSCCryptoPackage;
 // react-native-sound-player
@@ -104,6 +116,8 @@ import com.wix.reactnativeuilib.wheelpicker.WheelPickerPackage;
 import io.xogus.reactnative.versioncheck.RNVersionCheckPackage;
 // react-native-view-shot
 import fr.greweb.reactnativeviewshot.RNViewShotPackage;
+// react-native-webview
+import com.reactnativecommunity.webview.RNCWebViewPackage;
 // sp-react-native-in-app-updates
 import com.sudoplz.rninappupdates.SpReactNativeInAppUpdatesPackage;
 
@@ -165,15 +179,19 @@ public class PackageList {
       new AppCenterReactNativePackage(getApplication()),
       new AppCenterReactNativeAnalyticsPackage(getApplication(), getResources().getString(com.ipayghpostablet.R.string.appCenterAnalytics_whenToEnableAnalytics)),
       new AppCenterReactNativeCrashesPackage(getApplication(), getResources().getString(com.ipayghpostablet.R.string.appCenterCrashes_whenToSendCrashes)),
+      new JailMonkeyPackage(),
       new LottiePackage(),
+      new ActionSheetPackage(),
       new ReactNativeBlobUtilPackage(),
       new RNCameraPackage(),
       new MPAndroidChartPackage(),
       new CodePush(getResources().getString(com.ipayghpostablet.R.string.CodePushDeploymentKey), getApplicationContext(), com.ipayghpostablet.BuildConfig.DEBUG),
       new RNDeviceInfo(),
       new DocumentPickerPackage(),
+      new RNExitAppPackage(),
       new FastImageViewPackage(),
       new FastShadowPackage(),
+      new RNFileViewerPackage(),
       new RNFSPackage(),
       new RNGestureHandlerPackage(),
       new RNHTMLtoPDFPackage(),
@@ -187,7 +205,9 @@ public class PackageList {
       new ReanimatedPackage(),
       new SafeAreaContextPackage(),
       new RNScreensPackage(),
+      new SelectContactPackage(),
       new RNSharePackage(),
+      new RNSharedElementPackage(),
       new RNSCCryptoPackage(),
       new RNSoundPlayerPackage(),
       new RNSpinkitPackage(),
@@ -199,6 +219,7 @@ public class PackageList {
       new KeyboardInputPackage(getApplication()),
       new RNVersionCheckPackage(),
       new RNViewShotPackage(),
+      new RNCWebViewPackage(),
       new SpReactNativeInAppUpdatesPackage()
     ));
   }

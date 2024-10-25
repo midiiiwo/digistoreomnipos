@@ -316,6 +316,8 @@ const Drawer = props => {
             paddingVertical: -10,
             marginVertical: -1.5,
             backgroundColor: activeItem === 'Orders' ? '#3C79F5' : '#fff',
+            borderRadius: 15,
+
           }}
           label="Orders"
           icon={({ color }) => (
@@ -343,6 +345,7 @@ const Drawer = props => {
             paddingVertical: -10,
             marginVertical: -1.5,
             backgroundColor: activeItem === 'Products' ? '#3C79F5' : '#fff',
+            borderRadius: 15,
           }}
           label="Products"
           icon={({ color }) => (
@@ -369,6 +372,7 @@ const Drawer = props => {
             paddingVertical: -10,
             marginVertical: -1.5,
             backgroundColor: activeItem === 'Paypoint' ? '#3C79F5' : '#fff',
+            borderRadius: 15,
           }}
           label="Paypoint"
           icon={({ color }) => (
@@ -396,6 +400,7 @@ const Drawer = props => {
             paddingVertical: -10,
             marginVertical: -1.5,
             backgroundColor: activeItem === 'Transactions' ? '#3C79F5' : '#fff',
+            borderRadius: 15,
           }}
           label="Transactions"
           icon={({ color }) => (
@@ -445,6 +450,7 @@ const Drawer = props => {
               paddingVertical: -10,
               marginVertical: -1.5,
               backgroundColor: activeItem === 'Online Store' ? '#3C79F5' : '#fff',
+              borderRadius: 15,
             }}
             label="Online Store"
             icon={({ color }) => (
@@ -490,6 +496,7 @@ const Drawer = props => {
               paddingVertical: -10,
               marginVertical: -1.5,
               backgroundColor: activeItem === 'Users' ? '#3C79F5' : '#fff',
+              borderRadius: 15,
 
             }}
             label="Users"
@@ -538,6 +545,7 @@ const Drawer = props => {
               paddingVertical: -10,
               marginVertical: -1.5,
               backgroundColor: activeItem === 'Insight' ? '#3C79F5' : '#fff',
+              borderRadius: 15,
             }}
             label="Insight"
             icon={({ color }) => (
@@ -552,6 +560,34 @@ const Drawer = props => {
               props.navigation.navigate('Tabs', { screen: 'Insights' })
             }}
           />)}
+        <DrawerItem
+          labelStyle={[
+            styles.label, // Keep your existing label styles
+            {
+              color: activeItem === 'Backoffice' ? '#fff' : '#000', // Text color based on active state
+              fontWeight: activeItem === 'Backoffice' ? 'bold' : 'normal', // Bold text if active
+            },
+          ]}
+          style={{
+            paddingVertical: -10,
+            marginVertical: -1.5,
+            backgroundColor: activeItem === 'Backoffice' ? '#3C79F5' : '#fff',
+            borderRadius: 15,
+
+          }}
+          label="Backoffice"
+          icon={({ color }) => (
+            <Money height={30} width={30} />
+          )}
+          inactiveBackgroundColor="#fff"
+          activeBackgroundColor="#3C79F5"
+          activeTintColor="#fff"
+          inactiveTintColor="#4C4C4C"
+          onPress={() => {
+            setActiveItem('Backoffice');
+            navigation.navigate('Backoffice')
+          }}
+        />
         {isAdmin && (
           <DrawerItem
             labelStyle={[
@@ -565,6 +601,7 @@ const Drawer = props => {
               paddingVertical: -10,
               marginVertical: -1.5,
               backgroundColor: activeItem === 'Settings' ? '#3C79F5' : '#fff',
+              borderRadius: 15,
             }}
             label="Settings"
             icon={({ color }) => (

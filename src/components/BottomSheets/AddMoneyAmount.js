@@ -1,17 +1,8 @@
 /* eslint-disable eqeqeq */
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  Image,
-  FlatList,
-  Platform,
-} from 'react-native';
+import { StyleSheet, View, Text, Platform } from 'react-native';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
-
-import { TextInput } from 'react-native-paper';
 
 import { useSelector } from 'react-redux';
 import PrimaryButton from '../PrimaryButton';
@@ -19,30 +10,7 @@ import { useToast } from 'react-native-toast-notifications';
 import { useAddMoneyToWallet } from '../../hooks/useAddMoneyToWallet';
 import moment from 'moment';
 import { useGetAccountBalance } from '../../hooks/useGetAccountBalance';
-
-const Input = ({ placeholder, val, setVal, nLines, showError, ...props }) => {
-  return (
-    <TextInput
-      label={placeholder}
-      textColor="#30475e"
-      value={val}
-      onChangeText={setVal}
-      mode="outlined"
-      outlineColor={showError ? '#EB455F' : '#B7C4CF'}
-      activeOutlineColor={showError ? '#EB455F' : '#1942D8'}
-      outlineStyle={{
-        borderWidth: 0.9,
-        borderRadius: 4,
-        // borderColor: showError ? '#EB455F' : '#B7C4CF',
-      }}
-      placeholderTextColor="#B7C4CF"
-      style={styles.input}
-      numberOfLines={nLines}
-      multiline={nLines ? true : false}
-      {...props}
-    />
-  );
-};
+import Input from '../Input';
 
 function AddMoneyAmount(props) {
   const { user } = useSelector(state => state.auth);
@@ -99,7 +67,7 @@ function AddMoneyAmount(props) {
           }}>
           <Text
             style={{
-              fontFamily: 'Inter-SemiBold',
+              fontFamily: 'ReadexPro-Medium',
               fontSize: 17,
               color: '#30475e',
               marginBottom: 10,
@@ -109,8 +77,8 @@ function AddMoneyAmount(props) {
           </Text>
           <Text
             style={{
-              fontFamily: 'Inter-Medium',
-              fontSize: 17,
+              fontFamily: 'ReadexPro-Regular',
+              fontSize: 15,
               color: '#6B728E',
               marginBottom: 14,
               marginTop: 4,
@@ -149,8 +117,7 @@ function AddMoneyAmount(props) {
                 mobilenumber: number,
                 channel: networkCode,
                 voucher_code: '',
-                notify_source:
-                  Platform.OS === 'ios' ? 'IOS V2' : 'ANDROID POS V2',
+                notify_source: 'Digistore Business',
                 notify_device: 'Android',
                 mod_date: mod_date,
                 mod_by: user.login,
@@ -213,4 +180,3 @@ const styles = StyleSheet.create({
   },
 });
 export default AddMoneyAmount;
-

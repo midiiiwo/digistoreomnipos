@@ -8,7 +8,6 @@ import {
   Text,
   // TextInput,
   FlatList,
-  Dimensions,
 } from 'react-native';
 import ActionSheet from 'react-native-actions-sheet';
 import { SheetManager } from 'react-native-actions-sheet';
@@ -47,7 +46,7 @@ export function LocationSheet(props) {
   const { user } = useSelector(state => state.auth);
   const [deliveryOptions, setDeliveryOptions] = React.useState(null);
   const [merchantDistStatus, setMerchantDistStatus] = React.useState();
-  const { isLoading } = useGetStoreOutlets(user.merchant);
+  const { data, isLoading } = useGetStoreOutlets(user.merchant);
   const { data: config_, isLoading: isConfigLoading } =
     useGetStoreDeliveryConfig(user.merchant);
   const mutation = useGetAreaBasedDelivery(setDeliveryOptions);
@@ -129,7 +128,6 @@ export function LocationSheet(props) {
           merchantDelivery.data &&
           merchantDelivery.data.data
         ) {
-          console.log('cccccccccccccaaaaallllllllll');
           const deliveryOptionsList = [];
           for (let d in merchantDelivery.data.data) {
             if (merchantDelivery.data.data[d] !== null) {
@@ -190,8 +188,12 @@ export function LocationSheet(props) {
                 {
                   formatted_address: details.formatted_address,
                   geometry:
-                    details.geometry.location.lat +
-                    ',' +
+                    details &&
+                    details.geometry &&
+                    details.geometry.location &&
+                    details.geometry.location.lat + ',' + details &&
+                    details.geometry &&
+                    details.geometry.location &&
                     details.geometry.location.lng,
                 },
                 config_ && config_.data && config_.data.data,
@@ -262,7 +264,10 @@ export function LocationSheet(props) {
                       if (!item) {
                         return;
                       }
-                      const item_ = JSON.parse(item.value);
+                      let item_;
+                      try {
+                        item_ = JSON.parse(item.value);
+                      } catch (error) {}
                       return (
                         <TouchableOpacity
                           onPress={() => {
@@ -307,7 +312,6 @@ export function LocationSheet(props) {
                       if (!item) {
                         return;
                       }
-                      console.log('iteeeeeeeeeeeeeeeeeeeeee', item);
                       return (
                         <TouchableOpacity
                           onPress={() => {
@@ -479,11 +483,6 @@ function DeliverySheet(props) {
 const styles = StyleSheet.create({
   containerStyle: {
     marginBottom: 0,
-    width: Dimensions.get('window').width * 0.6,
-    paddingHorizontal: 24,
-  },
-  main: {
-    paddingVertical: 18,
   },
   picker: {
     borderWidth: 3,
@@ -499,13 +498,12 @@ const styles = StyleSheet.create({
     // borderBottomWidth: 0.3,
   },
   dropdownWrapper: {
-    // paddingHorizontal: 24,
-    marginVertical: 22,
+    paddingHorizontal: 24,
+    marginVertical: 12,
   },
   mainText: {
-    fontFamily: 'SFProDisplay-Medium',
-    fontSize: 18,
-    color: '#3C4959',
+    fontFamily: 'Inter-Medium',
+    letterSpacing: -0.3,
   },
   dropdown: {
     borderWidth: 0.5,

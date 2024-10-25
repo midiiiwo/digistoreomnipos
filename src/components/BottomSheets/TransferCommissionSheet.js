@@ -1,24 +1,13 @@
 /* eslint-disable eqeqeq */
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  Image,
-  FlatList,
-  Platform,
-  Dimensions,
-} from 'react-native';
+import { StyleSheet, View, Text, Platform } from 'react-native';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 
 import { TextInput } from 'react-native-paper';
 
 import { useSelector } from 'react-redux';
 import PrimaryButton from '../PrimaryButton';
-import { RadioButtonProvider } from '../../context/RadioButtonContext';
-import RadioButton from '../RadioButton';
-import { useRadioButton } from '../../hooks/useRadioButton';
 import { useTransferCommission } from '../../hooks/useTransferCommission';
 import { useToast } from 'react-native-toast-notifications';
 import { useQueryClient } from 'react-query';
@@ -34,8 +23,8 @@ const Input = ({ placeholder, val, setVal, nLines, showError, ...props }) => {
       outlineColor={showError ? '#EB455F' : '#B7C4CF'}
       activeOutlineColor={showError ? '#EB455F' : '#1942D8'}
       outlineStyle={{
-        borderWidth: 1.2,
-        borderRadius: 5,
+        borderWidth: 0.9,
+        borderRadius: 4,
         // borderColor: showError ? '#EB455F' : '#B7C4CF',
       }}
       placeholderTextColor="#B7C4CF"
@@ -65,8 +54,8 @@ function TransferCommissionSheet(props) {
     type: 'CREDIT',
     amount,
     dest: 'MAIN',
-    notify_device: Platform.OS === 'ios' ? 'IOS V2' : 'ANDROID POS V2',
-    notify_source: Platform.OS === 'ios' ? 'IOS V2' : 'ANDROID POS V2',
+    notify_device: '',
+    notify_source: Platform.OS === 'ios' ? 'IOS' : 'ANDROIDPOS',
     mod_by: user.login,
   };
 
@@ -111,19 +100,19 @@ function TransferCommissionSheet(props) {
           }}>
           <Text
             style={{
-              fontFamily: 'SFProDisplay-Medium',
-              fontSize: 18,
+              fontFamily: 'ReadexPro-Medium',
+              fontSize: 17,
               color: '#30475e',
-              marginBottom: 16,
-              marginTop: 2,
+              marginBottom: 10,
+              marginTop: 14,
             }}>
             Transfer Commission
           </Text>
           {transferStatus && (
             <Text
               style={{
-                fontFamily: 'Inter-Medium',
-                fontSize: 15,
+                fontFamily: 'ReadexPro-Medium',
+                fontSize: 14,
                 color:
                   transferStatus && transferStatus.status == '99'
                     ? '#EB455F'
@@ -138,14 +127,7 @@ function TransferCommissionSheet(props) {
             placeholder="Enter Amount to Transfer"
             val={amount}
             setVal={text => setAmount(text)}
-            style={{
-              width: '95%',
-              backgroundColor: '#fff',
-              marginBottom: Dimensions.get('window').width * 0.02,
-              height: 55,
-              fontSize: 17,
-              fontFamily: 'SFProDisplay-Regular',
-            }}
+            style={{ width: '100%', backgroundColor: '#fff' }}
             keyboardType="number-pad"
           />
         </View>
@@ -175,17 +157,13 @@ const styles = StyleSheet.create({
   // indicatorStyle: {
   //   display: 'flex',
   // },
-  containerStyle: {
-    borderRadius: 0,
-    width: Dimensions.get('window').width * 0.5,
-  },
+  containerStyle: { borderRadius: 0 },
   input: {
     marginVertical: 8,
     justifyContent: 'center',
     fontFamily: 'Inter-Regular',
-    fontSize: 18,
+    fontSize: 16,
     backgroundColor: '#fff',
-    height: 55,
   },
   btnWrapper: {
     position: 'absolute',

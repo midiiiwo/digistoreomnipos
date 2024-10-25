@@ -1,21 +1,19 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import { StyleSheet, View, Text, Pressable, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, Pressable, Platform } from 'react-native';
 import ActionSheet from 'react-native-actions-sheet';
 import { SheetManager } from 'react-native-actions-sheet';
 import { useSelector } from 'react-redux';
-import { DateTimePicker } from 'react-native-ui-lib';
-import Lottie from 'lottie-react-native';
 
-import { useActionCreator } from '../../hooks/useActionCreator';
 import { useServiceChargeFee } from '../../hooks/useServiceChargeFee';
 import LoadingModal from '../LoadingModal';
 import PrimaryButton from '../PrimaryButton';
-import Loading from '../Loading';
-import { usePayBill } from '../../hooks/usePayBill';
 import { useBuyAirtime } from '../../hooks/useBuyAirtime';
 import moment from 'moment';
 import Bill from '../../../assets/icons/delcross';
+import { useToast } from 'react-native-toast-notifications';
+import { useQueryClient } from 'react-query';
+import { useAddExpense } from '../../containers/CreateExpense';
 
 const mapCodeToProvider = {
   AIRTEL: 'AirtelTigo Top-up',
@@ -27,26 +25,85 @@ const mapCodeToProvider = {
 function ConfirmAirtimePayment(props) {
   const [payStatus, setPayStatus] = React.useState();
   const { user } = useSelector(state => state.auth);
-  const { airtime, amount, state } = props.payload;
+  const { airtime, amount, state, checkAsExpense, airtimeCategory } =
+    props.payload;
   const { data, isLoading } = useServiceChargeFee(
     airtime,
     amount,
     user.merchant,
   );
-  const { mutate, isLoading: isBuyAirtimeLoading } =
-    useBuyAirtime(setPayStatus);
 
-  React.useEffect(() => {
-    if (payStatus) {
-      SheetManager.hide('confirmAirtimePayment');
-      props.payload.navigation.navigate('Airtime Status', {
-        amount: data && data.data && data.data.total,
-        number: state.number,
-        payStatus,
-        bill: airtime,
-      });
+  const toast = useToast();
+  const client = useQueryClient();
+
+  const addExpense = useAddExpense(res => {
+    if (res) {
+      if (res) {
+        client.invalidateQueries(['expense-details']);
+        client.invalidateQueries(['expenses-history']);
+        toast.show(res?.message, { placement: 'top' });
+
+        SheetManager.hide('confirmAirtimePayment');
+        props.payload.navigation.navigate('Airtime Status', {
+          amount: data?.data?.total,
+          number: state.number,
+          payStatus,
+          bill: airtime,
+        });
+      }
     }
-  }, [payStatus, props.payload.navigation, data, state.number, airtime]);
+  });
+
+  const { mutate, isLoading: isBuyAirtimeLoading } = useBuyAirtime(res => {
+    if (res) {
+      setPayStatus(res);
+      if (res.status == 0) {
+        if (checkAsExpense) {
+          const payload = {
+            name: state.description,
+            category: airtimeCategory?.id,
+            mod_by: user?.login,
+            merchant: user?.merchant,
+            total_amount: data?.data?.amount,
+            amount_paid: data?.data?.amount,
+            occurance: 'NONE',
+            notify_device: Platform.OS,
+            notify_source: 'Digistore Business',
+            date: moment(new Date()).format('DD-MM-YYYY'),
+          };
+          addExpense.mutate(payload);
+        } else {
+          SheetManager.hide('confirmAirtimePayment');
+          props.payload.navigation.navigate('Airtime Status', {
+            amount: data?.data?.total,
+            number: state.number,
+            payStatus: res,
+            bill: airtime,
+          });
+        }
+      } else {
+        SheetManager.hide('confirmAirtimePayment');
+        props.payload.navigation.navigate('Airtime Status', {
+          amount: data?.data?.total,
+          number: state.number,
+          payStatus: res,
+          bill: airtime,
+        });
+      }
+    }
+  });
+
+  // React.useEffect(() => {
+  //   if (payStatus) {
+  //     SheetManager.hide('confirmAirtimePayment');
+  //     props.payload.navigation.navigate('Airtime Status', {
+  //       amount: data && data.data && data.data.total,
+  //       number: state.number,
+  //       payStatus,
+  //       bill: airtime,
+  //     });
+  //   }
+  // }, [payStatus, props.payload.navigation, data, state.number, airtime]);
 
   return (
     <ActionSheet
@@ -115,7 +172,7 @@ function ConfirmAirtimePayment(props) {
               <Text
                 style={[
                   styles.text,
-                  { fontSize: 16, fontFamily: 'SFProDisplay-Medium' },
+                  { fontSize: 16, fontFamily: 'ReadexPro-Medium' },
                 ]}>
                 Total
               </Text>
@@ -125,7 +182,7 @@ function ConfirmAirtimePayment(props) {
                   {
                     marginLeft: 'auto',
                     marginRight: 12,
-                    fontFamily: 'SFProDisplay-Medium',
+                    fontFamily: 'ReadexPro-Medium',
                     fontSize: 16,
                   },
                 ]}>
@@ -148,6 +205,7 @@ function ConfirmAirtimePayment(props) {
               mod_by: user.login || '',
               mod_date,
               date: mod_date,
+              notify_source: 'Digistore Business',
             });
           }}
           disabled={isBuyAirtimeLoading}>
@@ -191,12 +249,12 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   text: {
-    fontFamily: 'SFProDisplay-Regular',
+    fontFamily: 'ReadexPro-Regular',
     fontSize: 16,
     color: '#30475e',
   },
   confirm: {
-    fontFamily: 'SFProDisplay-Regular',
+    fontFamily: 'ReadexPro-Regular',
     fontSize: 15,
     color: '#30475e',
     width: '80%',

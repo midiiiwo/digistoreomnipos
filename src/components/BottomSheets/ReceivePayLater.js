@@ -262,7 +262,6 @@ export default ReceivedPayLater;
 const styles = StyleSheet.create({
   containerStyle: {
     marginBottom: 0,
-    width: Dimensions.get('window').width * 0.5,
   },
   picker: {
     borderWidth: 3,

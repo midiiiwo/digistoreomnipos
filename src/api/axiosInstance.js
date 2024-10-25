@@ -20,7 +20,31 @@ export async function appSecret(timeStamp) {
     RNSimpleCrypto.utils.convertArrayBufferToHex(signatureArrayBuffer);
   return signatureHex;
 }
+const DELIVERY_USER_ID = '88c34fdd-de3f-43f6-89e4-a19c97070d21';
+const DELIVERY_API_TOKEN =
+  'W1h0YLL35bN3UZlG9V38bQ/nXnAsEHN9K5l97Ra7Gern3o8l6UQNmLOUYdvYADnWyoxq0uN4ZIuVaw/1qrrRgA==';
 
+const DELIVERY_BASE_URI = 'https://deliveriesapi.ipaygh.com/';
+
+export const deliveryApi = axios.create({
+  baseURL: DELIVERY_BASE_URI,
+});
+
+deliveryApi.interceptors.request.use(
+  async request => {
+    //@ts-ignore
+    request.headers = {
+      ...request.headers,
+      'Content-Type': 'application/json',
+      api_token: DELIVERY_API_TOKEN,
+      user_id: DELIVERY_USER_ID,
+      apitoken: DELIVERY_API_TOKEN,
+      userid: DELIVERY_USER_ID,
+    };
+    return request;
+  },
+  error => Promise.reject(error),
+);
 // const baseURL =
 //   process.env.NODE_ENV === 'development'
 //     ? 'https://managed-services-api-uat-pjanjqoxfq-uc.a.run.app/apidev/v1/gateway/'
@@ -34,6 +58,8 @@ const baseURL =
 export const Api = axios.create({
   baseURL,
 });
+
+
 
 Api.interceptors.request.use(
   async request => {

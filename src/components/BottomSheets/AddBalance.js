@@ -2,7 +2,6 @@
 import {
   Dimensions,
   InteractionManager,
-  Platform,
   Pressable,
   StyleSheet,
   Text,
@@ -15,13 +14,12 @@ import { SheetManager } from 'react-native-actions-sheet';
 import Picker from '../Picker';
 import { Picker as RNPicker } from 'react-native-ui-lib';
 import _ from 'lodash';
-import { Input } from './EditCategorySheet';
+import Input from '../Input';
 import PrimaryButton from '../PrimaryButton';
 import { useReceiveQuickPayment } from '../../hooks/useReceiveQuickPayment';
 import Bin from '../../../assets/icons/delcross';
 import { useSelector } from 'react-redux';
 import { useQueryClient } from 'react-query';
-import { useToast } from 'react-native-toast-notifications';
 
 const options = [
   { value: 'CASH', label: 'Cash' },
@@ -38,7 +36,6 @@ const AddBalance = props => {
   // const [paymentStatus, setPaymentStatus] = React.useState();
   const client = useQueryClient();
   const next = React.useRef(false);
-  const toast = useToast();
 
   const { name, phone, email, setInvoice, setBalanceInstructions, type } =
     props.payload;
@@ -46,9 +43,11 @@ const AddBalance = props => {
   const { mutate, isLoading } = useReceiveQuickPayment(i => {
     if (i) {
       if (i.status == 0) {
-        toast.show(i.message, { placement: 'top' });
-        if (paymentType.value === 'CASH') {
+        if (paymentType && paymentType.value === 'CASH') {
           client.invalidateQueries('customer-details');
+          client.invalidateQueries('merchant-customers');
+          client.invalidateQueries('summary-filter');
+          client.invalidateQueries('all-orders');
         }
         setInvoice(i);
         SheetManager.hide('Add Balance');
@@ -64,13 +63,13 @@ const AddBalance = props => {
       drawUnderStatusBar={false}
       gestureEnabled={false}
       containerStyle={styles.containerStyle}
-      indicatorStyle={styles.indicatorStyle}
+      // indicatorStyle={styles.indicatorStyle}
       springOffset={50}
       closeOnTouchBackdrop={false}
+      openAnimationConfig={{ bounciness: 0 }}
       migrateTextField
       onClose={() => {
         InteractionManager.runAfterInteractions(() => {
-          console.log('neeeeee', next);
           if (next.current) {
             setBalanceInstructions(true);
             next.current = false;
@@ -87,8 +86,8 @@ const AddBalance = props => {
           <Text
             style={{
               color: '#30475e',
-              fontFamily: 'SFProDisplay-Medium',
-              fontSize: 19,
+              fontFamily: 'ReadexPro-Medium',
+              fontSize: 15,
               textAlign: 'center',
               alignSelf: 'center',
               position: 'absolute',
@@ -130,7 +129,7 @@ const AddBalance = props => {
         </View>
         <View
           style={{
-            paddingHorizontal: 34,
+            paddingHorizontal: 18,
             marginBottom: Dimensions.get('window').height * 0.05,
           }}>
           {paymentType && paymentType.value !== 'CASH' && (
@@ -145,11 +144,14 @@ const AddBalance = props => {
           <Input
             placeholder="Enter Amount"
             showError={
-              showError && paymentType.value !== 'CASH' && amount.length === 0
+              showError &&
+              paymentType &&
+              paymentType.value !== 'CASH' &&
+              amount.length === 0
             }
             val={amount}
-            setVal={setAmount}
             keyboardType="number-pad"
+            setVal={setAmount}
           />
         </View>
         <View style={styles.btnWrapper}>
@@ -171,7 +173,6 @@ const AddBalance = props => {
               if (
                 paymentType &&
                 paymentType.value !== 'CASH' &&
-                number &&
                 number.length !== 10
               ) {
                 setShowError(true);
@@ -209,8 +210,6 @@ export default AddBalance;
 const styles = StyleSheet.create({
   containerStyle: {
     marginBottom: 0,
-    width: Dimensions.get('window').width * 0.5,
-    paddingTop: 12,
   },
   picker: {
     borderWidth: 3,
@@ -240,13 +239,13 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.3,
   },
   dropdownWrapper: {
-    paddingHorizontal: 34,
+    paddingHorizontal: 24,
     marginVertical: 12,
     marginTop: 16,
   },
   mainText: {
-    fontFamily: 'SFProDisplay-Medium',
-    fontSize: 16,
+    fontFamily: 'ReadexPro-Medium',
+    fontSize: 15,
     color: '#30475e',
   },
   dropdown: {

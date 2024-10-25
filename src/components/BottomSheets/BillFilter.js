@@ -1,7 +1,6 @@
 import React from 'react';
-import { StyleSheet, View, Text, Pressable, ScrollView } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import ActionSheet from 'react-native-actions-sheet';
-import { SheetManager } from 'react-native-actions-sheet';
 import { useSelector } from 'react-redux';
 import { DateTimePicker } from 'react-native-ui-lib';
 import { Picker as RNPicker } from 'react-native-ui-lib';
@@ -44,25 +43,27 @@ function BillFilter(props) {
       return;
     }
     // console.log('starttttt', JSON.parse(range.value).meta);
-    if (JSON.parse(bRange.value).meta) {
-      setBStartDate(
-        moment()
-          .startOf(JSON.parse(bRange.value).value)
-          .subtract(1, JSON.parse(bRange.value).meta)
-          .toDate(),
-      );
-      setBEndDate(
-        moment()
-          .startOf(JSON.parse(bRange.value).value)
-          .subtract(1, 'day')
-          .toDate(),
-      );
-      return;
-    }
-    setBStartDate(moment().startOf(JSON.parse(bRange.value).value).toDate());
+    try {
+      if (JSON.parse(bRange.value).meta) {
+        setBStartDate(
+          moment()
+            .startOf(JSON.parse(bRange.value).value)
+            .subtract(1, JSON.parse(bRange.value).meta)
+            .toDate(),
+        );
+        setBEndDate(
+          moment()
+            .startOf(JSON.parse(bRange.value).value)
+            .subtract(1, 'day')
+            .toDate(),
+        );
+        return;
+      }
+      setBStartDate(moment().startOf(JSON.parse(bRange.value).value).toDate());
 
-    // setSummaryEndDate(new Date());
-    setBEndDate(moment().endOf(JSON.parse(bRange.value).value).toDate());
+      // setSummaryEndDate(new Date());
+      setBEndDate(moment().endOf(JSON.parse(bRange.value).value).toDate());
+    } catch (error) {}
   }, [bRange, setBStartDate, setBEndDate]);
 
   return (

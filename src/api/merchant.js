@@ -151,8 +151,7 @@ export function addMoneyStatus(invoiceId) {
 
 export function getGrossSalesStats(merchant, userLogin, startDate, endDate) {
   return Api.get(
-    `/reports/analytics/merchant/gross/sales/${merchant}${
-      userLogin !== undefined ? `/${userLogin}` : ''
+    `/reports/analytics/merchant/gross/sales/${merchant}${userLogin !== undefined ? `/${userLogin}` : ''
     }/${startDate}/${endDate}`,
   );
 }

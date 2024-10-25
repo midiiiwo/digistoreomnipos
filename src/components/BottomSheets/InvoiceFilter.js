@@ -43,27 +43,45 @@ function InvoiceFilter(props) {
       track.current = true;
       return;
     }
-    // console.log('starttttt', JSON.parse(range.value).meta);
-    if (JSON.parse(IVRange.value).meta) {
+    try {
+      // console.log('starttttt', JSON.parse(range.value).meta);
+      if (JSON.parse(IVRange.value || '{}')?.meta) {
+        setIVStartDate(
+          moment()
+            .startOf(JSON.parse(IVRange.value || '{}')?.value)
+            .subtract(1, JSON.parse(IVRange.value || '{}')?.meta)
+            .toDate(),
+        );
+        setIVEndDate(
+          moment()
+            .startOf(JSON.parse(IVRange.value || '{}')?.value)
+            .subtract(1, 'day')
+            .toDate(),
+        );
+        return;
+      }
       setIVStartDate(
         moment()
-          .startOf(JSON.parse(IVRange.value).value)
-          .subtract(1, JSON.parse(IVRange.value).meta)
+          .startOf(JSON.parse(IVRange.value || '{}')?.value)
           .toDate(),
       );
+
+      // setSummaryEndDate(new Date());
       setIVEndDate(
         moment()
-          .startOf(JSON.parse(IVRange.value).value)
-          .subtract(1, 'day')
+          .endOf(JSON.parse(IVRange.value || '{}')?.value)
           .toDate(),
       );
-      return;
-    }
-    setIVStartDate(moment().startOf(JSON.parse(IVRange.value).value).toDate());
-
-    // setSummaryEndDate(new Date());
-    setIVEndDate(moment().endOf(JSON.parse(IVRange.value).value).toDate());
+    } catch (error) {}
   }, [IVRange, setIVStartDate, setIVEndDate]);
+
+  console.log('IVRange', IVRange);
+
+  React.useEffect(() => {
+    if (!IVRange) {
+      IVDateRange({ label: 'Today', value: 'today' });
+    }
+  }, [IVDateRange, IVRange]);
 
   return (
     <ActionSheet

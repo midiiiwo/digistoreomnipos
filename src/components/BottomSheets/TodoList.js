@@ -5,7 +5,6 @@ import {
   View,
   Text,
   Pressable,
-  FlatList,
   ScrollView,
   InteractionManager,
 } from 'react-native';
@@ -14,21 +13,18 @@ import { SheetManager, useScrollHandlers } from 'react-native-actions-sheet';
 
 import Timer from '../../../assets/icons/timer.svg';
 import Verified from '../../../assets/icons/verified.svg';
-import Warning from '../../../assets/icons/Warning.svg';
-import { useActionCreator } from '../../hooks/useActionCreator';
 import { useSelector } from 'react-redux';
-import { useGetMerchantOutlets } from '../../hooks/useGetMerchantOutlets';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import { useTodoList } from '../../hooks/useGetTodoList';
 import { useGetCurrentActivationStep } from '../../hooks/useGetCurrentActivationStep';
 import { uniqBy } from 'lodash';
 import { useNavigation } from '@react-navigation/native';
 import PrimaryButton from '../PrimaryButton';
+import { useToast } from 'react-native-toast-notifications';
 
-const TodoItem = ({ item }) => {
+const TodoItem = ({ item, step }) => {
   const navigation = useNavigation();
   console.log('iteeee', item);
+  const toast = useToast();
   const { code } = item;
   return (
     <Pressable
@@ -53,6 +49,13 @@ const TodoItem = ({ item }) => {
             navigation.navigate('Receipt Details');
             break;
           case 'setup_store':
+            if (step != '8') {
+              toast.show(
+                'You must complete account activation before you can setup online store.',
+                { placement: 'top' },
+              );
+              return;
+            }
             navigation.navigate('Manage Store');
             break;
           default:
@@ -112,11 +115,7 @@ const todoDescOptions = {
 };
 function TodoList(props) {
   const { user } = useSelector(state => state.auth);
-  const {
-    data: todoList,
-    refetch: refetchTodoList,
-    isFetching: isTodoListFetching,
-  } = useTodoList(user.merchant);
+  const { data: todoList } = useTodoList(user.merchant);
 
   const { data: activationStep } = useGetCurrentActivationStep(user.merchant);
   let list = [];
@@ -221,7 +220,7 @@ function TodoList(props) {
                 paddingBottom: 82,
               }}>
               {list.map(i => {
-                return <TodoItem item={i} key={i.code} />;
+                return <TodoItem item={i} key={i.code} step={step} />;
               })}
             </View>
           </View>

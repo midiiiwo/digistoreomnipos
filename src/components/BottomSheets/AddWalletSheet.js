@@ -2,9 +2,7 @@
 import React from 'react';
 import { Image, StyleSheet, View, Text, Dimensions } from 'react-native';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import CustomButton from '../Button';
 import RadioButton from '../RadioButton';
 import { RadioButtonProvider } from '../../context/RadioButtonContext';
 import { Input } from './AddProductSheet';
@@ -14,7 +12,7 @@ import { useAddWallet } from '../../hooks/useAddWallet';
 import { useToast } from 'react-native-toast-notifications';
 import { useSelector } from 'react-redux';
 import moment from 'moment';
-import { useQueryClient } from 'react-query';
+// import { useQueryClient } from 'react-query';
 
 const AccountCard = ({ network, index }) => {
   return (
@@ -60,7 +58,7 @@ const AccountCard = ({ network, index }) => {
             />
           ) : (
             <Image
-              source={require('../../../assets/images/AirtelTigo-Money.jpeg')}
+              source={require('../../../assets/images/atmoney.png')}
               style={{
                 height: 48,
                 width: 48,
@@ -96,19 +94,17 @@ const AccountCard = ({ network, index }) => {
 
 const networkCodes = ['MTNMM', 'VODAC', 'TIGOC'];
 
-function AddWalletSheet(props) {
+const AddWalletSheet = props => {
   const [number, setNumber] = React.useState('');
   const toast = useToast();
   const [showError, setShowError] = React.useState(false);
   const [transactStatus, setTransactStatus] = React.useState();
   const { idx } = useRadioButton();
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
   const { mutate, isLoading } = useAddWallet(i => {
     setTransactStatus(i);
     // queryClient.invalidateQueries('account-list');
   });
-  const inset = useSafeAreaInsets();
-  console.log('inisertsetes', inset);
   const { user } = useSelector(state => state.auth);
 
   React.useEffect(() => {
@@ -188,7 +184,7 @@ function AddWalletSheet(props) {
       </View>
     </ActionSheet>
   );
-}
+};
 
 const styles = StyleSheet.create({
   btnWrapper: {
@@ -210,8 +206,11 @@ const styles = StyleSheet.create({
   },
 });
 
-export default props => (
-  <RadioButtonProvider>
-    <AddWalletSheet {...props} />
-  </RadioButtonProvider>
-);
+export default props => {
+  console.log('jdxxxxxxxxxx', AddWalletSheet);
+  return (
+    <RadioButtonProvider>
+      <AddWalletSheet {...props} />
+    </RadioButtonProvider>
+  );
+};

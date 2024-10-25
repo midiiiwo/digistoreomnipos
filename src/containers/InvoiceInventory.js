@@ -242,13 +242,14 @@ const InvoiceInventory = ({ navigation }) => {
     }
   }, [quickSaleInAction, setQuickSaleInAction, resetInvoiceCart]);
 
-  if (isLoading) {
+  if (isLoading || istaxesLoading) {
     return (
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Lottie
           source={require('../lottie/95136-2-parallel-lines-animation.json')}
           autoPlay
           loop
+          style={{ width: 150, height: 150 }}
         />
       </View>
     );

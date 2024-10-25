@@ -1,45 +1,72 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import { StyleSheet, View, Text, Pressable, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, Pressable } from 'react-native';
 import ActionSheet from 'react-native-actions-sheet';
 import { SheetManager } from 'react-native-actions-sheet';
 import { Picker as RNPicker } from 'react-native-ui-lib';
-import { useSelector } from 'react-redux';
-import { DateTimePicker } from 'react-native-ui-lib';
-import Lottie from 'lottie-react-native';
-
-import { useActionCreator } from '../../hooks/useActionCreator';
-import { useServiceChargeFee } from '../../hooks/useServiceChargeFee';
-import LoadingModal from '../LoadingModal';
 import PrimaryButton from '../PrimaryButton';
-import Loading from '../Loading';
-import { usePayBill } from '../../hooks/usePayBill';
-import { Input } from './AddProductSheet';
+import Input from '../Input';
 import Picker from '../Picker';
+import Bin from '../../../assets/icons/delcross';
+import { useToast } from 'react-native-toast-notifications';
+import { isArray } from 'lodash';
+import { useNavigation } from '@react-navigation/native';
 
 function ConfirmBillPayment(props) {
-  const { bill, name, amountDue, accountNumber, message, mobileNumber } =
-    props.payload;
+  const {
+    bill,
+    name,
+    amountDue,
+    accountNumber,
+    message,
+    mobileNumber,
+    amountPrev,
+    billName,
+    checkAsExpense,
+    billCategory,
+  } = props?.payload;
   const [amount, setAmount] = React.useState('');
   const [dataPlan, setDataPlan] = React.useState(null);
   const [showError, setShowError] = React.useState(false);
+  const toast = useToast();
 
   // console.log(JSON.parse(dataPlan.value).planPrice);
+  const navigation = useNavigation();
 
-  console.log('======', message);
+  React.useState(() => {
+    if (bill !== 'SURF' && bill !== 'BUSY') {
+      setAmount(amountPrev);
+    }
+  }, []);
+
+  console.log('biii', bill);
 
   return (
     <ActionSheet
       id={props.sheetId}
       statusBarTranslucent={false}
       drawUnderStatusBar={false}
-      gestureEnabled={true}
+      gestureEnabled={false}
       containerStyle={styles.containerStyle}
-      indicatorStyle={styles.indicatorStyle}
+      // indicatorStyle={styles.indicatorStyle}
+      closeOnPressBack={false}
+      closeOnTouchBackdrop={false}
       springOffset={50}
       // snapPoints={[50]}
       defaultOverlayOpacity={0.3}>
       <View style={styles.main}>
+        <View
+          style={{
+            paddingHorizontal: 26,
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}>
+          <Pressable
+            onPress={() => SheetManager.hide('confirmBillPayment')}
+            style={{ marginLeft: 'auto', paddingVertical: 5 }}>
+            <Bin />
+          </Pressable>
+        </View>
         <View style={{ alignItems: 'center' }}>
           <Text
             style={{
@@ -49,7 +76,7 @@ function ConfirmBillPayment(props) {
             }}>
             Account number validation passed
           </Text>
-          {bill !== 'SURF' && bill !== 'BUSY' && (
+          {bill !== 'SURF' && bill !== 'BUSY' && !isArray(message) && (
             <Text
               style={{
                 color: '#30475e',
@@ -61,15 +88,14 @@ function ConfirmBillPayment(props) {
             </Text>
           )}
         </View>
-        {bill !== 'SURF' && bill !== 'BUSY' && (
+        {bill !== 'SURF' && bill !== 'BUSY' && !isArray(message) && (
           <Input
             placeholder="Account name (Optional)"
             val={name}
-            setVal={text => setAmount(text)}
             editable={false}
           />
         )}
-        {bill !== 'SURF' && bill !== 'BUSY' && (
+        {bill !== 'SURF' && bill !== 'BUSY' && !isArray(message) && (
           <Input
             placeholder="Amount"
             val={amount}
@@ -77,25 +103,24 @@ function ConfirmBillPayment(props) {
             keyboardType="number-pad"
           />
         )}
-        {(bill === 'SURF' || bill === 'BUSY') && (
-          <View>
+        {(bill === 'SURF' || bill === 'BUSY' || isArray(message)) && (
+          <View style={{ paddingHorizontal: 16, paddingVertical: 10 }}>
             <Picker
-              placeholder="Choose Surfline Data plan"
+              placeholder="Choose Data plan"
               showError={!dataPlan && showError}
               value={dataPlan}
               setValue={item => {
                 setDataPlan(item);
               }}>
-              {message &&
-                message.map(item => {
-                  return (
-                    <RNPicker.Item
-                      key={item.planName}
-                      label={item.planDescription}
-                      value={JSON.stringify(item)}
-                    />
-                  );
-                })}
+              {message?.map(item => {
+                return (
+                  <RNPicker.Item
+                    key={item.planName}
+                    label={item.planDescription}
+                    value={JSON.stringify(item)}
+                  />
+                );
+              })}
             </Picker>
           </View>
         )}
@@ -103,23 +128,37 @@ function ConfirmBillPayment(props) {
       <View style={styles.btnWrapper}>
         <PrimaryButton
           style={styles.btn}
-          disabled={amount.length === 0 && dataPlan === null}
+          // disabled={amount.length === 0 && dataPlan === null}
           handlePress={() => {
             if (amount.length === 0 && !dataPlan) {
+              toast.show('Please enter amount or select plan', {
+                placement: 'top',
+                type: 'danger',
+              });
               setShowError(true);
               return;
             }
-            SheetManager.hideAll();
-            props.payload.navigation.navigate('Bill Confirmed', {
-              name,
-              amount:
-                amount.length > 0
-                  ? amount
-                  : JSON.parse(dataPlan.value).planPrice,
-              bill,
-              accountNumber,
-              mobileNumber,
-            });
+            console.log('heeeeddd', dataPlan);
+            try {
+              navigation.navigate('Bill Confirmed', {
+                name,
+                amount:
+                  amount?.toString()?.length > 0
+                    ? amount
+                    : JSON.parse(dataPlan?.value || '')?.planPriceValue,
+                bill,
+                accountNumber,
+                mobileNumber,
+                billName,
+                billCategory,
+                checkAsExpense,
+                priceValue: JSON.parse(dataPlan?.value || '{}')?.planPriceValue,
+                pricePlan: JSON.parse(dataPlan?.value || '{}')?.planPrice,
+              });
+              SheetManager.hide('confirmBillPayment');
+            } catch (error) {
+              console.log('eerrr', error);
+            }
             // mutate({
             //   name: state.accountName || '',
             //   email: state.customerEmail || '',
@@ -148,6 +187,7 @@ const styles = StyleSheet.create({
     paddingTop: 18,
     paddingHorizontal: 22,
     marginBottom: 82,
+    paddingBottom: 14,
   },
 
   btnWrapper: {

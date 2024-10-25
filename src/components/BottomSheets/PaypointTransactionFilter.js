@@ -39,27 +39,28 @@ function PaypointTransactionFilter(props) {
       track.current = true;
       return;
     }
-    console.log('ragnggg', range);
-    console.log('starttttt', JSON.parse(range.value).meta);
-    if (JSON.parse(range.value).meta) {
-      setPPStartDate(
-        moment()
-          .startOf(JSON.parse(range.value).value)
-          .subtract(1, JSON.parse(range.value).meta)
-          .toDate(),
-      );
-      setPPEndDate(
-        moment()
-          .startOf(JSON.parse(range.value).value)
-          .subtract(1, 'day')
-          .toDate(),
-      );
-      return;
-    }
-    setPPStartDate(moment().startOf(JSON.parse(range.value).value).toDate());
 
-    // setSummaryEndDate(new Date());
-    setPPEndDate(moment().endOf(JSON.parse(range.value).value).toDate());
+    try {
+      if (JSON.parse(range.value).meta) {
+        setPPStartDate(
+          moment()
+            .startOf(JSON.parse(range.value).value)
+            .subtract(1, JSON.parse(range.value).meta)
+            .toDate(),
+        );
+        setPPEndDate(
+          moment()
+            .startOf(JSON.parse(range.value).value)
+            .subtract(1, 'day')
+            .toDate(),
+        );
+        return;
+      }
+      setPPStartDate(moment().startOf(JSON.parse(range.value).value).toDate());
+
+      // setSummaryEndDate(new Date());
+      setPPEndDate(moment().endOf(JSON.parse(range.value).value).toDate());
+    } catch (error) {}
   }, [range, setPPStartDate, setPPEndDate]);
 
   // React.useEffect(() => {

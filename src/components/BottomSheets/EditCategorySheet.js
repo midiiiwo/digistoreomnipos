@@ -7,7 +7,6 @@ import { SheetManager } from 'react-native-actions-sheet';
 
 import { TextInput } from 'react-native-paper';
 
-import { useGetOutletCategories } from '../../hooks/useGetOutletCategories';
 import { useSelector } from 'react-redux';
 import PrimaryButton from '../PrimaryButton';
 import { useGetSelectedCategoryDetails } from '../../hooks/useGetSelectedCategoryDetails';
@@ -33,8 +32,8 @@ export const Input = ({
       outlineColor={showError ? '#EB455F' : '#B7C4CF'}
       activeOutlineColor={showError ? '#EB455F' : '#1942D8'}
       outlineStyle={{
-        borderWidth: 1.3,
-        borderRadius: 5,
+        borderWidth: 0.9,
+        borderRadius: 4,
         // borderColor: showError ? '#EB455F' : '#B7C4CF',
       }}
       placeholderTextColor="#B7C4CF"
@@ -232,12 +231,11 @@ const styles = StyleSheet.create({
   },
   containerStyle: { borderRadius: 0 },
   input: {
-    marginVertical: 10,
+    marginVertical: 8,
     justifyContent: 'center',
     fontFamily: 'Inter-Regular',
-    fontSize: 17,
+    fontSize: 14,
     backgroundColor: '#fff',
-    paddingVertical: 6,
   },
   btnWrapper: {
     position: 'absolute',

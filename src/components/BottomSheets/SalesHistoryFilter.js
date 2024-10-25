@@ -1,6 +1,7 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Text, Pressable, ScrollView } from 'react-native';
 import ActionSheet from 'react-native-actions-sheet';
+import { SheetManager } from 'react-native-actions-sheet';
 import { useSelector } from 'react-redux';
 import { DateTimePicker } from 'react-native-ui-lib';
 import { Picker as RNPicker } from 'react-native-ui-lib';
@@ -66,6 +67,12 @@ function SalesHistoryFilter(props) {
     setSEndDate(moment().endOf(JSON.parse(sRange.value).value).toDate());
   }, [sRange, setSStartDate, setSEndDate]);
 
+  React.useEffect(() => {
+    if (!sRange) {
+      SDateRange({ label: 'Today', value: 'today' });
+    }
+  }, [SDateRange, sRange]);
+
   return (
     <ActionSheet
       id={props.sheetId}
@@ -128,9 +135,6 @@ const styles = StyleSheet.create({
   dateWrapper: {
     marginHorizontal: 12,
     marginTop: 14,
-  },
-  containerStyle: {
-    width: '60%',
   },
 });
 export default SalesHistoryFilter;

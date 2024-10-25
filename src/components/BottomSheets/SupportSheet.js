@@ -73,7 +73,7 @@ function SupportSheet(props) {
 
 const styles = StyleSheet.create({
   containerStyle: {
-    marginBottom: 0,
+    paddingBottom: 12,
   },
 
   header: {
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.3,
   },
   mainText: {
-    fontFamily: 'Inter-SemiBold',
+    fontFamily: 'ReadexPro-Medium',
     fontSize: 17,
     color: '#30475E',
     letterSpacing: -0.4,
@@ -95,15 +95,15 @@ const styles = StyleSheet.create({
   },
   btn: {
     paddingHorizontal: 18,
-    paddingVertical: 14,
+    paddingVertical: 20,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     flex: 1,
   },
   support: {
-    fontFamily: 'SFProDisplay-Regular',
-    fontSize: 16,
+    fontFamily: 'ReadexPro-Regular',
+    fontSize: 14,
     color: '#30475e',
     marginLeft: 5,
     textAlign: 'center',
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
   },
   callText: {
-    fontFamily: 'SFProDisplay-Semibold',
+    fontFamily: 'ReadexPro-Medium',
     fontSize: 15,
     color: '#fff',
     marginLeft: 5,

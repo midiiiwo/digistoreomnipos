@@ -44,25 +44,29 @@ function SendMoneyFilter(props) {
       return;
     }
     // console.log('starttttt', JSON.parse(range.value).meta);
-    if (JSON.parse(smRange.value).meta) {
+    try {
+      if (JSON.parse(smRange.value).meta) {
+        setSMStartDate(
+          moment()
+            .startOf(JSON.parse(smRange.value).value)
+            .subtract(1, JSON.parse(smRange.value).meta)
+            .toDate(),
+        );
+        setSMEndDate(
+          moment()
+            .startOf(JSON.parse(smRange.value).value)
+            .subtract(1, 'day')
+            .toDate(),
+        );
+        return;
+      }
       setSMStartDate(
-        moment()
-          .startOf(JSON.parse(smRange.value).value)
-          .subtract(1, JSON.parse(smRange.value).meta)
-          .toDate(),
+        moment().startOf(JSON.parse(smRange.value).value).toDate(),
       );
-      setSMEndDate(
-        moment()
-          .startOf(JSON.parse(smRange.value).value)
-          .subtract(1, 'day')
-          .toDate(),
-      );
-      return;
-    }
-    setSMStartDate(moment().startOf(JSON.parse(smRange.value).value).toDate());
 
-    // setSummaryEndDate(new Date());
-    setSMEndDate(moment().endOf(JSON.parse(smRange.value).value).toDate());
+      // setSummaryEndDate(new Date());
+      setSMEndDate(moment().endOf(JSON.parse(smRange.value).value).toDate());
+    } catch (error) {}
   }, [smRange, setSMStartDate, setSMEndDate]);
 
   return (

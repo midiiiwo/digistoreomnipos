@@ -1,7 +1,6 @@
 import React from 'react';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import CustomButton from '../Button';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
@@ -14,9 +13,7 @@ function FundsBottomSheet(props) {
   const navigation = useNavigation();
   const { user } = useSelector(state => state.auth);
   const [dialog, setDialog] = React.useState(false);
-  const { data: step_, isLoading: stepLoading } = useGetCurrentActivationStep(
-    user.merchant,
-  );
+  const { data: step_ } = useGetCurrentActivationStep(user.merchant);
   const step =
     step_ &&
     step_.data &&
@@ -81,7 +78,7 @@ function FundsBottomSheet(props) {
                 return;
               }
               navigation.navigate('Transfer Funds');
-              SheetManager.hideAll();
+              SheetManager.hide('add-funds');
             }}>
             Transfer Funds
           </CustomButton>

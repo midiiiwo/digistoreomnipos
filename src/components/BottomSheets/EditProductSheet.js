@@ -12,7 +12,6 @@ import { Switch } from 'react-native-ui-lib';
 import { useGetOutletCategories } from '../../hooks/useGetOutletCategories';
 import { useSelector } from 'react-redux';
 import PrimaryButton from '../PrimaryButton';
-import { useAddCategoryProduct } from '../../hooks/useAddCategoryProduct';
 import { useGetSelectedProductDetails } from '../../hooks/useGetSelectedProductDetails';
 import Loading from '../Loading';
 import _ from 'lodash';
@@ -408,7 +407,7 @@ function EditProductSheet(props) {
               merchant: user.merchant,
               category:
                 typeof state.category.value === 'string'
-                  ? JSON.parse(state.category.value).category_id
+                  ? JSON.parse(state.category.value || '{}')?.category_id
                   : state.category.value.category_id,
             });
           }}>

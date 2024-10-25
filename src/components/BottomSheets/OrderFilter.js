@@ -1,14 +1,6 @@
 import React from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  Pressable,
-  ScrollView,
-  Dimensions,
-} from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import ActionSheet from 'react-native-actions-sheet';
-import { SheetManager } from 'react-native-actions-sheet';
 import { useSelector } from 'react-redux';
 import { DateTimePicker } from 'react-native-ui-lib';
 import { Picker as RNPicker } from 'react-native-ui-lib';
@@ -16,6 +8,7 @@ import { useActionCreator } from '../../hooks/useActionCreator';
 import Picker from '../Picker';
 import moment from 'moment';
 import { useGetMerchantOutlets } from '../../hooks/useGetMerchantOutlets';
+import { setDateRange } from '../../redux/actionCreators';
 
 const ranges = [
   { label: 'Today', value: 'today' },
@@ -32,23 +25,23 @@ const ranges = [
 
 function OrderFilter(props) {
   const track = React.useRef(false);
-  const { user } = useSelector(state => state.auth);
   const {
     startDate,
     endDate,
-    orderOutlet,
     // summaryPrevStartDate,
     // summaryPrevEndDate,
+    orderOutlet,
     range,
   } = useSelector(state => state.orders);
+  const { user } = useSelector(state => state.auth);
   const { orderDateRange, setOrderOutlet } = useActionCreator();
-  const { data } = useGetMerchantOutlets(user.merchant);
   const {
     setStartDate,
     setEndDate,
     // setPrevSummaryStartDate,
     // setPrevSummaryEndDate,
   } = useActionCreator();
+  const { data } = useGetMerchantOutlets(user.user_merchant_id);
   React.useEffect(() => {
     if (!track.current) {
       track.current = true;
@@ -75,6 +68,14 @@ function OrderFilter(props) {
       setEndDate(moment().endOf(JSON.parse(range.value).value).toDate());
     } catch (error) {}
   }, [range, setStartDate, setEndDate]);
+
+  console.log('rrrr', range);
+
+  React.useEffect(() => {
+    if (!range) {
+      setDateRange({ label: 'Today', value: 'today' });
+    }
+  }, [range]);
 
   // React.useEffect(() => {
   //   if (!track.current) {
@@ -104,7 +105,8 @@ function OrderFilter(props) {
   //   setPrevSummaryEndDate,
   //   setPrevSummaryStartDate,
   // ]);
-  const outlets = (data && data.data && data.data.data) || [];
+  const outlets = data?.data?.data || [];
+
   return (
     <ActionSheet
       id={props.sheetId}
@@ -201,9 +203,6 @@ const styles = StyleSheet.create({
   dateWrapper: {
     marginHorizontal: 12,
     marginTop: 14,
-  },
-  containerStyle: {
-    width: Dimensions.get('window').width * 0.6,
   },
 });
 export default OrderFilter;

@@ -6,7 +6,6 @@ import {
   Text,
   Pressable,
   InteractionManager,
-  Dimensions,
 } from 'react-native';
 import ActionSheet from 'react-native-actions-sheet';
 import { SheetManager } from 'react-native-actions-sheet';
@@ -26,7 +25,9 @@ function CartOptionsSheet(props) {
   const navigation = useNavigation();
   const deliveryNext = React.useRef(false);
   const noteNext = React.useRef(false);
+  const deliveryNoteNext = React.useRef(false);
   const channelNext = React.useRef(false);
+  const { user } = useSelector(state => state.auth);
   return (
     <ActionSheet
       id={props.sheetId}
@@ -34,6 +35,7 @@ function CartOptionsSheet(props) {
       drawUnderStatusBar={false}
       gestureEnabled={true}
       containerStyle={styles.containerStyle}
+      openAnimationConfig={{ bounciness: 0 }}
       // indicatorStyle={styles.indicatorStyle}
       onClose={() => {
         InteractionManager.runAfterInteractions(() => {
@@ -50,6 +52,11 @@ function CartOptionsSheet(props) {
           if (channelNext.current) {
             SheetManager.show('channels');
             channelNext.current = false;
+          }
+          if (deliveryNoteNext.current) {
+            SheetManager.show('deliveryNote');
+            deliveryNoteNext.current = false;
+            return;
           }
         });
       }}
@@ -69,21 +76,33 @@ function CartOptionsSheet(props) {
             )
           }>
           <Text style={styles.channelText}>Add discount</Text>
-          <CaretRight style={styles.caret} height={16} width={16} />
+          <CaretRight style={styles.caret} />
         </Pressable>
         <Pressable
           style={styles.channelType}
           onPress={() => handlePress(() => (deliveryNext.current = true))}>
           <Text style={styles.channelText}>Delivery</Text>
-          <CaretRight style={styles.caret} height={16} width={16} />
+          <CaretRight style={styles.caret} />
         </Pressable>
         <Pressable
           style={styles.channelType}
           onPress={() => handlePress(() => (noteNext.current = true))}>
-          <Text style={styles.channelText}>Add note</Text>
-          <CaretRight style={styles.caret} height={16} width={16} />
+          <Text style={styles.channelText}>Add order note</Text>
+          <CaretRight style={styles.caret} />
         </Pressable>
-        {/* <Pressable
+        {user &&
+          user.user_permissions &&
+          !user.user_permissions.includes('ADDORDERDLVRDATE') && (
+            <Pressable
+              style={styles.channelType}
+              onPress={() =>
+                handlePress(() => (deliveryNoteNext.current = true))
+              }>
+              <Text style={styles.channelText}>Add delivery note</Text>
+              <CaretRight style={styles.caret} />
+            </Pressable>
+          )}
+        <Pressable
           style={styles.channelType}
           onPress={() =>
             handlePress(() =>
@@ -93,8 +112,8 @@ function CartOptionsSheet(props) {
             )
           }>
           <Text style={styles.channelText}>Add Non-Inventory item</Text>
-          <CaretRight style={styles.caret} height={16} width={16} />
-        </Pressable> */}
+          <CaretRight style={styles.caret} />
+        </Pressable>
         <Pressable
           style={styles.channelType}
           onPress={() =>
@@ -106,7 +125,7 @@ function CartOptionsSheet(props) {
           <Text style={styles.channelText}>Sales channel</Text>
           <Text> </Text>
           <Text style={[styles.channelText]}>{`(${channel})`}</Text>
-          <CaretRight style={styles.caret} height={16} width={16} />
+          <CaretRight style={styles.caret} />
         </Pressable>
         <Pressable
           style={styles.channelType}
@@ -124,23 +143,19 @@ const styles = StyleSheet.create({
   containerStyle: {
     marginBottom: 0,
     paddingBottom: 22,
-    width: Dimensions.get('window').width * 0.5,
-    // paddingHorizontal:
-  },
-  main: {
-    width: '100%',
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'center',
     paddingVertical: 12,
-    borderBottomColor: '#eee',
+    borderBottomColor: 'rgba(146, 169, 189, 0.5)',
     borderBottomWidth: 0.3,
   },
   mainText: {
-    fontFamily: 'SFProDisplay-Medium',
-    fontSize: 20,
+    fontFamily: 'SFProDisplay-Semibold',
+    fontSize: 16,
     color: '#30475E',
+    letterSpacing: 0.2,
   },
   done: {
     fontFamily: 'Inter-SemiBold',
@@ -155,22 +170,19 @@ const styles = StyleSheet.create({
   },
   channelType: {
     alignItems: 'center',
-    paddingVertical: 20,
-    borderBottomColor: '#eee',
+    paddingVertical: 18,
+    borderBottomColor: 'rgba(146, 169, 189, 0.3)',
     borderBottomWidth: 0.3,
-    paddingHorizontal: 24,
+    paddingHorizontal: 18,
     flexDirection: 'row',
   },
   channelText: {
-    fontFamily: 'SFProDisplay-Regular',
-    fontSize: 18,
-    color: '#3C4959',
-    letterSpacing: 0.3,
+    fontFamily: 'ReadexPro-Medium',
+    fontSize: 15,
+    color: '#30475e',
   },
   caret: {
     marginLeft: 'auto',
-    height: 12,
-    width: 12,
   },
 });
 

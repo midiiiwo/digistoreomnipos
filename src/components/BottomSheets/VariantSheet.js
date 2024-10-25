@@ -1,13 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  ScrollView,
-  Pressable,
-  Dimensions,
-} from 'react-native';
+import { StyleSheet, View, Text, ScrollView, Pressable } from 'react-native';
 import { Picker as RNPicker } from 'react-native-ui-lib';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import PrimaryButton from '../PrimaryButton';
@@ -237,7 +230,7 @@ function VariantSheet({ sheetId, payload }) {
                     order_item_props: processedVariants,
                     order_item_prop_id: i && i.variantOptionId,
                   });
-                  SheetManager.hideAll();
+                  SheetManager.hide('variants');
                 }
               });
               return;
@@ -257,7 +250,7 @@ function VariantSheet({ sheetId, payload }) {
                 product_image: product_image,
                 order_item_props: processedVariants,
               });
-              SheetManager.hideAll();
+              SheetManager.hide('variants');
               return;
             }
             navigation.navigate('Inventory');
@@ -281,7 +274,6 @@ const dd = StyleSheet.create({
     // backgroundColor: 'red',
     color: '#009EFF',
   },
-
   main: {
     borderWidth: 1.2,
     borderStyle: 'dashed',
@@ -304,9 +296,6 @@ const styles = StyleSheet.create({
   container: {
     // minHeight: 128,
     paddingBottom: 100,
-  },
-  containerStyle: {
-    width: Dimensions.get('window').width * 0.5,
   },
   amountWrapper: {
     paddingTop: 12,

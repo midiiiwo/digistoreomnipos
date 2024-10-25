@@ -8,7 +8,6 @@ import {
   Pressable,
   Platform,
   Image,
-  Dimensions,
 } from 'react-native';
 import ActionSheet from 'react-native-actions-sheet';
 import { SheetManager } from 'react-native-actions-sheet';
@@ -20,6 +19,11 @@ import PrimaryButton from '../PrimaryButton';
 import { useSendMoney } from '../../hooks/useSendMoney';
 import moment from 'moment';
 import { useLookupAccount } from '../../hooks/useLookupAccount';
+import { useNavigation } from '@react-navigation/native';
+import { useAddExpense } from '../../containers/CreateExpense';
+import { useQueryClient } from 'react-query';
+import { useToast } from 'react-native-toast-notifications';
+import BankIcon from '../BankIcon';
 
 const mapBillerIdToLookupName = {
   SMTNMM: 'mtn',
@@ -31,29 +35,84 @@ const mapBillerIdToLookupName = {
 function ConfirmSendMoney(props) {
   const [payStatus, setPayStatus] = React.useState();
   const { user } = useSelector(state => state.auth);
-  const { bill, amount, state, lookup, navigation } = props.payload;
+  const navigation = useNavigation();
+  const { bill, amount, state, lookup, checkAsExpense, sendMoneyCategory } =
+    props.payload;
+
+  console.log(state);
+
   const { data, isLoading } = useServiceChargeFee(bill, amount, user.merchant);
-  const { mutate, isLoading: isSendMoneyLoading } = useSendMoney(setPayStatus);
   const { data: lookupData, isLoading: isLookupLoading } = useLookupAccount(
     mapBillerIdToLookupName[props.payload.lookup],
-    state.accountNumber,
+    state.accountNumber && state.accountNumber.replace(' ', ''),
     lookup && state.accountNumber.length > 0,
   );
+  const client = useQueryClient();
+  const toast = useToast();
 
-  React.useEffect(() => {
-    if (payStatus) {
-      navigation.navigate('Send Money Status', {
-        payStatus,
-        name: lookupData.data.name,
-        number: state.accountNumber,
-        description: state.description,
-        serviceProvider: lookup,
-        amount: data && data.data && data.data.amount,
-      });
-      SheetManager.hideAll();
+  const addExpense = useAddExpense(res => {
+    if (res) {
+      if (res) {
+        client.invalidateQueries(['expense-details']);
+        client.invalidateQueries(['expenses-history']);
+        toast.show(res?.message, { placement: 'top' });
+        SheetManager.hide('confirmSendMoney');
+
+        navigation.navigate('Send Money Status', {
+          payStatus,
+          name: lookupData.data.name,
+          number: state.accountNumber,
+          description: state.description,
+          serviceProvider: lookup,
+          amount: data?.data?.amount,
+        });
+      }
     }
-  }, [payStatus, navigation, lookupData, state, lookup, data]);
-  console.log(lookup);
+  });
+
+  const { mutate, isLoading: isSendMoneyLoading } = useSendMoney(res => {
+    if (res) {
+      setPayStatus(res);
+      if (res.status == 0) {
+        if (checkAsExpense) {
+          const payload = {
+            name: state.description,
+            category: sendMoneyCategory?.id,
+            mod_by: user?.login,
+            merchant: user?.merchant,
+            total_amount: data?.data?.amount,
+            amount_paid: data?.data?.amount,
+            occurance: 'NONE',
+            notify_device: Platform.OS,
+            notify_source: 'Digistore Business',
+            date: moment(new Date()).format('DD-MM-YYYY'),
+          };
+          addExpense.mutate(payload);
+        } else {
+          SheetManager.hide('confirmSendMoney');
+          navigation.navigate('Send Money Status', {
+            payStatus: res,
+            name: lookupData.data.name,
+            number: state.accountNumber,
+            description: state.description,
+            serviceProvider: lookup,
+            amount: data?.data?.amount,
+          });
+        }
+      } else {
+        SheetManager.hide('confirmSendMoney');
+        navigation.navigate('Send Money Status', {
+          payStatus: res,
+          name: lookupData.data.name,
+          number: state.accountNumber,
+          description: state.description,
+          serviceProvider: lookup,
+          amount: data?.data?.amount,
+        });
+      }
+    }
+  });
+
   return (
     <ActionSheet
       id={props.sheetId}
@@ -69,10 +128,10 @@ function ConfirmSendMoney(props) {
       <View style={styles.main}>
         <Pressable
           style={{ marginLeft: 'auto', paddingVertical: 12 }}
-          onPress={() => SheetManager.hideAll()}>
+          onPress={() => SheetManager.hide('confirmSendMoney')}>
           <Text
             style={{
-              fontFamily: 'Lato-Medium',
+              fontFamily: 'SFProDisplay-Medium',
               fontSize: 16,
               color: '#DF2E38',
             }}>
@@ -92,7 +151,7 @@ function ConfirmSendMoney(props) {
               <View style={styles.confirmWrapper}>
                 <Text style={styles.confirm}>
                   Confirm payment of GHS {data && data.data && data.data.amount}{' '}
-                  to:
+                  to
                 </Text>
                 <View style={styles.imgWrapper}>
                   {lookup === 'SMTNMM' ? (
@@ -107,21 +166,20 @@ function ConfirmSendMoney(props) {
                     />
                   ) : lookup === 'SARTLM' ? (
                     <Image
-                      source={require('../../../assets/images/AirtelTigo-Money.jpeg')}
+                      source={require('../../../assets/images/atmoney.png')}
                       style={styles.img}
                     />
+                  ) : lookup === 'SBANK' ? (
+                    <BankIcon bank={state?.bank?.value} />
                   ) : (
-                    <Image
-                      source={require('../../../assets/images/AirtelTigo-Money.jpeg')}
-                      style={styles.img}
-                    />
+                    <></>
                   )}
 
                   <Text
                     style={{
-                      fontFamily: 'Lato-Semibold',
-                      color: '#30475e',
-                      fontSize: 16,
+                      fontFamily: 'ReadexPro-Regular',
+                      color: '#304753',
+                      fontSize: 15,
                       marginLeft: 12,
                     }}>
                     {state.accountNumber}
@@ -131,18 +189,18 @@ function ConfirmSendMoney(props) {
                   <View style={{ marginTop: 8 }}>
                     <Text
                       style={{
-                        fontFamily: 'Lato-Regular',
+                        fontFamily: 'ReadexPro-Regular',
                         color: '#30475e',
                         fontSize: 14,
                         // marginLeft: 12,
                       }}>
-                      Recepient/Beneficiary Name:
+                      Recipient/Beneficiary Name:
                     </Text>
                     <Text
                       style={{
-                        fontFamily: 'Lato-Semibold',
-                        color: '#30475e',
-                        fontSize: 16,
+                        fontFamily: 'ReadexPro-Medium',
+                        color: '#512B81',
+                        fontSize: 15,
                         marginTop: 3,
                         width: '90%',
                         textAlign: 'left',
@@ -158,7 +216,7 @@ function ConfirmSendMoney(props) {
                   <View style={{ marginTop: 20 }}>
                     <Text
                       style={{
-                        fontFamily: 'Lato-Medium',
+                        fontFamily: 'ReadexPro-Medium',
                         color: '#30475e',
                         fontSize: 14,
                         // marginLeft: 12,
@@ -167,9 +225,9 @@ function ConfirmSendMoney(props) {
                     </Text>
                     <Text
                       style={{
-                        fontFamily: 'Lato-Semibold',
-                        color: '#30475e',
-                        fontSize: 16,
+                        fontFamily: 'ReadexPro-Medium',
+                        color: '#512B81',
+                        fontSize: 14,
                         marginTop: 3,
                         width: '90%',
                         textAlign: 'left',
@@ -223,7 +281,7 @@ function ConfirmSendMoney(props) {
                   <Text
                     style={[
                       styles.text,
-                      { fontSize: 16, fontFamily: 'Inter-Medium' },
+                      { fontSize: 15, fontFamily: 'ReadexPro-Medium' },
                     ]}>
                     Total
                   </Text>
@@ -233,8 +291,8 @@ function ConfirmSendMoney(props) {
                       {
                         marginLeft: 'auto',
                         marginRight: 12,
-                        fontFamily: 'Inter-Medium',
-                        fontSize: 16,
+                        fontFamily: 'ReadexPro-Medium',
+                        fontSize: 15,
                       },
                     ]}>
                     GHS {data.data.total}
@@ -249,10 +307,27 @@ function ConfirmSendMoney(props) {
           style={styles.btn}
           handlePress={() => {
             let mod_date = moment().format('YYYY-MM-DD h:mm:ss');
+            if (bill === 'SBANK') {
+              const payload = {
+                recipient: state.accountNumber || '',
+                merchant_code: user.user_merchant_receivable,
+                amount: state.amount,
+                mod_by: user.login || '',
+                reference: state.description,
+                pay_date: mod_date,
+                pay_channel: 'SBANK',
+                notify_source: 'Digistore Business',
+                notify_device: Platform.OS,
+                mod_date: mod_date,
+                bank_name: state.bank?.label,
+                bank_branch: state.branch?.label,
+                bank_code: state.bank?.value,
+                merchant: user?.merchant,
+              };
+              mutate(payload);
+              return;
+            }
             mutate({
-              // name: state.accountName || '',
-              // email: state.customerEmail || '',
-              // contact_no: state.customerNumber || '',
               recipient: state.accountNumber || '',
               merchant_code: user.user_merchant_receivable,
               amount: (data && data.data && data.data.amount) || 0,
@@ -260,10 +335,8 @@ function ConfirmSendMoney(props) {
               reference: state.description,
               pay_date: mod_date,
               pay_channel: bill,
-              notify_source:
-                Platform.OS === 'ios' ? 'IOS V2' : 'ANDROID POS V2',
-              notify_device:
-                Platform.OS === 'ios' ? 'IOS V2' : 'ANDROID POS V2',
+              notify_source: 'Digistore Business',
+              notify_device: Platform.OS,
               mod_date: mod_date,
             });
           }}
@@ -278,13 +351,11 @@ function ConfirmSendMoney(props) {
 const styles = StyleSheet.create({
   containerStyle: {
     marginBottom: 0,
-    width: Dimensions.get('window').width * 0.5,
   },
   main: {
     // height: '40%',
     paddingTop: 8,
     paddingHorizontal: 22,
-    width: '100%',
     marginBottom: 82,
   },
   img: { height: 48, width: 48, borderRadius: 118 },
@@ -316,13 +387,13 @@ const styles = StyleSheet.create({
     // marginTop: 18,
   },
   text: {
-    fontFamily: 'Lato-Semibold',
-    fontSize: 16,
+    fontFamily: 'ReadexPro-Regular',
+    fontSize: 15,
     color: '#30475e',
   },
   confirm: {
-    fontFamily: 'Lato-Medium',
-    fontSize: 16,
+    fontFamily: 'ReadexPro-Medium',
+    fontSize: 15,
     color: '#30475e',
   },
   confirmWrapper: {

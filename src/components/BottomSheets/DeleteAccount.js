@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import { StyleSheet, View, Text, Pressable, Dimensions } from 'react-native';
+import { StyleSheet, View, Text, Pressable } from 'react-native';
 import ActionSheet from 'react-native-actions-sheet';
 import { SheetManager } from 'react-native-actions-sheet';
 
@@ -71,7 +71,7 @@ function DeleteAccount(props) {
             style={{
               fontFamily: 'SFProDisplay-Regular',
               color: '#62606A',
-              fontSize: 17,
+              fontSize: 16,
               textAlign: 'center',
               width: '80%',
             }}>
@@ -84,7 +84,7 @@ function DeleteAccount(props) {
               backgroundColor: '#fff',
               justifyContent: 'center',
               alignItems: 'center',
-              paddingVertical: 16,
+              paddingVertical: 12,
               borderRadius: 28,
               marginTop: 14,
               borderColor: '#E0E0E0',
@@ -95,7 +95,7 @@ function DeleteAccount(props) {
               style={{
                 fontFamily: 'SFProDisplay-Medium',
                 color: '#002',
-                fontSize: 17,
+                fontSize: 15,
               }}>
               Go Back
             </Text>
@@ -105,7 +105,7 @@ function DeleteAccount(props) {
               backgroundColor: '#cf222e',
               justifyContent: 'center',
               alignItems: 'center',
-              paddingVertical: 16,
+              paddingVertical: 12,
               borderRadius: 28,
               marginTop: 14,
             }}
@@ -120,7 +120,7 @@ function DeleteAccount(props) {
               style={{
                 fontFamily: 'SFProDisplay-Medium',
                 color: '#fff',
-                fontSize: 17,
+                fontSize: 15,
               }}>
               {deleteMerchantAccount.isLoading
                 ? 'Processing'
@@ -137,7 +137,6 @@ const styles = StyleSheet.create({
   containerStyle: {
     marginBottom: 0,
     paddingBottom: 22,
-    width: Dimensions.get('window').width * 0.5,
   },
   header: {
     flexDirection: 'row',
@@ -149,7 +148,7 @@ const styles = StyleSheet.create({
   },
   mainText: {
     fontFamily: 'SFProDisplay-Medium',
-    fontSize: 18,
+    fontSize: 16,
     color: '#000002',
     // letterSpacing: -0.4,
   },

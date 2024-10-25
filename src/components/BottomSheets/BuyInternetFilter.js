@@ -1,7 +1,6 @@
 import React from 'react';
-import { StyleSheet, View, Text, Pressable, ScrollView } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import ActionSheet from 'react-native-actions-sheet';
-import { SheetManager } from 'react-native-actions-sheet';
 import { useSelector } from 'react-redux';
 import { DateTimePicker } from 'react-native-ui-lib';
 import { Picker as RNPicker } from 'react-native-ui-lib';
@@ -44,25 +43,27 @@ function BuyInternetFilter(props) {
       return;
     }
     // console.log('starttttt', JSON.parse(range.value).meta);
-    if (JSON.parse(iRange.value).meta) {
-      setIStartDate(
-        moment()
-          .startOf(JSON.parse(iRange.value).value)
-          .subtract(1, JSON.parse(iRange.value).meta)
-          .toDate(),
-      );
-      setIEndDate(
-        moment()
-          .startOf(JSON.parse(iRange.value).value)
-          .subtract(1, 'day')
-          .toDate(),
-      );
-      return;
-    }
-    setIStartDate(moment().startOf(JSON.parse(iRange.value).value).toDate());
+    try {
+      if (JSON.parse(iRange.value).meta) {
+        setIStartDate(
+          moment()
+            .startOf(JSON.parse(iRange.value).value)
+            .subtract(1, JSON.parse(iRange.value).meta)
+            .toDate(),
+        );
+        setIEndDate(
+          moment()
+            .startOf(JSON.parse(iRange.value).value)
+            .subtract(1, 'day')
+            .toDate(),
+        );
+        return;
+      }
+      setIStartDate(moment().startOf(JSON.parse(iRange.value).value).toDate());
 
-    // setSummaryEndDate(new Date());
-    setIEndDate(moment().endOf(JSON.parse(iRange.value).value).toDate());
+      // setSummaryEndDate(new Date());
+      setIEndDate(moment().endOf(JSON.parse(iRange.value).value).toDate());
+    } catch (error) {}
   }, [iRange, setIStartDate, setIEndDate]);
 
   return (

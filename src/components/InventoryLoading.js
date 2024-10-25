@@ -9,7 +9,7 @@ const InventoryLoading = () => {
         source={require('../lottie/95136-2-parallel-lines-animation.json')}
         autoPlay
         loop
-        // autoSize
+        style={styles.animation}  // Adjust size in this style
       />
     </View>
   );
@@ -18,7 +18,13 @@ const InventoryLoading = () => {
 const styles = StyleSheet.create({
   main: {
     flex: 1,
+    justifyContent: 'center', // Center vertically
+    alignItems: 'center',      // Center horizontally
     backgroundColor: '#F1F5F9',
+  },
+  animation: {
+    width: 150,  // Adjust the width as needed
+    height: 150, // Adjust the height as needed
   },
 });
 

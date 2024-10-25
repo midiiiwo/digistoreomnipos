@@ -62,20 +62,24 @@ anim rns_fade_from_bottom
 anim rns_fade_in
 anim rns_fade_out
 anim rns_fade_to_bottom
+anim rns_ios_from_left_background_close
+anim rns_ios_from_left_background_open
+anim rns_ios_from_left_foreground_close
+anim rns_ios_from_left_foreground_open
+anim rns_ios_from_right_background_close
+anim rns_ios_from_right_background_open
+anim rns_ios_from_right_foreground_close
+anim rns_ios_from_right_foreground_open
 anim rns_no_animation_20
 anim rns_no_animation_250
 anim rns_no_animation_350
 anim rns_no_animation_medium
 anim rns_slide_in_from_bottom
 anim rns_slide_in_from_left
-anim rns_slide_in_from_left_ios
 anim rns_slide_in_from_right
-anim rns_slide_in_from_right_ios
 anim rns_slide_out_to_bottom
 anim rns_slide_out_to_left
-anim rns_slide_out_to_left_ios
 anim rns_slide_out_to_right
-anim rns_slide_out_to_right_ios
 anim rns_standard_accelerate_interpolator
 anim ucrop_item_animation_fall_down
 anim ucrop_layout_animation_fall_down
@@ -3874,6 +3878,7 @@ layout design_navigation_menu_item
 layout design_text_input_end_icon
 layout design_text_input_start_icon
 layout dev_loading_view
+layout dialog_item
 layout fingerprint_dialog_layout
 layout fps_view
 layout launch_screen
@@ -4599,6 +4604,9 @@ style CardView_Dark
 style CardView_Light
 style DialogAnimationFade
 style DialogAnimationSlide
+style DialogListItemStyle
+style DialogStyle
+style DialogTitleStyle
 style EmptyTheme
 style MaterialAlertDialog_Material3
 style MaterialAlertDialog_Material3_Body_Text
@@ -5641,6 +5649,8 @@ styleable ViewTransition android_id SharedValue SharedValueId clearsTag duration
 styleable include constraintSet
 styleable ucrop_AspectRatioTextView ucrop_artv_ratio_title ucrop_artv_ratio_x ucrop_artv_ratio_y
 styleable ucrop_UCropView ucrop_aspect_ratio_x ucrop_aspect_ratio_y ucrop_circle_dimmed_layer ucrop_dimmed_color ucrop_frame_color ucrop_frame_stroke_size ucrop_grid_color ucrop_grid_column_count ucrop_grid_row_count ucrop_grid_stroke_size ucrop_show_frame ucrop_show_grid ucrop_show_oval_crop_frame
+xml file_provider_paths
+xml file_viewer_provider_paths
 xml imagepicker_provider_paths
 xml provider_paths
 xml ps_file_paths

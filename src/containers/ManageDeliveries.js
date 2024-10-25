@@ -10,7 +10,6 @@ import {
   Dimensions,
   useWindowDimensions,
 } from 'react-native';
-import { useActionCreator } from '../hooks/useActionCreator';
 import { useSelector } from 'react-redux';
 import PrimaryButton from '../components/PrimaryButton';
 import { useNavigation } from '@react-navigation/native';
@@ -27,6 +26,7 @@ import { RadioButton, RadioGroup } from 'react-native-ui-lib';
 import { useGetStoreDeliveryConfig } from '../hooks/useGetStoreDeliveryConfig';
 import { useSetupMerchantDeliveryConfigOption } from '../hooks/useSetupMerchantDeliveryConfigOption';
 import Loading from '../components/Loading';
+import { useCreateMerchantDeliveryConfigOption } from '../hooks/useCreateMerchantDeliveryConfigOptions';
 
 function Deliveries(props) {
   const { user } = useSelector(state => state.auth);
@@ -123,7 +123,7 @@ function Deliveries(props) {
         visible={visible}
         handleCancel={() => setVisible(false)}
         handleSuccess={() => {
-          mutate({ id: idToDelete });
+          mutate({ id: idToDelete.current });
         }}
         title={'Do you want to delete this route?'}
         prompt="This process is irreversible"
@@ -132,7 +132,7 @@ function Deliveries(props) {
   );
 }
 
-function Riders(props) {
+function Riders() {
   const { user } = useSelector(state => state.auth);
   const { data, refetch, isFetching } = useGetMerchantRiders(
     user.user_merchant_id,
@@ -140,7 +140,6 @@ function Riders(props) {
   const [visible, setVisible] = React.useState(false);
   const [deleteStatus, setDeleteStatus] = React.useState();
   const navigation = useNavigation();
-  const { outlet } = useSelector(state => state.auth);
   const { mutate } = useDeleteRider(setDeleteStatus);
   const toast = useToast();
   const client = useQueryClient();
@@ -258,6 +257,11 @@ const ManageDeliveries = () => {
       toast.show(i.message, { placement: 'top' });
     }
   });
+  const createDelivery = useCreateMerchantDeliveryConfigOption(i => {
+    if (i) {
+      toast.show(i.message, { placement: 'top' });
+    }
+  });
   const renderScene = ({ route }) => {
     switch (route.key) {
       case 'first':
@@ -281,84 +285,99 @@ const ManageDeliveries = () => {
     return <Loading />;
   }
 
+  // const deliveryConfig = data && data.data && data.data.data;
+
+  console.log('typppppp', data && data.data && data.data.status);
+
   return (
     <View style={{ flex: 1, backgroundColor: '#fff' }}>
       <View
         style={{
           backgroundColor: '#fff',
           paddingHorizontal: 12,
+          marginBottom: 14,
         }}>
         <RadioGroup initialValue={configType} onValueChange={setConfigType}>
           <RadioButton
             value={'IPAY'}
             label={'Subscribe to Digistore Delivery'}
             labelStyle={{
-              fontFamily: 'SFProDisplay-Regular',
-              fontSize: 18,
+              fontFamily: 'ReadexPro-Regular',
+              fontSize: 14,
               color: '#002',
             }}
             color="rgba(25, 66, 216, 0.87)"
           />
-          <View style={{ marginVertical: 10 }} />
+          <View style={{ marginVertical: 6 }} />
           <RadioButton
             value={'MERCHANT'}
             label={'Use your own Delivery Service'}
             labelStyle={{
-              fontFamily: 'SFProDisplay-Regular',
-              fontSize: 18,
+              fontFamily: 'ReadexPro-Regular',
+              fontSize: 14,
               color: '#002',
             }}
             color="rgba(25, 66, 216, 0.87)"
           />
         </RadioGroup>
-        <View style={{ alignItems: 'center', marginTop: 26 }}>
+        <View style={{ alignItems: 'center', marginTop: 18 }}>
           <PrimaryButton
             disabled={setupDelivery.isLoading}
             style={[styles.btn, { width: '100%', backgroundColor: '#30475e' }]}
             handlePress={() => {
-              setupDelivery.mutate({
-                merchant: user.merchant,
-                delivery: configType,
-                id: optionId,
-                mod_by: user.login,
-              });
+              if (data && data.data && data.data.status == 0) {
+                setupDelivery.mutate({
+                  merchant: user.merchant,
+                  delivery: configType,
+                  id: optionId,
+                  mod_by: user.login,
+                  delivery_source: user.user_merchant_type,
+                });
+              } else {
+                createDelivery.mutate({
+                  merchant: user.merchant,
+                  delivery: configType,
+                  delivery_source: user.user_merchant_type,
+                  mod_by: user.login,
+                });
+              }
             }}>
-            {setupDelivery.isLoading ? 'Processing' : 'Save'}
+            {createDelivery.isLoading || setupDelivery.isLoading
+              ? 'Processing'
+              : 'Save'}
           </PrimaryButton>
         </View>
       </View>
       {configType === 'MERCHANT' && (
-        <View style={{ flex: 1, marginTop: 14 }}>
-          <TabView
-            navigationState={{ index, routes }}
-            renderScene={renderScene}
-            onIndexChange={setIndex}
-            initialLayout={{ width: layout.width }}
-            lazy
-            swipeEnabled={false}
-            renderTabBar={props => (
-              <>
-                <TabBar
-                  {...props}
-                  style={{ backgroundColor: '#fff', elevation: 0 }}
-                  activeColor="#000"
-                  labelStyle={{
-                    fontFamily: 'SFProDisplay-Regular',
-                    fontSize: 18,
-                    color: '#30475e',
-                    letterSpacing: 0.2,
-                    textTransform: 'uppercase',
-                  }}
-                  indicatorStyle={{
-                    backgroundColor: '#2F66F6',
-                    borderRadius: 22,
-                    height: 3,
-                  }}
-                />
-              </>
-            )}
-          />
-        </View>
+        <TabView
+          navigationState={{ index, routes }}
+          renderScene={renderScene}
+          onIndexChange={setIndex}
+          initialLayout={{ width: layout.width }}
+          lazy
+          swipeEnabled={false}
+          renderTabBar={props => (
+            <>
+              <TabBar
+                {...props}
+                style={{ backgroundColor: '#fff', elevation: 0 }}
+                activeColor="#000"
+                labelStyle={{
+                  fontFamily: 'ReadexPro-Medium',
+                  fontSize: 15,
+                  color: '#30475e',
+                  letterSpacing: 0.2,
+                  textTransform: 'capitalize',
+                }}
+                indicatorStyle={{
+                  backgroundColor: '#2F66F6',
+                  borderRadius: 22,
+                  height: 3,
+                }}
+              />
+            </>
+          )}
+        />
       )}
     </View>
   );
@@ -388,15 +407,15 @@ const styles = StyleSheet.create({
   },
 
   channelText: {
-    fontFamily: 'SFProDisplay-Regular',
-    fontSize: 19,
+    fontFamily: 'ReadexPro-Regular',
+    fontSize: 15,
     color: '#002',
     marginBottom: 2,
   },
   address: {
-    fontSize: 16,
+    fontSize: 13,
     color: '#7B8FA1',
-    fontFamily: 'SFProDisplay-Regular',
+    fontFamily: 'ReadexPro-Regular',
   },
   caret: {
     marginLeft: 'auto',

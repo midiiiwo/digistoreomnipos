@@ -123,6 +123,7 @@ import { Platform } from 'react-native';
 import Account from '../containers/Account';
 import SalesChannels from '../containers/SalesChannels';
 import Logout from '../containers/Logout';
+import BackOfficeScreen from '../containers/Backoffice';
 // import More from '../containers/More';
 // import EventDetail from '../containers/EventDetail';
 // // import { createSharedElementStackNavigator } from 'react-navigation-shared-element';
@@ -502,6 +503,7 @@ function HomeStackNavigator() {
                 options={{
                   header: props => (
                     <HeaderInventory
+                      showCustomerOutlet={true}
                       navigation={props.navigation}
                     />
                   ),
@@ -875,6 +877,19 @@ function HomeStackNavigator() {
                   header: props => (
                     <PaypointHeader
                       // prevScreen={props.back.title}
+                      navigation={props.navigation}
+                    />
+                  ),
+                }}
+              />
+              <Stack.Screen
+                name="Backoffice"
+                component={BackOfficeScreen}
+                options={{
+                  header: props => (
+                    <HeaderInventory
+
+
                       navigation={props.navigation}
                     />
                   ),

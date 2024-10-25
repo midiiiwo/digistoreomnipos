@@ -13,37 +13,7 @@ import { useSelector } from 'react-redux';
 import PrimaryButton from '../PrimaryButton';
 import { useAddCategoryProduct } from '../../hooks/useAddCategoryProduct';
 import Picker from '../Picker';
-
-export const Input = ({
-  placeholder,
-  val,
-  setVal,
-  nLines,
-  showError,
-  ...props
-}) => {
-  return (
-    <TextInput
-      label={placeholder}
-      textColor="#30475e"
-      value={val}
-      onChangeText={setVal}
-      mode="outlined"
-      outlineColor={showError ? '#EB455F' : '#B7C4CF'}
-      activeOutlineColor={showError ? '#EB455F' : '#1942D8'}
-      outlineStyle={{
-        borderWidth: 0.9,
-        borderRadius: 4,
-        // borderColor: showError ? '#EB455F' : '#B7C4CF',
-      }}
-      placeholderTextColor="#B7C4CF"
-      style={styles.input}
-      numberOfLines={nLines}
-      multiline={nLines ? true : false}
-      {...props}
-    />
-  );
-};
+import Input from '../Input';
 
 const reducer = (state, action) => {
   switch (action.type) {

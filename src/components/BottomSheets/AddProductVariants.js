@@ -1,30 +1,12 @@
-/* eslint-disable eqeqeq */
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  Image,
-  FlatList,
-  Platform,
-  ScrollView,
-} from 'react-native';
+import { StyleSheet, View, Text, ScrollView } from 'react-native';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 
-import { TextInput } from 'react-native-paper';
-
-import { useSelector } from 'react-redux';
+import Input from '../Input';
 import PrimaryButton from '../PrimaryButton';
-import { RadioButtonProvider } from '../../context/RadioButtonContext';
-import RadioButton from '../RadioButton';
-import { useRadioButton } from '../../hooks/useRadioButton';
-import { useTransferCommission } from '../../hooks/useTransferCommission';
-import { useToast } from 'react-native-toast-notifications';
-import { useQueryClient } from 'react-query';
 import Bin from '../../../assets/icons/bin.svg';
 import { Pressable } from 'react-native';
-import { filter } from 'lodash';
 
 const VariantItem = ({
   v,
@@ -164,30 +146,6 @@ const VariantItem = ({
         </PrimaryButton>
       </View>
     </View>
-  );
-};
-
-const Input = ({ placeholder, val, setVal, nLines, showError, ...props }) => {
-  return (
-    <TextInput
-      label={placeholder}
-      textColor="#30475e"
-      value={val}
-      onChangeText={setVal}
-      mode="outlined"
-      outlineColor={showError ? '#EB455F' : '#B7C4CF'}
-      activeOutlineColor={showError ? '#EB455F' : '#1942D8'}
-      outlineStyle={{
-        borderWidth: 0.9,
-        borderRadius: 4,
-        // borderColor: showError ? '#EB455F' : '#B7C4CF',
-      }}
-      placeholderTextColor="#B7C4CF"
-      style={styles.input}
-      numberOfLines={nLines}
-      multiline={nLines ? true : false}
-      {...props}
-    />
   );
 };
 

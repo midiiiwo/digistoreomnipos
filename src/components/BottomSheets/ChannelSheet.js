@@ -1,4 +1,4 @@
-/* eslint-disable prettier/prettier */
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {
   StyleSheet,
@@ -7,7 +7,6 @@ import {
   Pressable,
   ScrollView,
   Image,
-  Dimensions,
 } from 'react-native';
 import ActionSheet from 'react-native-actions-sheet';
 import { SheetManager } from 'react-native-actions-sheet';
@@ -24,7 +23,7 @@ function ChannelSheet(props) {
     SheetManager.hide('channels');
   }
   const { user } = useSelector(state => state.auth);
-  const { data, isLoading } = useGetSaleChannelList(user.merchant);
+  const { data } = useGetSaleChannelList(user.merchant);
   return (
     <ActionSheet
       id={props.sheetId}
@@ -40,86 +39,96 @@ function ChannelSheet(props) {
           <Text style={styles.mainText}>Sale Source</Text>
         </View>
         <ScrollView>
-          {data &&
-            data.data &&
-            data.data.data.map(channel => {
-              return (
-                <Pressable
-                  key={channel}
-                  style={styles.channelType}
-                  onPress={() => handleSelect(channel)}>
-                  {channel === 'Inshop' && (
-                    <Image
-                      source={require('../../../assets/images/online-store.png')}
-                      style={styles.img}
-                    />
-                  )}
-                  {/* {channel === 'INSHP' && (
+          {((data && data.data && data.data.data) || []).map(channel => {
+            return (
+              <Pressable
+                key={channel}
+                style={styles.channelType}
+                onPress={() => handleSelect(channel)}>
+                {channel === 'Inshop' && (
+                  <Image
+                    source={require('../../../assets/images/online-store.png')}
+                    style={styles.img}
+                  />
+                )}
+                {/* {channel === 'INSHP' && (
                     <Image
                       source={require('../../assets/images/online-store.png')}
                       style={styles.img}
                     />
                   )} */}
 
-                  {/* {channel === 'ONLINE' && (
+                {/* {channel === 'ONLINE' && (
                     <Image
                       source={require('../../assets/images/wifi.png')}
                       style={styles.img}
                     />
                   )} */}
-                  {channel === 'Snapchat' && (
-                    <Image
-                      source={require('../../../assets/images/snapchat_.png')}
-                      style={styles.img}
-                    />
-                  )}
-                  {channel === 'Instagram' && (
-                    <Image
-                      source={require('../../../assets/images/instagram.png')}
-                      style={styles.img}
-                    />
-                  )}
-                  {channel === 'Twitter' && (
-                    <Image
-                      source={require('../../../assets/images/twitter.png')}
-                      style={styles.img}
-                    />
-                  )}
-                  {channel === 'Whatsapp' && (
-                    <Image
-                      source={require('../../../assets/images/whatsapp.png')}
-                      style={styles.img}
-                    />
-                  )}
-                  {channel === 'Tiktok' && (
-                    <Image
-                      source={require('../../../assets/images/tik-tok.png')}
-                      style={styles.img}
-                    />
-                  )}
-                  {channel === 'Facebook' && (
-                    <Image
-                      source={require('../../../assets/images/facebook.png')}
-                      style={styles.img}
-                    />
-                  )}
-                  {channel === 'Others' && (
-                    <Image
-                      source={require('../../../assets/images/sale.png')}
-                      style={styles.img}
-                    />
-                  )}
-                  {/* {channel === 'UNKNOWN' && (
+                {channel === 'Snapchat' && (
+                  <Image
+                    source={require('../../../assets/images/snapchat.webp')}
+                    style={[styles.img, { borderRadius: 100 }]}
+                  />
+                )}
+                {channel === 'Instagram' && (
+                  <Image
+                    source={require('../../../assets/images/instagram.png')}
+                    style={[styles.img, { borderRadius: 100 }]}
+                  />
+                )}
+                {channel === 'Twitter' && (
+                  <Image
+                    source={require('../../../assets/images/twitter.png')}
+                    style={styles.img}
+                  />
+                )}
+                {channel === 'Whatsapp' && (
+                  <Image
+                    source={require('../../../assets/images/whatsapp.webp')}
+                    style={[styles.img, { borderRadius: 100 }]}
+                  />
+                )}
+                {channel === 'Tiktok' && (
+                  <Image
+                    source={require('../../../assets/images/tik-tok.png')}
+                    style={[styles.img, { borderRadius: 100 }]}
+                  />
+                )}
+                {channel === 'Facebook' && (
+                  <Image
+                    source={require('../../../assets/images/facebook.png')}
+                    style={[styles.img, { borderRadius: 100 }]}
+                  />
+                )}
+                {channel === 'Others' && (
+                  <Image
+                    source={require('../../../assets/images/sale.png')}
+                    style={styles.img}
+                  />
+                )}
+                {channel === 'Glovo' && (
+                  <Image
+                    source={require('../../../assets/images/glovo2.png')}
+                    style={[styles.img, { borderRadius: 100 }]}
+                  />
+                )}
+                {channel === 'Bolt' && (
+                  <Image
+                    source={require('../../../assets/images/bolt.png')}
+                    style={styles.img}
+                  />
+                )}
+                {/* {channel === 'UNKNOWN' && (
                     <Image
                       source={require('../../../assets/images/payment.png')}
                       style={styles.img}
                     />
                   )} */}
-                  <Text style={styles.channelText}>{channel}</Text>
-                  <CaretRight style={styles.caret} height={15} width={15} />
-                </Pressable>
-              );
-            })}
+                <Text style={styles.channelText}>{channel}</Text>
+                <CaretRight style={styles.caret} />
+              </Pressable>
+            );
+          })}
         </ScrollView>
       </View>
     </ActionSheet>
@@ -129,7 +138,6 @@ function ChannelSheet(props) {
 const styles = StyleSheet.create({
   containerStyle: {
     marginBottom: 0,
-    width: Dimensions.get('window').width * 0.5,
   },
   // indicatorStyle: {
   //   display: 'none',
@@ -145,16 +153,15 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.3,
   },
   mainText: {
-    fontFamily: 'SFProDisplay-Medium',
-    fontSize: 18,
+    fontFamily: 'ReadexPro-Medium',
+    fontSize: 16,
     color: '#30475E',
-    letterSpacing: -0.1,
   },
   img: {
-    height: 30,
-    width: 30,
+    height: 24,
+    width: 24,
     borderRadius: 4,
-    marginRight: 12,
+    marginRight: 8,
     // marginVertical: 6,
     // marginTop: 6,
     // marginRight: 10,
@@ -162,7 +169,7 @@ const styles = StyleSheet.create({
     // backgroundColor: 'green',
   },
   done: {
-    fontFamily: 'Inter-SemiBold',
+    fontFamily: 'ReadexPro-Medium',
     color: '#1942D8',
     fontSize: 15,
     letterSpacing: -0.8,
@@ -183,11 +190,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
   },
   channelText: {
-    fontFamily: 'SFProDisplay-Regular',
-    fontSize: 17.4,
+    fontFamily: 'ReadexPro-Medium',
+    fontSize: 15,
     color: '#30475E',
+    letterSpacing: 0.2,
   },
 });
 
 export default ChannelSheet;
-

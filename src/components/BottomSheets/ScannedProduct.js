@@ -12,6 +12,7 @@ import { useActionCreator } from '../../hooks/useActionCreator';
 import { useNavigation } from '@react-navigation/native';
 
 function ScannedProduct(props) {
+  console.log('prrrr', props.payload);
   const { product } = props.payload;
   const toast = useToast();
   const { cart } = useSelector(state => state.sale);
@@ -21,6 +22,7 @@ function ScannedProduct(props) {
   const quant = React.useRef(0);
   const { addToCart } = useActionCreator();
   const navigation = useNavigation();
+  console.log('====+++>', product);
   return (
     <ActionSheet
       id={props.sheetId}
@@ -117,7 +119,7 @@ function ScannedProduct(props) {
               product_image: product.product_image,
             });
             SheetManager.hideAll();
-            navigation.navigate('Dashboard');
+            navigation.navigate('Inventory');
           }}>
           Add to Cart
         </PrimaryButton>
@@ -131,9 +133,6 @@ const styles = StyleSheet.create({
     height: Dimensions.get('window').height * 0.1,
     width: Dimensions.get('window').height * 0.1,
     borderRadius: 7,
-  },
-  containerStyle: {
-    width: Dimensions.get('window').width * 0.6,
   },
 });
 

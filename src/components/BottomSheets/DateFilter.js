@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  Pressable,
-  ScrollView,
-  Dimensions,
-} from 'react-native';
+import { StyleSheet, View, Text, Pressable, ScrollView } from 'react-native';
 import ActionSheet from 'react-native-actions-sheet';
 import { SheetManager } from 'react-native-actions-sheet';
 import { useSelector } from 'react-redux';
@@ -50,28 +43,29 @@ function SummaryDateSheet(props) {
     if (!track.current) {
       return;
     }
-    console.log('starttttt', JSON.parse(range.value).meta);
-    if (JSON.parse(range.value).meta) {
+    try {
+      if (JSON.parse(range.value).meta) {
+        setSummaryStartDate(
+          moment()
+            .startOf(JSON.parse(range.value).value)
+            .subtract(1, JSON.parse(range.value).meta)
+            .toDate(),
+        );
+        setSummaryEndDate(
+          moment()
+            .startOf(JSON.parse(range.value).value)
+            .subtract(1, 'day')
+            .toDate(),
+        );
+        return;
+      }
       setSummaryStartDate(
-        moment()
-          .startOf(JSON.parse(range.value).value)
-          .subtract(1, JSON.parse(range.value).meta)
-          .toDate(),
+        moment().startOf(JSON.parse(range.value).value).toDate(),
       );
-      setSummaryEndDate(
-        moment()
-          .startOf(JSON.parse(range.value).value)
-          .subtract(1, 'day')
-          .toDate(),
-      );
-      return;
-    }
-    setSummaryStartDate(
-      moment().startOf(JSON.parse(range.value).value).toDate(),
-    );
 
-    // setSummaryEndDate(new Date());
-    setSummaryEndDate(moment().endOf(JSON.parse(range.value).value).toDate());
+      // setSummaryEndDate(new Date());
+      setSummaryEndDate(moment().endOf(JSON.parse(range.value).value).toDate());
+    } catch (error) {}
   }, [range, setSummaryStartDate, setSummaryEndDate]);
 
   React.useEffect(() => {
@@ -130,6 +124,7 @@ function SummaryDateSheet(props) {
               );
             })}
           </Picker>
+
           <DateTimePicker
             title={'From'}
             placeholder={'Start date'}
@@ -166,9 +161,6 @@ const styles = StyleSheet.create({
   dateWrapper: {
     marginHorizontal: 12,
     marginTop: 14,
-  },
-  containerStyle: {
-    width: Dimensions.get('window').width * 0.6,
   },
 });
 export default SummaryDateSheet;

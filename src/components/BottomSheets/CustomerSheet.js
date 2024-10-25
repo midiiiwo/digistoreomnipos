@@ -1,14 +1,6 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
-import {
-  Pressable,
-  StyleSheet,
-  View,
-  Text,
-  TextInput,
-  FlatList,
-} from 'react-native';
-import Lottie from 'lottie-react-native';
+import { Pressable, StyleSheet, View, Text, TextInput } from 'react-native';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 
 import Search from '../../../assets/icons/search.svg';
@@ -268,3 +260,4 @@ const styles = StyleSheet.create({
 });
 
 export default CustomerSheet;
+

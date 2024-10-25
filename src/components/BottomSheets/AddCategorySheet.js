@@ -4,8 +4,7 @@ import { StyleSheet, View, Text, Pressable, ScrollView } from 'react-native';
 import ActionSheet from 'react-native-actions-sheet';
 import { Picker as RNPicker } from 'react-native-ui-lib';
 import { SheetManager } from 'react-native-actions-sheet';
-
-import { TextInput } from 'react-native-paper';
+import Input from '../Input';
 
 import { useSelector } from 'react-redux';
 import PrimaryButton from '../PrimaryButton';
@@ -42,30 +41,6 @@ export const Picker = ({ disabled, children, value, setValue, showError }) => {
   );
 };
 
-const Input = ({ placeholder, val, setVal, nLines, showError, ...props }) => {
-  return (
-    <TextInput
-      label={placeholder}
-      textColor="#30475e"
-      value={val}
-      onChangeText={setVal}
-      mode="outlined"
-      outlineColor={showError ? '#EB455F' : '#B7C4CF'}
-      activeOutlineColor={showError ? '#EB455F' : '#1942D8'}
-      outlineStyle={{
-        borderWidth: 0.9,
-        borderRadius: 4,
-        // borderColor: showError ? '#EB455F' : '#B7C4CF',
-      }}
-      placeholderTextColor="#B7C4CF"
-      style={styles.input}
-      numberOfLines={nLines}
-      multiline={nLines ? true : false}
-      {...props}
-    />
-  );
-};
-
 const reducer = (state, action) => {
   switch (action.type) {
     case 'category_name':
@@ -99,15 +74,37 @@ function AddCategorySheet(props) {
     }
   });
 
+  // React.useEffect(() => {
+  //   if (saved) {
+  //     if (saved.status == 0) {
+  //       toast.show(saved.message, { placement: 'top' });
+  //       SheetManager.hideAll();
+  //       setSaved(null);
+  //       return;
+  //     }
+  //     toast.show(saved.message, { placement: 'top', type: 'danger' });
+  //     setSaved(null);
+  //   }
+  // }, [saved, toast]);
+  //fix for the add categories let boss henry review
   React.useEffect(() => {
     if (saved) {
-      if (saved.status == 0) {
-        toast.show(saved.message, { placement: 'top' });
-        SheetManager.hideAll();
+      if (saved.status === 0) {
+        toast.show(saved.message, {
+          placement: 'top',
+          type: 'success',
+          style: { backgroundColor: '#30475e', opacity: 0.9 },
+        });
+        SheetManager.hide('addCategory');
         setSaved(null);
         return;
       }
-      toast.show(saved.message, { placement: 'top', type: 'danger' });
+
+      toast.show(saved.message, {
+        placement: 'top',
+        type: 'danger',
+        style: { backgroundColor: '#30475e', opacity: 0.9 },
+      });
       setSaved(null);
     }
   }, [saved, toast]);
@@ -186,11 +183,11 @@ function AddCategorySheet(props) {
           />
           <Input
             placeholder="Enter description (optional)"
-            val={state.description}
+            val={state.desc}
             nLines={3}
             setVal={text =>
               handleTextChange({
-                type: 'product_description',
+                type: 'category_desc',
                 payload: text,
               })
             }

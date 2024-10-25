@@ -1,14 +1,6 @@
 import React from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  Pressable,
-  ScrollView,
-  Dimensions,
-} from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import ActionSheet from 'react-native-actions-sheet';
-import { SheetManager } from 'react-native-actions-sheet';
 import { useSelector } from 'react-redux';
 import { DateTimePicker } from 'react-native-ui-lib';
 import { Picker as RNPicker } from 'react-native-ui-lib';
@@ -50,27 +42,29 @@ function AnalyticsSheet(props) {
     if (!track.current) {
       return;
     }
-    if (JSON.parse(range.value || '').meta) {
+    try {
+      if (JSON.parse(range.value).meta) {
+        setSummaryStartDate(
+          moment()
+            .startOf(JSON.parse(range.value).value)
+            .subtract(1, JSON.parse(range.value).meta)
+            .toDate(),
+        );
+        setSummaryEndDate(
+          moment()
+            .startOf(JSON.parse(range.value).value)
+            .subtract(1, 'day')
+            .toDate(),
+        );
+        return;
+      }
       setSummaryStartDate(
-        moment()
-          .startOf(JSON.parse(range.value).value)
-          .subtract(1, JSON.parse(range.value).meta)
-          .toDate(),
+        moment().startOf(JSON.parse(range.value).value).toDate(),
       );
-      setSummaryEndDate(
-        moment()
-          .startOf(JSON.parse(range.value).value)
-          .subtract(1, 'day')
-          .toDate(),
-      );
-      return;
-    }
-    setSummaryStartDate(
-      moment().startOf(JSON.parse(range.value).value).toDate(),
-    );
 
-    // setSummaryEndDate(new Date());
-    setSummaryEndDate(moment().endOf(JSON.parse(range.value).value).toDate());
+      // setSummaryEndDate(new Date());
+      setSummaryEndDate(moment().endOf(JSON.parse(range.value).value).toDate());
+    } catch (error) {}
   }, [range, setSummaryStartDate, setSummaryEndDate]);
 
   React.useEffect(() => {
@@ -165,9 +159,6 @@ const styles = StyleSheet.create({
   dateWrapper: {
     marginHorizontal: 12,
     marginTop: 14,
-  },
-  containerStyle: {
-    width: Dimensions.get('window').width * 0.6,
   },
 });
 export default AnalyticsSheet;

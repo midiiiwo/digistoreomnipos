@@ -300,10 +300,10 @@ const Inventory = ({ navigation }) => {
               'outlet',
               JSON.stringify(
                 data_ &&
-                  data_.data &&
-                  data_.data.data &&
-                  data_.data.data[0] &&
-                  data_.data.data[0],
+                data_.data &&
+                data_.data.data &&
+                data_.data.data[0] &&
+                data_.data.data[0],
               ),
             );
             currentOt =
@@ -329,10 +329,10 @@ const Inventory = ({ navigation }) => {
                 'outlet',
                 JSON.stringify(
                   data_ &&
-                    data_.data &&
-                    data_.data.data &&
-                    data_.data.data[i] &&
-                    data_.data.data[i],
+                  data_.data &&
+                  data_.data.data &&
+                  data_.data.data[i] &&
+                  data_.data.data[i],
                 ),
               );
               currentOt = outlets[i];
@@ -346,7 +346,7 @@ const Inventory = ({ navigation }) => {
             }
           }
         }
-      } catch (error) {}
+      } catch (error) { }
     })();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -773,15 +773,17 @@ const Inventory = ({ navigation }) => {
 
   if (isLoading || istaxesLoading) {
     return (
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Lottie
           source={require('../lottie/95136-2-parallel-lines-animation.json')}
           autoPlay
           loop
+          style={{ width: 150, height: 150 }}
         />
       </View>
     );
   }
+
 
   const orderAmount = (cart || []).reduce((acc, curr) => {
     if (!curr) {
@@ -1296,7 +1298,7 @@ const Inventory = ({ navigation }) => {
                       onPress={() =>
                         clearDiscount(
                           subTotal +
-                            (discountPayload && discountPayload.discount) || 0,
+                          (discountPayload && discountPayload.discount) || 0,
                         )
                       }
                       style={{
@@ -1358,8 +1360,8 @@ const Inventory = ({ navigation }) => {
                             </View>
                           );
                         }}
-                        // style={{ borderBottomColor: '#eee' }}
-                        // dateFormat="ddd, Do MMMM, YYYY"
+                      // style={{ borderBottomColor: '#eee' }}
+                      // dateFormat="ddd, Do MMMM, YYYY"
                       />
                     </View>
                     <View style={{ marginHorizontal: 6 }} />
@@ -1407,31 +1409,31 @@ const Inventory = ({ navigation }) => {
                                 </View>
                               );
                             }}
-                            // style={{ borderBottomColor: '#eee' }}
-                            // dateFormat="ddd, Do MMMM, YYYY"
+                          // style={{ borderBottomColor: '#eee' }}
+                          // dateFormat="ddd, Do MMMM, YYYY"
                           />
                         </>
                       )}
                       {!user?.user_permissions?.includes(
                         'ADDORDERDLVRDATE',
                       ) && (
-                        <Pressable
-                          onPress={() => SheetManager.show('deliveryNote')}
-                          style={{
-                            paddingHorizontal: 1,
-                            marginLeft: 'auto',
-                            marginTop: 13,
-                          }}>
-                          <Text
+                          <Pressable
+                            onPress={() => SheetManager.show('deliveryNote')}
                             style={{
-                              fontFamily: 'ReadexPro-Regular',
-                              fontSize: 14,
-                              color: '#0069FF',
+                              paddingHorizontal: 1,
+                              marginLeft: 'auto',
+                              marginTop: 13,
                             }}>
-                            Add Delivery Notes
-                          </Text>
-                        </Pressable>
-                      )}
+                            <Text
+                              style={{
+                                fontFamily: 'ReadexPro-Regular',
+                                fontSize: 14,
+                                color: '#0069FF',
+                              }}>
+                              Add Delivery Notes
+                            </Text>
+                          </Pressable>
+                        )}
                     </View>
                   </View>
                 </View>

@@ -24,15 +24,19 @@ MERGED from [:react-native-picker_picker] /Users/wedamanewenah/Downloads/IPAY/di
 MERGED from [:appcenter] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/appcenter/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-9:12
 MERGED from [:appcenter-analytics] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/appcenter-analytics/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-9:12
 MERGED from [:appcenter-crashes] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/appcenter-crashes/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-9:12
+MERGED from [:jail-monkey] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/jail-monkey/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-9:12
 MERGED from [:lottie-react-native] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/lottie-react-native/src/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-11:12
+MERGED from [:react-native-action-sheet] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-action-sheet/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-9:12
 MERGED from [:react-native-blob-util] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-blob-util/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-48:12
 MERGED from [:react-native-camera] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-camera/android/build/intermediates/merged_manifest/generalDebug/AndroidManifest.xml:2:1-18:12
 MERGED from [:react-native-charts-wrapper] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-charts-wrapper/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-9:12
 MERGED from [:react-native-code-push] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-code-push/android/app/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-15:12
 MERGED from [:react-native-device-info] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-device-info/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-9:12
 MERGED from [:react-native-document-picker] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-document-picker/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-9:12
+MERGED from [:react-native-exit-app] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-exit-app/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-9:12
 MERGED from [:react-native-fast-image] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-fast-image/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-9:12
 MERGED from [:react-native-fast-shadow] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-fast-shadow/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-9:12
+MERGED from [:react-native-file-viewer] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-file-viewer/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-21:12
 MERGED from [:react-native-fs] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-fs/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-11:12
 MERGED from [:react-native-gesture-handler] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-gesture-handler/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-9:12
 MERGED from [:react-native-html-to-pdf] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-html-to-pdf/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-9:12
@@ -45,13 +49,16 @@ MERGED from [:react-native-permissions] /Users/wedamanewenah/Downloads/IPAY/digi
 MERGED from [:react-native-push-notification] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-push-notification/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-9:12
 MERGED from [:react-native-safe-area-context] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-safe-area-context/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-9:12
 MERGED from [:react-native-screens] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-screens/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-9:12
+MERGED from [:react-native-select-contact] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-select-contact/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-11:12
 MERGED from [:react-native-share] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-share/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-21:12
+MERGED from [:react-native-shared-element] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-shared-element/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-9:12
 MERGED from [:react-native-simple-crypto] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-simple-crypto/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-9:12
 MERGED from [:react-native-sound-player] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-sound-player/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-9:12
 MERGED from [:react-native-spinkit] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-spinkit/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-9:12
 MERGED from [:react-native-svg] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-svg/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-9:12
 MERGED from [:react-native-version-check] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-version-check/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-9:12
 MERGED from [:react-native-view-shot] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-view-shot/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-9:12
+MERGED from [:react-native-webview] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-webview/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-21:12
 MERGED from [:sp-react-native-in-app-updates] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/sp-react-native-in-app-updates/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-9:12
 MERGED from [com.facebook.react:react-android:0.71.8] /Users/wedamanewenah/.gradle/caches/transforms-3/83cf091160b56910ebaf771ebf764e8f/transformed/jetified-react-android-0.71.8-debug/AndroidManifest.xml:2:1-11:12
 MERGED from [androidx.legacy:legacy-support-v4:1.0.0] /Users/wedamanewenah/.gradle/caches/transforms-3/6a4d4e2c45cfed13a4aa056ab8be8692/transformed/legacy-support-v4-1.0.0/AndroidManifest.xml:17:1-22:12
@@ -146,6 +153,7 @@ MERGED from [androidx.lifecycle:lifecycle-viewmodel-savedstate:2.3.1] /Users/wed
 MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.3.1] /Users/wedamanewenah/.gradle/caches/transforms-3/ae7d81141f164b8d64f637f3c3e6cac6/transformed/lifecycle-viewmodel-2.3.1/AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.core:core-ktx:1.8.0] /Users/wedamanewenah/.gradle/caches/transforms-3/644d20faf502e54926a79284a6ea6c0c/transformed/jetified-core-ktx-1.8.0/AndroidManifest.xml:2:1-9:12
 MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.2.0] /Users/wedamanewenah/.gradle/caches/transforms-3/9607dcadf55f17dfe4c1e17e4b947fdb/transformed/coordinatorlayout-1.2.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.webkit:webkit:1.4.0] /Users/wedamanewenah/.gradle/caches/transforms-3/d28c4d9ff4b5c3f8b753886ed3594789/transformed/webkit-1.4.0/AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.sqlite:sqlite:2.1.0] /Users/wedamanewenah/.gradle/caches/transforms-3/81dadc111853f13c37be3065aaa1dee2/transformed/sqlite-2.1.0/AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] /Users/wedamanewenah/.gradle/caches/transforms-3/14d61dfc7c47fe70d2af827870d10905/transformed/vectordrawable-animated-1.1.0/AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] /Users/wedamanewenah/.gradle/caches/transforms-3/36ea67ba0c58cefe6d4a228657898752/transformed/vectordrawable-1.1.0/AndroidManifest.xml:17:1-24:12
@@ -179,6 +187,7 @@ MERGED from [com.microsoft.appcenter.reactnative:appcenter-react-native:4.4.5] /
 MERGED from [com.microsoft.appcenter:appcenter-analytics:4.4.5] /Users/wedamanewenah/.gradle/caches/transforms-3/479f06b8d24a791ff714a2051927daca/transformed/jetified-appcenter-analytics-4.4.5/AndroidManifest.xml:6:1-13:12
 MERGED from [com.microsoft.appcenter:appcenter-crashes:4.4.5] /Users/wedamanewenah/.gradle/caches/transforms-3/abd66a5e2307b3bd7d89d4645ae6db41/transformed/jetified-appcenter-crashes-4.4.5/AndroidManifest.xml:6:1-13:12
 MERGED from [com.microsoft.appcenter:appcenter:4.4.5] /Users/wedamanewenah/.gradle/caches/transforms-3/9f9e730124e63a2c9b6f85512944deb3/transformed/jetified-appcenter-4.4.5/AndroidManifest.xml:6:1-16:12
+MERGED from [com.scottyab:rootbeer-lib:0.0.9] /Users/wedamanewenah/.gradle/caches/transforms-3/35b27e6809c21d6f11d5987390ae00e6/transformed/jetified-rootbeer-lib-0.0.9/AndroidManifest.xml:2:1-13:12
 MERGED from [com.android.installreferrer:installreferrer:1.1.2] /Users/wedamanewenah/.gradle/caches/transforms-3/f1273e0e1ed4fe8601bf80ffb70754c5/transformed/jetified-installreferrer-1.1.2/AndroidManifest.xml:2:1-13:12
 MERGED from [com.tom-roush:pdfbox-android:1.8.10.3] /Users/wedamanewenah/.gradle/caches/transforms-3/81fc26f814d2bf06b88529197370b13d/transformed/jetified-pdfbox-android-1.8.10.3/AndroidManifest.xml:2:1-11:12
 MERGED from [androidx.biometric:biometric:1.1.0] /Users/wedamanewenah/.gradle/caches/transforms-3/9b0f05ca548d50d32a4d53f54dc4357c/transformed/biometric-1.1.0/AndroidManifest.xml:17:1-29:12
@@ -353,10 +362,14 @@ MERGED from [:react-native-blob-util] /Users/wedamanewenah/Downloads/IPAY/digist
 MERGED from [:react-native-blob-util] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-blob-util/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:36:5-46:19
 MERGED from [:react-native-code-push] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-code-push/android/app/build/intermediates/merged_manifest/debug/AndroidManifest.xml:11:5-13:19
 MERGED from [:react-native-code-push] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-code-push/android/app/build/intermediates/merged_manifest/debug/AndroidManifest.xml:11:5-13:19
+MERGED from [:react-native-file-viewer] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-file-viewer/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:9:5-19:19
+MERGED from [:react-native-file-viewer] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-file-viewer/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:9:5-19:19
 MERGED from [:react-native-image-picker] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-image-picker/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:9:5-19:19
 MERGED from [:react-native-image-picker] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-image-picker/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:9:5-19:19
 MERGED from [:react-native-share] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-share/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:9:5-19:19
 MERGED from [:react-native-share] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-share/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:9:5-19:19
+MERGED from [:react-native-webview] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-webview/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:9:5-19:19
+MERGED from [:react-native-webview] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-webview/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:9:5-19:19
 MERGED from [com.facebook.react:react-android:0.71.8] /Users/wedamanewenah/.gradle/caches/transforms-3/83cf091160b56910ebaf771ebf764e8f/transformed/jetified-react-android-0.71.8-debug/AndroidManifest.xml:9:5-20
 MERGED from [com.facebook.react:react-android:0.71.8] /Users/wedamanewenah/.gradle/caches/transforms-3/83cf091160b56910ebaf771ebf764e8f/transformed/jetified-react-android-0.71.8-debug/AndroidManifest.xml:9:5-20
 MERGED from [com.google.firebase:firebase-messaging:23.1.1] /Users/wedamanewenah/.gradle/caches/transforms-3/e8d7b4f96ee4184125293b78ecd15ef0/transformed/jetified-firebase-messaging-23.1.1/AndroidManifest.xml:30:5-59:19
@@ -447,6 +460,8 @@ MERGED from [androidx.core:core:1.8.0] /Users/wedamanewenah/.gradle/caches/trans
 MERGED from [androidx.core:core:1.8.0] /Users/wedamanewenah/.gradle/caches/transforms-3/79870f32b463b8f926cf984784c1c468/transformed/core-1.8.0/AndroidManifest.xml:24:5-89
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /Users/wedamanewenah/.gradle/caches/transforms-3/38087feb28864fcd4459703f95692181/transformed/versionedparcelable-1.1.1/AndroidManifest.xml:24:5-25:19
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /Users/wedamanewenah/.gradle/caches/transforms-3/38087feb28864fcd4459703f95692181/transformed/versionedparcelable-1.1.1/AndroidManifest.xml:24:5-25:19
+MERGED from [com.scottyab:rootbeer-lib:0.0.9] /Users/wedamanewenah/.gradle/caches/transforms-3/35b27e6809c21d6f11d5987390ae00e6/transformed/jetified-rootbeer-lib-0.0.9/AndroidManifest.xml:11:5-20
+MERGED from [com.scottyab:rootbeer-lib:0.0.9] /Users/wedamanewenah/.gradle/caches/transforms-3/35b27e6809c21d6f11d5987390ae00e6/transformed/jetified-rootbeer-lib-0.0.9/AndroidManifest.xml:11:5-20
 MERGED from [com.android.installreferrer:installreferrer:1.1.2] /Users/wedamanewenah/.gradle/caches/transforms-3/f1273e0e1ed4fe8601bf80ffb70754c5/transformed/jetified-installreferrer-1.1.2/AndroidManifest.xml:11:5-20
 MERGED from [com.android.installreferrer:installreferrer:1.1.2] /Users/wedamanewenah/.gradle/caches/transforms-3/f1273e0e1ed4fe8601bf80ffb70754c5/transformed/jetified-installreferrer-1.1.2/AndroidManifest.xml:11:5-20
 MERGED from [com.google.android.odml:image:1.0.0-beta1] /Users/wedamanewenah/.gradle/caches/transforms-3/6d8f322f33f7fdf7386eb614c7c50bf7/transformed/jetified-image-1.0.0-beta1/AndroidManifest.xml:7:5-20
@@ -573,8 +588,12 @@ MERGED from [:appcenter-analytics] /Users/wedamanewenah/Downloads/IPAY/digistore
 MERGED from [:appcenter-analytics] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/appcenter-analytics/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-7:41
 MERGED from [:appcenter-crashes] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/appcenter-crashes/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-7:41
 MERGED from [:appcenter-crashes] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/appcenter-crashes/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-7:41
+MERGED from [:jail-monkey] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/jail-monkey/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-7:41
+MERGED from [:jail-monkey] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/jail-monkey/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-7:41
 MERGED from [:lottie-react-native] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/lottie-react-native/src/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-7:41
 MERGED from [:lottie-react-native] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/lottie-react-native/src/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-7:41
+MERGED from [:react-native-action-sheet] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-action-sheet/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-7:41
+MERGED from [:react-native-action-sheet] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-action-sheet/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-7:41
 MERGED from [:react-native-blob-util] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-blob-util/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-7:41
 MERGED from [:react-native-blob-util] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-blob-util/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-7:41
 MERGED from [:react-native-camera] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-camera/android/build/intermediates/merged_manifest/generalDebug/AndroidManifest.xml:5:5-7:41
@@ -587,10 +606,14 @@ MERGED from [:react-native-device-info] /Users/wedamanewenah/Downloads/IPAY/digi
 MERGED from [:react-native-device-info] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-device-info/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-7:41
 MERGED from [:react-native-document-picker] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-document-picker/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-7:41
 MERGED from [:react-native-document-picker] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-document-picker/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-7:41
+MERGED from [:react-native-exit-app] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-exit-app/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-7:41
+MERGED from [:react-native-exit-app] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-exit-app/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-7:41
 MERGED from [:react-native-fast-image] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-fast-image/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-7:41
 MERGED from [:react-native-fast-image] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-fast-image/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-7:41
 MERGED from [:react-native-fast-shadow] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-fast-shadow/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-7:41
 MERGED from [:react-native-fast-shadow] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-fast-shadow/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-7:41
+MERGED from [:react-native-file-viewer] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-file-viewer/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-7:41
+MERGED from [:react-native-file-viewer] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-file-viewer/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-7:41
 MERGED from [:react-native-fs] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-fs/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-7:41
 MERGED from [:react-native-fs] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-fs/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-7:41
 MERGED from [:react-native-gesture-handler] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-gesture-handler/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-7:41
@@ -615,8 +638,12 @@ MERGED from [:react-native-safe-area-context] /Users/wedamanewenah/Downloads/IPA
 MERGED from [:react-native-safe-area-context] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-safe-area-context/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-7:41
 MERGED from [:react-native-screens] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-screens/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-7:41
 MERGED from [:react-native-screens] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-screens/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-7:41
+MERGED from [:react-native-select-contact] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-select-contact/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-7:41
+MERGED from [:react-native-select-contact] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-select-contact/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-7:41
 MERGED from [:react-native-share] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-share/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-7:41
 MERGED from [:react-native-share] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-share/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-7:41
+MERGED from [:react-native-shared-element] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-shared-element/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-7:41
+MERGED from [:react-native-shared-element] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-shared-element/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-7:41
 MERGED from [:react-native-simple-crypto] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-simple-crypto/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-7:41
 MERGED from [:react-native-simple-crypto] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-simple-crypto/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-7:41
 MERGED from [:react-native-sound-player] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-sound-player/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-7:41
@@ -629,6 +656,8 @@ MERGED from [:react-native-version-check] /Users/wedamanewenah/Downloads/IPAY/di
 MERGED from [:react-native-version-check] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-version-check/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-7:41
 MERGED from [:react-native-view-shot] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-view-shot/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-7:41
 MERGED from [:react-native-view-shot] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-view-shot/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-7:41
+MERGED from [:react-native-webview] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-webview/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-7:41
+MERGED from [:react-native-webview] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-webview/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-7:41
 MERGED from [:sp-react-native-in-app-updates] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/sp-react-native-in-app-updates/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-7:41
 MERGED from [:sp-react-native-in-app-updates] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/sp-react-native-in-app-updates/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-7:41
 MERGED from [com.facebook.react:react-android:0.71.8] /Users/wedamanewenah/.gradle/caches/transforms-3/83cf091160b56910ebaf771ebf764e8f/transformed/jetified-react-android-0.71.8-debug/AndroidManifest.xml:5:5-7:41
@@ -817,6 +846,8 @@ MERGED from [androidx.core:core-ktx:1.8.0] /Users/wedamanewenah/.gradle/caches/t
 MERGED from [androidx.core:core-ktx:1.8.0] /Users/wedamanewenah/.gradle/caches/transforms-3/644d20faf502e54926a79284a6ea6c0c/transformed/jetified-core-ktx-1.8.0/AndroidManifest.xml:5:5-7:41
 MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.2.0] /Users/wedamanewenah/.gradle/caches/transforms-3/9607dcadf55f17dfe4c1e17e4b947fdb/transformed/coordinatorlayout-1.2.0/AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.2.0] /Users/wedamanewenah/.gradle/caches/transforms-3/9607dcadf55f17dfe4c1e17e4b947fdb/transformed/coordinatorlayout-1.2.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.webkit:webkit:1.4.0] /Users/wedamanewenah/.gradle/caches/transforms-3/d28c4d9ff4b5c3f8b753886ed3594789/transformed/webkit-1.4.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.webkit:webkit:1.4.0] /Users/wedamanewenah/.gradle/caches/transforms-3/d28c4d9ff4b5c3f8b753886ed3594789/transformed/webkit-1.4.0/AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.sqlite:sqlite:2.1.0] /Users/wedamanewenah/.gradle/caches/transforms-3/81dadc111853f13c37be3065aaa1dee2/transformed/sqlite-2.1.0/AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.sqlite:sqlite:2.1.0] /Users/wedamanewenah/.gradle/caches/transforms-3/81dadc111853f13c37be3065aaa1dee2/transformed/sqlite-2.1.0/AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] /Users/wedamanewenah/.gradle/caches/transforms-3/14d61dfc7c47fe70d2af827870d10905/transformed/vectordrawable-animated-1.1.0/AndroidManifest.xml:20:5-22:41
@@ -883,6 +914,8 @@ MERGED from [com.microsoft.appcenter:appcenter-crashes:4.4.5] /Users/wedamanewen
 MERGED from [com.microsoft.appcenter:appcenter-crashes:4.4.5] /Users/wedamanewenah/.gradle/caches/transforms-3/abd66a5e2307b3bd7d89d4645ae6db41/transformed/jetified-appcenter-crashes-4.4.5/AndroidManifest.xml:9:5-11:41
 MERGED from [com.microsoft.appcenter:appcenter:4.4.5] /Users/wedamanewenah/.gradle/caches/transforms-3/9f9e730124e63a2c9b6f85512944deb3/transformed/jetified-appcenter-4.4.5/AndroidManifest.xml:9:5-11:41
 MERGED from [com.microsoft.appcenter:appcenter:4.4.5] /Users/wedamanewenah/.gradle/caches/transforms-3/9f9e730124e63a2c9b6f85512944deb3/transformed/jetified-appcenter-4.4.5/AndroidManifest.xml:9:5-11:41
+MERGED from [com.scottyab:rootbeer-lib:0.0.9] /Users/wedamanewenah/.gradle/caches/transforms-3/35b27e6809c21d6f11d5987390ae00e6/transformed/jetified-rootbeer-lib-0.0.9/AndroidManifest.xml:7:5-9:41
+MERGED from [com.scottyab:rootbeer-lib:0.0.9] /Users/wedamanewenah/.gradle/caches/transforms-3/35b27e6809c21d6f11d5987390ae00e6/transformed/jetified-rootbeer-lib-0.0.9/AndroidManifest.xml:7:5-9:41
 MERGED from [com.android.installreferrer:installreferrer:1.1.2] /Users/wedamanewenah/.gradle/caches/transforms-3/f1273e0e1ed4fe8601bf80ffb70754c5/transformed/jetified-installreferrer-1.1.2/AndroidManifest.xml:5:5-7:41
 MERGED from [com.android.installreferrer:installreferrer:1.1.2] /Users/wedamanewenah/.gradle/caches/transforms-3/f1273e0e1ed4fe8601bf80ffb70754c5/transformed/jetified-installreferrer-1.1.2/AndroidManifest.xml:5:5-7:41
 MERGED from [com.tom-roush:pdfbox-android:1.8.10.3] /Users/wedamanewenah/.gradle/caches/transforms-3/81fc26f814d2bf06b88529197370b13d/transformed/jetified-pdfbox-android-1.8.10.3/AndroidManifest.xml:7:5-9:41
@@ -1121,6 +1154,16 @@ ADDED from [:react-native-camera] /Users/wedamanewenah/Downloads/IPAY/digistoreo
 		ADDED from [:react-native-camera] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-camera/android/build/intermediates/merged_manifest/generalDebug/AndroidManifest.xml:16:9-33
 	android:name
 		ADDED from [:react-native-camera] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-camera/android/build/intermediates/merged_manifest/generalDebug/AndroidManifest.xml:15:9-57
+provider#com.vinzscam.reactnativefileviewer.FileProvider
+ADDED from [:react-native-file-viewer] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-file-viewer/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:10:9-18:20
+	android:grantUriPermissions
+		ADDED from [:react-native-file-viewer] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-file-viewer/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:14:13-47
+	android:authorities
+		ADDED from [:react-native-file-viewer] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-file-viewer/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:12:13-60
+	android:exported
+		ADDED from [:react-native-file-viewer] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-file-viewer/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:13:13-37
+	android:name
+		ADDED from [:react-native-file-viewer] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-file-viewer/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:11:13-75
 provider#com.imagepicker.ImagePickerProvider
 ADDED from [:react-native-image-picker] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-image-picker/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:10:9-18:20
 	android:grantUriPermissions
@@ -1143,6 +1186,10 @@ MERGED from [androidx.biometric:biometric:1.1.0] /Users/wedamanewenah/.gradle/ca
 MERGED from [androidx.biometric:biometric:1.1.0] /Users/wedamanewenah/.gradle/caches/transforms-3/9b0f05ca548d50d32a4d53f54dc4357c/transformed/biometric-1.1.0/AndroidManifest.xml:27:5-74
 	android:name
 		ADDED from [:react-native-keychain] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-keychain/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:10:22-71
+uses-permission#android.permission.READ_CONTACTS
+ADDED from [:react-native-select-contact] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-select-contact/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:9:5-72
+	android:name
+		ADDED from [:react-native-select-contact] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-select-contact/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:9:22-69
 provider#cl.json.RNShareFileProvider
 ADDED from [:react-native-share] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-share/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:10:9-18:20
 	android:grantUriPermissions
@@ -1153,6 +1200,16 @@ ADDED from [:react-native-share] /Users/wedamanewenah/Downloads/IPAY/digistoreom
 		ADDED from [:react-native-share] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-share/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:13:13-37
 	android:name
 		ADDED from [:react-native-share] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-share/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:11:13-55
+provider#com.reactnativecommunity.webview.RNCWebViewFileProvider
+ADDED from [:react-native-webview] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-webview/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:10:9-18:20
+	android:grantUriPermissions
+		ADDED from [:react-native-webview] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-webview/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:14:13-47
+	android:authorities
+		ADDED from [:react-native-webview] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-webview/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:12:13-64
+	android:exported
+		ADDED from [:react-native-webview] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-webview/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:13:13-37
+	android:name
+		ADDED from [:react-native-webview] /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-webview/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:11:13-83
 uses-permission#com.google.android.c2dm.permission.RECEIVE
 ADDED from [com.google.firebase:firebase-messaging:23.1.1] /Users/wedamanewenah/.gradle/caches/transforms-3/e8d7b4f96ee4184125293b78ecd15ef0/transformed/jetified-firebase-messaging-23.1.1/AndroidManifest.xml:28:5-82
 MERGED from [com.google.android.gms:play-services-iid:17.0.0] /Users/wedamanewenah/.gradle/caches/transforms-3/830f60d49ad1c7b6d7fa4f55de0a9d68/transformed/jetified-play-services-iid-17.0.0/AndroidManifest.xml:23:5-82

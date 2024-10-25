@@ -6,19 +6,8 @@ import ActionSheet from 'react-native-actions-sheet';
 import { SheetManager } from 'react-native-actions-sheet';
 
 import { TextInput } from 'react-native-paper';
-import { Picker as RNPicker } from 'react-native-ui-lib';
 
-import { useGetOutletCategories } from '../../hooks/useGetOutletCategories';
-import { useSelector } from 'react-redux';
 import PrimaryButton from '../PrimaryButton';
-import { useGetSelectedCategoryDetails } from '../../hooks/useGetSelectedCategoryDetails';
-import Loading from '../Loading';
-import { useEditCategory } from '../../hooks/useEditCategory';
-import { useQueryClient } from 'react-query';
-import { useToast } from 'react-native-toast-notifications';
-import { useLookupCustomerFromVendor } from '../../hooks/useLookupCustomerFromVendor';
-import { Picker } from './AddProductSheet';
-import { useGetVendorOptions } from '../../hooks/useGetVendorOptions';
 import { useLookupAccount } from '../../hooks/useLookupAccount';
 
 const Input = ({ placeholder, val, setVal, nLines, showError, ...props }) => {
@@ -59,7 +48,6 @@ const reducer = (state, action) => {
 };
 
 function SendMoneySheet(props) {
-  const { user } = useSelector(state => state.auth);
   const [saved, setSaved] = React.useState('');
   const [showError, setShowError] = React.useState(false);
   const step = React.useRef(0);
