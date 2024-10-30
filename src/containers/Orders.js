@@ -107,7 +107,7 @@ const Orders = ({ navigation }) => {
     if (typeof outlet === 'object' && isArray(outlet)) {
       try {
         outlet = outlet.toString();
-      } catch (error) { }
+      } catch (error) {}
     }
 
     ordersHistory.mutate({
@@ -218,7 +218,7 @@ const Orders = ({ navigation }) => {
         return upperCase(orderStatus) === 'ALL'
           ? true
           : upperCase(orderStatus) === 'CONFIRMED'
-            ? [
+          ? [
               'PAID',
               'COMPLETED',
               'PICKUP_READY',
@@ -227,47 +227,47 @@ const Orders = ({ navigation }) => {
               'DISPATCHED',
               'PAYMENT_DEFERRED',
             ].includes(o?.order_status)
-            : upperCase(orderStatus) === 'PENDING'
-              ? ![
-                'PAID',
-                'COMPLETED',
-                'PICKUP_READY',
-                'BACKOFF_PROCCESSING',
-                'BACKOFF_PROCCESSED',
-                'DISPATCHED',
-              ].includes(o?.order_status)
-              : upperCase(orderStatus) === 'COMPLETED'
-                ? ['COMPLETED'].includes(o?.order_status)
-                : upperCase(orderStatus) === 'READY FOR PICKUP'
-                  ? ['PICKUP_READY'].includes(o?.order_status) &&
-                  o?.delivery_type === 'PICKUP'
-                  : upperCase(orderStatus) === 'READY FOR DELIVERY'
-                    ? ['PENDING'].includes(o?.delivery_status) &&
-                    o?.delivery_rider === null &&
-                    o?.delivery_type === 'DELIVERY' &&
-                    [
-                      'PAID',
-                      'COMPLETED',
-                      'PICKUP_READY',
-                      'BACKOFF_PROCCESSING',
-                      'BACKOFF_PROCCESSED',
-                      'DISPATCHED',
-                      'PAYMENT_DEFERRED',
-                    ].includes(o?.order_status)
-                    : upperCase(orderStatus) === 'DELIVERIES ONGOING'
-                      ? ['PENDING', 'PICKED_UP_ITEM'].includes(o?.delivery_status) &&
-                      o?.delivery_rider !== null &&
-                      o?.delivery_type === 'DELIVERY' &&
-                      [
-                        'PAID',
-                        'COMPLETED',
-                        'PICKUP_READY',
-                        'PICKED_UP_ITEM',
-                        'BACKOFF_PROCCESSING',
-                        'BACKOFF_PROCCESSED',
-                        'DISPATCHED',
-                      ].includes(o?.order_status)
-                      : upperCase(orderStatus) === o?.order_status;
+          : upperCase(orderStatus) === 'PENDING'
+          ? ![
+              'PAID',
+              'COMPLETED',
+              'PICKUP_READY',
+              'BACKOFF_PROCCESSING',
+              'BACKOFF_PROCCESSED',
+              'DISPATCHED',
+            ].includes(o?.order_status)
+          : upperCase(orderStatus) === 'COMPLETED'
+          ? ['COMPLETED'].includes(o?.order_status)
+          : upperCase(orderStatus) === 'READY FOR PICKUP'
+          ? ['PICKUP_READY'].includes(o?.order_status) &&
+            o?.delivery_type === 'PICKUP'
+          : upperCase(orderStatus) === 'READY FOR DELIVERY'
+          ? ['PENDING'].includes(o?.delivery_status) &&
+            o?.delivery_rider === null &&
+            o?.delivery_type === 'DELIVERY' &&
+            [
+              'PAID',
+              'COMPLETED',
+              'PICKUP_READY',
+              'BACKOFF_PROCCESSING',
+              'BACKOFF_PROCCESSED',
+              'DISPATCHED',
+              'PAYMENT_DEFERRED',
+            ].includes(o?.order_status)
+          : upperCase(orderStatus) === 'DELIVERIES ONGOING'
+          ? ['PENDING', 'PICKED_UP_ITEM'].includes(o?.delivery_status) &&
+            o?.delivery_rider !== null &&
+            o?.delivery_type === 'DELIVERY' &&
+            [
+              'PAID',
+              'COMPLETED',
+              'PICKUP_READY',
+              'PICKED_UP_ITEM',
+              'BACKOFF_PROCCESSING',
+              'BACKOFF_PROCCESSED',
+              'DISPATCHED',
+            ].includes(o?.order_status)
+          : upperCase(orderStatus) === o?.order_status;
       }),
     [orders?.data, orderStatus],
   );

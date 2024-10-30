@@ -12,7 +12,6 @@ import ModalCancel from '../ModalCancel';
 import { useTimer } from 'react-timer-hook';
 import { useVerifySaleOtp } from '../../hooks/useVerifySaleOtp';
 import Clipboard from '@react-native-community/clipboard';
-
 const OtpModal = ({
   dialog,
   setDialog,
@@ -36,7 +35,7 @@ const OtpModal = ({
 
   const { minutes, seconds, isRunning, restart, pause } = useTimer({
     expiryTimestamp: offsetDate,
-    autoStart: true,
+    autoStart: dialog,
   });
 
   React.useEffect(() => {
@@ -169,7 +168,7 @@ const OtpModal = ({
                 <Text
                   style={{
                     fontSize: 16,
-                    fontFamily: 'SFProDisplay-Regular',
+                    fontFamily: 'ReadexPro-Regular',
                     color: '#30475e',
                   }}>
                   {verifyStatus && verifyStatus.message}
@@ -248,7 +247,7 @@ const styles = StyleSheet.create({
   },
   modal: { alignItems: 'center' },
   modalView: {
-    width: '56%',
+    width: '96%',
     backgroundColor: '#fff',
     paddingHorizontal: 10,
     paddingVertical: 26,
@@ -277,7 +276,7 @@ const styles = StyleSheet.create({
     borderColor: '#03DAC6',
   },
   subText: {
-    fontFamily: 'SFProDisplay-Regular',
+    fontFamily: 'ReadexPro-Regular',
     color: '#30475e',
     fontSize: 15,
     marginTop: 4,

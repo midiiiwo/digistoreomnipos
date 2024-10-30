@@ -16,12 +16,14 @@ import { Switch } from '@rneui/themed';
 import { useSelector } from 'react-redux';
 import { useGetSelectedProductDetails } from '../hooks/useGetSelectedProductDetails';
 import Loading from '../components/Loading';
+import { useEditProduct } from '../hooks/useEditProduct';
 import { useQueryClient } from 'react-query';
 import Picker from '../components/Picker';
 import Input from '../components/Input';
 
 import { useGetStoreOutlets } from '../hooks/useGetStoreOutlets';
 import { useGetAllProductsCategories } from '../hooks/useGetAllProductsCategories';
+import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import { useToast } from 'react-native-toast-notifications';
 import { capitalize } from 'lodash';
 
@@ -79,7 +81,7 @@ function ViewProductDetails(props) {
     tag: 'NORMAL',
     taxable: 'YES',
     is_price_global: 'YES',
-    mod_by: user.user_name,
+    mod_by: user.login,
     outlet_list: [],
     old_outlet_list: [],
     has_variants: 'NO',
@@ -87,8 +89,12 @@ function ViewProductDetails(props) {
     lowStock: 0,
   });
 
+  const { outlet } = props.route.params;
   const { inventoryOutlet } = useSelector(state_ => state_.products);
 
+  // const toast = useToast();
+
+  const queryClient = useQueryClient();
   const [trackStock, setTrackStock] = React.useState(false);
 
   const { data, isLoading: isCatLoading } = useGetAllProductsCategories(
@@ -97,13 +103,33 @@ function ViewProductDetails(props) {
 
   const { data: productDetails, isLoading } = useGetSelectedProductDetails(
     user.merchant,
-    (inventoryOutlet && inventoryOutlet.outlet_id) || '',
+    (outlet && outlet.outlet_id) || '',
     props.route.params.id,
   );
 
   const { data: outlets, isLoading: isOutletsLoading } = useGetStoreOutlets(
     user.merchant,
   );
+
+  const editProduct = useEditProduct(i => {
+    if (i) {
+      if (i.status == 0) {
+        Toast.show({
+          type: ALERT_TYPE.SUCCESS,
+          title: 'Success',
+          textBody: i.message,
+        });
+        queryClient.invalidateQueries('global-products');
+        props.navigation.navigate('Products');
+      } else {
+        Toast.show({
+          type: ALERT_TYPE.DANGER,
+          title: 'Failed',
+          textBody: i && i.message,
+        });
+      }
+    }
+  });
 
   const handleTextChange = React.useCallback(
     ({ type, payload }) => {
@@ -595,7 +621,7 @@ const styles = StyleSheet.create({
   main: {
     height: '100%',
     paddingHorizontal: 26,
-    marginBottom: 78,
+    marginBottom: 10,
     marginTop: 26,
     backgroundColor: '#fff',
     borderRadius: 0,

@@ -5,7 +5,7 @@ export function useGetMerchantDetails(merchant) {
   const queryResult = useQuery(
     ['merchant-details', merchant],
     () => getMerchantDetails(merchant),
-    { staleTime: 0 },
+    { staleTime: Infinity, cacheTime: Infinity },
   );
   return queryResult;
 }

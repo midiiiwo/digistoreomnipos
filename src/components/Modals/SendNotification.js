@@ -30,6 +30,9 @@ const SendNotification = ({
     if (i) {
       toast.show(i.message, { placement: 'top' });
       setSendStatus(i);
+      if (i.status == 0) {
+        toggleNotification(false);
+      }
     }
   });
 
@@ -43,7 +46,7 @@ const SendNotification = ({
     customer_phone: notificationType === 'sms' ? smsOrEmail : '',
     customer_email: notificationType === 'email' ? smsOrEmail : '',
     merchant: user.merchant,
-    mod_by: 'CUSTOMER',
+    mod_by: user.login,
     // tracking_email: 'pherut@gmail.com',
     // tracking_url: 'http://buy.digistoreafrica.com',
   };
@@ -60,11 +63,10 @@ const SendNotification = ({
         <View style={{ paddingVertical: 12 }}>
           <Text
             style={{
-              fontFamily: 'SFProDisplay-Regular',
-              fontSize: 18,
+              fontFamily: 'ReadexPro-Medium',
+              fontSize: 16,
               color: '#30475e',
               textAlign: 'center',
-              letterSpacing: 0.2,
             }}>
             Send receipt to customer through{' '}
             {notificationType === 'email' ? 'email' : 'SMS'}
@@ -91,7 +93,6 @@ const SendNotification = ({
           handlePress={() => {
             // togg(false);
             // toggleCashConfirmed(true);
-            console.log('payload---<', payload);
             mutate(payload);
           }}>
           {isLoading
@@ -126,7 +127,7 @@ const styles = StyleSheet.create({
   },
   modal: { alignItems: 'center' },
   modalView: {
-    width: '50%',
+    width: '96%',
     backgroundColor: '#fff',
     paddingHorizontal: 12,
     paddingVertical: 26,
@@ -145,11 +146,11 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     backgroundColor: '#F5F7F9',
     width: '96%',
-    paddingVertical: 20,
+    paddingVertical: 14,
     paddingHorizontal: 12,
-    fontFamily: 'SFProDisplay-Regular',
+    fontFamily: 'ReadexPro-Regular',
     color: '#30475E',
-    fontSize: 18,
+    fontSize: 16,
     paddingLeft: 14,
     marginTop: 22,
   },
@@ -175,7 +176,7 @@ const styles = StyleSheet.create({
   primaryButton: {
     marginTop: 19,
     borderRadius: 5,
-    paddingVertical: 20,
+    paddingVertical: 16,
     width: '100%',
   },
   paymentReviewItem: {

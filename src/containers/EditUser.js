@@ -48,8 +48,6 @@ const EditUser = ({ navigation, route }) => {
   const [saved, setSaved] = React.useState();
   const [showError, setShowError] = React.useState(false);
   const [outletStatus, setOutletStatus] = React.useState(false);
-  const [verifyStatus, setVerifyStatus] = React.useState();
-  const [usernameStatus, setUsernameStatus] = React.useState();
   const [state, dispatch] = React.useReducer(reducer, {
     name: '',
     email: '',
@@ -65,8 +63,7 @@ const EditUser = ({ navigation, route }) => {
 
   const { item } = route && route.params;
 
-  const { mutate: addOutlets, isLoading: isAddingOutlets } =
-    useMapMerchantOutletsToUser(setOutletStatus);
+  const { mutate: addOutlets } = useMapMerchantOutletsToUser(setOutletStatus);
 
   const { data, isLoading: rolesLoading } = useGetMerchantUserRoles(
     user.merchant,
@@ -265,6 +262,7 @@ const EditUser = ({ navigation, route }) => {
               });
             }}
           />
+          <View style={{ marginVertical: 10 }} />
           <Picker
             showError={!state.role && showError}
             placeholder="User Role"
@@ -333,6 +331,10 @@ const EditUser = ({ navigation, route }) => {
               state.username.length === 0
             ) {
               setShowError(true);
+              toast.show('Please provide all required details', {
+                placement: 'top',
+                type: 'danger',
+              });
               return;
             }
             mutate({
@@ -340,7 +342,7 @@ const EditUser = ({ navigation, route }) => {
               name: state.name,
               email: state.email,
               phone: state.phone,
-              group: Number(JSON.parse(state.role.value).group_id),
+              group: Number(JSON.parse(state?.role?.value || '{}')?.group_id),
               // merchant: user.merchant,
               mod_by: user.login,
               status: state.status ? 'Active' : 'Inactive',

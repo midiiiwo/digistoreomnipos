@@ -13,7 +13,6 @@ export function useUpdateProfile(handleSuccess) {
       onSuccess(data) {
         handleSuccess(data.data);
       },
-      onError(err) {},
     },
   );
   return queryResult;

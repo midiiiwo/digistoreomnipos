@@ -5,7 +5,7 @@ export function useSendTransactionNotification(handleSuccess) {
   const queryClient = useQueryClient();
   const queryResult = useMutation(
     ['transaction-notification'],
-    payload => sendTransactionNotification(payload),
+    payload => sendTransactionNotification({ ...payload, notify_message: '' }),
     {
       onSuccess(data) {
         handleSuccess(data.data);

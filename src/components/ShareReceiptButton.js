@@ -3,15 +3,8 @@ import React from 'react';
 import { Pressable, Text, StyleSheet, View } from 'react-native';
 import Share from 'react-native-share';
 import { captureRef } from 'react-native-view-shot';
-import { SheetManager } from 'react-native-actions-sheet';
 import RNHTMLtoPDF from 'react-native-html-to-pdf';
 import { useToast } from 'react-native-toast-notifications';
-import RNFS from 'react-native-fs';
-import { PERMISSIONS, check, RESULTS, request } from 'react-native-permissions';
-import { MenuProvider } from 'react-native-popup-menu';
-// import { BLEPrinter } from 'react-native-thermal-receipt-printer-image-qr';
-// import { BLEPrinter } from 'react-native-thermal-receipt-printer';
-import { PermissionsAndroid } from 'react-native';
 import {
   Menu,
   MenuOptions,
@@ -25,7 +18,6 @@ import PdfIcon from '../../assets/icons/pdf.svg';
 import ShareIcon from '../../assets/icons/share.svg';
 import { useSendTransactionNotification } from '../hooks/useSendTransactionNotification';
 import { useSelector } from 'react-redux';
-import SendNotification from './Modals/SendNotification';
 import { printEcobank } from '../modules/printer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -103,14 +95,15 @@ const ShareReceiptButton = ({
     '[L]\n' +
     '[L]\n' +
     '[L]\n';
-  const [printers, setPrinters] = React.useState([]);
+  // const [printers, setPrinters] = React.useState([]);
   const { user } = useSelector(state => state.auth);
   const payload = {
     tran_id: paymentId,
     tran_type: quickSaleInAction ? 'PAYMENT' : 'ORDER',
     notify_type: '',
     merchant: user.merchant,
-    mod_by: 'CUSTOMER',
+    mod_by: user.login,
+    notify_message: '',
     // tracking_email: 'pherut@gmail.com',
     // tracking_url: 'http://buy.digistoreafrica.com',
   };
@@ -236,7 +229,10 @@ const ShareReceiptButton = ({
                       amount,
                     );
                   } else {
-                    const parsedDups = JSON.parse(dups);
+                    let parsedDups;
+                    try {
+                      parsedDups = JSON.parse(dups);
+                    } catch (error) {}
                     if (parsedDups.includes(paymentId)) {
                       printEcobank(
                         user.user_merchant,

@@ -27,8 +27,7 @@ const PaymentConfirmedModal = ({
   const { user } = useSelector(state => state.auth);
   const { invoice } = useSelector(state => state.sale);
   const { quickSaleInAction } = useSelector(state => state.quickSale);
-  const { setInvoice, resetCart, selectCustomer, setCustomerPayment } =
-    useActionCreator();
+  const { setInvoice, resetCart } = useActionCreator();
   const mutation = useRaiseOrder(setInvoice);
   const receiveQuickPaymentMutation = useReceiveQuickPayment(setInvoice);
   const { data, isFetching } = useGetPaymentStatus(
@@ -46,11 +45,8 @@ const PaymentConfirmedModal = ({
 
   if (
     !isFetching &&
-    data &&
-    data.data &&
-    data.data.message &&
-    data.data.message !== 'new' &&
-    data.data.message !== 'awaiting_payment' &&
+    data?.data?.message !== 'new' &&
+    data?.data?.message !== 'awaiting_payment' &&
     poll
   ) {
     setPoll(false);
@@ -58,6 +54,7 @@ const PaymentConfirmedModal = ({
   return (
     <Modal
       modalState={paymentConfirmed}
+      onModalShow={() => setPoll(true)}
       changeModalState={togglePaymentConfirmed}>
       <View style={[styles.modalView]}>
         <ModalCancel
@@ -84,7 +81,7 @@ const PaymentConfirmedModal = ({
                 <>
                   <Text
                     style={{
-                      fontFamily: 'SFProDisplay-Regular',
+                      fontFamily: 'ReadexPro-Regular',
                       fontSize: 15,
                       color: '#30475e',
                       marginBottom: 12,
@@ -100,7 +97,7 @@ const PaymentConfirmedModal = ({
                   />
                   <Text
                     style={{
-                      fontFamily: 'SFProDisplay-Regular',
+                      fontFamily: 'ReadexPro-Regular',
                       fontSize: 16,
                       color: '#5C6E91',
                       textAlign: 'center',
@@ -140,30 +137,23 @@ const PaymentConfirmedModal = ({
                     styles.status,
                     {
                       textAlign: 'center',
-                      fontFamily: 'SFProDisplay-Regular',
+                      fontFamily: 'ReadexPro-Regular',
                       marginBottom: 14,
                     },
                   ]}>
                   Sorry, payment for this order is pending confirmation. You
-                  will be notified via Email/SMS once payment is confirmed. You
-                  can also check transaction history to view its status
+                  will be notified via Email/SMS once payment is confirmed.
                 </Text>
                 <PrimaryButton
                   handlePress={() => {
-                    resetCart();
-                    navigation.navigate('Dashboard');
-                    setInvoice(null);
-                    resetCart();
-                    selectCustomer(null);
-                    setInvoice(null);
-                    setCustomerPayment({});
                     togglePaymentConfirmed(false);
-
+                    resetCart();
+                    navigation.navigate('Sales History');
                     // togglePaymentDetails(true);
                   }}
                   style={styles.goToReceipt}>
                   {/* <Text style={styles.goToReceiptText}>Restart payment</Text> */}
-                  Go to Dashboard
+                  View Transactions
                   {/* <ArrowRight /> */}
                 </PrimaryButton>
               </>
@@ -240,7 +230,7 @@ const styles = StyleSheet.create({
   },
   flatgrid: { marginVertical: 32, marginBottom: 0 },
   modalContainer: {
-    width: '50%',
+    width: '100%',
     alignItems: 'center',
   },
   lottie: {
@@ -248,7 +238,7 @@ const styles = StyleSheet.create({
   },
   modal: { alignItems: 'center' },
   modalView: {
-    width: '50%',
+    width: '96%',
     backgroundColor: '#fff',
     paddingHorizontal: 12,
     paddingVertical: 26,
@@ -354,7 +344,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   status: {
-    fontFamily: 'SFProDisplay-Medium',
+    fontFamily: 'ReadexPro-Medium',
     fontSize: 15,
     color: '#30475e',
   },

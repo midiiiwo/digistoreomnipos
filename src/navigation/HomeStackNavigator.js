@@ -1,7 +1,8 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Inventory from '../containers/Inventory';
-// import InventoryHeader from '../components/InventoryHeader';
+import Tabs from './BottomTab';
+import InventoryHeader from '../components/InventoryHeader';
 import Cart from '../containers/Cart';
 import PaymentOptions from '../containers/PaymentOptions';
 import Receipt from '../containers/Receipt';
@@ -14,6 +15,7 @@ import Products from '../containers/Products';
 import ProductsHeader from '../components/ProductsHeader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 // import { useSelector } from 'react-redux';
+import OutletLogin from '../containers/OutletLogin';
 import messaging from '@react-native-firebase/messaging';
 import Login from '../containers/Login';
 import { useSelector } from 'react-redux';
@@ -53,7 +55,6 @@ import OrderReceipt from '../containers/OrderReceipt';
 import DiscountQr from '../containers/DiscountQr';
 import PINCode, { hasUserSetPinCode } from '@haskkor/react-native-pincode';
 import { AppState } from 'react-native';
-import Tabs from './BottomTab';
 import Signup from '../containers/Signup';
 import NewUserPhone from '../containers/NewUserPhone';
 import VerifyOnboardingOtp from '../containers/VerifyOnboardingOtp';
@@ -77,7 +78,6 @@ import OutletList from '../containers/OutletList';
 import Discount from '../containers/Discount';
 import CartBarcode from '../containers/CartBarcode';
 import SetPin from '../containers/SetPin';
-import OutletLogin from '../containers/OutletLogin';
 import ResetPass from '../containers/ResetPass';
 import InvoiceHistory from '../containers/InvoiceHistory';
 import SignupOtp from '../containers/SignupOtp';
@@ -123,60 +123,59 @@ import { Platform } from 'react-native';
 import Account from '../containers/Account';
 import SalesChannels from '../containers/SalesChannels';
 import Logout from '../containers/Logout';
-import BackOfficeScreen from '../containers/Backoffice';
-// import More from '../containers/More';
-// import EventDetail from '../containers/EventDetail';
-// // import { createSharedElementStackNavigator } from 'react-navigation-shared-element';
-// import Status from '../containers/Status';
-// import Qr from '../containers/Qr';
-// import CreateEvent from '../containers/CreateEvent';
-// import EditEvent from '../containers/EditEvent';
-// import EventTickets from '../containers/EventTickets';
-// import AddEventTicket from '../containers/AddEventTicket';
-// import TicketDetails from '../containers/TicketDetails';
-// import EditEventTicket from '../containers/EditEventTicket';
+import More from '../containers/More';
+import EventDetail from '../containers/EventDetail';
+// import { createSharedElementStackNavigator } from 'react-navigation-shared-element';
+import Status from '../containers/Status';
+import Qr from '../containers/Qr';
+import CreateEvent from '../containers/CreateEvent';
+import EditEvent from '../containers/EditEvent';
+import EventTickets from '../containers/EventTickets';
+import AddEventTicket from '../containers/AddEventTicket';
+import TicketDetails from '../containers/TicketDetails';
+import EditEventTicket from '../containers/EditEventTicket';
 import ResetPassOtp from '../containers/ResetPassOtp';
-// import AddProductVariants from '../containers/AddProductVariants';
-// import EditProductVariants from '../containers/EditProductVariants';
-// import SessionExpired from '../components/Modals/SessionExpired';
-// import { useAxiosErrorResponseInterceptor } from '../hooks/useAxiosErrorResponseInterceptor';
-// import { useInitInterceptor } from '../hooks/useInitInterceptor';
-// import SellTicketEvents from '../containers/SellTicketEvents';
-// import SellEventDetails from '../containers/SellEventDetails';
-// import SellTicket from '../containers/SellTicket';
-// import SellTicketStatus from '../containers/SellTicketStatus';
-// import TicketSoldHistory from '../containers/TicketSoldHistory';
-// import TicketSoldDetails from '../containers/TicketSoldDetails';
-// import CreateInvoice from '../containers/CreateInvoice';
-// import InvoiceInventory from '../containers/InvoiceInventory';
-// import InvoiceCustomerSelect from '../containers/InvoiceCustomerSelect';
-// import InvoiceDelivery from '../containers/InvoiceDelivery';
-// import InvoiceDiscount from '../containers/InvoiceDiscount';
-// import InvoicePreview from '../containers/InvoicePreview';
-// import InvoicePaymentSend from '../containers/InvoicePaymentSend';
-// import InvoiceQuikeSale from '../containers/InvoiceQuickSale';
-// import InvoiceOrderPreview from '../containers/InvoiceOrderPreview';
-// import SendInvoiceHeader from '../components/SendInvoiceHeader';
-// import SendEmailInvoice from '../containers/SendEmailInvoice';
+import AddProductVariants from '../containers/AddProductVariants';
+import EditProductVariants from '../containers/EditProductVariants';
+import SessionExpired from '../components/Modals/SessionExpired';
+import { useAxiosErrorResponseInterceptor } from '../hooks/useAxiosErrorResponseInterceptor';
+import { useInitInterceptor } from '../hooks/useInitInterceptor';
+import SellTicketEvents from '../containers/SellTicketEvents';
+import SellEventDetails from '../containers/SellEventDetails';
+import SellTicket from '../containers/SellTicket';
+import SellTicketStatus from '../containers/SellTicketStatus';
+import TicketSoldHistory from '../containers/TicketSoldHistory';
+import TicketSoldDetails from '../containers/TicketSoldDetails';
+import CreateInvoice from '../containers/CreateInvoice';
+import InvoiceInventory from '../containers/InvoiceInventory';
+import InvoiceCustomerSelect from '../containers/InvoiceCustomerSelect';
+import InvoiceDelivery from '../containers/InvoiceDelivery';
+import InvoiceDiscount from '../containers/InvoiceDiscount';
+import InvoicePreview from '../containers/InvoicePreview';
+import InvoicePaymentSend from '../containers/InvoicePaymentSend';
+import InvoiceQuikeSale from '../containers/InvoiceQuickSale';
+import InvoiceOrderPreview from '../containers/InvoiceOrderPreview';
+import SendInvoiceHeader from '../components/SendInvoiceHeader';
+import SendEmailInvoice from '../containers/SendEmailInvoice';
 import LoginAuthorizationOtp from '../containers/LoginAuthorizationOtp';
+import InvoiceDetails from '../containers/InvoiceDetails';
+import PaypointTransactions from '../containers/PaypointTransactionDetails';
+import ExpensesHistory from '../containers/ExpensesHistory';
+import ExpensesCategories from '../containers/ExpensesCategories';
+import CreateExpenseCategory from '../containers/CreateExpenseCategory';
+import CreateExpense from '../containers/CreateExpense';
+import Suppliers from '../containers/Suppliers';
+import CreateSupplier from '../containers/AddSupplier';
+import ExpensesHeader from '../components/ExpensesHeader';
+import ExpensesCategoriesLov from '../containers/ExpenseCategoryLov';
+import SendMoneyBank from '../containers/SendMoneyBank';
+import SmsHistory from '../containers/SmsHistory';
+import UssdOffline from '../containers/UssdOffline';
+import SmsDetails from '../containers/SmsDetails';
+import Invoices from '../containers/Invoices';
+import InvoicesHeader from '../components/InvoicesHeader';
 import HeaderInventory from '../components/HeaderInventory';
-import InventoryHeader from '../components/InventoryHeader';
-// import InvoiceDetails from '../containers/InvoiceDetails';
-// import PaypointTransactions from '../containers/PaypointTransactionDetails';
-// import ExpensesHistory from '../containers/ExpensesHistory';
-// import ExpensesCategories from '../containers/ExpensesCategories';
-// import CreateExpenseCategory from '../containers/CreateExpenseCategory';
-// import CreateExpense from '../containers/CreateExpense';
-// import Suppliers from '../containers/Suppliers';
-// import CreateSupplier from '../containers/AddSupplier';
-// import ExpensesHeader from '../components/ExpensesHeader';
-// import ExpensesCategoriesLov from '../containers/ExpenseCategoryLov';
-// import SendMoneyBank from '../containers/SendMoneyBank';
-// import SmsHistory from '../containers/SmsHistory';
-// import UssdOffline from '../containers/UssdOffline';
-// import SmsDetails from '../containers/SmsDetails';
-// import Invoices from '../containers/Invoices';
-// import InvoicesHeader from '../components/InvoicesHeader';
+import InventoryQuickSale from '../containers/InventoryQuickSale';
 
 const Stack = createNativeStackNavigator();
 
@@ -185,30 +184,30 @@ function HomeStackNavigator() {
   const { auth, firstLaunch } = useSelector(state => state.auth);
   const { setPinState } = useActionCreator();
   const appState = React.useRef(AppState.currentState);
-  // const [sessionStatus, setSessionStatus] = React.useState(false);
+  const [sessionStatus, setSessionStatus] = React.useState(false);
 
   React.useEffect(() => {
     SplashScreen.hide();
   }, []);
 
-  // const { error, ejectInterceptor } =
-  //   useAxiosErrorResponseInterceptor(sessionStatus);
-  // const { ejectReqInterceptor } = useInitInterceptor({ sessionStatus });
+  const { error, ejectInterceptor } =
+    useAxiosErrorResponseInterceptor(sessionStatus);
+  const { ejectReqInterceptor } = useInitInterceptor({ sessionStatus });
 
-  // React.useEffect(() => {
-  //   (async () => {
-  //     if (error && auth) {
-  //       if (error.response && error.response.status === 401) {
-  //         const { data } = error.response;
-  //         if (data.error === true) {
-  //           setSessionStatus(true);
-  //           ejectInterceptor();
-  //           ejectReqInterceptor();
-  //         }
-  //       }
-  //     }
-  //   })();
-  // }, [error, auth, ejectInterceptor, ejectReqInterceptor]);
+  React.useEffect(() => {
+    (async () => {
+      if (error && auth) {
+        if (error.response && error.response.status === 401) {
+          const { data } = error.response;
+          if (data.error === true) {
+            setSessionStatus(true);
+            ejectInterceptor();
+            ejectReqInterceptor();
+          }
+        }
+      }
+    })();
+  }, [error, auth, ejectInterceptor, ejectReqInterceptor]);
 
   React.useEffect(() => {
     (async () => {
@@ -370,19 +369,6 @@ function HomeStackNavigator() {
                 }}
               />
               <Stack.Screen
-                name="Outlets Login"
-                component={OutletLogin}
-                options={{
-                  header: ({ navigation }) => (
-                    <InventoryHeader
-                      navigation={navigation}
-                      addCustomer={false}
-                      mainHeader={{ paddingVertical: 36 }}
-                    />
-                  ),
-                }}
-              />
-              <Stack.Screen
                 name="Reset Otp"
                 component={ResetPassOtp}
                 options={{
@@ -414,6 +400,20 @@ function HomeStackNavigator() {
                   ),
                 }}
               />
+              {/* <Stack.Screen
+                name="Outlets Login"
+                component={Inventory}
+                options={{
+                  header: ({ navigation }) => (
+                    <InventoryHeader
+                      CustomerSelect={true}
+                      navigation={navigation}
+                      addCustomer={false}
+                      mainHeader={{ paddingVertical: 36 }}
+                    />
+                  ),
+                }}
+              /> */}
               <Stack.Screen
                 name="ChangePass"
                 component={ChangePass}
@@ -492,11 +492,11 @@ function HomeStackNavigator() {
           )}
           {auth && (
             <>
-              {/* <Stack.Screen
-                name="Dashboard"
-                component={BottomTab}
+              <Stack.Screen
+                name="Outlets Login"
+                component={OutletLogin}
                 options={{ header: () => null }}
-              /> */}
+              />
               <Stack.Screen
                 name="Inventory"
                 component={Inventory}
@@ -504,6 +504,7 @@ function HomeStackNavigator() {
                   header: props => (
                     <HeaderInventory
                       showCustomerOutlet={true}
+                      // prevScreen={props.back.title}
                       navigation={props.navigation}
                     />
                   ),
@@ -514,28 +515,12 @@ function HomeStackNavigator() {
                 component={Cart}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                     />
                   ),
                 }}
-              />
-              <Stack.Screen
-                name="Tabs"
-                component={Tabs}
-                options={{
-                  header: props => (<HeaderInventory
-                    navigation={props.navigation}
-                    addCustomer={false}
-                    mainHeader={{
-                      justifyContent: 'center',
-                    }}
-                    title="Bill History"
-                  />
-                  ),
-                }}
-
               />
 
               <Stack.Screen
@@ -543,7 +528,7 @@ function HomeStackNavigator() {
                 component={AirtimeHistory}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -561,7 +546,7 @@ function HomeStackNavigator() {
                 component={BillHistory}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -573,12 +558,12 @@ function HomeStackNavigator() {
                   ),
                 }}
               />
-              {/* <Stack.Screen
+              <Stack.Screen
                 name="Paypoint Transaction"
                 component={PaypointTransactions}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -588,14 +573,14 @@ function HomeStackNavigator() {
                     />
                   ),
                 }}
-              /> */}
+              />
 
               <Stack.Screen
                 name="Send Money History"
                 component={SendMoneyHistoryScreen}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -613,7 +598,7 @@ function HomeStackNavigator() {
                 component={InternetHistory}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -631,7 +616,7 @@ function HomeStackNavigator() {
                 component={SaleHistoryScreen}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -643,7 +628,7 @@ function HomeStackNavigator() {
                   ),
                 }}
               />
-              {/* <Stack.Screen
+              <Stack.Screen
                 name="Invoices"
                 component={Invoices}
                 options={{
@@ -651,13 +636,13 @@ function HomeStackNavigator() {
                     <InvoicesHeader navigation={props.navigation} />
                   ),
                 }}
-              /> */}
+              />
               <Stack.Screen
                 name="Invoice History"
                 component={InvoiceHistory}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -669,12 +654,12 @@ function HomeStackNavigator() {
                   ),
                 }}
               />
-              {/* <Stack.Screen
+              <Stack.Screen
                 name="Estimate History"
                 component={InvoiceHistory}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -685,14 +670,14 @@ function HomeStackNavigator() {
                     />
                   ),
                 }}
-              /> */}
+              />
 
               <Stack.Screen
                 name="Outlets"
                 component={OutletList}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -710,7 +695,7 @@ function HomeStackNavigator() {
                 component={ManageOutlets}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -727,7 +712,7 @@ function HomeStackNavigator() {
                 component={ManageNotifications}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -746,6 +731,7 @@ function HomeStackNavigator() {
                   header: props => (
                     <HeaderInventory
                       // prevScreen={props.back.title}
+                      showCustomerOutlet={true}
                       navigation={props.navigation}
                       addCustomer={false}
                       mainHeader={{
@@ -762,7 +748,7 @@ function HomeStackNavigator() {
                 component={EditOutlet}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -780,7 +766,7 @@ function HomeStackNavigator() {
                 component={InventoryProductOptions}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -798,7 +784,7 @@ function HomeStackNavigator() {
                 component={}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                     />
@@ -808,10 +794,10 @@ function HomeStackNavigator() {
 
               <Stack.Screen
                 name="Quick Sale"
-                component={QuickCharge}
+                component={InventoryQuickSale}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       mainHeader={{ backgroundColor: '#F5F5F5' }}
@@ -824,7 +810,7 @@ function HomeStackNavigator() {
                 component={PaymentOptions}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       mainHeader={{ backgroundColor: '#F1F6F9' }}
                       navigation={props.navigation}
@@ -858,8 +844,7 @@ function HomeStackNavigator() {
                 }}
               />
               <Stack.Screen
-                name="lol" //this is products i changes it just because  i was getting an error
-
+                name="lol" //this is for products i just changed the name
                 component={Products}
                 options={{
                   header: props => (
@@ -869,6 +854,22 @@ function HomeStackNavigator() {
                     />
                   ),
                 }}
+              />
+              <Stack.Screen
+                name="Tabs"
+                component={Tabs}
+                options={{
+                  header: props => (<HeaderInventory
+                    navigation={props.navigation}
+                    addCustomer={false}
+                    mainHeader={{
+                      justifyContent: 'center',
+                    }}
+                    title="Bill History"
+                  />
+                  ),
+                }}
+
               />
               <Stack.Screen
                 name="Paypoint"
@@ -883,24 +884,11 @@ function HomeStackNavigator() {
                 }}
               />
               <Stack.Screen
-                name="Backoffice"
-                component={BackOfficeScreen}
-                options={{
-                  header: props => (
-                    <HeaderInventory
-
-
-                      navigation={props.navigation}
-                    />
-                  ),
-                }}
-              />
-              <Stack.Screen
                 name="Internet"
                 component={Internet}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -909,13 +897,12 @@ function HomeStackNavigator() {
                   ),
                 }}
               />
-
               <Stack.Screen
                 name="Notification"
                 component={Notification}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -932,7 +919,7 @@ function HomeStackNavigator() {
                 component={Airtime}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -946,7 +933,7 @@ function HomeStackNavigator() {
                 component={Bills}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -960,7 +947,7 @@ function HomeStackNavigator() {
                 component={Utilities}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -974,7 +961,7 @@ function HomeStackNavigator() {
                 component={Tv}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -988,7 +975,7 @@ function HomeStackNavigator() {
                 component={SendMoney}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -1000,12 +987,12 @@ function HomeStackNavigator() {
                   ),
                 }}
               />
-              {/* <Stack.Screen
+              <Stack.Screen
                 name="Send Money Bank"
                 component={SendMoneyBank}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -1016,13 +1003,13 @@ function HomeStackNavigator() {
                     />
                   ),
                 }}
-              /> */}
+              />
               <Stack.Screen
                 name="Send Money"
                 component={SendMoneyDetails}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -1038,7 +1025,7 @@ function HomeStackNavigator() {
                 component={AccountStatement}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -1074,7 +1061,7 @@ function HomeStackNavigator() {
                 component={Outflows}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -1086,12 +1073,12 @@ function HomeStackNavigator() {
                   ),
                 }}
               />
-              {/* <Stack.Screen
+              <Stack.Screen
                 name="Sms History"
                 component={SmsHistory}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -1108,7 +1095,7 @@ function HomeStackNavigator() {
                 component={SmsDetails}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -1119,13 +1106,13 @@ function HomeStackNavigator() {
                     />
                   ),
                 }}
-              /> */}
+              />
               <Stack.Screen
                 name="Inflows"
                 component={Inflows}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -1149,7 +1136,7 @@ function HomeStackNavigator() {
                 component={FundsTransfer}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -1166,7 +1153,7 @@ function HomeStackNavigator() {
                 component={AddProduct}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -1178,12 +1165,12 @@ function HomeStackNavigator() {
                   ),
                 }}
               />
-              {/* <Stack.Screen
+              <Stack.Screen
                 name="Add Product Variants"
                 component={AddProductVariants}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -1200,7 +1187,7 @@ function HomeStackNavigator() {
                 component={EditProductVariants}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -1211,13 +1198,13 @@ function HomeStackNavigator() {
                     />
                   ),
                 }}
-              /> */}
+              />
               <Stack.Screen
                 name="Add Outlet"
                 component={AddOutlet}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -1234,7 +1221,7 @@ function HomeStackNavigator() {
                 component={EditCategory}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -1251,7 +1238,7 @@ function HomeStackNavigator() {
                 component={AddCategory}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -1268,7 +1255,7 @@ function HomeStackNavigator() {
                 component={ManageStore}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -1285,7 +1272,7 @@ function HomeStackNavigator() {
                 component={EditProduct}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -1303,7 +1290,7 @@ function HomeStackNavigator() {
                 component={Shortcode}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -1320,7 +1307,7 @@ function HomeStackNavigator() {
                 component={ViewProductDetails}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -1337,7 +1324,7 @@ function HomeStackNavigator() {
                 component={BarcodeScanner}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -1354,7 +1341,7 @@ function HomeStackNavigator() {
                 component={CartBarcode}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -1371,7 +1358,7 @@ function HomeStackNavigator() {
                 component={DiscountQr}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -1402,7 +1389,7 @@ function HomeStackNavigator() {
                 component={ReceivedPaymentReceipt}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -1419,7 +1406,7 @@ function HomeStackNavigator() {
                 component={BillDetails}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -1433,7 +1420,7 @@ function HomeStackNavigator() {
                 component={BillConfirmed}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -1470,26 +1457,12 @@ function HomeStackNavigator() {
                   ),
                 }}
               />
-              {/* <Stack.Screen
+              <Stack.Screen
                 name="More"
                 component={More}
                 options={{
                   header: props => (
-                    <HeaderInventory
-                      // prevScreen={props.back.title}
-                      navigation={props.navigation}
-                      addCustomer={false}
-                      mainHeader={{ backgroundColor: '#fff' }}
-                    />
-                  ),
-                }}
-              /> */}
-              <Stack.Screen
-                name="Tickets"
-                component={Ticket}
-                options={{
-                  header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -1498,7 +1471,21 @@ function HomeStackNavigator() {
                   ),
                 }}
               />
-              {/* <Stack.Screen
+              <Stack.Screen
+                name="Tickets"
+                component={Ticket}
+                options={{
+                  header: props => (
+                    <InventoryHeader
+                      // prevScreen={props.back.title}
+                      navigation={props.navigation}
+                      addCustomer={false}
+                      mainHeader={{ backgroundColor: '#fff' }}
+                    />
+                  ),
+                }}
+              />
+              <Stack.Screen
                 name="Event Detail"
                 component={EventDetail}
                 options={{
@@ -1510,7 +1497,7 @@ function HomeStackNavigator() {
                 component={CreateEvent}
                 options={{
                   header: ({ navigation }) => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={navigation}
                       addCustomer={false}
@@ -1525,7 +1512,7 @@ function HomeStackNavigator() {
                 component={EditEvent}
                 options={{
                   header: ({ navigation }) => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={navigation}
                       addCustomer={false}
@@ -1540,7 +1527,7 @@ function HomeStackNavigator() {
                 component={AddEventTicket}
                 options={{
                   header: ({ navigation }) => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={navigation}
                       addCustomer={false}
@@ -1555,7 +1542,7 @@ function HomeStackNavigator() {
                 component={EditEventTicket}
                 options={{
                   header: ({ navigation }) => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={navigation}
                       addCustomer={false}
@@ -1570,7 +1557,7 @@ function HomeStackNavigator() {
                 component={EventTickets}
                 options={{
                   header: ({ navigation }) => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={navigation}
                       addCustomer={false}
@@ -1585,7 +1572,7 @@ function HomeStackNavigator() {
                 component={TicketDetails}
                 options={{
                   header: ({ navigation }) => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={navigation}
                       addCustomer={false}
@@ -1599,7 +1586,7 @@ function HomeStackNavigator() {
                 component={Qr}
                 options={{
                   header: ({ navigation }) => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={navigation}
                       addCustomer={false}
@@ -1613,7 +1600,7 @@ function HomeStackNavigator() {
                 component={Status}
                 options={{
                   header: ({ navigation }) => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={navigation}
                       addCustomer={false}
@@ -1621,13 +1608,13 @@ function HomeStackNavigator() {
                     />
                   ),
                 }}
-              /> */}
+              />
               <Stack.Screen
                 name="Bill Receipt"
                 component={BillReceipt}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -1644,7 +1631,7 @@ function HomeStackNavigator() {
                 component={PaypointTransactionHistory}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -1661,7 +1648,7 @@ function HomeStackNavigator() {
                 component={InvoicePay}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -1673,12 +1660,12 @@ function HomeStackNavigator() {
                   ),
                 }}
               />
-              {/* <Stack.Screen
+              <Stack.Screen
                 name="Ussd Offline"
                 component={UssdOffline}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -1689,13 +1676,13 @@ function HomeStackNavigator() {
                     />
                   ),
                 }}
-              /> */}
+              />
               <Stack.Screen
                 name="Send Money Receipt"
                 component={SendMoneyReceipt}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -1712,7 +1699,7 @@ function HomeStackNavigator() {
                 component={AirtimeReceipt}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -1729,7 +1716,7 @@ function HomeStackNavigator() {
                 component={TransferMoney}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -1746,7 +1733,7 @@ function HomeStackNavigator() {
                 component={Discount}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -1763,7 +1750,7 @@ function HomeStackNavigator() {
                 component={VerifyWalletAccount}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -1777,7 +1764,7 @@ function HomeStackNavigator() {
                 component={AddWallet}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -1791,7 +1778,7 @@ function HomeStackNavigator() {
                 component={DeliveryLocation}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -1805,7 +1792,7 @@ function HomeStackNavigator() {
                 component={AddMoneyStatus}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -1826,7 +1813,7 @@ function HomeStackNavigator() {
                 component={OrderDetails}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -1843,7 +1830,7 @@ function HomeStackNavigator() {
                 component={ActivationType}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -1860,7 +1847,7 @@ function HomeStackNavigator() {
                 component={PersonalInformation}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -1877,7 +1864,7 @@ function HomeStackNavigator() {
                 component={BusinessInformation}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -1894,7 +1881,7 @@ function HomeStackNavigator() {
                 component={SettlementInformation}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -1911,7 +1898,7 @@ function HomeStackNavigator() {
                 component={LocationSelect}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -1928,7 +1915,7 @@ function HomeStackNavigator() {
                 component={ProfileLocationSelect}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -1945,7 +1932,7 @@ function HomeStackNavigator() {
                 component={OutletLocation}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -1962,7 +1949,7 @@ function HomeStackNavigator() {
                 component={AddMoney}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -1979,7 +1966,7 @@ function HomeStackNavigator() {
                 component={EditCustomer}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -1996,7 +1983,7 @@ function HomeStackNavigator() {
                 component={CustomerDetails}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -2017,7 +2004,7 @@ function HomeStackNavigator() {
                 component={AddCustomer}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -2034,7 +2021,7 @@ function HomeStackNavigator() {
                 component={AddDelivery}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -2051,7 +2038,7 @@ function HomeStackNavigator() {
                 component={AddRider}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -2068,7 +2055,7 @@ function HomeStackNavigator() {
                 component={AddReceipt}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -2085,7 +2072,7 @@ function HomeStackNavigator() {
                 component={EditReceipt}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -2102,7 +2089,7 @@ function HomeStackNavigator() {
                 component={ReceiptDetails}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -2119,7 +2106,7 @@ function HomeStackNavigator() {
                 component={Users}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -2136,7 +2123,7 @@ function HomeStackNavigator() {
                 component={ManageTaxes}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -2153,7 +2140,7 @@ function HomeStackNavigator() {
                 component={AddUser}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -2170,7 +2157,7 @@ function HomeStackNavigator() {
                 component={EditUser}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -2187,7 +2174,7 @@ function HomeStackNavigator() {
                 component={EditTax}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -2204,7 +2191,7 @@ function HomeStackNavigator() {
                 component={AddTax}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -2221,7 +2208,7 @@ function HomeStackNavigator() {
                 component={Profile}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -2238,7 +2225,7 @@ function HomeStackNavigator() {
                 component={Settings}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -2256,7 +2243,7 @@ function HomeStackNavigator() {
                 component={Account}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -2274,7 +2261,7 @@ function HomeStackNavigator() {
                 component={SalesChannels}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -2291,7 +2278,13 @@ function HomeStackNavigator() {
                 name="Customer Select"
                 component={CustomerSelect}
                 options={{
-                  header: () => null,
+                  header: props => (
+                    <InventoryHeader
+
+                      navigation={props.navigation}
+                      addCustomer={false}
+                    />
+                  ),
                 }}
               />
               <Stack.Screen
@@ -2306,7 +2299,7 @@ function HomeStackNavigator() {
                 component={ReceiptPreview}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -2318,12 +2311,12 @@ function HomeStackNavigator() {
                   ),
                 }}
               />
-              {/* <Stack.Screen
+              <Stack.Screen
                 name="Sell Ticket Events"
                 component={SellTicketEvents}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -2340,7 +2333,7 @@ function HomeStackNavigator() {
                 component={SellTicket}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -2364,7 +2357,7 @@ function HomeStackNavigator() {
                 component={SellTicketStatus}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -2381,7 +2374,7 @@ function HomeStackNavigator() {
                 component={TicketSoldHistory}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -2398,7 +2391,7 @@ function HomeStackNavigator() {
                 component={TicketSoldDetails}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -2429,7 +2422,7 @@ function HomeStackNavigator() {
                 component={InvoiceInventory}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -2446,7 +2439,7 @@ function HomeStackNavigator() {
                 component={InvoiceQuikeSale}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -2463,7 +2456,7 @@ function HomeStackNavigator() {
                 component={InvoiceDiscount}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -2480,7 +2473,7 @@ function HomeStackNavigator() {
                 component={InvoiceDelivery}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -2497,7 +2490,7 @@ function HomeStackNavigator() {
                 component={InvoicePreview}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -2514,7 +2507,7 @@ function HomeStackNavigator() {
                 component={InvoiceDetails}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -2537,7 +2530,7 @@ function HomeStackNavigator() {
                 component={SendEmailInvoice}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       navigation={props.navigation}
                       addCustomer={false}
                       mainHeader={{
@@ -2553,7 +2546,7 @@ function HomeStackNavigator() {
                 component={InvoiceOrderPreview}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -2579,7 +2572,7 @@ function HomeStackNavigator() {
                 component={ExpensesCategories}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -2596,7 +2589,7 @@ function HomeStackNavigator() {
                 component={ExpensesCategoriesLov}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -2613,7 +2606,7 @@ function HomeStackNavigator() {
                 component={CreateExpenseCategory}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -2630,7 +2623,7 @@ function HomeStackNavigator() {
                 component={CreateExpense}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -2654,7 +2647,7 @@ function HomeStackNavigator() {
                 component={CreateSupplier}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <InventoryHeader
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
@@ -2665,15 +2658,15 @@ function HomeStackNavigator() {
                     />
                   ),
                 }}
-              /> */}
+              />
             </>
           )}
         </Stack.Navigator>
       }
-      {/* <SessionExpired
+      <SessionExpired
         sessionStatus={sessionStatus}
         toggleSessionStatus={setSessionStatus}
-      /> */}
+      />
     </>
   );
 }

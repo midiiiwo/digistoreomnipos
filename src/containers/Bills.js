@@ -2,8 +2,6 @@
 import { StyleSheet, FlatList, View, Text } from 'react-native';
 import React from 'react';
 import PaypointVendorCard from '../components/PaypointVendorCard';
-import { SheetManager } from 'react-native-actions-sheet';
-import { billOptions } from '../utils/billOptions';
 import { useSelector } from 'react-redux';
 
 const Bills = ({ navigation, route }) => {
@@ -28,8 +26,8 @@ const Bills = ({ navigation, route }) => {
             }}>
             <Text
               style={{
-                fontFamily: 'Lato-Semibold',
-                fontSize: 22,
+                fontFamily: 'ReadexPro-Regular',
+                fontSize: 20,
                 color: '#30475e',
               }}>
               Pay Bills

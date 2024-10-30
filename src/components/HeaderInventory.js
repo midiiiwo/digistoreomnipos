@@ -1,10 +1,10 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import { View, StyleSheet, Pressable, Text } from 'react-native';
-import ProfileIcon from '../../assets/icons/profile-circle.svg';
+import ProfileIcon from '../../assets/icons/transactions.svg';
 import { useSelector } from 'react-redux';
 import { Dimensions } from 'react-native';
-import User from '../../assets/icons/user.svg';
+import User from '../../assets/icons/analytics.svg';
 import ArrowLeftShort from '../../assets/icons/arrow-left-short.svg';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ShadowedView, shadowStyle } from 'react-native-fast-shadow';
@@ -83,7 +83,7 @@ const HeaderInventory = ({
               <Pressable
                 style={styles.headerTextWrapper}
                 onPress={() => navigation.navigate('Customer Select')}>
-                <Text style={styles.headerText}>Add Customer</Text>
+                <Text style={styles.headerText}>View Customers</Text>
               </Pressable>
             )}
             <ShadowedView

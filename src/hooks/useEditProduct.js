@@ -1,13 +1,15 @@
 import { useMutation } from 'react-query';
-import { editProduct } from '../api/products';
+import { editProduct_ } from '../api/products';
 
 export function useEditProduct(handleSuccess) {
   const queryResult = useMutation(
     ['edit-product'],
     payload => {
       try {
-        return editProduct(payload);
-      } catch (error) {}
+        return editProduct_(payload);
+      } catch (error) {
+        console.log('thiserrr', error);
+      }
     },
     {
       onSuccess(data) {

@@ -42,8 +42,8 @@ function Users(props) {
       <View style={{ paddingHorizontal: 22, marginBottom: 14 }}>
         <Text
           style={{
-            fontFamily: 'SFProDisplay-Medium',
-            fontSize: 26,
+            fontFamily: 'ReadexPro-Medium',
+            fontSize: 22,
             color: '#002',
           }}>
           Users
@@ -78,7 +78,7 @@ function Users(props) {
                 navigation.navigate('Edit User', { item });
               }}
               style={{
-                borderBottomColor: 'rgba(146, 169, 189, 0.4)',
+                borderBottomColor: 'rgba(146, 169, 189, 0.3)',
                 borderBottomWidth: 0.3,
                 alignItems: 'center',
                 paddingVertical: 18,
@@ -109,8 +109,7 @@ function Users(props) {
                 ]}>
                 <Text
                   style={{
-                    fontFamily: 'SFProDisplay-Medium',
-                    fontSize: 17,
+                    fontFamily: 'ReadexPro-Medium',
                     color:
                       item.user_status.toLowerCase() === 'inactive'
                         ? '#D61355'
@@ -171,14 +170,14 @@ const styles = StyleSheet.create({
   },
 
   channelText: {
-    fontFamily: 'SFProDisplay-Regular',
-    fontSize: 19,
+    fontFamily: 'ReadexPro-Regular',
+    fontSize: 15,
     color: '#002',
     marginBottom: 2,
   },
   address: {
-    fontFamily: 'SFProDisplay-Regular',
-    fontSize: 15.6,
+    fontFamily: 'ReadexPro-Regular',
+    fontSize: 13,
     color: '#7B8FA1',
   },
   caret: {

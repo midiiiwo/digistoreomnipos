@@ -10,17 +10,10 @@ import {
   Image,
   Dimensions,
 } from 'react-native';
-import axios from 'axios';
 import { useToast } from 'react-native-toast-notifications';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import User from '../../assets/icons/user_.svg';
-import Pass from '../../assets/icons/pass.svg';
-import { Api, loginApi } from '../api/axiosInstance';
-import { useActionCreator } from '../hooks/useActionCreator';
-import { useGetMerchantOutlets } from '../hooks/useGetMerchantOutlets';
-import { hasUserSetPinCode } from '@haskkor/react-native-pincode';
+import { loginApi } from '../api/axiosInstance';
 import { SheetManager } from 'react-native-actions-sheet';
-import { FloatingButton, SegmentedControl } from 'react-native-ui-lib';
+import { SegmentedControl } from 'react-native-ui-lib';
 import PhoneInput from 'react-native-phone-number-input';
 import Help from '../../assets/icons/help.svg';
 import { FAB } from 'react-native-paper';
@@ -35,8 +28,6 @@ const SignupSuccess = ({ navigation }) => {
   const toast = useToast();
   const [usernameType, setUsernameType] = React.useState(0);
   const phoneInput = React.useRef(null);
-
-  console.log('logggggggggggggggggggggggggggiiiiiiiiiiiiiiin');
 
   // const { setAuth, setPinState } = useActionCreator();
   // const [secureEntry, setSecureEntry] = React.useState(true);
@@ -257,11 +248,17 @@ const SignupSuccess = ({ navigation }) => {
             try {
               const ph = phone.startsWith('0') ? phone : '0' + phone;
               const userCred = usernameType === 1 ? username : ph;
-              const { data } = await checkUser(userCred);
+              const { data } = await checkUser(encodeURIComponent(userCred));
               if (data && data.status == '0') {
                 // if (data.is_admin !== 'YES') {
                 if (data && data.has_pin == 'YES') {
                   navigation.navigate('LockScreen', { username: userCred });
+                } else if (
+                  data &&
+                  data.has_pin == 'NO' &&
+                  data.has_otp == 'YES'
+                ) {
+                  navigation.navigate('Reset Otp', { uid: data.uid });
                 } else {
                   navigation.navigate('Set Pin', { uid: data.uid });
                 }
@@ -291,6 +288,7 @@ const SignupSuccess = ({ navigation }) => {
               setBtnText('Get started');
             } catch (error) {
               toast.show('Check your network');
+              setBtnText('Get started');
             }
             // }
           }}>

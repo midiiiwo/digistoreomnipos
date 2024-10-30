@@ -2,7 +2,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import React from 'react';
-import { StyleSheet, View, Text, Pressable } from 'react-native';
+import { StyleSheet, View, Text, Pressable, ScrollView } from 'react-native';
 import { SheetManager } from 'react-native-actions-sheet';
 import { useSelector } from 'react-redux';
 
@@ -10,11 +10,12 @@ import { useApplyDiscountCode } from '../hooks/useApplyDiscountCode';
 import { useActionCreator } from '../hooks/useActionCreator';
 // import ButtonLargeBottom from '../ButtonLargeBottom';
 import { useToast } from 'react-native-toast-notifications';
-import Input from '../components/Input';
+
 import PrimaryButton from '../components/PrimaryButton';
 import Qr from '../../assets/icons/qr-scanner.svg';
 import { Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import Input from '../components/Input';
 
 function Discount(props) {
   const navigation = useNavigation();
@@ -49,7 +50,7 @@ function Discount(props) {
           quantity: Number(discountCodeStatus.discount),
           discountCode,
         });
-        navigation.navigate('Dashboard');
+        navigation.navigate('Cart');
         SheetManager.hideAll();
       } else {
         toast.show(discountCodeStatus.message, {
@@ -63,74 +64,78 @@ function Discount(props) {
   }, [discountCodeStatus, toast, discountPayload]);
 
   return (
-    <View style={styles.main}>
-      {/* <View style={styles.topRow}> */}
-      <View style={{ paddingHorizontal: 18 }}>
-        <Input
-          placeholder="Enter Discount"
-          val={discount}
-          style={{
-            marginRight: 4,
-            backgroundColor: '#fff',
-            height: 50,
-          }}
-          keyboardType="number-pad"
-          setVal={text => setDiscount(text)}
-        />
-        <SegmentedControl
-          values={tabValues}
-          selectedIndex={tabIndex}
-          onChange={event => {
-            setTabIndex(event.nativeEvent.selectedSegmentIndex);
-          }}
-          backgroundColor="rgba(96, 126, 170, 0.1)"
-          tintColor="#1942D8"
-          activeFontStyle={styles.activeText}
-          fontStyle={styles.inactiveText}
-          style={styles.arbitrary}
-        />
-      </View>
+    <>
+      <ScrollView style={{ backgroundColor: '#fff' }}>
+        <View style={styles.main}>
+          {/* <View style={styles.topRow}> */}
+          <View style={{ paddingHorizontal: 18 }}>
+            <Input
+              placeholder="Enter Discount"
+              val={discount}
+              style={{
+                marginRight: 4,
+                backgroundColor: '#fff',
+                // height: 50,
+              }}
+              keyboardType="number-pad"
+              setVal={text => setDiscount(text)}
+            />
+            <SegmentedControl
+              values={tabValues}
+              selectedIndex={tabIndex}
+              onChange={event => {
+                setTabIndex(event.nativeEvent.selectedSegmentIndex);
+              }}
+              backgroundColor="rgba(96, 126, 170, 0.1)"
+              tintColor="#1942D8"
+              activeFontStyle={styles.activeText}
+              fontStyle={styles.inactiveText}
+              style={styles.arbitrary}
+            />
+          </View>
 
-      {/* </View> */}
-      <View style={{ alignItems: 'center', marginVertical: 23 }}>
-        <Text style={{ fontSize: 18, fontFamily: 'Lato-Bold', color: '#fff' }}>
-          Or
-        </Text>
-      </View>
-      <View
-        style={[
-          styles.input,
-          {
-            marginBottom: 12,
-            // marginTop: 46,
-            flexDirection: 'row',
-            alignItems: 'center',
-          },
-        ]}>
-        <Input
-          placeholder="Enter Discount Code or Gift Voucher"
-          // showError={showError && state.name.length === 0}
-          val={discountCode}
-          setVal={text => setDiscountCode(text)}
-          style={{
-            height: 50,
-            backgroundColor: '#fff',
-            flex: 1,
-            marginRight: 14,
-          }}
-        />
-        <Pressable
-          style={{ marginHorizontal: 6 }}
-          onPress={() => {
-            navigation.navigate('Discount Qr', {
-              prev_screen: 'Dashboard',
-            });
-            SheetManager.hide('discount');
-          }}>
-          <Qr stroke="#30475e" />
-        </Pressable>
-      </View>
-
+          {/* </View> */}
+          <View style={{ alignItems: 'center', marginVertical: 23 }}>
+            <Text
+              style={{ fontSize: 18, fontFamily: 'Lato-Bold', color: '#fff' }}>
+              Or
+            </Text>
+          </View>
+          <View
+            style={[
+              styles.input,
+              {
+                marginBottom: 12,
+                // marginTop: 46,
+                flexDirection: 'row',
+                alignItems: 'center',
+              },
+            ]}>
+            <Input
+              placeholder="Enter Discount Code or Gift Voucher"
+              // showError={showError && state.name.length === 0}
+              val={discountCode}
+              setVal={text => setDiscountCode(text)}
+              style={{
+                // height: 50,
+                backgroundColor: '#fff',
+                flex: 1,
+                marginRight: 14,
+              }}
+            />
+            <Pressable
+              style={{ marginHorizontal: 6 }}
+              onPress={() => {
+                navigation.navigate('Discount Qr', {
+                  prev_screen: 'Inventory',
+                });
+                SheetManager.hide('discount');
+              }}>
+              <Qr stroke="#30475e" />
+            </Pressable>
+          </View>
+        </View>
+      </ScrollView>
       <View style={styles.btnWrapper}>
         <PrimaryButton
           style={styles.btn}
@@ -174,7 +179,7 @@ function Discount(props) {
                 quantity: Number(discount),
               });
               toast.show('Discount applied', { placement: 'top' });
-              navigation.navigate('Dashboard');
+              navigation.navigate('Cart');
               setDiscount('');
               return;
             }
@@ -196,7 +201,7 @@ function Discount(props) {
           {applyDiscountCode.isLoading ? 'Processing' : 'Apply Discount'}
         </PrimaryButton>
       </View>
-    </View>
+    </>
   );
 }
 

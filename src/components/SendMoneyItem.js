@@ -14,6 +14,7 @@ const mapChannelToName = {
   LPTS: 'Loyalty Points',
   OFFMOMO: 'Offline MoMo',
   OFFCARD: 'Offline Card',
+  BANK: 'Bank Payout',
 };
 
 // const mapSalesChannelToName = {
@@ -58,13 +59,13 @@ const ImageItem = ({ PAYMENT_CHANNEL }) => {
       )}
       {PAYMENT_CHANNEL === 'AIRTELM' && (
         <Image
-          source={require('../../assets/images/AirtelTigo-Money.jpeg')}
+          source={require('../../assets/images/atmoney.png')}
           style={styles.img}
         />
       )}
       {PAYMENT_CHANNEL === 'TIGOC' && (
         <Image
-          source={require('../../assets/images/AirtelTigo-Money.jpeg')}
+          source={require('../../assets/images/atmoney.png')}
           style={styles.img}
         />
       )}
@@ -104,6 +105,12 @@ const ImageItem = ({ PAYMENT_CHANNEL }) => {
           style={styles.img}
         />
       )}
+      {PAYMENT_CHANNEL === 'BANK' && (
+        <Image
+          source={require('../../assets/images/saving.png')}
+          style={styles.img}
+        />
+      )}
     </View>
   );
 };
@@ -124,7 +131,7 @@ const SendMoneyItem = ({ item }) => {
               style={[
                 styles.name,
                 {
-                  fontFamily: 'ReadexPro-bold',
+                  fontFamily: 'ReadexPro-Medium',
                   fontSize: 15,
                   marginBottom: 4,
                   letterSpacing: 0.2,
@@ -141,6 +148,7 @@ const SendMoneyItem = ({ item }) => {
                   fontSize: 14.3,
                   color: '#6D8299',
                   marginBottom: 4,
+                  opacity: 0.7,
                 },
               ]}
               numberOfLines={1}>
@@ -158,6 +166,7 @@ const SendMoneyItem = ({ item }) => {
                   fontSize: 14,
                   color: '#6D8299',
                   marginBottom: 12,
+                  opacity: 0.7,
                 },
               ]}>
               {item.transaction_date.slice(0, 16)}
@@ -274,7 +283,7 @@ const styles = StyleSheet.create({
     maxWidth: '70%',
   },
   count: {
-    fontFamily: 'Lato-Bold',
+    fontFamily: 'ReadexPro-Medium',
     color: '#6D8299',
     fontSize: 15,
     marginBottom: 6,
@@ -284,7 +293,7 @@ const styles = StyleSheet.create({
     marginLeft: 'auto',
   },
   orderStatus: {
-    fontFamily: 'Lato-Bold',
+    fontFamily: 'ReadexPro-Medium',
     color: '#30475e',
   },
   statusIndicator: {

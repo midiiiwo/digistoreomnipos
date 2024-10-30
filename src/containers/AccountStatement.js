@@ -1,12 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import {
-  StyleSheet,
-  Text,
-  View,
-  Pressable,
-  TextInput,
-  FlatList,
-} from 'react-native';
+import { StyleSheet, Text, View, TextInput } from 'react-native';
 import React from 'react';
 import { DateTimePicker } from 'react-native-ui-lib';
 import { useAccountStatementHistory } from '../hooks/useAccountStatementHistory';
@@ -83,7 +76,7 @@ const AccountStatement = () => {
         // ItemSeparatorComponent={() => (
         //   <View style={{ borderBottomColor: '#ddd', borderBottomWidth: 0.5 }} />
         // )}
-        contentContainerStyle={{ paddingHorizontal: 18, paddingVertical: 8 }}
+        contentContainerStyle={{ paddingHorizontal: 8, paddingVertical: 6 }}
         data={handleSearch(searchTerm, data && data.data && data.data.data)}
         renderItem={({ item }) => {
           if (!item) {
@@ -92,7 +85,7 @@ const AccountStatement = () => {
           return (
             <View
               style={{
-                paddingHorizontal: 14,
+                paddingHorizontal: 12,
                 // paddingVertical: 12,
                 marginVertical: 2,
                 // height: 160,
@@ -110,7 +103,7 @@ const AccountStatement = () => {
                 }}>
                 <Text
                   style={{
-                    fontFamily: 'Lato-Bold',
+                    fontFamily: 'ReadexPro-Medium',
                     color: '#30475e',
                     fontSize: 15,
                     // marginBottom: 5,
@@ -119,14 +112,14 @@ const AccountStatement = () => {
                 </Text>
                 <Text
                   style={{
-                    fontFamily: 'Lato-Semibold',
+                    fontFamily: 'ReadexPro-Medium',
                     color: '#6D8299',
-                    fontSize: 15,
+                    fontSize: 14,
                   }}>
                   Remark:{' '}
                   <Text
                     style={{
-                      fontFamily: 'Lato-Medium',
+                      fontFamily: 'ReadexPro-Medium',
                       color: '#6D8299',
                       fontSize: 14,
                     }}>
@@ -151,7 +144,7 @@ const AccountStatement = () => {
                     />
                     <Text
                       style={{
-                        fontFamily: 'Lato-Semibold',
+                        fontFamily: 'ReadexPro-Medium',
                         color: '#30475e',
                         fontSize: 15,
                       }}>
@@ -175,7 +168,7 @@ const AccountStatement = () => {
                 }}>
                 <Text
                   style={{
-                    fontFamily: 'Lato-Medium',
+                    fontFamily: 'ReadexPro-Medium',
                     color: item.credit ? '#87C4C9' : '#FD8A8A',
                     fontSize: 15,
                     // marginTop: 16,
@@ -184,7 +177,7 @@ const AccountStatement = () => {
                 </Text>
                 <Text
                   style={{
-                    fontFamily: 'SFProDisplay-Semibold',
+                    fontFamily: 'ReadexPro-Medium',
                     color: '#30475e',
                     marginBottom: 10,
                     fontSize: 16,
@@ -193,7 +186,7 @@ const AccountStatement = () => {
                 </Text>
                 <Text
                   style={{
-                    fontFamily: 'SFProDisplay-Regular',
+                    fontFamily: 'ReadexPro-Regular',
                     color: '#30475e',
                     fontSize: 15,
                   }}>
@@ -201,7 +194,7 @@ const AccountStatement = () => {
                 </Text>
                 <Text
                   style={{
-                    fontFamily: 'SFProDisplay-Semibold',
+                    fontFamily: 'ReadexPro-Medium',
                     color: '#30475e',
                     fontSize: 16,
                   }}>
@@ -209,7 +202,7 @@ const AccountStatement = () => {
                 </Text>
                 <Text
                   style={{
-                    fontFamily: 'SFProDisplay-Regular',
+                    fontFamily: 'ReadexPro-Regular',
                     color: '#6D8299',
                     marginTop: 10,
                     fontSize: 13,

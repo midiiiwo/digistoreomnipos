@@ -144,7 +144,7 @@ const PaypointVendorCard = ({ path, bill, handlePress }) => {
         {bill === 'STIGOC' && (
           <Image
             style={[styles.img]}
-            source={require('../../assets/images/AirtelTigo-Money.jpeg')}
+            source={require('../../assets/images/atmoney.png')}
           />
         )}
         {bill === 'SBANK' && (
@@ -153,10 +153,28 @@ const PaypointVendorCard = ({ path, bill, handlePress }) => {
             source={require('../../assets/images/saving.png')}
           />
         )}
+        {bill === 'MTNMD' && (
+          <Image
+            style={[styles.img]}
+            source={require('../../assets/images/mtn-fibre.png')}
+          />
+        )}
+        {bill === 'VODAMD' && (
+          <Image
+            style={[styles.img]}
+            source={require('../../assets/images/vodafone-broadband.png')}
+          />
+        )}
+        {bill === 'TIGOMD' && (
+          <Image
+            style={[styles.img]}
+            source={require('../../assets/images/airteltigo.png')}
+          />
+        )}
         {bill === 'AirtelTigo Top-up' && (
           <Image
             style={[styles.img]}
-            source={require('../../assets/images/AirtelTigo-Money.jpeg')}
+            source={require('../../assets/images/atmoney.png')}
           />
         )}
         <Text style={styles.option}>{path}</Text>
@@ -168,9 +186,9 @@ const PaypointVendorCard = ({ path, bill, handlePress }) => {
 const styles = StyleSheet.create({
   cardMain: {
     marginBottom: 46,
-    height: Dimensions.get('window').width * 0.12,
-    width: Dimensions.get('window').width * 0.2,
-    // marginHorizontal: Dimensions.get('window').width * 0.0007,
+    height: Dimensions.get('window').width * 0.25,
+    width: Dimensions.get('window').width * 0.25,
+    marginHorizontal: Dimensions.get('window').width * 0.017,
   },
   imgContainer: {
     alignItems: 'center',
@@ -178,13 +196,13 @@ const styles = StyleSheet.create({
   option: {
     textAlign: 'center',
     marginTop: 12,
-    fontSize: 16.5,
+    fontSize: 13.5,
     color: '#30475E',
-    fontFamily: 'ReadexPro-Medium',
+    fontFamily: 'ReadexPro-Regular',
   },
   img: {
-    height: 65,
-    width: 65,
+    height: 55,
+    width: 55,
     borderRadius: 118,
     // borderColor: '#ddd',
     // borderWidth: 0.7,

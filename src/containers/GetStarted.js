@@ -2,7 +2,6 @@
 import { StyleSheet, Text, View, Image, Dimensions } from 'react-native';
 import React from 'react';
 import AppIntroSlider from 'react-native-app-intro-slider';
-import { style } from 'deprecated-react-native-prop-types/DeprecatedTextPropTypes';
 import { useNavigation } from '@react-navigation/native';
 import { useActionCreator } from '../hooks/useActionCreator';
 
@@ -38,7 +37,7 @@ const renderItem = ({ item }) => {
       <View style={styles.imageWrapper}>
         <Image
           source={require('../../assets/images/POS_logo_png.png')}
-          style={{ marginTop: 10, height: imgWidth * 0.15, width: imgWidth }}
+          style={{ marginTop: 10, height: imgWidth * 0.3, width: imgWidth }}
           resizeMode="contain"
         />
       </View>

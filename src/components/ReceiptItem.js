@@ -1,9 +1,17 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-import Dot from '../../assets/icons/dot.svg';
+const ReceiptItem = ({ itemName, quantity, amount, $extras, $removables }) => {
+  let extras;
+  let removables;
 
-const ReceiptItem = ({ itemName, quantity, amount }) => {
+  console.log('extrasssss', $extras);
+
+  try {
+    extras = JSON.parse($extras);
+    removables = JSON.parse($removables);
+  } catch (error) {}
   return (
     <View style={[styles.main]}>
       <View style={styles.auxWrapper}>
@@ -15,7 +23,78 @@ const ReceiptItem = ({ itemName, quantity, amount }) => {
               {itemName}
             </Text>
           </View>
-          {/* <Text style={styles.variant}>{variant}kg</Text> */}
+          {Object.values(extras || {}).length > 0 && (
+            <View>
+              <Text
+                style={[
+                  styles.taxLabel,
+                  {
+                    overflow: 'hidden',
+                    // backgroundColor: 'red',
+                    paddingHorizontal: 0,
+                    textDecorationStyle: 'solid',
+                    textDecorationLine: 'underline',
+                    fontWeight: '800',
+                    marginVertical: 4,
+                  },
+                ]}>
+                Extras
+              </Text>
+              <Text
+                style={[
+                  styles.taxLabel,
+                  {
+                    overflow: 'hidden',
+                    // backgroundColor: 'red',
+                    paddingHorizontal: 0,
+                  },
+                ]}>
+                {Object.values(extras)
+                  .map(extra => {
+                    if (extra) {
+                      return extra?.order_extra;
+                    }
+                  })
+                  .toString()}
+              </Text>
+            </View>
+          )}
+          {Object.values(removables || {}).length > 0 && (
+            <View>
+              <Text
+                style={[
+                  styles.taxLabel,
+                  {
+                    overflow: 'hidden',
+                    // backgroundColor: 'red',
+                    paddingHorizontal: 0,
+                    textDecorationStyle: 'solid',
+                    textDecorationLine: 'underline',
+                    fontWeight: '800',
+                    marginVertical: 4,
+                  },
+                ]}>
+                Removables
+              </Text>
+              <Text
+                style={[
+                  styles.taxLabel,
+                  {
+                    overflow: 'hidden',
+                    // backgroundColor: 'red',
+                    paddingHorizontal: 0,
+                  },
+                ]}>
+                {Object.values(removables)
+                  .map(removable => {
+                    if (removable) {
+                      return removable?.order_removable;
+                    }
+                  })
+                  .toString()}
+              </Text>
+            </View>
+          )}
         </View>
         <View style={styles.amountWrapper}>
           <Text style={styles.amount}>GHS {amount}</Text>
@@ -28,9 +107,15 @@ const ReceiptItem = ({ itemName, quantity, amount }) => {
 const styles = StyleSheet.create({
   main: {
     paddingHorizontal: 10,
-    paddingVertical: 12,
+    paddingVertical: 8,
     borderBottomColor: '#ddd',
     borderBottomWidth: 0.5,
+  },
+  taxLabel: {
+    fontFamily: 'ReadexPro-Regular',
+    fontSize: 14.6,
+    color: '#5C6E91',
+    letterSpacing: 0.15,
   },
   auxWrapper: {
     flexDirection: 'row',
@@ -44,11 +129,12 @@ const styles = StyleSheet.create({
     marginHorizontal: 6,
   },
   itemName: {
-    fontFamily: 'Inter-Medium',
+    fontFamily: 'ReadexPro-Medium',
     fontWeight: '600',
-    fontSize: 16,
+    fontSize: 14.5,
     color: '#30475E',
     width: '70%',
+    letterSpacing: 0.3,
   },
   quant: {
     fontFamily: 'JetBrainsMono-Regular',
@@ -67,8 +153,8 @@ const styles = StyleSheet.create({
   },
   amount: {
     color: '#1942D8',
-    fontFamily: 'Inter-Medium',
-    fontSize: 16,
+    fontFamily: 'ReadexPro-Medium',
+    fontSize: 14.4,
   },
 });
 

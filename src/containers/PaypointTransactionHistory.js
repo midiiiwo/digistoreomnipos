@@ -14,16 +14,15 @@ import { useGetRecentPaypointTransactions } from '../hooks/useGetRecentPaypointT
 import { useSelector } from 'react-redux';
 import Loading from '../components/Loading';
 import RecentCard from '../components/RecentCard';
-import { DateTimePicker } from 'react-native-ui-lib';
-import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
+import Search from '../../assets/icons/search.svg';
+
 import Filter from '../../assets/icons/filter.svg';
 import { handleSearch } from '../utils/shared';
 import { SheetManager } from 'react-native-actions-sheet';
 
-const d = new Date();
-
-const PaypointTransactionHistory = ({ navigation }) => {
+const PaypointTransactionHistory = ({ navigation, route }) => {
   const { user } = useSelector(state => state.auth);
+  const options = route.params.options;
   // const endDate = moment(new Date()).format('DD-MM-YYYY');
   // const startDate = moment(
   //   new Date().setDate(new Date().getDate() - 30),
@@ -74,9 +73,15 @@ const PaypointTransactionHistory = ({ navigation }) => {
       </View> */}
       <View style={styles.topIcons}>
         <View style={styles.searchBox}>
+          <Search
+            stroke="#131517"
+            height={20}
+            width={20}
+            style={{ marginLeft: 12 }}
+          />
           <TextInput
             style={styles.search}
-            placeholder="Search transaction"
+            placeholder="Search Transaction"
             placeholderTextColor="#929AAB"
             value={searchTerm}
             onChangeText={setSearchTerm}
@@ -140,9 +145,9 @@ const PaypointTransactionHistory = ({ navigation }) => {
               }}>
               <Text
                 style={{
-                  fontFamily: 'Lato-Semibold',
+                  fontFamily: 'ReadexPro-Medium',
                   color: '#748DA6',
-                  fontSize: 15.5,
+                  fontSize: 15,
                 }}>
                 Total Transactions:{' '}
                 {recentTransactions &&
@@ -151,9 +156,9 @@ const PaypointTransactionHistory = ({ navigation }) => {
               </Text>
               <Text
                 style={{
-                  fontFamily: 'Lato-Semibold',
+                  fontFamily: 'ReadexPro-Medium',
                   color: '#748DA6',
-                  fontSize: 15.5,
+                  fontSize: 15,
                   marginTop: 4,
                 }}>
                 Total Amount: GHS {totalAmount.toFixed(2)}
@@ -170,7 +175,7 @@ const PaypointTransactionHistory = ({ navigation }) => {
           ),
         ]}
         renderItem={({ item }) => (
-          <RecentCard item={item} navigation={navigation} />
+          <RecentCard item={item} navigation={navigation} options={options} />
         )}
       />
     </View>
@@ -214,21 +219,25 @@ const styles = StyleSheet.create({
     paddingLeft: 8,
   },
   searchBox: {
+    flex: 1,
     flexDirection: 'row',
-    width: '100%',
     alignItems: 'center',
     paddingRight: 14,
-    borderRadius: 5,
-    backgroundColor: '#F5F7F9',
-    height: 52,
+    borderRadius: 54,
+    backgroundColor: '#fff',
+    height: 50,
+    borderColor: '#DCDCDE',
+    borderWidth: 1,
   },
   search: {
     height: '100%',
     borderRadius: 8,
-    paddingHorizontal: 18,
-    fontSize: 16,
+    paddingHorizontal: 12,
+    fontSize: 15,
     flex: 1,
     color: '#30475e',
-    fontFamily: 'Lato-Semibold',
+    fontFamily: 'ReadexPro-Regular',
+    letterSpacing: 0.1,
+    marginTop: 2,
   },
 });

@@ -69,6 +69,8 @@ const reducer = (state, action) => {
       return { ...state, outlet_list: action.payload };
     case 'low_stock':
       return { ...state, lowStock: action.payload };
+    case 'product_tag':
+      return { ...state, tag: action.payload };
 
     default:
       return state;
@@ -82,6 +84,8 @@ function EditProduct(props) {
   const [showError, setShowError] = React.useState(false);
   const [applyTaxes, setApplyTaxes] = React.useState(true);
   const [openMenu, setOpenMenu] = React.useState(false);
+  const [isChecked, setChecked] = React.useState(false);
+
   // const navigation = useNavigation();
   const [state, dispatch] = React.useReducer(reducer, {
     name: '',
@@ -764,6 +768,30 @@ function EditProduct(props) {
                 </PrimaryButton>
               </View> */}
             </View>
+            {/* added the featured product section */}
+            <View style={{ marginHorizontal: 2 }}/>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginVertical: 10,
+              }}>
+              <Switch
+                value={state.tag === 'FEATURED'} // Check if the current tag is 'FEATURED'
+                onValueChange={() => {
+                  const newTag = state.tag === 'FEATURED' ? 'NORMAL' : 'FEATURED'; // Toggle the tag
+                  dispatch({ type: 'product_tag', payload: newTag }); // Dispatch action to update the tag in the state
+                }}
+                onColor="#2192FF"
+                offColor="#EEF1F2"
+              />
+              <Text style={{ marginLeft: 8, color: 'black' }}>
+                {state.tag === 'FEATURED'
+                  ? 'Product Featured'
+                  : 'Product Not Featured'}
+              </Text>
+            </View>
+
             {/* )} */}
           </ScrollView>
         )}
@@ -837,7 +865,8 @@ function EditProduct(props) {
               id: props.route.params.id,
               outlet_list: JSON.stringify(outletIds),
               merchant: user.merchant,
-              category: JSON.parse(state.category.value).product_category_id,
+              category: JSON.parse(state?.category?.value || '{}')
+                ?.product_category_id,
               outlet_inventory_list: JSON.stringify(outletInventory_),
               'image[]':
                 state['image[]'] && typeof state['image[]'] === 'object'

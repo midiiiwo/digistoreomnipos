@@ -11,19 +11,13 @@ import {
   PermissionsAndroid,
   Platform,
 } from 'react-native';
-import ActionSheet from 'react-native-actions-sheet';
-import {
-  Checkbox,
-  DateTimePicker,
-  Picker as RNPicker,
-} from 'react-native-ui-lib';
-
-import { TextInput } from 'react-native-paper';
+import { Checkbox, DateTimePicker } from 'react-native-ui-lib';
 
 import { useSelector } from 'react-redux';
 import PrimaryButton from '../components/PrimaryButton';
 import { useToast } from 'react-native-toast-notifications';
 import { useQueryClient } from 'react-query';
+
 import { useAddOutlet } from '../hooks/useAddOutlet';
 import { CheckItem } from './ReceiptDetails';
 import {
@@ -35,6 +29,9 @@ import {
 
 import AddImage from '../../assets/icons/add-image.svg';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import { PERMISSIONS, request } from 'react-native-permissions';
+import moment from 'moment';
+import _ from 'lodash';
 import Input from '../components/Input';
 
 const mapDaytoCode = {
@@ -75,7 +72,7 @@ export const WorkingTimeCheck = ({
           style={{
             color: '#204391',
             // alignSelf: 'center',
-            marginRight: 10,
+            marginRight: 8,
           }}
 
           // label="By clicking to create an account, you agree to iPay's Terms of Use
@@ -85,7 +82,7 @@ export const WorkingTimeCheck = ({
           style={{
             fontFamily: 'Roboto-Medium',
             color: '#30475e',
-            fontSize: 17,
+            fontSize: 15,
           }}>
           {placeholder}
         </Text>
@@ -100,23 +97,20 @@ export const WorkingTimeCheck = ({
           title="Open"
           mode="time"
           onChange={i => {
-            const time = i.toLocaleTimeString();
-            const digits = time.slice(0, -6);
-            const amPM = time.slice(-2);
-            onStartTimeChange(digits + ' ' + amPM);
+            console.log('idididid', i);
+            onStartTimeChange(i);
           }}
           editable={value}
           value={dateValue}
+          timeFormat="h:mm A"
         />
         <View style={{ marginHorizontal: 8 }} />
         <DateTimePicker
           title="Close"
           mode="time"
+          timeFormat="h:mm A"
           onChange={i => {
-            const time = i.toLocaleTimeString();
-            const digits = time.slice(0, -6);
-            const amPM = time.slice(-2);
-            onEndTimeChange(digits + ' ' + amPM);
+            onEndTimeChange(i);
           }}
           editable={value}
           value={dateValue}
@@ -319,9 +313,7 @@ const AddOutlet = ({ navigation, route }) => {
   const { user } = useSelector(state => state.auth);
   const [saved, setSaved] = React.useState();
   const [showError, setShowError] = React.useState(false);
-  const [taxStatus, setTaxStatus] = React.useState(false);
-  const [verifyStatus, setVerifyStatus] = React.useState();
-  const [usernameStatus, setUsernameStatus] = React.useState();
+
   const [openMenu, setOpenMenu] = React.useState(false);
   const [state, dispatch] = React.useReducer(reducer, {
     id: '',
@@ -428,6 +420,7 @@ const AddOutlet = ({ navigation, route }) => {
     },
     [dispatch],
   );
+
   return (
     <View style={{ flex: 1, backgroundColor: '#fff' }}>
       <View style={{ height: '100%' }}>
@@ -462,37 +455,60 @@ const AddOutlet = ({ navigation, route }) => {
                   style={{ marginVertical: 10 }}
                   onSelect={async () => {
                     setOpenMenu(false);
-                    try {
-                      const granted = await PermissionsAndroid.request(
-                        PermissionsAndroid.PERMISSIONS.CAMERA,
-                        {
-                          title: 'App Camera Permission',
-                          message: 'App needs access to your camera',
-                          buttonNeutral: 'Ask Me Later',
-                          buttonNegative: 'Cancel',
-                          buttonPositive: 'OK',
-                        },
-                      );
-                      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-                        const result = await launchCamera({
-                          includeBase64: false,
-                          includeExtra: false,
-                          mediaType: 'photo',
-                          quality: 0.6,
-                        });
-                        if (result) {
-                          dispatch({
-                            type: 'image',
-                            payload: result.assets[0],
+                    if (Platform.OS === 'android') {
+                      try {
+                        const granted = await PermissionsAndroid.request(
+                          PermissionsAndroid.PERMISSIONS.CAMERA,
+                          {
+                            title: 'App Camera Permission',
+                            message: 'App needs access to your camera',
+                            buttonNeutral: 'Ask Me Later',
+                            buttonNegative: 'Cancel',
+                            buttonPositive: 'OK',
+                          },
+                        );
+                        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                          const result = await launchCamera({
+                            includeBase64: false,
+                            includeExtra: false,
+                            mediaType: 'photo',
+                            quality: 0.6,
+                          });
+                          if (result) {
+                            dispatch({
+                              type: 'image',
+                              payload: result.assets[0],
+                            });
+                          }
+                        } else {
+                          toast.show('Camera permission denied', {
+                            placement: 'top',
                           });
                         }
-                      } else {
-                        toast.show('Camera permission denied', {
-                          placement: 'top',
-                        });
+                      } catch (error) {}
+                    } else if (Platform.OS === 'ios') {
+                      try {
+                        const granted = await request(PERMISSIONS.IOS.CAMERA);
+
+                        if (granted === 'granted') {
+                          const result = await launchCamera({
+                            includeBase64: false,
+                            includeExtra: false,
+                            mediaType: 'photo',
+                          });
+                          console.log('grrrr', result);
+                          if (result) {
+                            dispatch({
+                              type: 'image',
+                              payload: result.assets[0],
+                            });
+                          }
+                        } else {
+                          // request(PERMISSIONS.IOS.CAMERA);
+                        }
+                      } catch (error) {
+                        console.log('=>>>>>>>>>>>>>>>>,', error);
                       }
-                    } catch (error) {
-                      console.error('=>>>>>>>>>>>>>>>>,', error);
                     }
                   }}>
                   <Text
@@ -533,9 +549,8 @@ const AddOutlet = ({ navigation, route }) => {
             <View style={{ padding: 5, marginVertical: 12 }}>
               <Text
                 style={{
-                  fontFamily: 'SFProDisplay-Medium',
+                  fontFamily: 'Roboto-Medium',
                   color: '#567189',
-                  fontSize: 17,
                 }}>
                 Upload Outlet Image
               </Text>
@@ -547,11 +562,7 @@ const AddOutlet = ({ navigation, route }) => {
                 onPress={() => {
                   dispatch({ type: 'image', payload: null });
                 }}>
-                <Text
-                  style={{
-                    fontFamily: 'SFProDisplay-Medium',
-                    color: '#E0144C',
-                  }}>
+                <Text style={{ fontFamily: 'Roboto-Medium', color: '#E0144C' }}>
                   Clear Image
                 </Text>
               </Pressable>
@@ -571,6 +582,7 @@ const AddOutlet = ({ navigation, route }) => {
           <Input
             placeholder="Enter Outlet Contact"
             val={state.contact}
+            showError={showError && state.contact.length === 0}
             // nLines={3}
             setVal={text =>
               handleTextChange({
@@ -599,19 +611,23 @@ const AddOutlet = ({ navigation, route }) => {
             }}
             style={{
               marginTop: 14,
-              paddingVertical: 16,
+              paddingVertical: 12,
               alignItems: 'center',
-              borderColor: '#B7C4CF',
-              borderWidth: 1.6,
+              borderColor: showError && !state.location ? '#EB455F' : '#B7C4CF',
+              borderWidth: 0.9,
               // borderStyle: 'dashed',
               marginBottom: 8,
-              borderRadius: 5,
+              borderRadius: 4,
             }}>
             <Text
               style={{
                 fontFamily: 'Roboto-Medium',
-                color: 'rgba(25, 66, 216, 0.87)',
-                fontSize: 18,
+                color:
+                  showError && !state.location
+                    ? '#EB455F'
+                    : 'rgba(25, 66, 216, 0.87)',
+                fontSize: 15,
+                textAlign: 'center',
               }}>
               {!state.location
                 ? 'Physical Location of Outlet'
@@ -794,15 +810,20 @@ const AddOutlet = ({ navigation, route }) => {
           disabled={isLoading}
           handlePress={() => {
             console.log(state);
-            // if (
-            //   state.name.length === 0 ||
-            //   // !state.tin ||
-            //   state.value.length === 0 ||
-            //   state.showTax.length === 0
-            // ) {
-            //   setShowError(true);
-            //   return;
-            // }
+            if (
+              state.name.length === 0 ||
+              // !state.tin ||
+              state.contact.length === 0 ||
+              state.notify.length === 0 ||
+              !state.location
+            ) {
+              setShowError(true);
+              toast.show('Please provide all required details', {
+                placement: 'top',
+                type: 'danger',
+              });
+              return;
+            }
             const workingTimes = {};
             let loop = 0;
             if (state.set_worktime) {
@@ -810,21 +831,19 @@ const AddOutlet = ({ navigation, route }) => {
                 if (value.status) {
                   workingTimes[loop] = {
                     workDay: mapDaytoCode[key],
-                    workStartTime: value.start,
-                    workEndTime: value.end,
+                    workStartTime: moment(value.start).format('h:mm A'),
+                    workEndTime: moment(value.end).format('h:mm A'),
                   };
                   loop++;
                 }
               }
             }
-            console.log('wttttttttttttt', workingTimes);
-            mutate({
+            const payload = {
               outlet_name: state.name,
               outlet_contact: state.contact,
-              outlet_notify: state.notify,
-              outlet_source: state.source,
+              outlet_notification_contact: state.notify,
+              outlet_source: 'MOBILE',
               outlet_worktime_set: state.set_worktime ? 'YES' : 'NO',
-              outlet_worktime_list: JSON.stringify(workingTimes),
               outlet_address:
                 (state.location && state.location.delivery_location) || '',
               outlet_gps:
@@ -845,7 +864,12 @@ const AddOutlet = ({ navigation, route }) => {
                 : '',
               mod_by: user.login,
               merchant_id: user.merchant,
-            });
+            };
+            if (!_.isEmpty(workingTimes)) {
+              // eslint-disable-next-line dot-notation
+              payload['outlet_worktime_list'] = JSON.stringify(workingTimes);
+            }
+            mutate(payload);
           }}>
           {isLoading ? 'Processing' : 'Save Outlet'}
         </PrimaryButton>

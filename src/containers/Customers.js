@@ -24,15 +24,7 @@ import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import CustomStatusBar from '../components/StatusBar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-function CustomerItem({
-  name,
-  telephone,
-  handlePress,
-  credit,
-  debit,
-  debitActive,
-  creditActive,
-}) {
+function CustomerItem({ name, telephone, handlePress, credit }) {
   const splitName = name.split(' ');
   const first =
     (splitName[0] || '').slice(0, 1).toUpperCase() +
@@ -76,11 +68,15 @@ const Customers = ({ navigation }) => {
     user.merchant,
   );
 
+  const [isPending, startTransition] = React.useTransition();
+
   const [storeCreditActive, setStoreCreditActive] = React.useState(false);
   const [storeDebitActive, setDebitActive] = React.useState(false);
+  const [storeCreditActive_, setStoreCreditActive_] = React.useState(false);
+  const [storeDebitActive_, setDebitActive_] = React.useState(false);
   const { top } = useSafeAreaInsets();
 
-  if (isLoading) {
+  if (isLoading || isPending) {
     return <Loading />;
   }
 
@@ -114,11 +110,8 @@ const Customers = ({ navigation }) => {
   }, 0);
 
   if (
-    (data &&
-      data.data &&
-      data.data.data &&
-      data.data.data.filter(i => i !== null).length === 0) ||
-    (data && data.data && !data.data.data)
+    data?.data?.data?.filter(i => i !== null)?.length === 0 ||
+    !data?.data?.data
   ) {
     return (
       <View
@@ -131,7 +124,7 @@ const Customers = ({ navigation }) => {
         <Text
           style={{
             fontFamily: 'ReadexPro-bold',
-            fontSize: 16,
+            fontSize: 18,
             color: '#30475e',
           }}>
           You have no customers recorded
@@ -139,7 +132,7 @@ const Customers = ({ navigation }) => {
         <Text
           style={{
             fontFamily: 'ReadexPro-Medium',
-            fontSize: 14,
+            fontSize: 15,
             color: '#748DA6',
             marginTop: 10,
           }}>
@@ -186,7 +179,6 @@ const Customers = ({ navigation }) => {
           </Pressable>
           <View style={styles.viewSpace} />
           <Pressable
-            style={{ marginRight: 18, marginLeft: 10 }}
             onPress={() => {
               if (!user.user_permissions.includes('ADDCUST')) {
                 Toast.show({
@@ -202,67 +194,57 @@ const Customers = ({ navigation }) => {
             <AddCircle fill="#98A8F8" />
           </Pressable>
         </View>
-        <FlatList
-          refreshControl={
-            <RefreshControl
-              refreshing={isLoading || isRefetching}
-              onRefresh={() => {
-                refetch();
-              }}
-            />
-          }
-          contentContainerStyle={{
-            borderRadius: 14,
-            paddingBottom: Dimensions.get('window').height * 0.2,
-          }}
-          data={handleSearch(searchTerm, customersData || [], 'customer_name')}
-          style={{ backgroundColor: '#fff' }}
-          showsVerticalScrollIndicator
-          ItemSeparatorComponent={() => <View style={styles.separator} />}
-          renderItem={({ item }) => {
-            if (!item) {
-              return;
-            }
-            // if (
-            //   storeCreditActive &&
-            //   !storeDebitActive &&
-            //   Number(item.customer_credit_limit) === 0
-            // ) {
-            //   return;
-            // }
-            // if (
-            //   storeDebitActive &&
-            //   !storeCreditActive &&
-            //   Number(item.customer_debit_balance) === 0
-            // ) {
-            //   return;
-            // }
-            return (
-              <CustomerItem
-                name={item.customer_name || 'N/A'}
-                telephone={item.customer_phone || 'N/A'}
-                credit={item.customer_credit_limit}
-                debit={item.customer_debit_balance}
-                creditActive={storeCreditActive}
-                debitActive={storeDebitActive}
-                handlePress={() => {
-                  if (!user.user_permissions.includes('VIEWCUST')) {
-                    Toast.show({
-                      type: ALERT_TYPE.WARNING,
-                      title: 'Upgrade Needed',
-                      textBody:
-                        "You don't have access to this feature. Please upgrade your account",
-                    });
-                    return;
-                  }
-                  navigation.navigate('Customer Details', {
-                    id: item.customer_id,
-                  });
+        <View style={{ height: Dimensions.get('window').height - 200 }}>
+          <FlatList
+            refreshControl={
+              <RefreshControl
+                refreshing={isLoading || isRefetching}
+                onRefresh={() => {
+                  refetch();
                 }}
               />
-            );
-          }}
-        />
+            }
+            estimatedListSize={Dimensions.get('window').height - 200}
+            contentContainerStyle={{
+              borderRadius: 14,
+              paddingBottom: Dimensions.get('window').height * 0.2,
+            }}
+            data={handleSearch(searchTerm, customersData, 'customer_name')}
+            style={{ backgroundColor: '#fff' }}
+            showsVerticalScrollIndicator
+            ItemSeparatorComponent={() => <View style={styles.separator} />}
+            renderItem={({ item }) => {
+              if (!item) {
+                return;
+              }
+
+              return (
+                <CustomerItem
+                  name={item.customer_name || 'N/A'}
+                  telephone={item.customer_phone || 'N/A'}
+                  credit={item.customer_credit_limit}
+                  debit={item.customer_debit_balance}
+                  creditActive={storeCreditActive}
+                  debitActive={storeDebitActive}
+                  handlePress={() => {
+                    if (!user.user_permissions.includes('VIEWCUST')) {
+                      Toast.show({
+                        type: ALERT_TYPE.WARNING,
+                        title: 'Upgrade Needed',
+                        textBody:
+                          "You don't have access to this feature. Please upgrade your account",
+                      });
+                      return;
+                    }
+                    navigation.navigate('Customer Details', {
+                      id: item.customer_id,
+                    });
+                  }}
+                />
+              );
+            }}
+          />
+        </View>
       </View>
       <View
         style={{
@@ -275,19 +257,24 @@ const Customers = ({ navigation }) => {
           borderTopWidth: 0.5,
         }}>
         <Pressable
-          onPress={() => setStoreCreditActive(!storeCreditActive)}
+          onPress={() => {
+            setStoreCreditActive_(!storeCreditActive_);
+            startTransition(() => {
+              setStoreCreditActive(!storeCreditActive);
+            });
+          }}
           style={{
             width: '50%',
             paddingVertical: 12,
             alignItems: 'center',
-            backgroundColor: storeCreditActive ? '#22A699' : '#fff',
+            backgroundColor: storeCreditActive_ ? '#22A699' : '#fff',
           }}>
           <Text
             style={{
               marginTop: 2,
               fontFamily: 'ReadexPro-Regular',
-              fontSize: 17,
-              color: storeCreditActive ? '#fff' : '#30475e',
+              fontSize: 14,
+              color: storeCreditActive_ ? '#fff' : '#30475e',
             }}>
             Store Credit
           </Text>
@@ -295,7 +282,7 @@ const Customers = ({ navigation }) => {
             style={{
               marginTop: 2,
               fontFamily: 'ReadexPro-Medium',
-              fontSize: 17,
+              fontSize: 14,
               color: storeCreditActive ? '#fff' : '#22A699',
             }}>
             GHS {new Intl.NumberFormat().format(totalStoreCredit)}
@@ -303,19 +290,24 @@ const Customers = ({ navigation }) => {
         </Pressable>
         <View style={{ borderLeftWidth: 0.7, borderLeftColor: '#ddd' }} />
         <Pressable
-          onPress={() => setDebitActive(!storeDebitActive)}
+          onPress={() => {
+            setDebitActive_(!storeDebitActive_);
+            startTransition(() => {
+              setDebitActive(!storeDebitActive);
+            });
+          }}
           style={{
             width: '50%',
-            paddingVertical: 16,
+            paddingVertical: 12,
             alignItems: 'center',
-            backgroundColor: storeDebitActive ? '#D14D72' : '#fff',
+            backgroundColor: storeDebitActive_ ? '#D14D72' : '#fff',
           }}>
           <Text
             style={{
               marginTop: 2,
               fontFamily: 'ReadexPro-Regular',
-              fontSize: 17,
-              color: storeDebitActive ? '#fff' : '#30475e',
+              fontSize: 14,
+              color: storeDebitActive_ ? '#fff' : '#30475e',
             }}>
             Debtors
           </Text>
@@ -323,7 +315,7 @@ const Customers = ({ navigation }) => {
             style={{
               marginTop: 2,
               fontFamily: 'ReadexPro-Medium',
-              fontSize: 17,
+              fontSize: 14,
               color: storeDebitActive ? '#fff' : '#D14D72',
             }}>
             GHS {new Intl.NumberFormat().format(totalStoreDebit)}
@@ -344,7 +336,7 @@ const styles = StyleSheet.create({
   },
   customerItem: {
     flexDirection: 'row',
-    paddingHorizontal: 6,
+    paddingHorizontal: 4,
     paddingLeft: 18,
     alignItems: 'center',
     paddingVertical: 10,
@@ -362,7 +354,7 @@ const styles = StyleSheet.create({
   },
   signin: {
     color: '#fff',
-    fontFamily: 'Lato-Bold',
+    fontFamily: 'ReadexPro-bold',
     fontSize: 16,
   },
   topIcons: {
@@ -370,7 +362,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 12,
     paddingLeft: 6,
-    marginTop: 2,
+    marginTop: 22,
     height: 52,
   },
   searchBox: {
@@ -380,7 +372,7 @@ const styles = StyleSheet.create({
     paddingRight: 14,
     borderRadius: 54,
     backgroundColor: '#fff',
-    height: 55,
+    height: 50,
     borderColor: '#DCDCDE',
     borderWidth: 1,
   },
@@ -388,12 +380,12 @@ const styles = StyleSheet.create({
     height: '100%',
     borderRadius: 8,
     paddingHorizontal: 12,
-    fontSize: 17.4,
+    fontSize: 15.4,
     flex: 1,
     color: '#30475e',
     fontFamily: 'ReadexPro-Regular',
-    marginTop: 4,
-    letterSpacing: 0.3,
+    letterSpacing: 0.1,
+    marginTop: 2,
   },
   searchBtn: {
     marginLeft: 'auto',
@@ -406,27 +398,31 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#98A8F8',
     borderRadius: 100,
-    height: 55,
-    width: 55,
+    height: 48,
+    width: 48,
     marginRight: 16,
   },
   initial: {
-    fontFamily: 'ReadexPro-Medium',
-    fontSize: 22,
+    fontFamily: 'ReadexPro-bold',
+    fontSize: 20,
     color: '#fff',
+    marginTop: 2,
   },
   name: {
     fontFamily: 'ReadexPro-Regular',
-    fontSize: 17,
+    fontSize: 15.5,
     color: '#3B3E3D',
     maxWidth: '85%',
     minWidth: '80%',
+    letterSpacing: -0.2,
+    // backgroundColor: 'red',
   },
   telephone: {
     fontFamily: 'ReadexPro-Regular',
-    fontSize: 13.5,
+    fontSize: 12,
     color: '#7B8FA1',
-    marginTop: 4,
+    marginTop: -2,
+    letterSpacing: 0.3,
   },
   separator: {
     borderBottomWidth: 0,

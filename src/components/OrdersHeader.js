@@ -1,15 +1,11 @@
 import React from 'react';
 import { View, StyleSheet, Pressable } from 'react-native';
-import Filter from '../../assets/icons/filter';
+import Filter from '../../assets/icons/filter.svg';
 import { SheetManager } from 'react-native-actions-sheet';
-import { useSelector } from 'react-redux';
-import { useActionCreator } from '../hooks/useActionCreator';
 import { Dimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const OrdersHeader = ({ navigation }) => {
-  const { startDate, endDate } = useSelector(state => state.orders);
-  const { setStartDate, setEndDate } = useActionCreator();
   const { top } = useSafeAreaInsets();
   return (
     <View
@@ -17,20 +13,16 @@ const OrdersHeader = ({ navigation }) => {
         styles.headerMain,
         { paddingTop: top + Dimensions.get('window').width * 0.028 },
       ]}>
+      {/* <Pressable style={styles.scannerWrapper}>
+        <Qr stroke="#30475e" height={29} width={29} />
+      </Pressable> */}
+
+      {/* <Text style={styles.headerTxt}>Orders</Text> */}
+
       <Pressable
         style={styles.filterWrapper}
-        onPress={() =>
-          SheetManager.show('orderDate', {
-            payload: {
-              startDate,
-              endDate,
-              setStartDate,
-              setEndDate,
-              startIndex: 4,
-            },
-          })
-        }>
-        <Filter stroke="#30475e" height={40} width={40} />
+        onPress={() => SheetManager.show('orderDate')}>
+        <Filter stroke="#30475e" height={33} width={33} />
       </Pressable>
     </View>
   );
@@ -51,8 +43,8 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   headerTxt: {
-    fontFamily: 'SFProDisplay-Semibold',
-    fontSize: 16,
+    fontFamily: 'ReadexPro-Medium',
+    fontSize: 15,
     color: '#30475e',
     textAlign: 'center',
     position: 'absolute',

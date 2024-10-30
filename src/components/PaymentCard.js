@@ -29,7 +29,7 @@ const PaymentCard = ({ path, payment, handlePress }) => {
         {payment === 'TIGOC' && (
           <Image
             style={[styles.img]}
-            source={require('../../assets/images/AirtelTigo-Money.jpeg')}
+            source={require('../../assets/images/atmoney.png')}
           />
         )}
         {payment === 'VODAC' && (
@@ -92,6 +92,18 @@ const PaymentCard = ({ path, payment, handlePress }) => {
             source={require('../../assets/images/storecredit.png')}
           />
         )}
+        {payment === 'PATPAY' && (
+          <Image
+            style={[styles.img, { borderRadius: 0 }]}
+            source={require('../../assets/images/task.png')}
+          />
+        )}
+        {payment === 'OFFUSSD' && (
+          <Image
+            style={[styles.img, { borderRadius: 0 }]}
+            source={require('../../assets/images/ussd.png')}
+          />
+        )}
         <Text style={styles.option}>
           {payment === 'INVPAY' ? 'Invoice' : path}
         </Text>
@@ -102,9 +114,10 @@ const PaymentCard = ({ path, payment, handlePress }) => {
 
 const styles = StyleSheet.create({
   cardMain: {
-    marginBottom: Dimensions.get('window').height * 0.04,
-    width: Dimensions.get('window').width * 0.18,
-    // marginHorizontal: Dimensions.get('window').width * 0.0,
+    marginBottom: 28,
+    height: Dimensions.get('window').width * 0.25,
+    width: Dimensions.get('window').width * 0.25,
+    marginHorizontal: Dimensions.get('window').width * 0.017,
   },
   imgContainer: {
     alignItems: 'center',
@@ -112,13 +125,13 @@ const styles = StyleSheet.create({
   option: {
     textAlign: 'center',
     marginTop: 12,
-    fontSize: 15.5,
+    fontSize: 13.5,
     color: '#30475E',
-    fontFamily: 'ReadexPro-Medium',
+    fontFamily: 'ReadexPro-Regular',
   },
   img: {
-    height: 70,
-    width: 70,
+    height: 56,
+    width: 56,
     borderRadius: 118,
     // borderWidth: 0.8,
     // borderColor: '#ddd',

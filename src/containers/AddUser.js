@@ -1,50 +1,20 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable eqeqeq */
 import React from 'react';
-import { StyleSheet, View, Text, Pressable, ScrollView } from 'react-native';
-import ActionSheet from 'react-native-actions-sheet';
-import { DateTimePicker, Picker as RNPicker } from 'react-native-ui-lib';
-import { SheetManager } from 'react-native-actions-sheet';
+import { StyleSheet, View, ScrollView, Text } from 'react-native';
+import { Picker as RNPicker } from 'react-native-ui-lib';
 
-import { TextInput } from 'react-native-paper';
-
-import { useAddProductCategory } from '../hooks/useAddProductCategory';
 import { useSelector } from 'react-redux';
 import PrimaryButton from '../components/PrimaryButton';
-import { useAddCategory } from '../hooks/useAddCategory';
 import { useToast } from 'react-native-toast-notifications';
 import { useQueryClient } from 'react-query';
 import { useCreateMerchantUser } from '../hooks/userCreateMerchantUser';
-import moment from 'moment';
 import Picker from '../components/Picker';
 import { useGetMerchantUserRoles } from '../hooks/useGetMerchantUserRoles';
 import { useVerifyMerchantUserUsername } from '../hooks/useVerifyMerhcantUserUsername';
 import { useGetMerchantOutlets } from '../hooks/useGetMerchantOutlets';
 import { useMapMerchantOutletsToUser } from '../hooks/useMapMerchantOutletsToUser';
-
-const Input = ({ placeholder, val, setVal, nLines, showError, ...props }) => {
-  return (
-    <TextInput
-      label={placeholder}
-      textColor="#30475e"
-      value={val}
-      onChangeText={setVal}
-      mode="outlined"
-      outlineColor={showError ? '#EB455F' : '#B7C4CF'}
-      activeOutlineColor={showError ? '#EB455F' : '#1942D8'}
-      outlineStyle={{
-        borderWidth: 0.9,
-        borderRadius: 4,
-        // borderColor: showError ? '#EB455F' : '#B7C4CF',
-      }}
-      placeholderTextColor="#B7C4CF"
-      style={styles.input}
-      numberOfLines={nLines}
-      multiline={nLines ? true : false}
-      {...props}
-    />
-  );
-};
+import Input from '../components/Input';
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -72,7 +42,6 @@ const AddUser = ({ navigation }) => {
   const [verify, setVerify] = React.useState(false);
   const [verifyStatus, setVerifyStatus] = React.useState();
   const [outletStatus, setOutletStatus] = React.useState();
-  const [usernameStatus, setUsernameStatus] = React.useState();
   const [state, dispatch] = React.useReducer(reducer, {
     name: '',
     email: '',
@@ -110,10 +79,9 @@ const AddUser = ({ navigation }) => {
     }
   });
 
-  const { data: verifyData, refetch } = useVerifyMerchantUserUsername(
+  const { refetch, data: vUser } = useVerifyMerchantUserUsername(
     state.username,
     data => {
-      console.log('ddddddddddd', data);
       setVerifyStatus(data);
     },
     false,
@@ -122,18 +90,16 @@ const AddUser = ({ navigation }) => {
   const { data } = useGetMerchantUserRoles(user.merchant);
 
   React.useEffect(() => {
-    console.log('---------------', verifyStatus);
-    if (verifyStatus) {
-      if (verifyStatus.status == 0) {
-        // toast.show(verifyStatus.message, { placement: 'top', type: 'success' });
+    if (vUser && vUser.data) {
+      if (vUser.data.status == 0) {
         setVerify(true);
       } else {
         setVerify(false);
-        toast.show(verifyStatus.message, { placement: 'top', type: 'danger' });
+        // toast.show(vUser.data.message, { placement: 'top', type: 'danger' });
       }
       setVerifyStatus(null);
     }
-  }, [data, toast, verifyStatus]);
+  }, [data, toast, vUser]);
 
   React.useEffect(() => {
     if (outletStatus) {
@@ -160,6 +126,7 @@ const AddUser = ({ navigation }) => {
     },
     [dispatch],
   );
+  console.log('verifyyyyy', vUser && vUser.data);
   return (
     <View style={{ flex: 1, backgroundColor: '#fff' }}>
       <View style={{ height: '100%' }}>
@@ -202,22 +169,37 @@ const AddUser = ({ navigation }) => {
           <Input
             placeholder="Enter Username"
             val={state.username}
-            setVal={text =>
+            setVal={text => {
               handleTextChange({
                 type: 'username',
                 payload: text,
-              })
-            }
+              });
+              setTimeout(() => {
+                refetch();
+              }, 200);
+            }}
             showError={
               (showError && state.username.length === 0) ||
               (state.username.length > 0 && !verify)
             }
-            onEndEditing={e => {
-              if (e.nativeEvent.text.length > 0) {
-                refetch();
-              }
-            }}
+            // onEndEditing={e => {
+            //   if (e.nativeEvent.text.length > 0) {
+            //     refetch();
+            //   }
+            // }}
           />
+          {vUser && vUser.data && vUser.data.status != 0 && (
+            <View>
+              <Text
+                style={{
+                  fontFamily: 'SFProDisplay-Regular',
+                  fontSize: 15,
+                  color: '#C70039',
+                }}>
+                {vUser.data.message}
+              </Text>
+            </View>
+          )}
           <Picker
             placeholder="Select User Group"
             showError={!state.role && showError}
@@ -262,7 +244,6 @@ const AddUser = ({ navigation }) => {
                 if (!i) {
                   return;
                 }
-                console.log('===========>>>>>', i);
                 return (
                   <RNPicker.Item
                     key={i.outlet_name}
@@ -288,6 +269,10 @@ const AddUser = ({ navigation }) => {
               !verify
             ) {
               setShowError(true);
+              toast.show('Please provide all required details.', {
+                placement: 'top',
+                type: 'danger',
+              });
               return;
             }
             mutate({
@@ -295,7 +280,7 @@ const AddUser = ({ navigation }) => {
               email: state.email,
               phone: state.phone,
               username: state.username,
-              group: Number(JSON.parse(state.role.value).group_id),
+              group: Number(JSON.parse(state?.role?.value || '{}')?.group_id),
               merchant: user.merchant,
               mod_by: user.login,
               user_type: 'MERCHANT',

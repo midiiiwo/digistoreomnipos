@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import { StyleSheet, View, Pressable } from 'react-native';
-import BackIcon from '../../assets/icons/arrow-back.svg';
+import ProfileIcon from '../../assets/icons/transactions.svg';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import { useSelector } from 'react-redux';
 import { useActionCreator } from '../hooks/useActionCreator';
@@ -15,9 +15,23 @@ const InvoicesHeader = ({ navigation }) => {
 
   return (
     <View style={[styles.headerMain, { paddingTop: top + 10 }]}>
-      <Pressable style={styles.back} onPress={() => navigation.goBack()}>
+      {/* <Pressable style={styles.back} onPress={() => navigation.goBack()}>
         <BackIcon height={23} width={23} stroke="#21438F" />
+      </Pressable> */}
+      <Pressable
+        onPress={() => {
+          navigation.openDrawer();
+        }}
+        // style={{
+        //   backgroundColor: '#fff',
+        //   borderRadius: 60,
+        //   padding: 10,
+        // }}
+        style={styles.back}
+      >
+        <ProfileIcon height={28} width={27} stroke="#30475e" />
       </Pressable>
+
       <View style={styles.segmentedControlWrapper}>
         <SegmentedControl
           values={tabValues}
@@ -31,7 +45,7 @@ const InvoicesHeader = ({ navigation }) => {
           fontStyle={styles.inactiveText}
           style={styles.arbitrary}
           sliderStyle={{ borderRadius: 40 }}
-          // enabled={false}
+        // enabled={false}
         />
       </View>
     </View>

@@ -2,11 +2,8 @@ import React from 'react';
 import { Pressable, Text, StyleSheet, View } from 'react-native';
 import Share from 'react-native-share';
 import { captureRef } from 'react-native-view-shot';
-import { SheetManager } from 'react-native-actions-sheet';
 import RNHTMLtoPDF from 'react-native-html-to-pdf';
 import { useToast } from 'react-native-toast-notifications';
-import RNFS from 'react-native-fs';
-import { PERMISSIONS, check, RESULTS, request } from 'react-native-permissions';
 
 import Print from '../../assets/icons/print.svg';
 import Email from '../../assets/icons/email.svg';
@@ -14,7 +11,6 @@ import PdfIcon from '../../assets/icons/pdf.svg';
 import ShareIcon from '../../assets/icons/share.svg';
 import { useSendTransactionNotification } from '../hooks/useSendTransactionNotification';
 import { useSelector } from 'react-redux';
-import SendNotification from './Modals/SendNotification';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const ButtonItem = ({ Icon, label, handlePress }) => {
@@ -39,7 +35,6 @@ const BillReceiptShareButton = ({
   // const [notification, toggleNotification] = React.useState(false);
   // const [notificationType, setNotificationType] = React.useState();
   const toast = useToast();
-  const { quickSaleInAction } = useSelector(state => state.quickSale);
   // const [sendStatus, setSendStatus] = React.useState();
   const { mutate, isLoading } = useSendTransactionNotification(i => {
     if (i) {
@@ -53,7 +48,9 @@ const BillReceiptShareButton = ({
     tran_type: 'PAYPOINT',
     notify_type: '',
     merchant: user.merchant,
-    mod_by: 'CUSTOMER',
+    mod_by: user.login,
+    notify_message: '',
+
     // tracking_email: 'pherut@gmail.com',
     // tracking_url: 'http://buy.digistoreafrica.com',
   };
@@ -108,7 +105,6 @@ const BillReceiptShareButton = ({
         label="Share"
         Icon={ShareIcon}
         handlePress={() => {
-          console.log('viewref: ', viewRef);
           captureRef(viewRef, {
             format: 'png',
             result: 'base64',

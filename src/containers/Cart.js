@@ -7,6 +7,7 @@ import {
   Dimensions,
   Pressable,
   FlatList,
+  LayoutAnimation,
 } from 'react-native';
 import { useSelector } from 'react-redux';
 import { SheetManager } from 'react-native-actions-sheet';
@@ -25,15 +26,15 @@ import _ from 'lodash';
 // import { Switch } from 'react-native-ui-lib';
 import { FlashList } from '@shopify/flash-list';
 import { Switch } from '@rneui/themed';
-import { DateTimePicker } from 'react-native-ui-lib';
+import moment from 'moment';
 
 const Cart = ({ navigation }) => {
   const {
     setAddTaxes,
     setTotalAmount,
     setQuickSaleInAction,
-    setOrderDate,
     clearDiscount,
+    setOrderTaxes,
   } = useActionCreator();
   const {
     cart,
@@ -42,44 +43,56 @@ const Cart = ({ navigation }) => {
     delivery,
     totalItems,
     addTaxes,
+    deliveryDueDate,
     orderDate,
   } = useSelector(state => state.sale);
   const { user } = useSelector(state => state.auth);
 
-  console.log('ldlslkslgkjsgsgd', orderDate);
-
-  // const { oldAmount, discount, newAmount } = discountPayload;
-
   const { data, isLoading } = useGetApplicableTaxes(user.merchant);
   const toast = useToast();
-
-  // React.useEffect(() => {
-  //   if (cart.length === 0) {
-  //     resetCart();
-  //   }
-  // }, [cart, resetCart]);
 
   if (isLoading) {
     return <Loading />;
   }
 
+  const orderAmount = (cart || []).reduce((acc, curr) => {
+    if (!curr) {
+      return acc;
+    }
+    return acc + Number(curr.amount) * Number(curr.quantity);
+  }, 0);
+
   const taxes_ =
-    (data &&
-      data.data &&
-      data.data.data &&
-      data.data.data.map(tax => {
+    (data?.data?.data || []).map(tax => {
+      if (tax) {
         return {
           taxName: tax.tax_name,
-          amount: Number((tax.tax_value * subTotal).toFixed(2)),
+          amount: Number(
+            (
+              tax.tax_value *
+              (orderAmount - (discountPayload?.discount || 0))
+            ).toFixed(2),
+          ),
+          appliedAs: tax.tax_applied_as,
+          taxId: tax.tax_id,
+          taxValue: tax.tax_value,
         };
-      })) ||
-    [];
+      }
+    }) || [];
+
+  const totalTaxesApplied =
+    (addTaxes &&
+      taxes_ &&
+      taxes_
+        .filter(i => i && i.appliedAs === 'EXCLUSIVE')
+        .reduce((acc, curr) => {
+          return acc + curr.amount;
+        }, 0)) ||
+    0;
 
   const totalOtherAmount =
-    ((addTaxes &&
-      taxes_ &&
-      taxes_.reduce((acc, curr) => acc + curr.amount, 0)) ||
-      0) + Number(delivery.price.toFixed(2));
+    totalTaxesApplied +
+    Number((delivery && delivery.price && delivery.price.toFixed(2)) || 0);
 
   return (
     <View style={styles.main}>
@@ -91,12 +104,16 @@ const Cart = ({ navigation }) => {
             alignItems: 'center',
           }}>
           <Text
-            style={{ fontFamily: 'Lato-Bold', fontSize: 18, color: '#30475e' }}>
+            style={{
+              fontFamily: 'ReadexPro-bold',
+              fontSize: 18,
+              color: '#30475e',
+            }}>
             You have no items in your cart
           </Text>
           <Text
             style={{
-              fontFamily: 'Lato-Medium',
+              fontFamily: 'ReadexPro-Medium',
               fontSize: 15,
               color: '#748DA6',
               marginTop: 10,
@@ -149,28 +166,35 @@ const Cart = ({ navigation }) => {
                           // size="medium"
                           // animationSpeed={200}
 
-                          onValueChange={() => setAddTaxes(!addTaxes)}
+                          onValueChange={() => {
+                            setAddTaxes(!addTaxes);
+                            LayoutAnimation.configureNext(
+                              LayoutAnimation.Presets.easeInEaseOut,
+                            );
+                          }}
                         />
                       )}
                     </View>
-                    <View style={styles.taxMain}>
-                      <Text style={styles.taxLabel}>Subtotal</Text>
+                    <View style={[styles.taxMain, { marginBottom: 3 }]}>
+                      <Text style={[styles.taxLabel]}>Subtotal</Text>
                       <View style={styles.amountWrapper}>
                         <Text style={styles.taxAmount}>
                           GHS{' '}
-                          {subTotal +
-                            (discountPayload && discountPayload.discount) || 0}
+                          {new Intl.NumberFormat('en-US', {
+                            maximumFractionDigits: 2,
+                            minimumFractionDigits: 2,
+                          }).format(orderAmount)}
                         </Text>
                       </View>
                     </View>
-                    {discountPayload?.discount > 0 && (
-                      <View style={styles.taxMain}>
+                    {discountPayload && discountPayload.discount > 0 && (
+                      <View style={[styles.taxMain, { marginTop: 0 }]}>
                         <Text style={styles.taxLabel}>
                           Discount{' '}
                           {discountPayload && discountPayload.discountCode && (
                             <Text
                               style={{
-                                fontFamily: 'Inter-Regular',
+                                fontFamily: 'ReadexPro-Regular',
                                 fontSize: 15,
                                 color: '#73777B',
                               }}>
@@ -183,51 +207,88 @@ const Cart = ({ navigation }) => {
                           {new Intl.NumberFormat('en-US', {
                             minimumFractionDigits: 2,
                             maximumFractionDigits: 2,
-                          }).format(discountPayload.discount)}
+                          }).format(discountPayload?.discount)}
                         </Text>
                       </View>
                     )}
+
                     {addTaxes && (
                       <FlatList
                         data={taxes_}
                         renderItem={({ item }) => {
-                          console.log('taxxxxxx', item);
+                          if (item?.appliedAs === 'INCLUSIVE') {
+                            return <></>;
+                          }
                           return (
-                            <View style={styles.taxMain}>
+                            <View
+                              style={[
+                                styles.taxMain,
+                                {
+                                  marginBottom: 0,
+                                  marginTop: 3,
+                                },
+                              ]}>
                               <Text style={styles.taxLabel}>
-                                {item.taxName}
+                                {item?.taxName} - {Number(item?.taxValue) * 100}
+                                %{' '}
+                                <Text
+                                  style={{
+                                    textTransform: 'capitalize',
+                                    fontSize: 13,
+                                    color: '#9DB2BF',
+                                    fontFamily: 'ReadexPro-Medium',
+                                  }}>
+                                  (
+                                  {item?.appliedAs === 'INCLUSIVE'
+                                    ? 'Incl.'
+                                    : 'Excl.'}
+                                  )
+                                </Text>
                               </Text>
                               <Text style={styles.taxAmount}>
-                                GHS {item.amount}
+                                GHS{' '}
+                                {new Intl.NumberFormat('en-US', {
+                                  maximumFractionDigits: 2,
+                                  minimumFractionDigits: 2,
+                                }).format(Number(item?.amount))}
                               </Text>
                             </View>
                           );
                         }}
                       />
                     )}
-                    {Number(delivery?.price) > 0 && (
-                      <View style={styles.taxMain}>
+                    {delivery && Number(delivery.price) > 0 && (
+                      <View
+                        style={[
+                          styles.taxMain,
+                          { marginTop: 0, marginBottom: 3 },
+                        ]}>
                         <Text style={styles.taxLabel}>Delivery</Text>
                         <Text style={styles.taxAmount}>
-                          GHS {delivery ? delivery.price : 0}
+                          GHS{' '}
+                          {new Intl.NumberFormat('en-US', {
+                            maximumFractionDigits: 2,
+                            minimumFractionDigits: 2,
+                          }).format(delivery ? delivery?.price : 0)}
                         </Text>
                       </View>
                     )}
+
                     <View
                       style={[
                         styles.taxMain,
                         {
                           borderTopColor: '#DDDDDD',
                           borderTopWidth: 0.4,
-                          paddingTop: 16,
+                          paddingTop: 10,
                         },
                       ]}>
                       <Text
                         style={[
                           styles.taxLabel,
                           {
-                            fontSize: 17,
-                            fontFamily: 'SFProDisplay-Medium',
+                            fontSize: 14.5,
+                            fontFamily: 'ReadexPro-bold',
                           },
                         ]}>
                         Total
@@ -244,24 +305,71 @@ const Cart = ({ navigation }) => {
                         <Text
                           style={[
                             styles.taxAmount,
-                            { fontSize: 17, fontFamily: 'SFProDisplay-Medium' },
+                            {
+                              fontSize: 14.5,
+                              fontFamily: 'ReadexPro-bold',
+                            },
                           ]}>
-                          GHS {(subTotal + totalOtherAmount).toFixed(2)}
+                          GHS{' '}
+                          {new Intl.NumberFormat('en-US', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          }).format(subTotal + totalOtherAmount)}
                         </Text>
                       </View>
                     </View>
+                    {addTaxes && (
+                      <FlatList
+                        data={taxes_}
+                        renderItem={({ item }) => {
+                          if (item?.appliedAs === 'EXCLUSIVE') {
+                            return <></>;
+                          }
+                          return (
+                            <View
+                              style={[
+                                styles.taxMain,
+                                {
+                                  marginBottom: 0,
+                                  marginTop: 3,
+                                },
+                              ]}>
+                              <Text style={styles.taxLabel}>
+                                {item?.taxName} - {Number(item?.taxValue) * 100}
+                                %{' '}
+                                <Text
+                                  style={{
+                                    textTransform: 'capitalize',
+                                    fontSize: 13,
+                                    color: '#9DB2BF',
+                                    fontFamily: 'ReadexPro-Medium',
+                                  }}>
+                                  (
+                                  {item?.appliedAs === 'INCLUSIVE'
+                                    ? 'Incl.'
+                                    : 'Excl.'}
+                                  )
+                                </Text>
+                              </Text>
+                              <Text style={styles.taxAmount}>
+                                GHS{' '}
+                                {new Intl.NumberFormat('en-US', {
+                                  maximumFractionDigits: 2,
+                                  minimumFractionDigits: 2,
+                                }).format(Number(item?.amount))}
+                              </Text>
+                            </View>
+                          );
+                        }}
+                      />
+                    )}
                     <View>
                       <Pressable
-                        onPress={
-                          () => {
-                            navigation.navigate('Add Discount', {
-                              type: 'inventory',
-                            });
-                          }
-                          // SheetManager.show('discount', {
-                          //   payload: { type: 'inventory', navigation },
-                          // })
-                        }
+                        onPress={() => {
+                          navigation.navigate('Add Discount', {
+                            type: 'inventory',
+                          });
+                        }}
                         style={{
                           padding: 12,
                           paddingHorizontal: 1,
@@ -292,20 +400,86 @@ const Cart = ({ navigation }) => {
                             fontSize: 16,
                             color: '#59C1BD',
                           }}>
-                          Add delivery rate
+                          Select Delivery Option ({delivery && delivery.label})
                         </Text>
                       </Pressable>
-                      <DateTimePicker
-                        title={''}
-                        placeholder={'Order Date'}
-                        mode={'date'}
-                        migrate
-                        value={orderDate}
-                        onChange={val => {
-                          setOrderDate(val);
-                        }}
-                        // dateFormat="ddd, Do MMMM, YYYY"
-                      />
+                      <Pressable
+                        onPress={() => SheetManager.show('Order Date')}
+                        style={{
+                          paddingHorizontal: 1,
+                          marginLeft: 'auto',
+                          marginTop: 13,
+                        }}>
+                        <Text
+                          style={{
+                            fontFamily: 'SFProDisplay-Regular',
+                            fontSize: 16,
+                            color: '#59C1BD',
+                          }}>
+                          Select Order Date
+                        </Text>
+                        <Text
+                          style={{
+                            fontFamily: 'SFProDisplay-Regular',
+                            fontSize: 14,
+                            color: '#808080',
+                            textAlign: 'right',
+                          }}>
+                          {orderDate && moment(orderDate).format('DD-MMM-YYYY')}
+                        </Text>
+                      </Pressable>
+                      {user &&
+                        user.user_permissions &&
+                        user.user_permissions.includes('ADDORDERDLVRDATE') && (
+                          <Pressable
+                            onPress={() => SheetManager.show('deliveryDueDate')}
+                            style={{
+                              paddingHorizontal: 1,
+                              marginLeft: 'auto',
+                              marginTop: 13,
+                            }}>
+                            <Text
+                              style={{
+                                fontFamily: 'SFProDisplay-Regular',
+                                fontSize: 16,
+                                color: '#59C1BD',
+                              }}>
+                              Select Delivery Due Date
+                            </Text>
+                            <Text
+                              style={{
+                                fontFamily: 'SFProDisplay-Regular',
+                                fontSize: 14,
+                                color: '#808080',
+                                textAlign: 'right',
+                              }}>
+                              {deliveryDueDate &&
+                                moment(deliveryDueDate).format('DD-MMM-YYYY')}
+                            </Text>
+                          </Pressable>
+                        )}
+
+                      {user &&
+                        user.user_permissions &&
+                        !user.user_permissions.includes('ADDORDERDLVRDATE') && (
+                          <Pressable
+                            onPress={() => SheetManager.show('deliveryNote')}
+                            style={{
+                              paddingHorizontal: 1,
+                              marginLeft: 'auto',
+                              marginTop: 13,
+                            }}>
+                            <Text
+                              style={{
+                                fontFamily: 'SFProDisplay-Regular',
+                                fontSize: 16,
+                                color: '#59C1BD',
+                              }}>
+                              Add Delivery Notes
+                            </Text>
+                          </Pressable>
+                        )}
+
                       {discountPayload && (
                         <Pressable
                           onPress={() =>
@@ -356,10 +530,14 @@ const Cart = ({ navigation }) => {
             setQuickSaleInAction(false);
 
             setTotalAmount(Number((subTotal + totalOtherAmount).toFixed(2)));
+            if (addTaxes) {
+              setOrderTaxes(taxes_);
+            }
             navigation.navigate('Payments');
           }}
           disabled={cart.length === 0}>
-          {totalItems} items - GHS {(subTotal + totalOtherAmount).toFixed(2)}
+          {totalItems} items - GHS{' '}
+          {Number(subTotal + totalOtherAmount).toFixed(2)}
         </ButtonLargeBottom>
         <ButtonCancelBottom
           Icon={ArrowUp}
@@ -395,16 +573,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 6,
     paddingVertical: 16,
-    borderRadius: 3,
+    borderRadius: 4,
     width: '80%',
   },
   signin: {
     color: '#fff',
-    fontFamily: 'Lato-Bold',
+    fontFamily: 'ReadexPro-Medium',
     fontSize: 15,
   },
   label: {
-    fontFamily: 'SFProDisplay-Regular',
+    fontFamily: 'ReadexPro-Regular',
     color: '#30475E',
     fontSize: 16,
     marginRight: 5,
@@ -438,7 +616,7 @@ const styles = StyleSheet.create({
   extraStyleBtnCancel: { backgroundColor: '#F1EEE9' },
   deleteText: {
     color: '#fff',
-    fontFamily: 'SFProDisplay-Regular',
+    fontFamily: 'ReadexPro-Regular',
     fontSize: 15,
     marginRight: 20,
   },
@@ -454,15 +632,15 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   taxLabel: {
-    fontFamily: 'SFProDisplay-Regular',
-    fontSize: 16,
+    fontFamily: 'ReadexPro-Regular',
+    fontSize: 14,
     color: '#5C6E91',
     letterSpacing: 0.2,
   },
   taxAmount: {
     marginLeft: 'auto',
-    fontFamily: 'SFProDisplay-Regular',
-    fontSize: 16,
+    fontFamily: 'ReadexPro-Medium',
+    fontSize: 14,
     color: '#5C6E91',
   },
   btnWrapper: {

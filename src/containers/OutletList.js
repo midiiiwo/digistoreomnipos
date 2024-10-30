@@ -18,14 +18,16 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import Check from '../../assets/icons/check-outline.svg';
 import PrimaryButton from '../components/PrimaryButton';
+import { useNavigation } from '@react-navigation/native';
 
 function OutletList(props) {
   const { user } = useSelector(state => state.auth);
   const { data, refetch, isFetching } = useGetMerchantOutlets(
     user.user_merchant_id,
   );
+  const navigation = useNavigation();
   const { outlet } = useSelector(state => state.auth);
-  const { setCurrentUser, setCurrentOutlet, resetCart, setInventoryOutlet } =
+  const { setCurrentUser, setCurrentOutlet, setInventoryOutlet } =
     useActionCreator();
   return (
     <View style={styles.main}>
@@ -40,7 +42,7 @@ function OutletList(props) {
         contentContainerStyle={{
           paddingBottom: Dimensions.get('window').height * 0.1,
         }}
-        data={data && data.data && data.data.data}
+        data={(data && data.data && data.data.data) || []}
         renderItem={({ item }) => {
           if (!item) {
             return;
@@ -62,13 +64,12 @@ function OutletList(props) {
                   outlet: item.outlet_id || '',
                 });
                 setCurrentOutlet(item);
+                setInventoryOutlet(item);
                 Toast.show({
                   type: ALERT_TYPE.SUCCESS,
                   title: 'Outlet Changed',
                   textBody: `Outlet change success. Current outlet is ${item.outlet_name}`,
                 });
-                resetCart();
-                setInventoryOutlet(item);
                 SheetManager.hide('outlets');
               }}
               style={{
@@ -80,7 +81,7 @@ function OutletList(props) {
                 paddingHorizontal: 18,
                 flexDirection: 'row',
               }}>
-              <View>
+              <View style={{ maxWidth: '88%' }}>
                 <Text style={styles.channelText}>
                   {item && item.outlet_name}
                 </Text>
@@ -100,7 +101,7 @@ function OutletList(props) {
           );
         }}
       />
-      {/* <View style={styles.btnWrapper}>
+      <View style={styles.btnWrapper}>
         <PrimaryButton
           style={styles.btn}
           handlePress={() => {
@@ -108,10 +109,12 @@ function OutletList(props) {
           }}>
           Add Outlet
         </PrimaryButton>
-      </View> */}
+      </View>
     </View>
   );
 }
+
+PrimaryButton;
 
 const styles = StyleSheet.create({
   containerStyle: {
@@ -137,14 +140,14 @@ const styles = StyleSheet.create({
   },
 
   channelText: {
-    fontFamily: 'SFProDisplay-Regular',
-    fontSize: 19,
+    fontFamily: 'ReadexPro-Regular',
+    fontSize: 15,
     color: '#002',
     marginBottom: 2,
   },
   address: {
-    fontFamily: 'SFProDisplay-Regular',
-    fontSize: 16,
+    fontFamily: 'ReadexPro-Regular',
+    fontSize: 13.2,
     color: '#7B8FA1',
   },
   caret: {

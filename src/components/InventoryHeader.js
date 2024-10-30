@@ -4,8 +4,8 @@ import { StyleSheet, Text, View, Pressable } from 'react-native';
 import BackIcon from '../../assets/icons/arrow-back.svg';
 import { useSelector } from 'react-redux';
 
-import User from '../../assets/icons/user.svg';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import User from '../../assets/icons/draweruser.svg';
+import CustomStatusBar from './StatusBar';
 
 const InventoryHeader = ({
   navigation,
@@ -15,21 +15,24 @@ const InventoryHeader = ({
   title,
   rightComponentText,
   rightComponentFunction,
-  showBack = true,
 }) => {
   const { customer } = useSelector(state => state.sale);
-  const { top } = useSafeAreaInsets();
+
+  // React.useEffect(() => {
+  //   StatusBar.setTranslucent(true);
+  //   StatusBar.setBackgroundColor('transparent');
+  // }, []);
+
   return (
-    <View style={[styles.main, { paddingTop: top + 4 }, mainHeader]}>
-      <View style={[styles.headerMain, {}]}>
-        {showBack && (
-          <Pressable style={styles.back} onPress={() => navigation.goBack()}>
-            <BackIcon height={28.5} width={28.5} stroke="#3C4959" />
-            {/* <Text style={styles.prev}>{prevScreen}</Text> */}
-          </Pressable>
-        )}
+    <View style={[styles.main, { paddingTop: 0 }, mainHeader]}>
+      <CustomStatusBar backgroundColor="transparent" barStyle="dark-content" />
+      {/* <StatusBar translucent={true} backgroundColor={'translucent'} /> */}
+      <View style={[styles.headerMain, { paddingVertical: 14 }]}>
+        <Pressable style={styles.back} onPress={() => navigation.goBack()}>
+          <BackIcon height={23} width={23} stroke="#000" />
+        </Pressable>
         <View style={styles.titleWrapper}>
-          {title && <Text style={[styles.prev]}>{title}</Text>}
+          {<Text style={[styles.prev]}>{title}</Text>}
         </View>
         {addCustomer &&
           (customer ? (
@@ -74,7 +77,7 @@ const InventoryHeader = ({
 
 const styles = StyleSheet.create({
   main: {
-    paddingVertical: 8,
+    paddingTop: 12,
     // justifyContent: 'center',
     backgroundColor: '#fff',
   },
@@ -82,18 +85,20 @@ const styles = StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 22,
-    paddingTop: 30,
+    // paddingVertical: 22,
+    // paddingTop: 30,
     // paddingBottom: 8,
     paddingLeft: 12,
+    // height: Dimensions.get('window').height * 0.08,
+    // justifyContent: 'center'
   },
 
   headerText: {
     marginLeft: 'auto',
     marginRight: 14,
     color: '#1942D8',
-    fontFamily: 'SFProDisplay-Medium',
-    fontSize: 17,
+    fontFamily: 'Inter-Medium',
+    fontSize: 15,
   },
   headerTextWrapper: {
     marginLeft: 'auto',
@@ -106,12 +111,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginRight: 'auto',
     marginLeft: 'auto',
-
     // right: 'auto',
   },
   prev: {
     fontFamily: 'ReadexPro-Medium',
-    fontSize: 21,
+    fontSize: 17.5,
     color: '#000',
   },
   back: {

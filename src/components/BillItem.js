@@ -130,6 +130,7 @@ const BillItem = ({ item }) => {
           referenceId: item.ETZ_REFERENCE,
           billName: bills[item.BILL_TYPEID],
           commission: item.BILL_COMMISSION,
+          transactionStatus: item.TRANSACTION_STATUS,
         })
       }>
       <View style={styles.details}>
@@ -144,7 +145,7 @@ const BillItem = ({ item }) => {
               style={[
                 styles.name,
                 {
-                  fontFamily: 'SFProDisplay-Semibold',
+                  fontFamily: 'ReadexPro-Medium',
                   fontSize: 15,
                   marginBottom: 4,
                   letterSpacing: 0.2,
@@ -157,7 +158,7 @@ const BillItem = ({ item }) => {
               style={[
                 styles.name,
                 {
-                  fontFamily: 'SFProDisplay-Regular',
+                  fontFamily: 'ReadexPro-Regular',
                   fontSize: 13.7,
                   color: '#6D8299',
                   marginBottom: 4,
@@ -173,11 +174,12 @@ const BillItem = ({ item }) => {
                 styles.name,
 
                 {
-                  fontFamily: 'SFProDisplay-Regular',
+                  fontFamily: 'ReadexPro-Regular',
                   fontSize: 13.8,
                   color: '#6D8299',
                   marginBottom: 12,
                   letterSpacing: 0.2,
+                  opacity: 0.7,
                 },
               ]}>
               {item.TRANSACTION_DATE.slice(0, 16)}
@@ -197,7 +199,7 @@ const BillItem = ({ item }) => {
               styles.name,
               {
                 marginLeft: 6,
-                fontFamily: 'SFProDisplay-Medium',
+                fontFamily: 'ReadexPro-Medium',
                 fontSize: 13.8,
                 letterSpacing: 0.2,
               },
@@ -212,7 +214,6 @@ const BillItem = ({ item }) => {
             <Text
               style={[
                 styles.name,
-                { fontSize: 15, fontFamily: 'SFProDisplay-Medium' },
               ]}
               numberOfLines={1}>
               {item.customer_name}
@@ -291,7 +292,7 @@ const styles = StyleSheet.create({
     maxWidth: '70%',
   },
   count: {
-    fontFamily: 'Lato-Bold',
+    fontFamily: 'ReadexPro-Medium',
     color: '#6D8299',
     fontSize: 15,
     marginBottom: 6,
@@ -301,7 +302,7 @@ const styles = StyleSheet.create({
     marginLeft: 'auto',
   },
   orderStatus: {
-    fontFamily: 'Lato-Bold',
+    fontFamily: 'ReadexPro-Medium',
     color: '#30475e',
   },
   statusIndicator: {

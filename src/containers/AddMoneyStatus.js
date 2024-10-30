@@ -36,7 +36,7 @@ const AddMoneyStatus = ({ route, navigation }) => {
             />
             <Text
               style={{
-                fontFamily: 'Inter-SemiBold',
+                fontFamily: 'ReadexPro-Medium',
                 fontSize: 15,
                 color: '#30475e',
                 textAlign: 'center',

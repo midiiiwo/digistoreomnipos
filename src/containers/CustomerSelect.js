@@ -1,15 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {
-  Pressable,
-  StyleSheet,
-  View,
-  Text,
-  TextInput,
-  FlatList,
-} from 'react-native';
-import Lottie from 'lottie-react-native';
-import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
+import { Pressable, StyleSheet, View, Text, TextInput } from 'react-native';
 
 import Search from '../../assets/icons/search.svg';
 import CancelIcon from '../../assets/icons/cancel1.svg';
@@ -19,12 +10,12 @@ import { useSelector } from 'react-redux';
 import { useGetMerchantCustomers } from '../hooks/useGetMerchantCustomers';
 import { handleSearch } from '../utils/shared';
 import Loading from '../components/Loading';
-import { FlashList } from '@shopify/flash-list';
 import { useNavigation } from '@react-navigation/native';
 import Check from '../../assets/icons/check-outline.svg';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { FlashList } from '@shopify/flash-list';
 
-function CustomerItem({ name, telephone, handlePress, active, credit, debit }) {
+function CustomerItem({ name, telephone, handlePress, active, credit }) {
   return (
     <Pressable style={styles.customerItem} onPress={handlePress}>
       <View
@@ -150,8 +141,8 @@ function CustomerSelect(props) {
               </Pressable>
             </View>
           )}
-          <FlatList
-            // estimatedItemSize={52}
+          <FlashList
+            estimatedItemSize={52}
             contentContainerStyle={styles.list}
             data={handleSearch(searchTerm, data.data.data)}
             renderItem={({ item }) => {
@@ -187,11 +178,6 @@ function CustomerSelect(props) {
               }
               return item.customer_phone;
             }}
-            // ItemSeparatorComponent={() => (
-            //   <View
-            //     style={{ borderBottomColor: '#eee', borderBottomWidth: 0.8 }}
-            //   />
-            // )}
           />
         </View>
       )}
@@ -221,7 +207,7 @@ const styles = StyleSheet.create({
     display: 'none',
   },
   cancelWrapper: { marginLeft: 'auto', PaddingTop: 12 },
-  text: { fontFamily: 'SFProDisplay-Medium', color: '#1942D8', fontSize: 18 },
+  text: { fontFamily: 'Inter-Medium', color: '#1942D8', fontSize: 15 },
   // searchBox: {
   //   flex: 1,
   //   alignItems: 'center',
@@ -258,15 +244,15 @@ const styles = StyleSheet.create({
   },
   cancelIcon: { marginTop: 10 },
   selectedCustomerName: {
-    fontFamily: 'SFProDisplay-Medium',
-    fontSize: 18,
+    fontFamily: 'ReadexPro-Medium',
+    fontSize: 16,
     color: '#30475E',
   },
   selectedCustomerMobile: {
-    fontFamily: 'SFProDisplay-Regular',
-    fontSize: 16,
+    fontFamily: 'ReadexPro-Regular',
+    fontSize: 13,
     color: '#738598',
-    marginTop: 4,
+    marginTop: 2,
   },
   searchBox: {
     // flex: 1,
@@ -275,7 +261,7 @@ const styles = StyleSheet.create({
     paddingRight: 14,
     borderRadius: 54,
     backgroundColor: '#fff',
-    height: 55,
+    height: 50,
     borderColor: '#DCDCDE',
     borderWidth: 1,
   },
@@ -283,7 +269,7 @@ const styles = StyleSheet.create({
     // height: '100%',
     borderRadius: 8,
     paddingHorizontal: 12,
-    fontSize: 17.4,
+    fontSize: 15.4,
     flex: 1,
     color: '#30475e',
     fontFamily: 'SFProDisplay-Regular',
@@ -299,10 +285,10 @@ const styles = StyleSheet.create({
   },
   customerItem: {
     flexDirection: 'row',
-    paddingHorizontal: 8,
+    paddingHorizontal: 4,
     paddingLeft: 18,
     alignItems: 'center',
-    paddingVertical: 12,
+    paddingVertical: 10,
     backgroundColor: '#fff',
     marginBottom: 2,
     borderRadius: 4,
@@ -312,18 +298,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#98A8F8',
     borderRadius: 100,
-    height: 55,
-    width: 55,
+    height: 50,
+    width: 50,
     marginRight: 16,
   },
   initial: {
     fontFamily: 'Inter-Bold',
-    fontSize: 20,
+    fontSize: 18,
     color: '#fff',
   },
   name: {
-    fontFamily: 'SFProDisplay-Regular',
-    fontSize: 18.8,
+    fontFamily: 'ReadexPro-Regular',
+    fontSize: 16,
     color: '#30475E',
     maxWidth: '85%',
     minWidth: '80%',
@@ -331,8 +317,8 @@ const styles = StyleSheet.create({
     // backgroundColor: 'red',
   },
   telephone: {
-    fontFamily: 'SFProDisplay-Regular',
-    fontSize: 14.4,
+    fontFamily: 'ReadexPro-Regular',
+    fontSize: 13.4,
     color: '#738598',
     marginTop: 4,
   },

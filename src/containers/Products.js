@@ -1,23 +1,20 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {
-  // Text,
   View,
   StyleSheet,
   Dimensions,
   TextInput,
   Pressable,
-  FlatList,
   Text,
 } from 'react-native';
 import * as Tabs from 'react-native-collapsible-tab-view';
 import Lottie from 'lottie-react-native';
 import AddCircle from '../../assets/icons/add-circle-dark.svg';
 import Search from '../../assets/icons/search.svg';
-import ArrowLeftShort from '../../assets/icons/arrow-left-short.svg';
+// import FilterLines from '../../assets/icons/filtericons.svg';
 
 import { useSelector } from 'react-redux';
-
 import { handleSearch } from '../utils/shared';
 import Loading from '../components/Loading';
 import ProductInventoryCard from '../components/ProductInventoryCard';
@@ -28,24 +25,32 @@ import { useGetAllProductsCategories } from '../hooks/useGetAllProductsCategorie
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import { uniqBy } from 'lodash';
 import PagerView from 'react-native-pager-view';
-import { ShadowedView, shadowStyle } from 'react-native-fast-shadow';
 import { SheetManager } from 'react-native-actions-sheet';
 import { useActionCreator } from '../hooks/useActionCreator';
-// import Cart from './Cart';
+import { FlashList } from '@shopify/flash-list';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-const Viewer = ({ category, searchTerm, navigation, inventoryOutlet }) => {
+const Viewer = ({
+  category,
+  searchTerm,
+  navigation,
+  inventoryOutlet,
+  setInventoryOutlet,
+}) => {
   const { user } = useSelector(state => state.auth);
   const {
     data: allProducts,
     isLoading: isAllProductsLoading,
     refetch: refetchAll,
-    isFetching: isRefetchingAll,
+    isRefetching: isRefetchingAll,
   } = useGetGlobalProducts(
     user.merchant,
     (inventoryOutlet && inventoryOutlet.outlet_id) || 'ALL',
   );
 
-  const keyExtractor = item => item.product_id;
+  // React.useEffect(() => {
+  //   refetchAll();
+  // }, [inventoryOutlet, refetchAll]);
 
   const renderAllItems = React.useCallback(
     ({ item, index }) => {
@@ -63,6 +68,8 @@ const Viewer = ({ category, searchTerm, navigation, inventoryOutlet }) => {
             properties={item.product_properties}
             variants={item.product_properties_variants}
             navigation={navigation}
+            inventoryOutlet={inventoryOutlet}
+            setInventoryOutlet={setInventoryOutlet}
           />
         );
       }
@@ -74,10 +81,12 @@ const Viewer = ({ category, searchTerm, navigation, inventoryOutlet }) => {
           properties={item.product_properties}
           variants={item.product_properties_variants}
           navigation={navigation}
+          inventoryOutlet={inventoryOutlet}
+          setInventoryOutlet={setInventoryOutlet}
         />
       );
     },
-    [navigation],
+    [navigation, inventoryOutlet, setInventoryOutlet],
   );
 
   const renderCategoryItems = React.useCallback(({ item, index }) => {
@@ -94,6 +103,8 @@ const Viewer = ({ category, searchTerm, navigation, inventoryOutlet }) => {
           hasPropertyVariants={item.product_has_property_variants}
           properties={item.product_properties}
           variants={item.product_properties_variants}
+          inventoryOutlet={inventoryOutlet}
+          setInventoryOutlet={setInventoryOutlet}
         />
       );
     }
@@ -104,8 +115,10 @@ const Viewer = ({ category, searchTerm, navigation, inventoryOutlet }) => {
         hasPropertyVariants={item.product_has_property_variants}
         properties={item.product_properties}
         variants={item.product_properties_variants}
+        inventoryOutlet={inventoryOutlet}
       />
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (isAllProductsLoading) {
@@ -117,8 +130,9 @@ const Viewer = ({ category, searchTerm, navigation, inventoryOutlet }) => {
       return <Loading />;
     }
     return (
-      <>
-        <FlatList
+      <><View style={{ flex: 1 }}>
+        <FlashList
+          estimatedItemSize={Dimensions.get('screen').width * 0.309}
           refreshControl={
             <RefreshControl
               refreshing={isRefetchingAll}
@@ -127,33 +141,48 @@ const Viewer = ({ category, searchTerm, navigation, inventoryOutlet }) => {
               }}
             />
           }
-          keyExtractor={keyExtractor}
-          style={styles.grid}
+          keyExtractor={(item, index) => {
+            if (!item) {
+              return index;
+            }
+            return item.product_id;
+          }}
           contentContainerStyle={styles.container}
           data={[
             ...handleSearch(
               searchTerm,
-              ((allProducts && allProducts.data && allProducts.data.data) || [])
+              (allProducts?.data?.data || [])
                 .filter(i => i != null)
                 .filter(i => {
                   if (!i) {
                     return;
                   }
                   return i.product_category === category.name;
-                }),
+                }) || [],
             ),
-            { type: 'Add' },
           ]}
-          numColumns={6}
+          numColumns={3}
           renderItem={renderCategoryItems}
+          onScroll={({ nativeEvent }) => {
+            // Hide outlet button if any scroll movement is detected
+            if (nativeEvent.contentOffset.y > 0) {
+              setShowOutletButton(false); // Hide the button on scroll
+            } else {
+              setShowOutletButton(true); // Show the button if scrolled back to the top
+            }
+          }}
+          scrollEventThrottle={16}
+
         />
+      </View>
       </>
     );
   }
   if (
-    ((allProducts && allProducts.data && allProducts.data.data) || []).filter(
-      i => i != null,
-    ).length === 0
+    allProducts &&
+    allProducts.data &&
+    allProducts.data.data &&
+    allProducts.data.data.filter(i => i != null).length === 0
   ) {
     return (
       <View
@@ -163,16 +192,12 @@ const Viewer = ({ category, searchTerm, navigation, inventoryOutlet }) => {
           alignItems: 'center',
         }}>
         <Text
-          style={{
-            fontFamily: 'ReadexPro-bold',
-            fontSize: 18,
-            color: '#30475e',
-          }}>
+          style={{ fontFamily: 'Lato-Bold', fontSize: 18, color: '#30475e' }}>
           You have no products yet
         </Text>
         <Text
           style={{
-            fontFamily: 'ReadexPro-Medium',
+            fontFamily: 'Lato-Medium',
             fontSize: 15,
             color: '#748DA6',
             marginTop: 10,
@@ -197,7 +222,7 @@ const Viewer = ({ category, searchTerm, navigation, inventoryOutlet }) => {
   }
   return (
     <>
-      <FlatList
+      <FlashList
         refreshControl={
           <RefreshControl
             refreshing={isRefetchingAll}
@@ -206,8 +231,13 @@ const Viewer = ({ category, searchTerm, navigation, inventoryOutlet }) => {
             }}
           />
         }
-        keyExtractor={keyExtractor}
-        style={styles.grid}
+        keyExtractor={(item, index) => {
+          if (!item) {
+            return index;
+          }
+          return item.product_id;
+        }}
+        estimatedItemSize={Dimensions.get('screen').width * 0.309}
         contentContainerStyle={styles.container}
         data={[
           ...handleSearch(
@@ -215,11 +245,10 @@ const Viewer = ({ category, searchTerm, navigation, inventoryOutlet }) => {
             (
               (allProducts && allProducts.data && allProducts.data.data) ||
               []
-            ).filter(i => i != null),
+            ).filter(i => i != null) || [],
           ),
-          { type: 'Add' },
         ]}
-        numColumns={6}
+        numColumns={3}
         renderItem={renderAllItems}
       />
     </>
@@ -228,9 +257,11 @@ const Viewer = ({ category, searchTerm, navigation, inventoryOutlet }) => {
 
 const ProductsView = ({ navigation }) => {
   const { user } = useSelector(state => state.auth);
-  const { inventoryOutlet } = useSelector(state => state.products);
+  const { bottom } = useSafeAreaInsets();
   const { data, isLoading } = useGetAllProductsCategories(user.merchant);
   const [searchTerm, setSearchTerm] = React.useState('');
+  const { inventoryOutlet } = useSelector(state => state.products);
+  const [showOutletButton, setShowOutletButton] = React.useState(true);
   const { setInventoryOutlet } = useActionCreator();
   if (isLoading) {
     return (
@@ -272,124 +303,123 @@ const ProductsView = ({ navigation }) => {
             category={cat}
             searchTerm={searchTerm.trim()}
             inventoryOutlet={inventoryOutlet}
+            setInventoryOutlet={setInventoryOutlet}
           />
         </Tabs.Lazy>
       </Tabs.Tab>
     );
   });
   return (
-    <Tabs.Container
-      lazy
-      renderHeader={() => (
-        <View style={styles.topIcons}>
-          <Pressable style={styles.searchBox}>
-            <Search
-              stroke="#131517"
-              height={24}
-              width={24}
-              style={{ marginLeft: 12 }}
-            />
-            <TextInput
-              style={styles.search}
-              placeholder="Search product"
-              placeholderTextColor="#929AAB"
-              value={searchTerm}
-              onChangeText={setSearchTerm}
-            />
-          </Pressable>
-          <View style={styles.viewSpace} />
-          <Pressable
-            style={{ marginLeft: 14 }}
-            onPress={() => {
-              if (!user.user_permissions.includes('ADDPROD')) {
-                Toast.show({
-                  type: ALERT_TYPE.WARNING,
-                  title: 'Upgrade Needed',
-                  textBody:
-                    "You don't have access to this feature. Please upgrade your account",
-                });
-                return;
-              }
-              navigation.navigate('Add Product');
-            }}>
-            <AddCircle height={48} width={48} />
-          </Pressable>
-          <View style={{ marginRight: 14 }} />
-          <ShadowedView
-            style={shadowStyle({
-              opacity: 0.1,
-              radius: 1.5,
-              offset: [0, 0],
-            })}>
-            <Pressable
-              onPress={() => {
-                SheetManager.show('inventoryOutlet', {
-                  payload: { setInventoryOutlet, inventoryOutlet },
-                });
-              }}
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'center',
-                alignItems: 'center',
-                backgroundColor: '#fff',
-                paddingHorizontal: 14,
-                paddingVertical: 8,
-                borderRadius: 30,
-              }}>
-              <Text
-                style={{
-                  fontFamily: 'ReadexPro-Medium',
-                  color: '#304753',
-                  fontSize: 16,
-                }}>
-                {inventoryOutlet && inventoryOutlet.outlet_name}
-              </Text>
-              <ArrowLeftShort
-                style={{ marginLeft: 2 }}
-                height={18}
-                width={18}
+    <>
+      <Tabs.Container
+        lazy
+        renderHeader={() => (
+          <View style={styles.topIcons}>
+            <Pressable style={styles.searchBox}>
+              <Search
+                stroke="#131517"
+                height={20}
+                width={20}
+                style={{ marginLeft: 12 }}
+              />
+              <TextInput
+                style={styles.search}
+                placeholder="Search product"
+                placeholderTextColor="#929AAB"
+                value={searchTerm}
+                onChangeText={setSearchTerm}
               />
             </Pressable>
-          </ShadowedView>
-        </View>
+            <View style={styles.viewSpace} />
+            <Pressable
+              style={{ marginHorizontal: 4 }}
+              onPress={() => {
+                if (!user.user_permissions.includes('ADDPROD')) {
+                  Toast.show({
+                    type: ALERT_TYPE.WARNING,
+                    title: 'Upgrade Needed',
+                    textBody:
+                      "You don't have access to this feature. Please upgrade your account",
+                  });
+                  return;
+                }
+                navigation.navigate('Add Product');
+              }}>
+              <AddCircle />
+            </Pressable>
+            {/* <Pressable
+            style={{ marginHorizontal: 6 }}
+            onPress={() => {
+              SheetManager.show('inventoryOutlet', {
+                payload: { setInventoryOutlet, inventoryOutlet },
+              });
+            }}>
+            <FilterLines />
+          </Pressable> */}
+          </View>
+        )}
+        renderTabBar={props => (
+          <Tabs.MaterialTabBar
+            labelStyle={styles.labelStyle}
+            {...props}
+            style={styles.containerStyle}
+            indicatorStyle={styles.indicatorStyle}
+            tabStyle={styles.tabStyle}
+            inactiveColor="#3E4377"
+            activeColor="#1942D8"
+            scrollEnabled
+          />
+        )}>
+        {screens}
+      </Tabs.Container>
+      {showOutletButton && (
+        <Pressable
+          onPress={() => {
+            SheetManager.show('inventoryOutlet', {
+              payload: { setInventoryOutlet, inventoryOutlet },
+            });
+          }}
+          style={{
+            backgroundColor: 'rgba(25, 66, 216, 0.9)',
+            position: 'absolute',
+            width: '50%',
+            bottom: 6 + bottom,
+            alignItems: 'center',
+            borderRadius: 50,
+            alignSelf: 'center',
+          }}>
+          <View style={{ paddingVertical: 14 }}>
+            <Text style={{ fontFamily: 'ReadexPro-Medium', color: '#fff', fontSize: 15 }}>
+              {inventoryOutlet && inventoryOutlet.outlet_name}
+            </Text>
+          </View>
+        </Pressable>
       )}
-      renderTabBar={props => (
-        <Tabs.MaterialTabBar
-          labelStyle={styles.labelStyle}
-          {...props}
-          style={styles.containerStyle}
-          indicatorStyle={styles.indicatorStyle}
-          tabStyle={styles.tabStyle}
-          inactiveColor="#000"
-          activeColor="#1942D8"
-          scrollEnabled
-        />
-      )}>
-      {screens}
-    </Tabs.Container>
+    </>
   );
 };
 
 const Products = ({ navigation }) => {
   const { activeProductsTab } = useSelector(state => state.products);
 
-  const ref = React.useRef();
-
   React.useEffect(() => {
-    if (ref) {
-      ref.current.setPageWithoutAnimation(activeProductsTab);
-    }
+    pagerRef.current.setPage(activeProductsTab);
   }, [activeProductsTab]);
 
+  const pagerRef = React.useRef();
+
   return (
-    <PagerView style={styles.main} ref={ref} initialPage={0}>
-      <View key="0" collapsable={false}>
-        <ProductsView navigation={navigation} />
-      </View>
-      <View key="1" collapsable={false}>
-        <Categories navigation={navigation} />
-      </View>
-    </PagerView>
+    <>
+      {/* <StatusBar backgroundColor="#fff" barStyle={'dark-content'} /> */}
+      <PagerView style={styles.main} initialPage={0} ref={pagerRef}>
+        <View key={1} collapsable={false}>
+          <ProductsView navigation={navigation} />
+        </View>
+        <View key={2} collapsable={false}>
+          <Categories navigation={navigation} />
+        </View>
+      </PagerView>
+    </>
   );
 };
 
@@ -406,7 +436,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 12,
     paddingLeft: 20,
-    height: 60,
+    height: 52,
   },
   tabView: {
     flex: 1,
@@ -414,9 +444,8 @@ const styles = StyleSheet.create({
   },
   containerStyle: { marginHorizontal: 12, marginTop: 12 },
   labelStyle: {
-    fontFamily: 'ReadexPro-Medium',
-    textTransform: 'uppercase',
-    fontSize: 14,
+    fontFamily: 'Inter-Medium',
+    textTransform: 'capitalize',
   },
   indicatorStyle: {
     height: 3.5,
@@ -431,7 +460,7 @@ const styles = StyleSheet.create({
   },
   quickSale: {
     marginRight: 'auto',
-    fontFamily: 'ReadexPro-Regular',
+    fontFamily: 'Inter-Regular',
     marginLeft: 20,
     color: '#1942D8',
     marginTop: 10,
@@ -453,7 +482,7 @@ const styles = StyleSheet.create({
     paddingRight: 14,
     borderRadius: 54,
     backgroundColor: '#fff',
-    height: 55,
+    height: 50,
     borderColor: '#DCDCDE',
     borderWidth: 1,
   },
@@ -465,7 +494,7 @@ const styles = StyleSheet.create({
     flex: 1,
     color: '#30475e',
     fontFamily: 'ReadexPro-Regular',
-    marginTop: 4,
+    letterSpacing: 0.3,
   },
   searchBtn: {
     marginLeft: 'auto',
@@ -498,10 +527,9 @@ const styles = StyleSheet.create({
   },
 
   container: {
-    width: '100%',
-    // alignItems: 'center',
-    paddingLeft: Dimensions.get('window').width * 0.018,
-    paddingTop: 20,
+    paddingVertical: 120,
+    paddingBottom: 70 + 28,
+    paddingLeft: Dimensions.get('window').width * 0.028,
   },
   btn: {
     backgroundColor: '#3967E8',

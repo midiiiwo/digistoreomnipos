@@ -7,12 +7,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import FastImage from 'react-native-fast-image';
 import { useActionCreator } from '../hooks/useActionCreator';
 import { useMutation, useQueryClient } from 'react-query';
+import { logout as $logout } from '../api/merchant';
 import moment from 'moment';
-import { Api } from '../api/axiosInstance';
-
-function $logout(payload) {
-  return Api.put('/logout', payload);
-}
 
 function useLogout(handleSuccess) {
   const queryResult = useMutation(
@@ -33,29 +29,23 @@ function useLogout(handleSuccess) {
 
 const Logout = () => {
   const { user } = useSelector(state => state.auth);
-  const { resetCart, resetStore, setOverlayLoading, setAuth } =
+  const { resetCart, resetStore, setOverlayLoading, setAuth, resetInvoice } =
     useActionCreator();
   const client = useQueryClient();
-  const { mutateAsync } = useLogout(() => {});
   const unsubscribeFromTopics = async () => {
-    const authStatus = await messaging().requestPermission();
-    const enabled =
-      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+    var fcm = user?.user_unique_device_ids;
+    for (var f in fcm) {
+      const fcmData = fcm[f];
 
-    if (enabled) {
-      var fcm = user?.user_unique_device_ids;
-      for (var f in fcm) {
-        const fcmData = fcm[f];
-
-        messaging()
-          .unsubscribeFromTopic(fcmData)
-          .then(() => {
-            console.log(`unsubscribed from topic: ${fcmData}`);
-          });
-      }
+      messaging()
+        .unsubscribeFromTopic(fcmData)
+        .then(() => {
+          console.log(`unsubscribed from topic: ${fcmData}`);
+        });
     }
   };
+
+  const { mutateAsync } = useLogout(() => {});
 
   const logout = async () => {
     setOverlayLoading(true);
@@ -79,6 +69,7 @@ const Logout = () => {
     client.clear();
     setOverlayLoading(false);
     setAuth(false);
+    resetInvoice();
   };
 
   React.useEffect(() => {

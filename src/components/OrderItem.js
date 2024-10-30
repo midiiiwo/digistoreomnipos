@@ -263,13 +263,13 @@ const OrderItem = ({ item, navigation }) => {
           <Text style={{ fontSize: 12 }}>GHS</Text>{' '}
           {Number(item.total_amount) == 0 && Number(item.order_discount) != 0
             ? new Intl.NumberFormat('en-US', {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            }).format(Math.abs(Number(item.order_discount)))
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              }).format(Math.abs(Number(item.order_discount)))
             : new Intl.NumberFormat('en-US', {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            }).format(Number(item.total_amount))}
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              }).format(Number(item.total_amount))}
         </Text>
         <View style={[styles.statusWrapper, { alignSelf: 'flex-end' }]}>
           <View
@@ -278,14 +278,14 @@ const OrderItem = ({ item, navigation }) => {
               {
                 backgroundColor:
                   item.order_status !== 'NEW' &&
-                    item.order_status !== 'PENDING' &&
-                    item.order_status !== 'FAILED' &&
-                    item.order_status !== 'PAYMENT_CANCELLED' &&
-                    item.order_status !== 'DECLINED' &&
-                    item.order_status !== 'PAYMENT_FAILED' &&
-                    item.order_status !== 'VOID' &&
-                    item.order_status !== 'PAYMENT_DEFERRED' &&
-                    item?.payment_status !== 'Deferred'
+                  item.order_status !== 'PENDING' &&
+                  item.order_status !== 'FAILED' &&
+                  item.order_status !== 'PAYMENT_CANCELLED' &&
+                  item.order_status !== 'DECLINED' &&
+                  item.order_status !== 'PAYMENT_FAILED' &&
+                  item.order_status !== 'VOID' &&
+                  item.order_status !== 'PAYMENT_DEFERRED' &&
+                  item?.payment_status !== 'Deferred'
                     ? '#87C4C9'
                     : '#FD8A8A',
               },
@@ -293,15 +293,15 @@ const OrderItem = ({ item, navigation }) => {
           />
           <Text style={styles.orderStatus}>
             {item &&
-              item.order_status !== 'NEW' &&
-              item.order_status !== 'PENDING' &&
-              item.order_status !== 'FAILED' &&
-              item.order_status !== 'PAYMENT_CANCELLED' &&
-              item.order_status !== 'DECLINED' &&
-              item.order_status !== 'PAYMENT_FAILED' &&
-              item.order_status !== 'CANCELLED' &&
-              item.order_status !== 'PAYMENT_DEFERRED' &&
-              item?.payment_status !== 'Deferred'
+            item.order_status !== 'NEW' &&
+            item.order_status !== 'PENDING' &&
+            item.order_status !== 'FAILED' &&
+            item.order_status !== 'PAYMENT_CANCELLED' &&
+            item.order_status !== 'DECLINED' &&
+            item.order_status !== 'PAYMENT_FAILED' &&
+            item.order_status !== 'CANCELLED' &&
+            item.order_status !== 'PAYMENT_DEFERRED' &&
+            item?.payment_status !== 'Deferred'
               ? item.order_status === 'VOID'
                 ? 'Void'
                 : 'Paid'
@@ -317,8 +317,8 @@ const OrderItem = ({ item, navigation }) => {
                   item.delivery_status === 'DELIVERED'
                     ? '#87C4C9'
                     : item.delivery_status === 'PENDING'
-                      ? '#FD8A8A'
-                      : '#FD8A8A',
+                    ? '#FD8A8A'
+                    : '#FD8A8A',
               },
             ]}
           />
@@ -326,8 +326,8 @@ const OrderItem = ({ item, navigation }) => {
             {item.delivery_status === 'DELIVERED'
               ? 'Delivered'
               : item.delivery_status === 'PENDING'
-                ? 'Undelivered'
-                : 'Undelivered'}
+              ? 'Undelivered'
+              : 'Undelivered'}
           </Text>
         </View>
       </View>

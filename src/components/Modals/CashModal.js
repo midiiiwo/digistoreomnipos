@@ -45,7 +45,7 @@ const CashModal = ({
         />
         <Text
           style={{
-            fontFamily: 'SFProDisplay-Regular',
+            fontFamily: 'ReadexPro-Regular',
             fontSize: 15,
             color: '#30475e',
             textAlign: 'center',
@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
   },
   modal: { alignItems: 'center' },
   modalView: {
-    width: '50%',
+    width: '96%',
     backgroundColor: '#fff',
     paddingHorizontal: 12,
     paddingVertical: 26,
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
     width: '96%',
     paddingVertical: 14,
     paddingHorizontal: 12,
-    fontFamily: 'SFProDisplay-Regular',
+    fontFamily: 'ReadexPro-Regular',
     color: '#30475E',
     fontSize: 16,
     paddingLeft: 14,

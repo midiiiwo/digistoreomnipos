@@ -53,9 +53,10 @@ const CashConfirm = ({
     discountPayload,
     orderDate,
     addTaxes,
+    orderCheckoutTaxes,
     deliveryNote,
     deliveryDueDate,
-    orderCheckoutTaxes,
+    orderNotes,
   } = useSelector(state => state.sale);
   const { quickSaleInAction, description, channel } = useSelector(
     state => state.quickSale,
@@ -92,14 +93,14 @@ const CashConfirm = ({
     orderItems[idx] = {
       order_item_no:
         item.type && item.type === 'non-inventory-item' ? '' : item.id,
-      order_item_qty: item.quantity,
-      order_item: item.itemName,
-      order_item_amt: item.amount,
-      order_item_prop: item.order_item_props || {},
+      order_item_qty: item && item.quantity,
+      order_item: item && item.itemName,
+      order_item_amt: item && item.amount,
+      order_item_prop: (item && item.order_item_props) || {},
+      order_item_prop_id: item && item.order_item_prop_id,
     };
   });
   const orderTaxes_ = {};
-  console.log('orrrrrrr', orderCheckoutTaxes);
   (orderCheckoutTaxes || []).forEach((taxItem, idx) => {
     if (taxItem) {
       orderTaxes_[idx] = {
@@ -109,7 +110,7 @@ const CashConfirm = ({
     }
   });
 
-  console.log('dddd', orderCheckoutTaxes);
+  console.log('dddd', customerPayment);
 
   return (
     <Modal
@@ -128,7 +129,7 @@ const CashConfirm = ({
         />
         <Text
           style={{
-            fontFamily: 'SFProDisplay-Regular',
+            fontFamily: 'ReadexPro-Regular',
             fontSize: 15,
             color: '#30475e',
             textAlign: 'center',
@@ -216,19 +217,6 @@ const CashConfirm = ({
                   delivery_email:
                     (customerPayment && customerPayment.email) || '',
                   delivery_charge: (delivery && delivery.price) || 0,
-                  service_charge: 0,
-                  order_coupon:
-                    (discountPayload && discountPayload.discountCode) || '',
-                  order_discount_code:
-                    (discountPayload && discountPayload.discountCode) || '',
-                  order_discount:
-                    (discountPayload && discountPayload.discount) || 0,
-                  order_amount: orderAmount,
-                  total_amount: totalAmount,
-                  payment_type: payment,
-                  payment_network: payment,
-                  merchant: user.merchant,
-                  source: channel,
                   delivery_notes:
                     user &&
                     user.user_permissions &&
@@ -239,13 +227,29 @@ const CashConfirm = ({
                         ? moment(deliveryDueDate).format('YYYY-MM-DD')
                         : ''
                       : deliveryNote,
+                  service_charge: 0,
+                  order_coupon:
+                    (discountPayload && discountPayload.discountCode) || '',
+                  order_discount_code:
+                    (discountPayload && discountPayload.discountCode) || '',
+                  order_discount:
+                    (discountPayload && discountPayload.discount) || 0,
+                  order_amount: orderAmount,
+                  order_notes: orderNotes,
+                  total_amount: totalAmount,
+                  payment_type: payment,
+                  payment_network: payment,
+                  merchant: user.merchant,
+                  source: channel,
                   notify_source: 'Digistore Business',
                   mod_by: user.login,
                   payment_number:
                     (customerPayment && customerPayment.phone) || '',
                   order_date:
-                    orderDate_ && orderDate_.toString().length > 0
-                      ? moment(orderDate_).format('YYYY-MM-DD H:mm:ss')
+                    orderDate?.toString()?.length > 0
+                      ? moment(orderDate?.setTime(Date.now())).format(
+                          'YYYY-MM-DD H:mm:ss',
+                        )
                       : pay_date,
                   mod_date:
                     orderDate_ && orderDate_.toString().length > 0
@@ -254,7 +258,7 @@ const CashConfirm = ({
                   payment_receipt: receiptNumber,
                 };
 
-            if (!_.isEmpty(orderTaxes_) && addTaxes) {
+            if (!quickSaleInAction && !_.isEmpty(orderTaxes_) && addTaxes) {
               // eslint-disable-next-line dot-notation
               payload['order_taxes'] = JSON.stringify(orderTaxes_);
             }
@@ -301,7 +305,7 @@ const styles = StyleSheet.create({
   },
   modal: { alignItems: 'center' },
   modalView: {
-    width: '50%',
+    width: '96%',
     backgroundColor: '#fff',
     paddingHorizontal: 12,
     paddingVertical: 26,
@@ -356,12 +360,12 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   paymentReviewItemName: {
-    fontFamily: 'SFProDisplay-Regular',
+    fontFamily: 'ReadexPro-Regular',
     color: 'rgba(48, 71, 94, 0.99)',
     fontSize: 16,
   },
   paymentReviewItemAmount: {
-    fontFamily: 'SFProDisplay-Regular',
+    fontFamily: 'ReadexPro-Regular',
     color: 'rgba(48, 71, 94, 0.99)',
     fontSize: 16,
     marginLeft: 'auto',

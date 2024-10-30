@@ -37,7 +37,7 @@ export function useGetEstimates(handleSuccess) {
     payload => {
       try {
         return getEstimates(payload);
-      } catch (error) {}
+      } catch (error) { }
     },
     {
       onSuccess(data) {
@@ -56,7 +56,7 @@ const EstimateHistory = () => {
 
   const { outlet } = useSelector(state => state.auth);
   const [openMenu, setOpenMenu] = React.useState(false);
-  const {} = useGetEstimates();
+  const { } = useGetEstimates();
   const [range, setRange] = React.useState('All');
   const navigation = useNavigation();
 
@@ -257,9 +257,11 @@ const EstimateHistory = () => {
           },
 
           style: {
-            marginLeft: 'auto',
-            marginRight: 14,
-            marginBottom: Dimensions.get('window').width * 0.1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '50%',
+            backgroundColor: 'rgba(60, 121, 245, 1.0)',
+            marginBottom: Dimensions.get('window').width * 0.05,
           },
         }}
       />

@@ -1,11 +1,13 @@
+/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable prettier/prettier */
 import React from 'react';
 import { StyleSheet, View, Pressable } from 'react-native';
-import ProfileIcon from '../../assets/icons/profile-circle.svg';
+import BackIcon from '../../assets/icons/arrow-back-light.svg';
 import { SheetManager } from 'react-native-actions-sheet';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import { useActionCreator } from '../hooks/useActionCreator';
 import { useSelector } from 'react-redux';
+import ProfileIcon from '../../assets/icons/transactions.svg';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const PaypointHeader = ({ navigation, prevScreen }) => {
@@ -16,23 +18,23 @@ const PaypointHeader = ({ navigation, prevScreen }) => {
   return (
     <View style={[styles.main, { paddingTop: top + 12 }]}>
       <View style={styles.headerMain}>
+        {/* <Pressable style={styles.back} onPress={() => navigation.goBack()}>
+          <BackIcon height={18} width={18} stroke="#" />
+        </Pressable> */}
         <Pressable
           onPress={() => {
             navigation.openDrawer();
           }}
-          style={{
-            backgroundColor: '#fff',
-            borderRadius: 60,
-            padding: 10,
-            flexDirection: 'row',
-            alignItems: 'center',
-            position: 'absolute',
-            left: 12,
-            // backgroundColor: 'red',
-            padding: 14,
-          }}>
-          <ProfileIcon height={28} width={27} stroke="#30475e" />
+          // style={{
+          //   backgroundColor: '',
+          //   borderRadius: 60,
+          //   padding: 10,
+          // }}
+          style={styles.back}
+        >
+          <ProfileIcon height={28} width={27} stroke="#000" />
         </Pressable>
+
         <View
           style={styles.segmentedControlWrapper}
           onPress={() => SheetManager.show('customers')}>
@@ -47,6 +49,7 @@ const PaypointHeader = ({ navigation, prevScreen }) => {
             activeFontStyle={styles.activeText}
             fontStyle={styles.inactiveText}
             style={styles.arbitrary}
+            sliderStyle={{ borderRadius: 40 }}
           />
         </View>
       </View>
@@ -58,6 +61,7 @@ const styles = StyleSheet.create({
   main: {
     paddingTop: 12,
     backgroundColor: '#21438F',
+
   },
   headerMain: {
     width: '100%',
@@ -77,25 +81,28 @@ const styles = StyleSheet.create({
   },
   segmentedControlWrapper: {
     paddingHorizontal: 10,
-    width: '30%',
+    width: '70%',
   },
-  arbitrary: { height: 45, borderRadius: 5 },
+  arbitrary: { height: 35, borderRadius: 40 },
   back: {
     flexDirection: 'row',
     alignItems: 'center',
     position: 'absolute',
+    backgroundColor: '#ffff',
+    borderRadius: 60,
+    padding: 10,
     left: 12,
     // backgroundColor: 'red',
     padding: 14,
   },
   activeText: {
-    fontSize: 17,
+    fontSize: 14,
     color: '#1942D8',
     fontFamily: 'Inter-Medium',
     fontWeight: '600',
   },
   inactiveText: {
-    fontSize: 17,
+    fontSize: 14,
     color: '#1942D8',
     fontFamily: 'Inter-Medium',
   },
@@ -103,4 +110,3 @@ const styles = StyleSheet.create({
 
 export default PaypointHeader;
 
-// style={styles.back}

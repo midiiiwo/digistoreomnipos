@@ -220,6 +220,12 @@ export function getMerchantRiders(merchant, outlet) {
   );
 }
 
+export function getMerchantRidersAll(merchant, outlet) {
+  return deliveryApi.get(
+    `admin/company/${merchant}/riders/${outlet}`,
+  );
+}
+
 export function getOnlineStoreDetails(merchant) {
   return Api.get(`stores/merchant/${merchant}/store/online`);
 }
@@ -381,15 +387,15 @@ export function createMerchantDeliveryConfigOption(payload) {
 }
 
 export function addMerchantRider(payload) {
-  return Api.post('orders/delivery/rider', payload);
+  return deliveryApi.post('admin/rider/fromPOS', payload);
 }
 
 export function deleteMerchantDeliveryRoute(id) {
   return Api.delete(`/orders/delivery/route/${id}`);
 }
 
-export function deleteRider(payload) {
-  return Api.put('orders/delivery/rider/remove', payload);
+export function deleteRider({ user_id }) {
+  return deliveryApi.delete(`/admin/rider/${user_id}`, { user_id });
 }
 
 export function setupStoreOrShortcode(payload) {

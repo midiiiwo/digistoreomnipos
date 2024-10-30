@@ -29,8 +29,8 @@ const InvoiceStatus = ({ modalState, toggle, data, setStatus }) => {
           <View style={{ alignItems: 'center', paddingVertical: 18 }}>
             <Text
               style={{
-                fontFamily: 'SFProDisplay-Medium',
-                fontSize: 18,
+                fontFamily: 'ReadexPro-Medium',
+                fontSize: 15,
                 color: '#30475e',
                 marginBottom: 12,
               }}>
@@ -45,8 +45,8 @@ const InvoiceStatus = ({ modalState, toggle, data, setStatus }) => {
             />
             <Text
               style={{
-                fontFamily: 'SFProDisplay-Regular',
-                fontSize: 18,
+                fontFamily: 'ReadexPro-Regular',
+                fontSize: 16,
                 color: '#30475e',
                 textAlign: 'center',
                 marginHorizontal: 12,
@@ -60,8 +60,8 @@ const InvoiceStatus = ({ modalState, toggle, data, setStatus }) => {
           <View style={{ alignItems: 'center', paddingVertical: 18 }}>
             <Text
               style={{
-                fontFamily: 'SFProDisplay-Medium',
-                fontSize: 18,
+                fontFamily: 'ReadexPro-Medium',
+                fontSize: 15,
                 color: '#30475e',
                 marginBottom: 12,
               }}>
@@ -81,7 +81,7 @@ const InvoiceStatus = ({ modalState, toggle, data, setStatus }) => {
                 textAlign: 'center',
                 marginHorizontal: 12,
               }}>
-              {data && data.Regular}
+              {data && data.message}
             </Text>
           </View>
         )}
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
 
   modal: { alignItems: 'center' },
   modalView: {
-    width: '50%',
+    width: '96%',
     backgroundColor: '#fff',
     paddingHorizontal: 12,
     paddingVertical: 26,

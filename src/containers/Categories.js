@@ -7,6 +7,7 @@ import {
   FlatList,
   Pressable,
   TextInput,
+  RefreshControl,
 } from 'react-native';
 import { useSelector } from 'react-redux';
 import Loading from '../components/Loading';
@@ -16,22 +17,20 @@ import AddCircle from '../../assets/icons/add-circle-dark.svg';
 import { handleSearch } from '../utils/shared';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import CaretRight from '../../assets/icons/cart-right.svg';
-import { useNavigation } from '@react-navigation/native';
 
-const Categories = () => {
+const Categories = ({ navigation }) => {
   const { user } = useSelector(state => state.auth);
-  const navigation = useNavigation();
-  const { data, isLoading } = useGetAllProductsCategories(user.merchant);
+  const { data, isLoading, isFetching, refetch } = useGetAllProductsCategories(
+    user.merchant,
+  );
   const [searchTerm, setSearchTerm] = React.useState('');
 
   if (isLoading) {
     return <Loading />;
   }
   if (
-    data &&
-    data.data &&
-    data.data.data &&
-    data.data.data.filter(i => i != null).length === 0
+    ((data && data.data && data.data.data) || []).filter(i => i != null)
+      .length === 0
   ) {
     return (
       <View
@@ -41,13 +40,17 @@ const Categories = () => {
           alignItems: 'center',
         }}>
         <Text
-          style={{ fontFamily: 'Lato-Bold', fontSize: 18, color: '#30475e' }}>
+          style={{
+            fontFamily: 'ReadexPro-bold',
+            fontSize: 18,
+            color: '#30475e',
+          }}>
           You have no categories yet
         </Text>
         <Text
           style={{
-            fontFamily: 'Lato-Medium',
-            fontSize: 17,
+            fontFamily: 'ReadexPro-Medium',
+            fontSize: 15,
             color: '#748DA6',
             marginTop: 10,
           }}>
@@ -75,8 +78,8 @@ const Categories = () => {
         <Pressable style={styles.searchBox}>
           <Search
             stroke="#131517"
-            height={25}
-            width={25}
+            height={20}
+            width={20}
             style={{ marginLeft: 12 }}
           />
           <TextInput
@@ -101,14 +104,22 @@ const Categories = () => {
             }
             navigation.navigate('Add Category');
           }}>
-          <AddCircle height={48} width={48} />
+          <AddCircle />
         </Pressable>
       </View>
       <FlatList
+        refreshControl={
+          <RefreshControl refreshing={isFetching} onRefresh={refetch} />
+        }
         ItemSeparatorComponent={() => <View style={styles.separator} />}
         data={
-          [...handleSearch(searchTerm, data.data.data, 'product_category')] ||
-          []
+          [
+            ...handleSearch(
+              searchTerm,
+              (data && data.data && data.data.data) || [],
+              'product_category',
+            ),
+          ] || []
         }
         keyExtractor={(item, index) => {
           if (!item) {
@@ -163,22 +174,20 @@ const styles = StyleSheet.create({
     // paddingHorizontal: 20,
   },
   wrapper: {
-    paddingHorizontal: 25,
+    paddingHorizontal: 20,
     paddingVertical: 12,
     flexDirection: 'row',
   },
   name: {
-    fontFamily: 'SFProDisplay-Regular',
+    fontFamily: 'ReadexPro-Regular',
     color: '#002',
     marginBottom: 2,
-    fontSize: 18.6,
-    letterSpacing: 0.4,
+    fontSize: 15.5,
   },
   count: {
-    fontFamily: 'SFProDisplay-Regular',
+    fontFamily: 'ReadexPro-Regular',
     color: '#7B8FA1',
-    fontSize: 16,
-    letterSpacing: 0.4,
+    fontSize: 13.5,
   },
   viewSpace: {
     width: 8,
@@ -196,7 +205,7 @@ const styles = StyleSheet.create({
     paddingRight: 14,
     borderRadius: 54,
     backgroundColor: '#fff',
-    height: 55,
+    height: 50,
     borderColor: '#DCDCDE',
     borderWidth: 1,
   },
@@ -204,11 +213,11 @@ const styles = StyleSheet.create({
     height: '100%',
     borderRadius: 8,
     paddingHorizontal: 12,
-    fontSize: 17.4,
+    fontSize: 15,
     flex: 1,
     color: '#30475e',
-    fontFamily: 'SFProDisplay-Regular',
-    letterSpacing: 0.3,
+    fontFamily: 'ReadexPro-Regular',
+    marginTop: 2,
   },
   btn: {
     backgroundColor: '#3967E8',

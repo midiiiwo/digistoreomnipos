@@ -8,12 +8,8 @@ import {
   Pressable,
 } from 'react-native';
 import React from 'react';
-import PaypointVendorCard from '../components/PaypointVendorCard';
-import { InternetImages } from '../utils/internetOptions';
 import { SheetManager } from 'react-native-actions-sheet';
-import { AirtimeOptions } from '../utils/AirtimeOptions';
 import { useSelector } from 'react-redux';
-import RadioButton from '../components/RadioButton';
 import { RadioButtonProvider } from '../context/RadioButtonContext';
 import Verified from '../../assets/icons/verified.svg';
 import { useGetAccountList } from '../hooks/useGetAccountList';
@@ -22,8 +18,6 @@ import Bin from '../../assets/icons/bin.svg';
 import { useDeleteWalletAccount } from '../hooks/useDeleteWalletAccount';
 import { useQueryClient } from 'react-query';
 import { useToast } from 'react-native-toast-notifications';
-import { useAddWallet } from '../hooks/useAddWallet';
-import moment from 'moment';
 import { RefreshControl } from 'react-native';
 import DeleteDialog from '../components/DeleteDialog';
 
@@ -112,7 +106,7 @@ const AccountCard = ({
         />
       ) : (
         <Image
-          source={require('../../assets/images/AirtelTigo-Money.jpeg')}
+          source={require('../../assets/images/atmoney.png')}
           style={{
             height: 45,
             width: 45,
@@ -126,7 +120,7 @@ const AccountCard = ({
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Text
             style={{
-              fontFamily: 'SFProDisplay-Medium',
+              fontFamily: 'ReadexPro-Medium',
               color: '#30475e',
               fontSize: 15,
               justifyContent: 'center',
@@ -139,7 +133,7 @@ const AccountCard = ({
 
         <Text
           style={{
-            fontFamily: 'SFProDisplay-Regular',
+            fontFamily: 'ReadexPro-Regular',
             color: '#6B728E',
             fontSize: 14,
           }}>
@@ -263,7 +257,7 @@ const AddMoney = ({ navigation, route }) => {
           }}>
           <Text
             style={{
-              fontFamily: 'Inter-Medium',
+              fontFamily: 'SFProDisplay-Medium',
               fontSize: 16,
               color: '#1942D8',
             }}>

@@ -19,7 +19,6 @@ import { handleSearch } from '../utils/shared';
 // import { useGetFundsTransferHistory } from '../hooks/useGetFundsTransferHistory';
 // import PrimaryButton from '../components/PrimaryButton';
 // import { useCancelFundsTransfer } from '../hooks/useCancelFundsTransfer';
-// import { useQueryClient } from 'react-query';
 import { useToast } from 'react-native-toast-notifications';
 // import { useGetAirtimeHistory } from '../hooks/useGetAirtimeHistory';
 import { useGetSendMoneyHistory } from '../hooks/useGetSendMoneyHistory';
@@ -32,6 +31,10 @@ import Search from '../../assets/icons/search.svg';
 // const d = new Date();
 
 const SendMoneyHistoryScreen = () => {
+  // const [startDate, setStartDate] = React.useState(
+  //   new Date(new Date().setDate(d.getDate() - 30)),
+  // );
+  // const [endDate, setEndDate] = React.useState(new Date());
   const [searchTerm, setSearchTerm] = React.useState('');
   const [cancelledStatus, setCancelledStatus] = React.useState();
   const toast = useToast();
@@ -47,6 +50,7 @@ const SendMoneyHistoryScreen = () => {
     moment(smEndDate).format('DD-MM-YYYY'),
   );
 
+  // const navigation = useNavigation();
   // React.useEffect(() => refetch(), [startDate, endDate]);
 
   React.useEffect(() => {

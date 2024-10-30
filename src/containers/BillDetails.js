@@ -1,42 +1,18 @@
 /* eslint-disable eqeqeq */
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import { StyleSheet, View, Text, Pressable, ScrollView } from 'react-native';
-import ActionSheet from 'react-native-actions-sheet';
+import { StyleSheet, View, Text, ScrollView, Pressable } from 'react-native';
 import { SheetManager } from 'react-native-actions-sheet';
 
-import { TextInput } from 'react-native-paper';
-import { Picker as RNPicker } from 'react-native-ui-lib';
-
-import { useSelector } from 'react-redux';
 import PrimaryButton from '../components/PrimaryButton';
 import { useLookupCustomerFromVendor } from '../hooks/useLookupCustomerFromVendor';
-import { useGetVendorOptions } from '../hooks/useGetVendorOptions';
 import { useToast } from 'react-native-toast-notifications';
-
-const Input = ({ placeholder, val, setVal, nLines, showError, ...props }) => {
-  return (
-    <TextInput
-      label={placeholder}
-      textColor="#30475e"
-      value={val}
-      onChangeText={setVal}
-      mode="outlined"
-      outlineColor={showError ? '#EB455F' : '#B7C4CF'}
-      activeOutlineColor={showError ? '#EB455F' : '#1942D8'}
-      outlineStyle={{
-        borderWidth: 0.9,
-        borderRadius: 4,
-        // borderColor: showError ? '#EB455F' : '#B7C4CF',
-      }}
-      placeholderTextColor="#B7C4CF"
-      style={styles.input}
-      numberOfLines={nLines}
-      multiline={nLines ? true : false}
-      {...props}
-    />
-  );
-};
+import Input from '../components/Input';
+import { useGetExpenseCategoriesLov } from './ExpenseCategoryLov';
+import { useSelector } from 'react-redux';
+import Loading from '../components/Loading';
+import Picker from '../components/Picker';
+import { Checkbox, Picker as RNPicker } from 'react-native-ui-lib';
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -52,26 +28,44 @@ const reducer = (state, action) => {
       return { ...state, customerEmail: action.payload };
     case 'mobile_number':
       return { ...state, mobileNumber: action.payload };
+    case 'category':
+      return { ...state, category: action.payload };
     case 'amount':
       return { ...state, amount: action.payload };
+    case 'update_all':
+      return { ...state, ...action.payload };
     default:
       return state;
   }
 };
 
 function BillDetails(props) {
-  const { user } = useSelector(state => state.auth);
-  const [saved, setSaved] = React.useState('');
   const [showError, setShowError] = React.useState(false);
   const step = React.useRef(0);
   const [lookUp, setLookup] = React.useState(false);
+
+  const [checkAsExpense, setCheckAsExpense] = React.useState(false);
 
   const [state, dispatch] = React.useReducer(reducer, {
     accountNumber: '',
     accountName: '',
     mobileNumber: '',
     amount: '',
+    category: null,
   });
+  const { user } = useSelector(s => s.auth);
+
+  const { data, isLoading } = useGetExpenseCategoriesLov(user?.merchant);
+
+  React.useEffect(() => {
+    console.log(props.payload);
+    dispatch({
+      type: 'update_all',
+      payload: {
+        accountNumber: props?.route?.params?.accountNumber || '',
+      },
+    });
+  }, [props]);
 
   const toast = useToast();
 
@@ -94,15 +88,9 @@ function BillDetails(props) {
     [dispatch],
   );
 
-  // const { data, isLoading } = useGetVendorOptions(
-  //   props.payload.billCode,
-  //   state.accountNumber,
-  //   lookUp && state.accountNumber.length > 0,
-  // );
-
   React.useEffect(() => {
-    if (!isLookupLoading && lookupData && lookupData.data) {
-      if (lookupData.data.status == 0) {
+    if (!isLookupLoading && lookupData?.data) {
+      if (lookupData?.data?.status == 0) {
         SheetManager.show('confirmBillPayment', {
           payload: {
             bill: props.route.params.billCode,
@@ -110,9 +98,16 @@ function BillDetails(props) {
             amountDue: lookupData.data.message.amountDue,
             navigation: props.navigation,
             accountNumber: state.accountNumber,
-            message: lookupData.data.message,
+            message: lookupData?.data?.message,
             mobileNumber: state.mobileNumber,
-            // accountNumber: state.accountNumber,
+            amountPrev:
+              (props.route &&
+                props.route.params &&
+                props.route.params.amount) ||
+              '',
+            checkAsExpense,
+            billCategory: state.category,
+            billName: props?.route?.params?.bill,
           },
         });
       } else if (lookupData.data.status != 0) {
@@ -131,8 +126,12 @@ function BillDetails(props) {
     toast,
     props.route.params.billCode,
     props.navigation,
-    // state.accountNumber,
   ]);
+
+  if (isLoading) {
+    return <Loading />;
+  }
+  const categoriesData = data?.data?.data;
 
   return (
     <>
@@ -151,7 +150,7 @@ function BillDetails(props) {
             textAlign: 'center',
             marginTop: 14,
           }}>
-          {props.route.params.bill.toUpperCase()}
+          {props?.route?.params?.bill?.toUpperCase()}
         </Text>
         <ScrollView style={styles.main}>
           <Input
@@ -186,29 +185,65 @@ function BillDetails(props) {
             keyboardType="phone-pad"
             inputMode="tel"
           />
-          {/* <Picker
-            // showError={!state.category && showError}
-            value={state.category}
-            setValue={item => {
-              handleTextChange({
-                type: 'product_category',
-                payload: item,
-              });
+          <Pressable
+            onPress={() => {
+              setCheckAsExpense(prev => !prev);
+            }}
+            style={{
+              flexDirection: 'row',
+              paddingVertical: 16,
             }}>
-            {data &&
-              data.data &&
-              data.data.data &&
-              data.data.message.map(item => {
-                console.log('item----<', item);
-                return (
-                  <RNPicker.Item
-                  // key={item.category_name}
-                  // label={item.category_name}
-                  // value={JSON.stringify(item)}
-                  />
-                );
+            <Checkbox
+              value={checkAsExpense}
+              onValueChange={setCheckAsExpense}
+              color="rgba(25, 66, 216, 0.9)"
+              style={{
+                color: '#204391',
+                alignSelf: 'center',
+                marginRight: 8,
+                marginLeft: 0,
+              }}
+            />
+            <Text
+              style={{
+                fontFamily: 'ReadexPro-Regular',
+                color: '#30475e',
+                fontSize: 14,
+                letterSpacing: -0.1,
+                maxWidth: '90%',
+              }}>
+              Record transaction as an expense
+            </Text>
+          </Pressable>
+          {checkAsExpense && (
+            <Picker
+              showSearch
+              searchPlaceholder={'Search Expense Category'}
+              placeholder="Select Expense Category"
+              showError={showError && !state.category && checkAsExpense}
+              value={state.category?.id || state.catergory?.value}
+              setValue={item => {
+                handleTextChange({
+                  type: 'category',
+                  payload: { id: item?.value },
+                });
+              }}>
+              {categoriesData?.map(item => {
+                if (
+                  item?.expense_category_id &&
+                  item?.expense_category_is_system != 1
+                ) {
+                  return (
+                    <RNPicker.Item
+                      key={item?.expense_category_id}
+                      label={item?.expense_category}
+                      value={item?.expense_category_id}
+                    />
+                  );
+                }
               })}
-          </Picker> */}
+            </Picker>
+          )}
         </ScrollView>
       </View>
       <View style={styles.btnWrapper}>
@@ -216,7 +251,14 @@ function BillDetails(props) {
           style={styles.btn}
           disabled={isLookupLoading || isFetching}
           handlePress={() => {
-            if (state.accountNumber.length === 0) {
+            if (
+              state.accountNumber.length === 0 ||
+              (checkAsExpense && !state.category)
+            ) {
+              toast.show('Please enter required details', {
+                placement: 'top',
+                type: 'danger',
+              });
               setShowError(true);
               return;
             }
@@ -224,15 +266,6 @@ function BillDetails(props) {
               setLookup(true);
               return;
             }
-            // if (step.current === 1 && lookupData.data.status == 0) {
-            //   SheetManager.show('confirmBillPayment', {
-            //     payload: {
-            //       bill: props.route.params.billCode,
-            //       amount: state.amount,
-            //       state,
-            //     },
-            //   });
-            // }
           }}>
           {isLookupLoading || isFetching ? 'Processing' : 'Proceed'}
         </PrimaryButton>

@@ -19,7 +19,7 @@ const Button = ({
         {
           width,
           backgroundColor,
-          paddingVertical: 30,
+          paddingVertical: 20,
           height,
         },
       ]}>
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     // flex: 1,
   },
   text: {
-    fontSize: 22,
+    fontSize: 18,
     fontFamily: 'SourceSansPro-Bold',
   },
 });

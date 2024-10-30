@@ -8,7 +8,7 @@ export function useGetTransactionFee(
   enabled = false,
 ) {
   const queryResult = useQuery(
-    ['transaction-fee'],
+    ['transaction-fee', payChannel, subTotal],
     () => getTransactionFee(payChannel, subTotal, merchant),
     { enabled, cacheTime: Infinity, staleTime: 0 },
   );

@@ -2,6 +2,9 @@
 import { StyleSheet, Text, View, Pressable, Image } from 'react-native';
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
+import { useToast } from 'react-native-toast-notifications';
+import { useCheckInvoiceStatus } from '../hooks/useCheckInvoiceStatus';
+import { useSelector } from 'react-redux';
 
 const mapChannelToName = {
   MTNMM: 'MTN Mobile Money',
@@ -19,6 +22,8 @@ const mapChannelToName = {
   QRPAY: 'GHQR',
   CREDITBAL: 'Store Credit',
   DEBITBAL: 'Pay Later',
+  PATPAY: 'Partial Payment',
+  PAYLATER: 'Pay Later',
 };
 
 // const mapSalesChannelToName = {
@@ -63,13 +68,13 @@ const ImageItem = ({ PAYMENT_CHANNEL }) => {
       )}
       {PAYMENT_CHANNEL === 'AIRTELM' && (
         <Image
-          source={require('../../assets/images/AirtelTigo-Money.jpeg')}
+          source={require('../../assets/images/atmoney.png')}
           style={styles.img}
         />
       )}
       {PAYMENT_CHANNEL === 'TIGOC' && (
         <Image
-          source={require('../../assets/images/AirtelTigo-Money.jpeg')}
+          source={require('../../assets/images/atmoney.png')}
           style={styles.img}
         />
       )}
@@ -133,17 +138,38 @@ const ImageItem = ({ PAYMENT_CHANNEL }) => {
           style={styles.img}
         />
       )}
+      {PAYMENT_CHANNEL === 'PAYLATER' && (
+        <Image
+          source={require('../../assets/images/pl.png')}
+          style={[styles.img, { borderRadius: 0 }]}
+        />
+      )}
     </View>
   );
 };
 
+const momoPayments = ['MTNMM', 'TIGOC', 'VODAC'];
+
 const TransactionItem = ({ item }) => {
+  const toast = useToast();
+  const { mutate, isLoading } = useCheckInvoiceStatus(i => {
+    if (i) {
+      toast.show(i.message, { placement: 'top' });
+    }
+  });
+
+  const isCheckable =
+    momoPayments.includes(item.PAYMENT_CHANNEL) &&
+    item.PAYMENT_STATUS === 'Pending';
+  console.log(item.PAYMENT_CHANNEL);
+  const { user } = useSelector(state => state.auth);
+  const [currentTransaction, setCurrentTransaction] = React.useState();
   const navigation = useNavigation();
   return (
     <Pressable
       style={styles.wrapper}
       onPress={() => {
-        if (item.PAYMENT_STATUS !== 'Successful') {
+        if (item && item.PAYMENT_STATUS !== 'Successful') {
           return;
         }
         navigation.navigate('Received Payment Receipt', {
@@ -155,6 +181,9 @@ const TransactionItem = ({ item }) => {
           serviceProvider: item.PAYMENT_CHANNEL,
           // commission: COMMISSION,
           description: item.PAYMENT_DESCRIPTION,
+          date: item.TRANSACTION_DATE,
+          servedBy: item.MOD_BY_NAME,
+          paymentStatus: item.PAYMENT_STATUS,
         });
       }}>
       <View style={styles.details}>
@@ -169,27 +198,28 @@ const TransactionItem = ({ item }) => {
               style={[
                 styles.name,
                 {
-                  fontFamily: 'SFProDisplay-Semibold',
-                  fontSize: 17.4,
+                  fontFamily: 'ReadexPro-Medium',
+                  fontSize: 15.4,
                   marginBottom: 4,
                   letterSpacing: 0.3,
                 },
               ]}
               numberOfLines={1}>
-              {item.TRANSACTION_ID}
+              {item && item.TRANSACTION_ID}
             </Text>
             <Text
               style={[
                 styles.name,
                 {
-                  fontFamily: 'SFProDisplay-Regular',
-                  fontSize: 16.3,
+                  fontFamily: 'ReadexPro-Regular',
+                  fontSize: 14.3,
                   color: '#6D8299',
                   marginBottom: 4,
+                  opacity: 0.7,
                 },
               ]}
               numberOfLines={1}>
-              {item.CUSTOMER_NAME.length > 0
+              {item && item.CUSTOMER_NAME && item.CUSTOMER_NAME.length > 0
                 ? item.CUSTOMER_NAME
                 : 'No Customer'}
             </Text>
@@ -199,13 +229,16 @@ const TransactionItem = ({ item }) => {
                 styles.name,
 
                 {
-                  fontFamily: 'SFProDisplay-Regular',
-                  fontSize: 16,
+                  fontFamily: 'ReadexPro-Regular',
+                  fontSize: 14,
                   color: '#6D8299',
                   marginBottom: 12,
+                  opacity: 0.7,
                 },
               ]}>
-              {item.TRANSACTION_DATE.slice(0, 16)}
+              {item &&
+                item.TRANSACTION_DATE &&
+                item.TRANSACTION_DATE.slice(0, 16)}
             </Text>
           </View>
         </View>
@@ -216,20 +249,20 @@ const TransactionItem = ({ item }) => {
             // backgroundColor: 'red',
             marginTop: 'auto',
           }}>
-          <ImageItem PAYMENT_CHANNEL={item.PAYMENT_CHANNEL} />
+          <ImageItem PAYMENT_CHANNEL={item && item.PAYMENT_CHANNEL} />
           <Text
             style={[
               styles.name,
               {
                 marginLeft: 6,
-                fontFamily: 'SFProDisplay-Medium',
-                fontSize: 16.2,
+                fontFamily: 'ReadexPro-Medium',
+                fontSize: 14.2,
                 opacity: 0.9,
                 letterSpacing: 0.2,
               },
             ]}
             numberOfLines={1}>
-            {mapChannelToName[item.PAYMENT_CHANNEL]}
+            {mapChannelToName[(item && item.PAYMENT_CHANNEL) || '']}
           </Text>
         </View>
 
@@ -248,7 +281,7 @@ const TransactionItem = ({ item }) => {
       </View>
       <View style={styles.status}>
         <Text style={[styles.count, { textAlign: 'right' }]}>
-          GHS {Number(item.BILL_AMOUNT).toFixed(2)}
+          GHS {Number((item && item.BILL_AMOUNT) || 0).toFixed(2)}
         </Text>
         {/* <View style={[styles.statusWrapper, { alignSelf: 'flex-end' }]}>
           <View
@@ -282,7 +315,7 @@ const TransactionItem = ({ item }) => {
               styles.statusIndicator,
               {
                 backgroundColor:
-                  item.PAYMENT_STATUS === 'Successful'
+                  item && item.PAYMENT_STATUS === 'Successful'
                     ? '#87C4C9'
                     : item.PAYMENT_STATUS === 'Pending'
                     ? '#FFDB89'
@@ -290,8 +323,43 @@ const TransactionItem = ({ item }) => {
               },
             ]}
           />
-          <Text style={styles.orderStatus}>{item.PAYMENT_STATUS}</Text>
+          <Text style={styles.orderStatus}>{item && item.PAYMENT_STATUS}</Text>
         </View>
+        {isCheckable && (
+          <Pressable
+            onPress={() => {
+              if (item) {
+                setCurrentTransaction(item);
+                mutate({
+                  merchant: user.merchant,
+                  invoice: item.TRANSACTION_ID,
+                  action: 'check_invoice_status',
+                });
+              }
+            }}
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              paddingHorizontal: 6,
+              paddingVertical: 7,
+              borderRadius: 4,
+              marginTop: 'auto',
+              // alignSelf: 'center',
+            }}>
+            <Text
+              style={{
+                fontSize: 15,
+                fontFamily: 'ReadexPro-Medium',
+                color: '#7091F5',
+              }}>
+              {isLoading &&
+              currentTransaction &&
+              currentTransaction.TRANSACTION_ID === item.TRANSACTION_ID
+                ? 'Loading'
+                : 'Check Status'}
+            </Text>
+          </Pressable>
+        )}
       </View>
     </Pressable>
   );
@@ -321,7 +389,7 @@ const styles = StyleSheet.create({
   count: {
     fontFamily: 'Lato-Bold',
     color: '#6D8299',
-    fontSize: 18,
+    fontSize: 15,
     marginBottom: 6,
     // marginTop: 8,
   },
@@ -329,9 +397,8 @@ const styles = StyleSheet.create({
     marginLeft: 'auto',
   },
   orderStatus: {
-    fontFamily: 'Lato-Bold',
+    fontFamily: 'ReadexPro-Medium',
     color: '#30475e',
-    fontSize: 17,
   },
   statusIndicator: {
     height: 8,
@@ -340,8 +407,8 @@ const styles = StyleSheet.create({
     marginRight: 4,
   },
   img: {
-    height: 30,
-    width: 30,
+    height: 24,
+    width: 24,
     borderRadius: 28,
     // marginVertical: 6,
     // marginTop: 6,

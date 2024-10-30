@@ -2,19 +2,12 @@
 /* eslint-disable eqeqeq */
 import React from 'react';
 import { StyleSheet, View, Text, Pressable, ScrollView } from 'react-native';
-import ActionSheet from 'react-native-actions-sheet';
-import { DateTimePicker, Picker as RNPicker } from 'react-native-ui-lib';
-import { SheetManager } from 'react-native-actions-sheet';
+import { DateTimePicker } from 'react-native-ui-lib';
 
-import { TextInput } from 'react-native-paper';
-
-import { useAddProductCategory } from '../hooks/useAddProductCategory';
 import { useSelector } from 'react-redux';
 import PrimaryButton from '../components/PrimaryButton';
-import { useAddCategory } from '../hooks/useAddCategory';
 import { useToast } from 'react-native-toast-notifications';
 import { useQueryClient } from 'react-query';
-import { useAddCustomer } from '../hooks/useAddCustomer';
 import moment from 'moment';
 import { useGetCustomerDetails } from '../hooks/useGetCustomerDetails';
 import Loading from '../components/Loading';
@@ -155,197 +148,200 @@ const EditCustomer = ({ navigation, route }) => {
 
   return (
     <View style={{ flex: 1, backgroundColor: '#fff' }}>
-      <View style={{ height: '100%' }}>
-        <View style={styles.main}>
-          <Input
-            placeholder="Enter Customer Name"
-            showError={showError && state.name.length === 0}
-            val={state.name}
-            setVal={text =>
-              handleTextChange({
-                type: 'customer_name',
-                payload: text,
-              })
-            }
-          />
-          <Input
-            placeholder="Enter Customer Email"
-            val={state.email}
-            // nLines={3}
-            setVal={text =>
-              handleTextChange({
-                type: 'customer_email',
-                payload: text,
-              })
-            }
-          />
-          <Input
-            placeholder="Enter Customer Phone"
-            val={state.phone}
-            keyboardType="phone-pad"
-            // nLines={3}
-            setVal={text =>
-              handleTextChange({
-                type: 'customer_phone',
-                payload: text,
-              })
-            }
-            disabled
-          />
-          <Input
-            placeholder="Enter Customer Alt Phone"
-            val={state.alt}
-            keyboardType="phone-pad"
-            // nLines={3}
-            setVal={text =>
-              handleTextChange({
-                type: 'customer_alt',
-                payload: text,
-              })
-            }
-            // disabled
-          />
-          <View style={{ marginTop: 22 }}>
-            <DateTimePicker
-              title={''}
-              placeholder={'Enter Date of Birth'}
-              mode={'date'}
-              migrate
-              value={state.dob}
-              onChange={val => {
+      <ScrollView>
+        <View style={{ height: '100%' }}>
+          <View style={styles.main}>
+            <Input
+              placeholder="Enter Customer Name"
+              showError={showError && state.name.length === 0}
+              val={state.name}
+              setVal={text =>
                 handleTextChange({
-                  type: 'customer_dob',
-                  payload: val,
-                });
-              }}
+                  type: 'customer_name',
+                  payload: text,
+                })
+              }
             />
+            <Input
+              placeholder="Enter Customer Email"
+              val={state.email}
+              // nLines={3}
+              setVal={text =>
+                handleTextChange({
+                  type: 'customer_email',
+                  payload: text,
+                })
+              }
+            />
+            <Input
+              placeholder="Enter Customer Phone"
+              val={state.phone}
+              keyboardType="phone-pad"
+              // nLines={3}
+              setVal={text =>
+                handleTextChange({
+                  type: 'customer_phone',
+                  payload: text,
+                })
+              }
+              disabled
+            />
+            <Input
+              placeholder="Enter Customer Alt Phone"
+              val={state.alt}
+              keyboardType="phone-pad"
+              // nLines={3}
+              setVal={text =>
+                handleTextChange({
+                  type: 'customer_alt',
+                  payload: text,
+                })
+              }
+              // disabled
+            />
+            <View style={{ marginTop: 22 }}>
+              <DateTimePicker
+                title={''}
+                placeholder={'Enter Date of Birth'}
+                mode={'date'}
+                migrate
+                value={state.dob}
+                onChange={val => {
+                  handleTextChange({
+                    type: 'customer_dob',
+                    payload: val,
+                  });
+                }}
+              />
+            </View>
+            {showLocation && (
+              <GooglePlacesAutocomplete
+                placeholder="Enter location address here"
+                placeholderTextColor="#ff0000"
+                fetchDetails={true}
+                // textInputHide={mutation.isLoading || deliveryOptions !== null}
+                onPress={(id, details) => {
+                  setLocation({
+                    location_gps:
+                      details.geometry.location.lat +
+                      ',' +
+                      details.geometry.location.lng,
+                    location_name: details && details.formatted_address,
+                  });
+                  setShowLocation(false);
+                }}
+                query={{
+                  key: 'AIzaSyCEhoYQkAxqs75nVsS_xUWg2w5DVFZ_p_4',
+                  language: 'en',
+                  components: 'country:gh',
+                }}
+                textInputProps={{
+                  placeholderTextColor: '#ccc',
+                }}
+                styles={{
+                  textInput: {
+                    borderRadius: 4,
+                    paddingHorizontal: 18,
+                    fontSize: 16,
+                    color: '#30475e',
+                    fontFamily: 'Inter-Medium',
+                    backgroundColor: '#F5F7F9',
+                    marginTop: 12,
+                    height: 52,
+                  },
+                  listView: {
+                    // flexGrow: 0,
+                  },
+                  container: {
+                    zIndex: 10,
+                    overflow: 'visible',
+                    // height: 48,
+                    // flexGrow: mutation.isLoading || deliveryOptions ? 0 : 1,
+                    // flexGrow: 0,
+                    // flexShrink: mutation.isLoading || deliveryOptions ? 0 : 1,
+                  },
+                }}
+                renderRow={i => (
+                  <View>
+                    <Text
+                      style={{
+                        color: '#30475e',
+                        fontSize: 14,
+                        fontFamily: 'Inter-Medium',
+                      }}>
+                      {i.description}
+                    </Text>
+                  </View>
+                )}
+              />
+            )}
+            {location && !showLocation && (
+              <Pressable onPress={() => setShowLocation(true)}>
+                <Text
+                  style={{
+                    fontFamily: 'Lato-Medium',
+                    fontSize: 16,
+                    color: '#30475e',
+                  }}>
+                  Location: {location && location.location_name}
+                </Text>
+                <Text
+                  style={{
+                    fontFamily: 'Lato-Medium',
+                    fontSize: 16,
+                    color: '#30475e',
+                  }}>
+                  GPS: {location && location.location_gps}
+                </Text>
+              </Pressable>
+            )}
           </View>
-          {showLocation && (
-            <GooglePlacesAutocomplete
-              placeholder="Enter location address here"
-              placeholderTextColor="#ff0000"
-              fetchDetails={true}
-              // textInputHide={mutation.isLoading || deliveryOptions !== null}
-              onPress={(id, details) => {
-                setLocation({
-                  location_gps:
-                    details.geometry.location.lat +
-                    ',' +
-                    details.geometry.location.lng,
-                  location_name: details && details.formatted_address,
-                });
-                setShowLocation(false);
-              }}
-              query={{
-                key: 'AIzaSyCEhoYQkAxqs75nVsS_xUWg2w5DVFZ_p_4',
-                language: 'en',
-                components: 'country:gh',
-              }}
-              textInputProps={{
-                placeholderTextColor: '#ccc',
-              }}
-              styles={{
-                textInput: {
-                  borderRadius: 4,
-                  paddingHorizontal: 18,
-                  fontSize: 16,
-                  color: '#30475e',
-                  fontFamily: 'Inter-Medium',
-                  backgroundColor: '#F5F7F9',
-                  marginTop: 12,
-                  height: 52,
-                },
-                listView: {
-                  // flexGrow: 0,
-                },
-                container: {
-                  zIndex: 10,
-                  overflow: 'visible',
-                  // height: 48,
-                  // flexGrow: mutation.isLoading || deliveryOptions ? 0 : 1,
-                  // flexGrow: 0,
-                  // flexShrink: mutation.isLoading || deliveryOptions ? 0 : 1,
-                },
-              }}
-              renderRow={i => (
-                <View>
-                  <Text
-                    style={{
-                      color: '#30475e',
-                      fontSize: 14,
-                      fontFamily: 'Inter-Medium',
-                    }}>
-                    {i.description}
-                  </Text>
-                </View>
-              )}
-            />
-          )}
-          {location && !showLocation && (
-            <Pressable onPress={() => setShowLocation(true)}>
-              <Text
-                style={{
-                  fontFamily: 'Lato-Medium',
-                  fontSize: 16,
-                  color: '#30475e',
-                }}>
-                Location: {location && location.location_name}
-              </Text>
-              <Text
-                style={{
-                  fontFamily: 'Lato-Medium',
-                  fontSize: 16,
-                  color: '#30475e',
-                }}>
-                GPS: {location && location.location_gps}
-              </Text>
-            </Pressable>
-          )}
         </View>
-      </View>
-      <View style={styles.btnWrapper}>
-        <PrimaryButton
-          style={styles.btn}
-          disabled={editCustomer.isLoading}
-          handlePress={() => {
-            if (
-              state.name.length === 0
-              // state.email.length === 0 ||
-              // state.phone.length === 0 ||
-            ) {
-              setShowError(true);
-              return;
-            }
-            console.log(typeof state.dob);
-            editCustomer.mutate({
-              client_id: route.params.id,
-              client_name: state.name,
-              client_email: state.email,
-              client_phone: state.phone,
-              client_alt_phone: state.alt,
-              client_dob:
-                typeof state.dob === 'object'
-                  ? moment(state.dob).format('DD-MM-YYYY')
-                  : data &&
-                    data.data &&
-                    data.data.data &&
-                    data.data.data.customer_dob,
-              client_merchant: user.merchant,
-              mod_by: user.login,
-            });
-            if (location) {
-              editCustomerLocation.mutate({
-                customer_id: route.params.id,
-                location_gps: location.location_gps,
-                location_name: location.location_name,
-                customer_merchant: user.merchant,
+        <View style={styles.btnWrapper}>
+          <PrimaryButton
+            style={styles.btn}
+            disabled={editCustomer.isLoading}
+            handlePress={() => {
+              if (
+                state.name.length === 0
+                // state.email.length === 0 ||
+                // state.phone.length === 0 ||
+              ) {
+                setShowError(true);
+                toast.show('Please provide all required details.', {
+                  placement: 'top',
+                  type: 'danger',
+                });
+                return;
+              }
+              console.log(typeof state.dob);
+              editCustomer.mutate({
+                client_id: route.params.id,
+                client_name: state.name,
+                client_email: state.email,
+                client_phone: state.phone,
+                client_alt_phone: state.alt,
+                client_dob:
+                  typeof state.dob === 'object'
+                    ? moment(state.dob).format('DD-MM-YYYY')
+                    : data?.data?.data?.customer_dob,
+                client_merchant: user.merchant,
                 mod_by: user.login,
               });
-            }
-          }}>
-          {editCustomer.isLoading ? 'Processing' : 'Save Customer'}
-        </PrimaryButton>
-      </View>
+              if (location) {
+                editCustomerLocation.mutate({
+                  customer_id: route.params.id,
+                  location_gps: location.location_gps,
+                  location_name: location.location_name,
+                  customer_merchant: user.merchant,
+                  mod_by: user.login,
+                });
+              }
+            }}>
+            {editCustomer.isLoading ? 'Processing' : 'Save Customer'}
+          </PrimaryButton>
+        </View>
+      </ScrollView>
     </View>
   );
 };

@@ -9,6 +9,7 @@ const ModalCancel = ({
   cancel = true,
   extraStyle,
   cancelText,
+  onNewSaleTrigger,
 }) => {
   const { setInvoice, setCustomerPayment, resetCart, selectCustomer } =
     useActionCreator();
@@ -17,7 +18,11 @@ const ModalCancel = ({
       {newSale && (
         <Pressable
           onPress={() => {
-            navigation.navigate('Dashboard');
+            if (onNewSaleTrigger) {
+              onNewSaleTrigger();
+              return;
+            }
+            navigation.navigate('Inventory');
             setInvoice(null);
             resetCart();
             selectCustomer(null);
@@ -56,14 +61,14 @@ const styles = StyleSheet.create({
     marginLeft: 'auto',
   },
   text: {
-    fontFamily: 'SFProDisplay-Regular',
-    fontSize: 18,
+    fontFamily: 'ReadexPro-Regular',
+    fontSize: 15,
     marginLeft: 'auto',
     color: '#EB455F',
   },
   newsale: {
-    fontFamily: 'SFProDisplay-Regular',
-    fontSize: 18,
+    fontFamily: 'ReadexPro-Regular',
+    fontSize: 15,
     marginLeft: 'auto',
     color: 'rgba(25, 66, 216, 0.9)',
   },

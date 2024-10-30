@@ -317,33 +317,29 @@ function InventoryProductOptions(props) {
             paddingHorizontal: 8,
           }}>
           <View style={{ flexDirection: 'column' }}>
-            <View style={{ flexDirection: 'row' }}>
-              <View style={[styles.channelType, { flex: 1 }]}>
-                <View style={{ flexDirection: 'column', flex: 1 }}>
-                  <Input
-                    placeholder="Price"
-                    val={price}
-                    setVal={text => setPrice(text)}
-                    style={{ backgroundColor: '#fff' }}
-                    showError={price.length === 0 && showError}
-                  />
-                </View>
+            <View style={[styles.channelType, { flex: 1 }]}>
+              <View style={{ flexDirection: 'column', flex: 1 }}>
+                <Input
+                  placeholder="Price"
+                  val={price}
+                  setVal={text => setPrice(text)}
+                  style={{ backgroundColor: '#fff' }}
+                  showError={price.length === 0 && showError}
+                />
               </View>
+            </View>
+            <View style={{ flexDirection: 'row' }}>
               <View style={[styles.channelType, { flex: 1 }]}>
                 <View
                   style={{
-                    flexDirection: 'row',
+                    flexDirection: 'column',
                     flex: 1,
                   }}>
                   <Input
                     placeholder="Quantity"
                     val={stockQty}
                     setVal={text => setStockQty(text)}
-                    style={{
-                      backgroundColor: '#fff',
-                      flex: 1,
-                      marginHorizontal: 12,
-                    }}
+                    style={{ backgroundColor: '#fff' }}
                     showError={
                       !quantityUnlimited && stockQty.length === 0 && showError
                     }
@@ -375,16 +371,12 @@ function InventoryProductOptions(props) {
                 </View>
               </View>
               <View style={[styles.channelType, { flex: 1 }]}>
-                <View style={{ flexDirection: 'row', flex: 1 }}>
+                <View style={{ flexDirection: 'column', flex: 1 }}>
                   <Input
                     placeholder="Low level Stock"
                     val={lowStock}
                     setVal={text => setLowStock(text)}
-                    style={{
-                      backgroundColor: '#fff',
-                      flex: 1,
-                      marginHorizontal: 12,
-                    }}
+                    style={{ backgroundColor: '#fff' }}
                     showError={
                       !lowStockUnlimited && lowStock.length === 0 && showError
                     }

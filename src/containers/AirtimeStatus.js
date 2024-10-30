@@ -59,8 +59,8 @@ const DetailItem = ({ label, value, firstItem }) => {
 // };
 
 const AirtimeStatus = ({ route, navigation }) => {
-  const { payStatus, name, number, bill, amount } = route.params;
-  console.log('status---<', payStatus);
+  const { payStatus, number, bill, amount } = route?.params;
+  console.log('status---<', route?.params);
   return (
     <>
       <ScrollView style={styles.main}>

@@ -9,9 +9,13 @@ import {
   Dimensions,
   Alert,
   RefreshControl,
+  TouchableOpacity,
+  Clipboard,
+
 } from 'react-native';
 import { SheetManager } from 'react-native-actions-sheet';
 import { captureRef } from 'react-native-view-shot';
+import Copyicon from '../../assets/icons/copyIcon.svg';
 
 import { useSelector } from 'react-redux';
 import { useGetSelectedOrderDetails } from '../hooks/useGetSelectedOrderDetails';
@@ -90,6 +94,13 @@ const OrderDetails = props => {
 
   const isKitchenStaff = user.user_permissions.includes('BCKRMORDER');
   const { startDate, endDate } = useSelector(state => state.orders);
+  const copyToClipboard = () => {
+    if (item && item.delivery_location) {
+      Clipboard.setString(item.delivery_location);
+      // Optionally, show a message indicating the location was copied
+      alert('Location copied to clipboard!');
+    }
+  };
 
   // console.log('iddddd', props.route.params.id);
 
@@ -785,14 +796,19 @@ const OrderDetails = props => {
                 </View>
 
                 <View style={styles.taxMain}>
+
                   <Text style={styles.taxLabel}>Delivery Location</Text>
                   <Text
+                    onPress={copyToClipboard}
                     style={[
                       styles.taxAmount,
-                      { width: '40%', textAlign: 'right' },
+                      { width: '40%', textAlign: 'right', color: 'blue' },
                     ]}>
                     {item && item.delivery_location}
                   </Text>
+                  <Pressable onPress={copyToClipboard} style={{ marginLeft: 8 }}>
+                    <Copyicon height={30} width={30} />
+                  </Pressable>
                 </View>
                 <View style={styles.taxMain}>
                   <Text style={[styles.taxLabel, { color: '#6528F7' }]}>

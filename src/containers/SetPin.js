@@ -5,7 +5,6 @@ import {
   View,
   Pressable,
   Text,
-  Image,
   Dimensions,
 } from 'react-native';
 import React from 'react';
@@ -13,30 +12,28 @@ import { useToast } from 'react-native-toast-notifications';
 import Pass from '../../assets/icons/pass.svg';
 import { useNavigation } from '@react-navigation/native';
 import { loginApi } from '../api/axiosInstance';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useActionCreator } from '../hooks/useActionCreator';
 
 const SetPin = ({ route }) => {
   const [pin, setPin] = React.useState('');
   const [pinRepeat, setPinRepeat] = React.useState('');
-  const { setAuth, setCurrentUser } = useActionCreator();
   const [secureEntry, setSecureEntry] = React.useState(true);
   const [secureEntry1, setSecureEntry1] = React.useState(true);
   const navigation = useNavigation();
-  const { uid } = route.params;
+  const { uid, otp } = route.params;
   const toast = useToast();
   const [loading, setLoading] = React.useState(false);
   // const imgWidth = Dimensions.get('window').width * 0.7;
 
-  const _setPin = React.useCallback(async (uid, _pin) => {
+  const _setPin = async (uid_, _pin) => {
     setLoading(true);
     const response = await loginApi.put('/users/merchant/user/pin', {
-      uid,
+      uid: uid_,
       new_pin: _pin,
+      otp,
     });
     setLoading(false);
     return response;
-  }, []);
+  };
 
   return (
     <View style={styles.main}>

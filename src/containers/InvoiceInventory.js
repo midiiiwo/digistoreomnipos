@@ -242,7 +242,7 @@ const InvoiceInventory = ({ navigation }) => {
     }
   }, [quickSaleInAction, setQuickSaleInAction, resetInvoiceCart]);
 
-  if (isLoading || istaxesLoading) {
+  if (isLoading) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Lottie

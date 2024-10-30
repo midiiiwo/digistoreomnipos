@@ -36,7 +36,7 @@ const AnalyticsHeader = ({ navigation }) => {
             },
           })
         }>
-        <Filter stroke="#30475e" height={40} width={40} />
+        <Filter stroke="#30475e" height={33} width={33} />
       </Pressable>
     </View>
   );
@@ -57,8 +57,8 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   headerTxt: {
-    fontFamily: 'SFProDisplay-Semibold',
-    fontSize: 16,
+    fontFamily: 'ReadexPro-Medium',
+    fontSize: 15,
     color: '#30475e',
     textAlign: 'center',
     position: 'absolute',

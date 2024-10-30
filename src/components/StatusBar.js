@@ -1,10 +1,6 @@
 import React from 'react';
 import { View, StatusBar } from 'react-native';
-import {
-  SafeAreaView,
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const CustomStatusBar = ({
   backgroundColor,

@@ -2,14 +2,7 @@
 import React from 'react';
 import { Text, StyleSheet, Pressable, Platform } from 'react-native';
 
-const PrimaryButton = ({
-  children,
-  width,
-  handlePress,
-  style,
-  disabled,
-  textStyle,
-}) => {
+const PrimaryButton = ({ children, width, handlePress, style, disabled }) => {
   return (
     <Pressable
       disabled={disabled}
@@ -22,14 +15,12 @@ const PrimaryButton = ({
           backgroundColor: style.backgroundColor
             ? style.backgroundColor
             : disabled
-            ? 'rgba(25, 66, 216, 0.5)'
+            ? 'rgba(25, 66, 216, 0.9)'
             : 'rgba(25, 66, 216, 0.9)',
-          // borderRadius: 100,
         },
-
         style,
       ]}>
-      <Text style={[styles.text, textStyle]}>{children}</Text>
+      <Text style={styles.text}>{children}</Text>
     </Pressable>
   );
 };
@@ -40,13 +31,14 @@ const styles = StyleSheet.create({
     // backgroundColor: 'rgba(25, 66, 216, 0.9)',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: 18,
+    paddingVertical: 12,
     width: '80%',
   },
   text: {
     color: '#fff',
     fontFamily: 'ReadexPro-Medium',
-    fontSize: 16,
+    fontSize: 14.9,
+    letterSpacing: 0.3,
   },
 });
 

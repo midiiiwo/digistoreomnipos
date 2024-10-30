@@ -1,7 +1,8 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import { Dimensions, StyleSheet, View } from 'react-native';
+import { Dimensions, StyleSheet, View, Text } from 'react-native';
 import QRCodeScanner from 'react-native-qrcode-scanner';
+import { SheetManager } from 'react-native-actions-sheet';
 // import {RNCamera} from 'react-native-camera';
 // import Icon from 'react-native-vector-icons/Ionicons';
 // import * as Animatable from 'react-native-animatable';

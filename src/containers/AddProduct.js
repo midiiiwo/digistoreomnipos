@@ -66,6 +66,9 @@ const reducer = (state, action) => {
       return { ...state, outlet_list: action.payload };
     case 'variants':
       return { ...state, variants: action.payload };
+    case 'product_tag':
+      return { ...state, tag: action.payload };
+
     default:
       return state;
   }
@@ -693,6 +696,29 @@ const AddProduct = ({ navigation, route }) => {
                 }
                 keyboardType="number-pad"
               />
+              <View style={{ marginHorizontal: 2 }}/>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginVertical: 10,
+                }}>
+                <Switch
+                  value={state.tag === 'FEATURED'} // Check if the current tag is 'FEATURED'
+                  onValueChange={() => {
+                    const newTag =
+                      state.tag === 'FEATURED' ? 'NORMAL' : 'FEATURED'; // Toggle the tag
+                    dispatch({ type: 'product_tag', payload: newTag }); // Dispatch action to update the tag in the state
+                  }}
+                  onColor="#2192FF"
+                  offColor="#EEF1F2"
+                />
+                <Text style={{ marginLeft: 8, color: 'black' }}>
+                  {state.tag === 'FEATURED'
+                    ? 'Product Featured'
+                    : 'Product Not Featured'}
+                </Text>
+              </View>
               {/* <View style={{ marginVertical: 12 }}>
                 <PrimaryButton
                   style={[
@@ -814,7 +840,8 @@ const AddProduct = ({ navigation, route }) => {
               desc: state.desc,
               merchant: user.merchant,
               category:
-                JSON.parse(state.category.value).product_category_id || '',
+                JSON.parse(state.category.value || '{}')?.product_category_id ||
+                '',
               outlet_list: outletIds,
               mod_by: user.login,
 

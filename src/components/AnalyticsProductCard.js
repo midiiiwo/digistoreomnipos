@@ -1,30 +1,9 @@
 /* eslint-disable react-native/no-inline-styles */
-/* eslint-disable prettier/prettier */
-import _ from 'lodash';
 import React from 'react';
-import {
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-  Dimensions,
-  Image,
-} from 'react-native';
-import { SheetManager } from 'react-native-actions-sheet';
-import { useSelector } from 'react-redux';
-
+import { StyleSheet, Text, View, Dimensions, Image } from 'react-native';
 import ImageIcon from '../../assets/icons/ImageIcon.svg';
-import { useActionCreator } from '../hooks/useActionCreator';
-import { useToast } from 'react-native-toast-notifications';
 
 const ProductCard = ({ itemName, amount, product_image, count }) => {
-  const quant = React.useRef(0);
-  const { addToCart } = useActionCreator();
-  const toast = useToast();
-  const { cart } = useSelector(state => state.sale);
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-
   return (
     <View style={[styles.main]}>
       <View style={styles.imageWrapper}>

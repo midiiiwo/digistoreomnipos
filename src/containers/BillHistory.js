@@ -1,62 +1,24 @@
 /* eslint-disable react-native/no-inline-styles */
-import {
-  StyleSheet,
-  Text,
-  View,
-  Pressable,
-  TextInput,
-  FlatList,
-  Image,
-} from 'react-native';
+import { StyleSheet, Text, View, Pressable, TextInput } from 'react-native';
 import React from 'react';
-import { DateTimePicker } from 'react-native-ui-lib';
-import { useAccountStatementHistory } from '../hooks/useAccountStatementHistory';
+
 import { useSelector } from 'react-redux';
 import moment from 'moment';
 import { FlashList } from '@shopify/flash-list';
 import { RefreshControl } from 'react-native';
 import { handleSearch } from '../utils/shared';
-import { useGetFundsTransferHistory } from '../hooks/useGetFundsTransferHistory';
-import PrimaryButton from '../components/PrimaryButton';
-import { useCancelFundsTransfer } from '../hooks/useCancelFundsTransfer';
-import { useQueryClient } from 'react-query';
+
 import { useToast } from 'react-native-toast-notifications';
-import { useGetAirtimeHistory } from '../hooks/useGetAirtimeHistory';
 import { useGetBillPaymentHistory } from '../hooks/useGetBillPaymentHistory';
 import Filter from '../../assets/icons/filter';
 import Loading from '../components/Loading';
 import { SheetManager } from 'react-native-actions-sheet';
-import { useNavigation } from '@react-navigation/native';
 import BillItem from '../components/BillItem';
 import Search from '../../assets/icons/search.svg';
 
-const d = new Date();
-
-const bills = {
-  DSTV: 'DSTV',
-  BO: 'BOX Office',
-  GOTV: 'GOTV',
-  ECGP: 'ECG Postpaid',
-  ECG: 'ECG Prepaid',
-  KWESETV: 'Kwese TV',
-  MTNPP: 'MTN Postpaid',
-  VPP: 'Vodafone Postpaid',
-  GWCL: 'Ghana Water Company',
-  SURF: 'Surfline 4G',
-  ADSL: 'Vodafone Broadband',
-  MTNBB: 'MTN Broadband',
-  BUSY: 'Busy 4G',
-};
-
 const BillHistory = () => {
-  const [startDate, setStartDate] = React.useState(
-    new Date(new Date().setDate(d.getDate() - 30)),
-  );
-  const [endDate, setEndDate] = React.useState(new Date());
-  const navigation = useNavigation();
   const [searchTerm, setSearchTerm] = React.useState('');
   const [cancelledStatus, setCancelledStatus] = React.useState();
-  const client = useQueryClient();
   const toast = useToast();
 
   const { user } = useSelector(state => state.auth);

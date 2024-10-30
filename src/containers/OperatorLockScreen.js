@@ -14,6 +14,7 @@ import Backspace from '../../assets/icons/backspace.svg';
 import Lock from '../../assets/icons/lock.svg';
 import { loginApi } from '../api/axiosInstance';
 import { useToast } from 'react-native-toast-notifications';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useActionCreator } from '../hooks/useActionCreator';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -39,16 +40,18 @@ const BackspaceComp = ({ bRef }) => {
 };
 
 const OperatorLockScreen = ({ route }) => {
+  const navigation = useNavigation();
   const { username } = route.params;
-  const { setCurrentUser, setLoggininOverlay, setAuth } = useActionCreator();
+  const { setCurrentUser, setAuth, setLoggininOverlay } = useActionCreator();
+  const [_, setLoading] = React.useState(false);
   const ref = React.useRef();
   const [input, setInput] = React.useState('');
-  const [ip, setIp] = React.useState('');
   const { bottom } = useSafeAreaInsets();
+  const [ip, setIp] = React.useState('');
+
   const toast = useToast();
-  const navigation = useNavigation();
   const signin = async (user, pin) => {
-    // setLoading(true);
+    setLoading(true);
     setLoggininOverlay(true);
     let response;
     const metaData = {
@@ -64,8 +67,8 @@ const OperatorLockScreen = ({ route }) => {
         pin,
         device_meta_data: JSON.stringify(metaData),
       });
-      // setLoading(false);
-    } catch (error) {}
+      setLoading(false);
+    } catch (error) { }
     setLoggininOverlay(false);
     return response;
   };
@@ -82,12 +85,6 @@ const OperatorLockScreen = ({ route }) => {
   }, []);
 
   React.useEffect(() => {
-    navigation.addListener('focus', () => {
-      ref.current.clearAll();
-    });
-  }, [navigation]);
-
-  React.useEffect(() => {
     if (input.length === 4) {
       signin(username, input).then(res => {
         const { data } = res;
@@ -100,13 +97,13 @@ const OperatorLockScreen = ({ route }) => {
           if (data.status == 0 || data.device_authorized === 'YES') {
             ref.current.clearAll();
             if (data) {
-              // AsyncStorage.setItem('user', JSON.stringify(data));
+              AsyncStorage.setItem('user', JSON.stringify(data));
               setCurrentUser({
                 ...data,
                 merchant: data.user_merchant_id,
                 outlet: data.user_merchant_group_id,
               });
-              // setAuth(true);
+              setAuth(true);
               navigation.navigate('Outlets Login');
             }
           } else if (

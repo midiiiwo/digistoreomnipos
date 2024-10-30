@@ -12,24 +12,16 @@ import {
   PermissionsAndroid,
   Platform,
 } from 'react-native';
-import ActionSheet from 'react-native-actions-sheet';
-import { Picker as RNPicker } from 'react-native-ui-lib';
-import { SheetManager } from 'react-native-actions-sheet';
 import { Checkbox, DateTimePicker } from 'react-native-ui-lib';
 
-import { TextInput } from 'react-native-paper';
 // import { Switch } from 'react-native-ui-lib';
-import { Switch } from '@rneui/themed';
 
 import { useSelector } from 'react-redux';
 import PrimaryButton from '../components/PrimaryButton';
 import Loading from '../components/Loading';
-import _, { update } from 'lodash';
-import { useEditProduct } from '../hooks/useEditProduct';
+import _ from 'lodash';
 import { useQueryClient } from 'react-query';
-import Picker from '../components/Picker';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
-import Scanner from '../../assets/icons/barscanner';
 import AddImage from '../../assets/icons/add-image.svg';
 import { useGetOutletDetails } from '../hooks/useGetOutletDetails';
 import { CheckItem } from './ReceiptDetails';
@@ -44,6 +36,10 @@ import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import { useToast } from 'react-native-toast-notifications';
 import { useNavigation } from '@react-navigation/native';
 import { useUpdateOutlet } from '../hooks/useUpdateOutlet';
+import moment from 'moment';
+import { PERMISSIONS, request } from 'react-native-permissions';
+import Input from '../components/Input';
+import { useDeleteOutlet } from '../hooks/useDeleteOutlet';
 // import { WorkingTimeCheck } from './AddOutlet';
 
 const WorkingTimeCheck = ({
@@ -60,35 +56,35 @@ const WorkingTimeCheck = ({
       // onPress={onValueChange}
       style={{
         flexDirection: 'row',
-        // borderBottomColor: '#ddd',
-        // borderBottomWidth: 0.7,
+        borderBottomColor: '#EEEEEE',
+        borderBottomWidth: 1,
         // borderTopColor: '#ddd',
         // borderTopWidth: 0.7,
         marginVertical: 4,
         alignItems: 'flex-start',
       }}>
       <View style={{ marginTop: 16, flexDirection: 'row' }}>
-        <Checkbox
-          value={value}
-          onValueChange={onValueChange}
-          color="rgba(25, 66, 216, 0.9)"
-          style={{
-            color: '#204391',
-            // alignSelf: 'center',
-            marginRight: 8,
-          }}
-
-          // label="By clicking to create an account, you agree to iPay's Terms of Use
-          // and Privacy Policy"
-        />
-        <Text
-          style={{
-            fontFamily: 'Roboto-Medium',
-            color: '#30475e',
-            fontSize: 15,
-          }}>
-          {placeholder}
-        </Text>
+        <View style={{ flexDirection: 'row' }}>
+          <Checkbox
+            value={value}
+            onValueChange={onValueChange}
+            color="rgba(25, 66, 216, 0.9)"
+            style={{
+              color: '#204391',
+              marginRight: 8,
+            }}
+            shape="circle"
+          />
+          <Text
+            style={{
+              fontFamily: 'SFProDisplay-Medium',
+              color: '#30475e',
+              fontSize: 15,
+              marginTop: 1,
+            }}>
+            {placeholder}
+          </Text>
+        </View>
       </View>
       <View
         style={{
@@ -97,61 +93,30 @@ const WorkingTimeCheck = ({
           flexDirection: 'row',
         }}>
         <DateTimePicker
-          title="Open"
+          title="Open at"
           mode="time"
-          timeFormat="H:mm A"
+          timeFormat="h:mm A"
           onChange={i => {
-            // const time = i.toLocaleTimeString();
-            // const digits = time.slice(0, -6);
-            // const amPM = time.slice(-2);
             onStartTimeChange(i);
           }}
           editable={value}
           value={start}
+          is24Hour={false}
         />
         <View style={{ marginHorizontal: 8 }} />
         <DateTimePicker
-          title="Close"
+          title="Close at"
           mode="time"
           timeFormat="h:mm A"
           onChange={i => {
-            // console.log('iiiiii', i);
-            // console.log('iiiiii', typeof i);
-            // const time = i.toLocaleTimeString();
-            // const digits = time.slice(0, -6);
-            // const amPM = time.slice(-2);
-
-            console.log('iiiiiii', i);
             onEndTimeChange(i);
           }}
           editable={value}
           value={end}
+          is24Hour={false}
         />
       </View>
     </View>
-  );
-};
-const Input = ({ placeholder, val, setVal, nLines, showError, ...props }) => {
-  return (
-    <TextInput
-      label={placeholder}
-      textColor="#30475e"
-      value={val}
-      onChangeText={setVal}
-      mode="outlined"
-      outlineColor={showError ? '#EB455F' : '#B7C4CF'}
-      activeOutlineColor={showError ? '#EB455F' : '#1942D8'}
-      outlineStyle={{
-        borderWidth: 0.9,
-        borderRadius: 4,
-        // borderColor: showError ? '#EB455F' : '#B7C4CF',
-      }}
-      placeholderTextColor="#B7C4CF"
-      style={styles.input}
-      numberOfLines={nLines}
-      multiline={nLines ? true : false}
-      {...props}
-    />
   );
 };
 
@@ -369,10 +334,8 @@ const mapDaytoCode = {
 function EditOutlet(props) {
   const { user } = useSelector(state => state.auth);
 
-  const [toggleMoreInput, setToggleMoreInput] = React.useState(false);
   const [saved, setSaved] = React.useState();
   const [showError, setShowError] = React.useState(false);
-  const [applyTaxes, setApplyTaxes] = React.useState(true);
   const [openMenu, setOpenMenu] = React.useState(false);
   const client = useQueryClient();
   const [state, dispatch] = React.useReducer(reducer, {
@@ -425,13 +388,22 @@ function EditOutlet(props) {
 
   const toast = useToast();
 
-  const queryClient = useQueryClient();
-
   const updateOutlet = useUpdateOutlet(i => {
     if (i && i.status == 0) {
       setSaved(i);
       client.invalidateQueries('outlet-lov');
       client.invalidateQueries('merchant-outlets');
+      return;
+    }
+    setSaved(i);
+  });
+
+  const deleteOutlets = useDeleteOutlet(i => {
+    if (i && i.status == 0) {
+      setSaved(i);
+      client.invalidateQueries('outlet-lov');
+      client.invalidateQueries('merchant-outlets');
+      navigation.canGoBack();
       return;
     }
     setSaved(i);
@@ -472,11 +444,14 @@ function EditOutlet(props) {
   const parseTime = React.useCallback(time => {
     let parsedTime = new Date();
     let parts = time.match(/(\d+):(\d+) (AM|PM)/);
+
     if (parts) {
-      let hours = parseInt(parts[1]),
-        minutes = parseInt(parts[2]),
+      let hours = parseInt(parts[1], 10),
+        minutes = parseInt(parts[2], 10),
         tt = parts[3];
-      if (tt === 'PM' && hours < 12) hours += 12;
+      if (tt === 'PM' && hours < 12) {
+        hours += 12;
+      }
       parsedTime.setHours(hours, minutes, 0, 0);
     }
     return parsedTime;
@@ -485,8 +460,9 @@ function EditOutlet(props) {
   React.useEffect(() => {
     if (data && data.data && data.data.data && data.data.status == 0) {
       const outletData = data.data.data;
-      console.log('ggggggggggggggggg', outletData);
-      const [lat, lng] = outletData.outlet_gps.split(',');
+      const [lat, lng] = (outletData &&
+        outletData.outlet_gps &&
+        outletData.outlet_gps.split(',')) || ['', ''];
       const location = {
         delivery_location: outletData.outlet_address,
         delivery_gps: {
@@ -497,7 +473,7 @@ function EditOutlet(props) {
         },
       };
       const workingTimes = {};
-      (outletData.outlet_opening_hours || []).forEach(i => {
+      ((outletData && outletData.outlet_opening_hours) || []).forEach(i => {
         console.log(parseTime(i.outlet_opening_starttime));
         if (i) {
           workingTimes[mapCodeToDay[i.outlet_opening_day]] = {
@@ -576,37 +552,62 @@ function EditOutlet(props) {
                     style={{ marginVertical: 10 }}
                     onSelect={async () => {
                       setOpenMenu(false);
-                      try {
-                        const granted = await PermissionsAndroid.request(
-                          PermissionsAndroid.PERMISSIONS.CAMERA,
-                          {
-                            title: 'App Camera Permission',
-                            message: 'App needs access to your camera',
-                            buttonNeutral: 'Ask Me Later',
-                            buttonNegative: 'Cancel',
-                            buttonPositive: 'OK',
-                          },
-                        );
-                        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-                          const result = await launchCamera({
-                            includeBase64: false,
-                            includeExtra: false,
-                            mediaType: 'photo',
-                            quality: 0.65,
-                          });
-                          if (result) {
-                            dispatch({
-                              type: 'image',
-                              payload: result.assets[0],
+                      if (Platform.OS === 'android') {
+                        try {
+                          const granted = await PermissionsAndroid.request(
+                            PermissionsAndroid.PERMISSIONS.CAMERA,
+                            {
+                              title: 'App Camera Permission',
+                              message: 'App needs access to your camera',
+                              buttonNeutral: 'Ask Me Later',
+                              buttonNegative: 'Cancel',
+                              buttonPositive: 'OK',
+                            },
+                          );
+                          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                            const result = await launchCamera({
+                              includeBase64: false,
+                              includeExtra: false,
+                              mediaType: 'photo',
+                              quality: 0.65,
+                            });
+                            if (result) {
+                              dispatch({
+                                type: 'image',
+                                payload: result.assets[0],
+                              });
+                            }
+                          } else {
+                            toast.show('Camera permission denied', {
+                              placement: 'top',
                             });
                           }
-                        } else {
-                          toast.show('Camera permission denied', {
-                            placement: 'top',
-                          });
+                        } catch (error) {
+                          console.log('=>>>>>>>>>>>>>>>>,', error);
                         }
-                      } catch (error) {
-                        console.log('=>>>>>>>>>>>>>>>>,', error);
+                      } else if (Platform.OS === 'ios') {
+                        try {
+                          const granted = await request(PERMISSIONS.IOS.CAMERA);
+
+                          if (granted === 'granted') {
+                            const result = await launchCamera({
+                              includeBase64: false,
+                              includeExtra: false,
+                              mediaType: 'photo',
+                            });
+                            console.log('grrrr', result);
+                            if (result) {
+                              dispatch({
+                                type: 'image',
+                                payload: result.assets[0],
+                              });
+                            }
+                          } else {
+                            // request(PERMISSIONS.IOS.CAMERA);
+                          }
+                        } catch (error) {
+                          console.log('=>>>>>>>>>>>>>>>>,', error);
+                        }
                       }
                     }}>
                     <Text
@@ -910,6 +911,20 @@ function EditOutlet(props) {
           style={styles.btn}
           disabled={updateOutlet.isLoading}
           handlePress={() => {
+            if (
+              state.name.length === 0 ||
+              // !state.tin ||
+              state.contact.length === 0 ||
+              state.notify.length === 0 ||
+              !state.location
+            ) {
+              setShowError(true);
+              toast.show('Please provide all required details', {
+                placement: 'top',
+                type: 'danger',
+              });
+              return;
+            }
             const workingTimes = {};
             let loop = 0;
             if (state.set_worktime) {
@@ -917,21 +932,20 @@ function EditOutlet(props) {
                 if (value.status) {
                   workingTimes[loop] = {
                     workDay: mapDaytoCode[key],
-                    workStartTime: value.start,
-                    workEndTime: value.end,
+                    workStartTime: moment(value.start).format('h:mm A'),
+                    workEndTime: moment(value.end).format('h:mm A'),
                   };
                   loop++;
                 }
               }
             }
-            updateOutlet.mutate({
+            const payload = {
               outlet_id: state.id,
               outlet_name: state.name,
               outlet_contact: state.contact,
-              outlet_notify: state.notify,
+              outlet_notification_contact: state.notify,
               outlet_source: 'MOBILE',
               outlet_worktime_set: state.set_worktime ? 'YES' : 'NO',
-              outlet_worktime_list: JSON.stringify(workingTimes),
               outlet_address:
                 (state.location && state.location.delivery_location) || '',
               outlet_gps:
@@ -955,9 +969,26 @@ function EditOutlet(props) {
                   : '',
               mod_by: user.login,
               merchant_id: user.merchant,
-            });
+            };
+            if (!_.isEmpty(workingTimes)) {
+              // eslint-disable-next-line dot-notation
+              payload['outlet_worktime_list'] = JSON.stringify(workingTimes);
+            }
+            updateOutlet.mutate(payload);
           }}>
           {updateOutlet.isLoading ? 'Processing' : 'Save Outlet'}
+        </PrimaryButton>
+        <View style={{ marginHorizontal: 4 }} />
+        <PrimaryButton
+          style={[styles.btn, { backgroundColor: '#F24C3D' }]}
+          handlePress={() => {
+            deleteOutlets.mutate({
+              outlet_id: state.id,
+              mod_by: user?.login,
+            });
+          }}
+          disabled={deleteOutlets.isLoading}>
+          {deleteOutlets.isLoading ? 'Processing' : 'Delete Outlet'}
         </PrimaryButton>
       </View>
     </>
@@ -992,10 +1023,12 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderTopColor: '#ddd',
     borderTopWidth: 0.6,
+    flexDirection: 'row',
+    paddingHorizontal: 12,
   },
   btn: {
     borderRadius: 4,
-    width: '90%',
+    flex: 1,
   },
   dWrapper: {
     paddingTop: 12,

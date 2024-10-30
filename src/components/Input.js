@@ -33,12 +33,14 @@ const styles = StyleSheet.create({
   input: {
     marginVertical: 8,
     justifyContent: 'center',
-    fontSize: 15.2,
+
+    fontSize: 14.6,
     backgroundColor: '#fff',
   },
   contentStyle: {
-    fontFamily: 'ReadexPro-Regular',
-    letterSpacing: 0.3,
-    color: '#002',
+    fontFamily: 'IBMPlexSans-Medium',
+    color: '#30475e',
+    fontSize: 14.8,
+    letterSpacing: -0.15,
   },
 });

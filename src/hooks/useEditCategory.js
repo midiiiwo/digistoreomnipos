@@ -6,7 +6,7 @@ export function useEditCategory(handleSuccess) {
     ['edit-category'],
     payload => {
       try {
-        return editCategory(payload);
+        return editCategory(payload.category);
       } catch (error) {}
     },
     {

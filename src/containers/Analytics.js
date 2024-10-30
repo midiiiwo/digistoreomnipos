@@ -1,4 +1,3 @@
-/* eslint-disable react/self-closing-comp */
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {
@@ -17,6 +16,7 @@ import { useSelector } from 'react-redux';
 import Loading from '../components/Loading';
 import { Dimensions } from 'react-native';
 import { PieChart } from 'react-native-gifted-charts';
+import Pie from 'react-native-pie';
 import { BarChart, CombinedChart } from 'react-native-charts-wrapper';
 import { TabView, TabBar } from 'react-native-tab-view';
 import { useWindowDimensions } from 'react-native';
@@ -26,24 +26,33 @@ import { useSalesInsights } from '../hooks/useSalesInsights';
 import { useProductAnalytics } from '../hooks/useProductAnalytics';
 import { useActionCreator } from '../hooks/useActionCreator';
 import { SheetManager } from 'react-native-actions-sheet';
+import { formatNumberTwoSig } from '../utils/shared';
+import { useGetMerchantCustomers } from '../hooks/useGetMerchantCustomers';
+import { useGetExpensesHistory } from './ExpensesHistory';
+import _ from 'lodash';
 
 const colors = {
   'MTN Mobile Money': '#FFDD83',
-  'AirtelTigo Money': '#284A9A',
-  'Vodafone Cash': '#EA5455',
+  'AT Money': '#284A9A',
+  'Telecel Cash': '#EA5455',
   'Bank Card': '#5D3891',
   Cash: '#408E91',
   GhQR: '#BE0909',
   'Offline Card': '#30475e',
   'Offline MoMo': '#009FBD',
+  'Pay Later': '#009FBD',
+  Others: '#009FBD',
 };
 
 const shortName = {
   'MTN Mobile Money': 'MTN MoMo',
-  'AirtelTigo Money': 'AirtelTigo',
-  'Vodafone Cash': 'Voda Cash',
+  'AT Money': 'AT Money',
+  'Telecel Cash': 'Telecel Cash',
   'Bank Card': 'Card',
   Cash: 'Cash',
+  'Pay Later': 'Pay Later',
+  'Offline Card': 'Offline Card',
+  Others: 'Others',
 };
 
 const mapSalesToName = {
@@ -60,18 +69,17 @@ const mapSalesToName = {
   NET_PROFIT: 'Net Profit',
   TRANSACTION_FEES: 'Payment Fees',
   REFUNDED_SALES: 'Refunds',
-  SMS_CHARGE: 'SMS Cost',
+  SMS_COST: 'SMS Cost',
 };
 
 const InsightCard = ({ title, currencySymbol, metric }) => {
-  console.log('ccccccccc', title, metric);
   return (
     <View style={[styles.cardMain]}>
-      <Text style={[styles.cardTitle]}>{title}</Text>
       <Text style={[styles.amount]}>
         {currencySymbol}
         {metric}
       </Text>
+      <Text style={[styles.cardTitle]}>{title}</Text>
     </View>
   );
 };
@@ -95,18 +103,12 @@ const Overview = () => {
       end_date: moment(summaryEndDate).format('DD-MM-YYYY'),
     });
   }, [summaryStartDate, summaryEndDate, user.merchant, mutate]);
-  // let summary = [];
-  // for (let i in (insights && insights.sales_summary) || {}) {
-  //   summary.push({ title: i, metric: insights.sales_summary[i] });
-  // }
 
   if (isLoading) {
     return <Loading />;
   }
 
   const summary = insights && insights.sales_summary;
-
-  console.log('syyyyyyy', insights);
 
   return (
     <View style={[ss.card, { flex: 1 }]}>
@@ -115,10 +117,9 @@ const Overview = () => {
         <Pressable
           style={{
             marginLeft: 'auto',
-            marginRight: Dimensions.get('window').width * 0.03,
+            marginRight: Dimensions.get('window').width * 0.05,
           }}
           onPress={() => {
-            console.log('prrrrrrrr');
             SheetManager.show('AnalyticsFilter', {
               payload: {
                 startDate: summaryStartDate,
@@ -134,8 +135,8 @@ const Overview = () => {
               ss.headerText,
               {
                 color: '#006DFF',
-                fontFamily: 'ReadexPro-Medium',
-                fontSize: 17.5,
+                fontFamily: 'SFProDisplay-Medium',
+                fontSize: 14.5,
               },
             ]}>
             {range.label}
@@ -162,7 +163,11 @@ const Overview = () => {
             style={{
               justifyContent: 'center',
             }}>
-            <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'center',
+              }}>
               <InsightCard
                 title={mapSalesToName.GROSS_SALES}
                 metric={summary.GROSS_SALES}
@@ -172,22 +177,28 @@ const Overview = () => {
                 title={mapSalesToName.REFUNDED_SALES}
                 metric={summary.REFUNDED_SALES}
               />
+            </View>
+            <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
               <InsightCard
                 title={mapSalesToName.DISCOUNTS}
                 metric={summary.DISCOUNTS}
               />
-            </View>
-            <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+              <View style={{ marginHorizontal: 1 }} />
               <InsightCard
                 title={mapSalesToName.TRANSACTION_FEES}
                 metric={summary.TRANSACTION_FEES}
               />
+            </View>
+            <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
               <InsightCard
                 title={mapSalesToName.SHIPPING_FEES}
                 metric={summary.SHIPPING_FEES}
               />
               <View style={{ marginHorizontal: 1 }} />
-              <InsightCard title={mapSalesToName.SMS_CHARGE} metric={'0.00'} />
+              <InsightCard
+                title={mapSalesToName.SMS_COST}
+                metric={summary.SMS_COST}
+              />
             </View>
             <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
               <InsightCard
@@ -199,17 +210,19 @@ const Overview = () => {
                 title={mapSalesToName.NET_SALES}
                 metric={summary.NET_SALES}
               />
+            </View>
+            <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
               <InsightCard
                 title={mapSalesToName.COST_OF_GOODS}
                 metric={summary.COST_OF_GOODS}
               />
-            </View>
-            <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
               <View style={{ marginHorizontal: 1 }} />
               <InsightCard
                 title={mapSalesToName.GROSS_PROFIT}
                 metric={summary.GROSS_PROFIT}
               />
+            </View>
+            <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
               <InsightCard
                 title={mapSalesToName.EXPENSES}
                 metric={summary.EXPENSES}
@@ -317,7 +330,9 @@ const Sales = () => {
     return <Loading />;
   }
 
-  const notIncluded = ['Offline MoMo', 'Offline Card', 'GhQR'];
+  const notIncluded = ['Offline MoMo', 'Offline Card', 'GhQR', 'Store Credit'];
+
+  const momoPayments = ['MTN Mobile Money', 'Telecel Cash', 'AT Money'];
 
   // console.log('ddddddddddddddd', data && data.data && data.data.data);
   const total = ((insights && insights.sales_by_paymenttype) || []).reduce(
@@ -343,10 +358,6 @@ const Sales = () => {
         return;
       }
 
-      // if (notIncluded.includes(i.PAYMENT_TYPE)) {
-      //   return;
-      // }
-
       const percent =
         (Number(i.TYPE_TOTAL_AMOUNT.replace(/,/g, '')) / total) * 100;
       return {
@@ -357,6 +368,8 @@ const Sales = () => {
       };
     }) || []
   ).filter(i => i);
+
+  console.log(chartData);
 
   // const barChartLabels = [];
   // const barChartData = [];
@@ -394,7 +407,7 @@ const Sales = () => {
           },
         ],
         config: {
-          barWidth: 0.25,
+          barWidth: 0.5,
           dashedLine: {
             lineLength: 5, // required
             spaceLength: 2, // required
@@ -424,15 +437,15 @@ const Sales = () => {
       granularityEnabled: true,
       granularity: 3,
       position: 'BOTTOM',
-      fontFamily: 'ReadexPro-Regular',
-      textSize: 15.7,
+      fontFamily: 'SFProDisplay-Regular',
+      textSize: 10.7,
       fontStyle: {
         color: processColor('#091D60'),
       },
       drawGridLines: false,
       gridDashedLine: {
-        lineLength: Dimensions.get('window').width * 0.003,
-        spaceLength: Dimensions.get('window').width * 0.002,
+        lineLength: Dimensions.get('window').width * 0.03,
+        spaceLength: Dimensions.get('window').width * 0.02,
       },
       // avoidFirstLastClipping: true,
       // yOffset: 0,
@@ -450,15 +463,14 @@ const Sales = () => {
         gridDashedLine: {
           lineLength:
             Platform.OS === 'android'
-              ? Dimensions.get('window').width * 0.007
-              : Dimensions.get('window').width * 0.003,
+              ? Dimensions.get('window').width * 0.03
+              : Dimensions.get('window').width * 0.01,
           spaceLength:
             Platform.OS === 'android'
-              ? Dimensions.get('window').width * 0.007
-              : Dimensions.get('window').width * 0.003,
+              ? Dimensions.get('window').width * 0.02
+              : Dimensions.get('window').width * 0.01,
         },
-        fontFamily: 'ReadexPro-Regular',
-        textSize: 15,
+        fontFamily: 'SFProDisplay-Regular',
         // zeroLine: {
         //   // enabled: false,
         // },
@@ -488,6 +500,18 @@ const Sales = () => {
     }
   });
 
+  const momoTotal = chartData.reduce((acc, curr) => {
+    if (!curr) {
+      return acc;
+    }
+    if (!momoPayments.includes(curr.name)) {
+      return acc;
+    }
+    return curr.value + acc;
+  }, 0);
+
+  console.log('ccccc', chartData);
+
   const barChartData = {
     data: {
       dataSets: [
@@ -502,7 +526,7 @@ const Sales = () => {
         },
       ],
       config: {
-        barWidth: 0.18,
+        barWidth: 0.25,
         dashedLine: {
           lineLength: 5, // required
           spaceLength: 2, // required
@@ -515,8 +539,8 @@ const Sales = () => {
       granularityEnabled: true,
       granularity: 1,
       position: 'BOTTOM',
-      fontFamily: 'ReadexPro-Regular',
-      textSize: 17.7,
+      fontFamily: 'SFProDisplay-Regular',
+      textSize: 10.7,
       fontStyle: {
         color: processColor('#091D60'),
       },
@@ -541,15 +565,14 @@ const Sales = () => {
         gridDashedLine: {
           lineLength:
             Platform.OS === 'android'
-              ? Dimensions.get('window').width * 0.008
-              : Dimensions.get('window').width * 0.003,
+              ? Dimensions.get('window').width * 0.03
+              : Dimensions.get('window').width * 0.01,
           spaceLength:
             Platform.OS === 'android'
-              ? Dimensions.get('window').width * 0.008
-              : Dimensions.get('window').width * 0.003,
+              ? Dimensions.get('window').width * 0.02
+              : Dimensions.get('window').width * 0.01,
         },
-        fontFamily: 'ReadexPro-Regular',
-        textSize: 15,
+        fontFamily: 'SFProDisplay-Regular',
         zeroLine: {
           // enabled: false,
         },
@@ -583,7 +606,6 @@ const Sales = () => {
       label: i.BREAKDOWNS,
     };
   });
-  console.log('barrrrrriiiiiiii', barChartData);
 
   // const data = {
   //   labels: barChartLabels,
@@ -594,7 +616,6 @@ const Sales = () => {
   //   ],
   // };
 
-  console.log('rangggg', range.label);
   let summary = [];
   for (let i in (insights && insights.sales_summary) || {}) {
     summary.push({ title: i, metric: insights.sales_summary[i] });
@@ -620,7 +641,7 @@ const Sales = () => {
         <View style={[ss.card, { marginHorizontal: 0 }]}>
           <View
             style={{
-              marginTop: 17.5,
+              marginTop: 14.5,
               paddingLeft: 18,
               flexDirection: 'row',
               alignItems: 'center',
@@ -630,7 +651,7 @@ const Sales = () => {
             <Pressable
               style={{
                 marginLeft: 'auto',
-                marginRight: Dimensions.get('window').width * 0.03,
+                marginRight: Dimensions.get('window').width * 0.05,
                 padding: 8,
               }}
               onPress={() => {
@@ -649,8 +670,8 @@ const Sales = () => {
                 style={[
                   {
                     color: '#006DFF',
-                    fontFamily: 'ReadexPro-Medium',
-                    fontSize: 17.5,
+                    fontFamily: 'SFProDisplay-Medium',
+                    fontSize: 14.5,
                   },
                 ]}>
                 {range.label}
@@ -667,7 +688,7 @@ const Sales = () => {
               flex: 1,
               // backgroundColor: 'red',
               width: '100%',
-              height: Dimensions.get('window').height * 0.5,
+              height: Dimensions.get('window').height * 0.4,
               alignItems: 'stretch',
             }}>
             <CombinedChart
@@ -677,7 +698,7 @@ const Sales = () => {
               animation={{ durationX: 100 }}
               legend={state.current.legend}
               gridBackgroundColor={processColor('#ffffff')}
-              visibleRange={{ x: { min: 20, max: 1 } }}
+              visibleRange={{ x: { min: 11, max: 11 } }}
               drawBarShadow={false}
               drawValueAboveBar={true}
               chartDescription={{ text: '' }}
@@ -705,7 +726,7 @@ const Sales = () => {
         <View style={[ss.card, { marginHorizontal: 0 }]}>
           <View
             style={{
-              marginTop: 17.5,
+              marginTop: 14.5,
               paddingLeft: 18,
               marginBottom: 0,
               flexDirection: 'row',
@@ -714,7 +735,7 @@ const Sales = () => {
             <Pressable
               style={{
                 marginLeft: 'auto',
-                marginRight: Dimensions.get('window').width * 0.03,
+                marginRight: Dimensions.get('window').width * 0.05,
               }}
               onPress={() => {
                 SheetManager.show('AnalyticsFilter', {
@@ -731,8 +752,8 @@ const Sales = () => {
                 style={[
                   {
                     color: '#006DFF',
-                    fontFamily: 'ReadexPro-Medium',
-                    fontSize: 17.5,
+                    fontFamily: 'SFProDisplay-Medium',
+                    fontSize: 14.5,
                   },
                 ]}>
                 {range.label}
@@ -816,9 +837,9 @@ const Sales = () => {
                   <View
                     style={{
                       flexDirection: 'row',
-                      paddingVertical: 14,
+                      paddingVertical: 8,
                       // backgroundColor: 'red',
-                      width: '95%',
+                      width: '90%',
                       borderBottomColor: '#ddd',
                       borderBottomWidth: 0.5,
                       borderTopColor: '#ddd',
@@ -827,21 +848,21 @@ const Sales = () => {
                     key={item.label}>
                     <Text
                       style={{
-                        fontFamily: 'ReadexPro-Regular',
+                        fontFamily: 'SFProDisplay-Regular',
                         color: '#191825',
-                        fontSize: 17,
+                        fontSize: 14,
                       }}>
                       {item.label.slice(0, 1).toUpperCase() +
                         item.label.slice(1).toLowerCase()}{' '}
                     </Text>
                     <Text
                       style={{
-                        fontFamily: 'ReadexPro-Regular',
+                        fontFamily: 'SFProDisplay-Regular',
                         color: '#191825',
-                        fontSize: 17,
+                        fontSize: 14,
                         marginLeft: 'auto',
                       }}>
-                      {new Intl.NumberFormat().format(item.value)}
+                      {formatNumberTwoSig(item?.value)}
                     </Text>
                   </View>
                 );
@@ -862,14 +883,11 @@ const Sales = () => {
         </View> */}
 
         <View>
-          <View style={[ss.card, { paddingLeft: 18 }]}>
+          <View style={[ss.card, { paddingLeft: 10 }]}>
             <View style={[ss.header, { flexDirection: 'row' }]}>
-              <Text style={ss.headerText}>Sales By Payment Type</Text>
+              <Text style={[ss.headerText]}>Sales By Payment Type</Text>
               <Pressable
-                style={{
-                  marginLeft: 'auto',
-                  marginRight: Dimensions.get('window').width * 0.03,
-                }}
+                style={{ marginLeft: 'auto' }}
                 onPress={() => {
                   SheetManager.show('AnalyticsFilter', {
                     payload: {
@@ -886,11 +904,11 @@ const Sales = () => {
                     ss.headerText,
                     {
                       color: '#006DFF',
-                      fontFamily: 'ReadexPro-Medium',
-                      fontSize: 17.5,
+                      fontFamily: 'SFProDisplay-Medium',
+                      fontSize: 14.5,
                     },
                   ]}>
-                  {range.label}
+                  {range?.label}
                 </Text>
               </Pressable>
             </View>
@@ -907,18 +925,15 @@ const Sales = () => {
                   data={chartData}
                   showText
                   textColor="#000"
-                  radius={120}
+                  radius={85}
                   textSize={12}
                   donut
                   // innerCircleBorderColor="#fff"
                   // showTextBackground
                   // textBackgroundRadius={26}
-                  // donut
                   // showGradient
-                  // focusOnPress
                   // radius={90}
-
-                  innerRadius={60}
+                  innerRadius={62}
                   innerCircleColor={'#232B5D'}
                   centerLabelComponent={() => {
                     return (
@@ -961,11 +976,10 @@ const Sales = () => {
                         key={item.name}>
                         <View
                           style={{
-                            height: 11,
-                            width: 11,
+                            height: 7,
+                            width: 7,
                             backgroundColor: item.color,
                             marginRight: 12,
-                            // marginVertical: 9,
                             borderRadåius: 0,
                           }}
                         />
@@ -973,14 +987,15 @@ const Sales = () => {
                           <Text
                             style={{
                               fontFamily: 'ReadexPro-Medium',
-                              color: '#091D60',
-                              fontSize: 16.8,
+                              color: '#30475e',
+                              fontSize: 13.8,
                             }}>
                             {shortName[item.name]}{' '}
                             <Text
                               style={{
                                 color: '#656',
                                 fontFamily: 'ReadexPro-Regular',
+                                opacity: 0.7,
                               }}>
                               ({item.percentage})
                             </Text>
@@ -988,15 +1003,28 @@ const Sales = () => {
                           <Text
                             style={{
                               fontFamily: 'ReadexPro-Medium',
-                              color: '#091D60',
-                              fontSize: 15.8,
+                              color: '#30475e',
+                              fontSize: 12.8,
                             }}>
-                            GHS {new Intl.NumberFormat().format(item.value)}
+                            GHS {formatNumberTwoSig(item?.value)}
                           </Text>
                         </View>
                       </View>
                     );
                   })}
+                  <Text
+                    style={{
+                      fontFamily: 'ReadexPro-Medium',
+                      fontSize: 14,
+                      color: '#30475e',
+                      marginTop: 6,
+                    }}>
+                    MoMo Total: GHS{' '}
+                    {new Intl.NumberFormat('en-US', {
+                      maximumFractionDigits: 2,
+                      minimumFractionDigits: 2,
+                    }).format(momoTotal)}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -1009,8 +1037,6 @@ const Sales = () => {
 
 const Products = () => {
   const [productStatus, setProductStatus] = React.useState();
-  const [trendStatus, setTrendStatus] = React.useState();
-  const [trendPRevStatus, setTrendPrevStatus] = React.useState();
   const { mutate, isLoading } = useProductAnalytics(setProductStatus);
 
   const { summaryStartDate, summaryEndDate, range } = useSelector(
@@ -1044,8 +1070,6 @@ const Products = () => {
   const productLowStock = productStatus && productStatus.products_low_stock;
 
   const productsTrend = (productStatus && productStatus.products_trend) || [];
-  const productsPrevTrend =
-    (trendPRevStatus && trendPRevStatus.products_trend) || [];
 
   const trendLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
@@ -1220,7 +1244,7 @@ const Products = () => {
           },
         ],
         config: {
-          barWidth: 0.25,
+          barWidth: 0.5,
           dashedLine: {
             lineLength: 5, // required
             spaceLength: 2, // required
@@ -1250,15 +1274,15 @@ const Products = () => {
       granularityEnabled: true,
       granularity: 3,
       position: 'BOTTOM',
-      fontFamily: 'ReadexPro-Regular',
-      textSize: 16.7,
+      fontFamily: 'SFProDisplay-Regular',
+      textSize: 10.7,
       fontStyle: {
         color: processColor('#091D60'),
       },
       drawGridLines: false,
       gridDashedLine: {
-        lineLength: Dimensions.get('window').width * 0.008,
-        spaceLength: Dimensions.get('window').width * 0.004,
+        lineLength: Dimensions.get('window').width * 0.03,
+        spaceLength: Dimensions.get('window').width * 0.02,
       },
       // avoidFirstLastClipping: true,
       // yOffset: 0,
@@ -1276,15 +1300,14 @@ const Products = () => {
         gridDashedLine: {
           lineLength:
             Platform.OS === 'android'
-              ? Dimensions.get('window').width * 0.008
-              : Dimensions.get('window').width * 0.004,
+              ? Dimensions.get('window').width * 0.03
+              : Dimensions.get('window').width * 0.01,
           spaceLength:
             Platform.OS === 'android'
-              ? Dimensions.get('window').width * 0.008
-              : Dimensions.get('window').width * 0.004,
+              ? Dimensions.get('window').width * 0.02
+              : Dimensions.get('window').width * 0.01,
         },
-        fontFamily: 'ReadexPro-Regular',
-        textSize: 16,
+        fontFamily: 'SFProDisplay-Regular',
         zeroLine: {
           // enabled: false,
         },
@@ -1332,17 +1355,14 @@ const Products = () => {
       <View style={[ss.card, { marginHorizontal: 0 }]}>
         <View
           style={{
-            marginTop: 17.5,
+            marginTop: 14.5,
             paddingLeft: 18,
             marginBottom: 0,
             flexDirection: 'row',
           }}>
           <Text style={ss.headerText}>Product Sales Trend (count)</Text>
           <Pressable
-            style={{
-              marginLeft: 'auto',
-              marginRight: Dimensions.get('window').width * 0.03,
-            }}
+            style={{ marginLeft: 'auto', marginRight: 12 }}
             onPress={() => {
               console.log('prrrrrrrr');
               SheetManager.show('AnalyticsFilter', {
@@ -1360,8 +1380,8 @@ const Products = () => {
                 ss.headerText,
                 {
                   color: '#006DFF',
-                  fontFamily: 'ReadexPro-Medium',
-                  fontSize: 17.5,
+                  fontFamily: 'SFProDisplay-Medium',
+                  fontSize: 14.5,
                 },
               ]}>
               {range.label}
@@ -1398,7 +1418,7 @@ const Products = () => {
               animation={{ durationX: 100 }}
               // legend={state.current.legend}
               gridBackgroundColor={processColor('#ffffff')}
-              visibleRange={{ x: { min: 20, max: 1 } }}
+              visibleRange={{ x: { min: 11, max: 1 } }}
               drawBarShadow={false}
               drawValueAboveBar={true}
               chartDescription={{ text: '' }}
@@ -1496,10 +1516,7 @@ const Products = () => {
         <View style={[ss.header, { flexDirection: 'row' }]}>
           <Text style={ss.headerText}>Products Summary</Text>
           <Pressable
-            style={{
-              marginLeft: 'auto',
-              marginRight: Dimensions.get('window').width * 0.03,
-            }}
+            style={{ marginLeft: 'auto' }}
             onPress={() => {
               console.log('prrrrrrrr');
               SheetManager.show('AnalyticsFilter', {
@@ -1517,8 +1534,8 @@ const Products = () => {
                 ss.headerText,
                 {
                   color: '#006DFF',
-                  fontFamily: 'ReadexPro-Medium',
-                  fontSize: 17.5,
+                  fontFamily: 'SFProDisplay-Medium',
+                  fontSize: 14.5,
                 },
               ]}>
               {range.label}
@@ -1555,10 +1572,7 @@ const Products = () => {
         <View style={[ss.header, { flexDirection: 'row' }]}>
           <Text style={ss.headerText}>Products with low stock</Text>
           <Pressable
-            style={{
-              marginLeft: 'auto',
-              marginRight: Dimensions.get('window').width * 0.03,
-            }}
+            style={{ marginLeft: 'auto' }}
             onPress={() => {
               console.log('prrrrrrrr');
               SheetManager.show('AnalyticsFilter', {
@@ -1576,8 +1590,8 @@ const Products = () => {
                 ss.headerText,
                 {
                   color: '#006DFF',
-                  fontFamily: 'ReadexPro-Medium',
-                  fontSize: 17.5,
+                  fontFamily: 'SFProDisplay-Medium',
+                  fontSize: 14.5,
                 },
               ]}>
               {range.label}
@@ -1602,10 +1616,7 @@ const Products = () => {
         <View style={[ss.header, { flexDirection: 'row' }]}>
           <Text style={ss.headerText}>New Products Added</Text>
           <Pressable
-            style={{
-              marginLeft: 'auto',
-              marginRight: Dimensions.get('window').width * 0.03,
-            }}
+            style={{ marginLeft: 'auto' }}
             onPress={() => {
               console.log('prrrrrrrr');
               SheetManager.show('AnalyticsFilter', {
@@ -1623,8 +1634,8 @@ const Products = () => {
                 ss.headerText,
                 {
                   color: '#006DFF',
-                  fontFamily: 'ReadexPro-Medium',
-                  fontSize: 17.5,
+                  fontFamily: 'SFProDisplay-Medium',
+                  fontSize: 14.5,
                 },
               ]}>
               {range.label}
@@ -1649,10 +1660,7 @@ const Products = () => {
         <View style={[ss.header, { flexDirection: 'row' }]}>
           <Text style={ss.headerText}>Top 5 Selling Products</Text>
           <Pressable
-            style={{
-              marginLeft: 'auto',
-              marginRight: Dimensions.get('window').width * 0.03,
-            }}
+            style={{ marginLeft: 'auto' }}
             onPress={() => {
               console.log('prrrrrrrr');
               SheetManager.show('AnalyticsFilter', {
@@ -1670,8 +1678,8 @@ const Products = () => {
                 ss.headerText,
                 {
                   color: '#006DFF',
-                  fontFamily: 'ReadexPro-Medium',
-                  fontSize: 17.5,
+                  fontFamily: 'SFProDisplay-Medium',
+                  fontSize: 14.5,
                 },
               ]}>
               {range.label}
@@ -1696,10 +1704,7 @@ const Products = () => {
         <View style={[ss.header, { flexDirection: 'row' }]}>
           <Text style={ss.headerText}>Least Performing Products (5)</Text>
           <Pressable
-            style={{
-              marginLeft: 'auto',
-              marginRight: Dimensions.get('window').width * 0.03,
-            }}
+            style={{ marginLeft: 'auto' }}
             onPress={() => {
               console.log('prrrrrrrr');
               SheetManager.show('AnalyticsFilter', {
@@ -1717,8 +1722,8 @@ const Products = () => {
                 ss.headerText,
                 {
                   color: '#006DFF',
-                  fontFamily: 'ReadexPro-Medium',
-                  fontSize: 17.5,
+                  fontFamily: 'SFProDisplay-Medium',
+                  fontSize: 14.5,
                 },
               ]}>
               {range.label}
@@ -1757,7 +1762,7 @@ const Products = () => {
             paddingHorizontal: 10,
             flexDirection: 'row',
             flexWrap: 'wrap',
-            paddingLeft: Dimensions.get('window').width * 0.03,
+            paddingLeft: Dimensions.get('window').width * 0.05,
           }}>
           {(topSellingProducts || []).map(i => {
             return (
@@ -1801,7 +1806,7 @@ const Products = () => {
               paddingHorizontal: 10,
               flexDirection: 'row',
               flexWrap: 'wrap',
-              paddingLeft: Dimensions.get('window').width * 0.03,
+              paddingLeft: Dimensions.get('window').width * 0.05,
             }}>
             {(leastSellingProducts || []).map(i => {
               return (
@@ -1829,6 +1834,18 @@ const Customers = () => {
   );
   const { setSummaryStartDate, setSummaryEndDate } = useActionCreator();
   const { mutate, isLoading } = useGetCustomerAnalytics(setData);
+
+  const {
+    data: $customersData,
+    isLoading: isCustomersLoading,
+    // isRefetching,
+    // refetch,
+  } = useGetMerchantCustomers(user.merchant);
+
+  const customersData = $customersData?.data?.data || [];
+
+  console.log('tttttyyy', typeof $customersData?.data?.data);
+
   React.useEffect(() => {
     mutate({
       merchant: user.merchant,
@@ -1838,13 +1855,14 @@ const Customers = () => {
     });
   }, [mutate, user, summaryStartDate, summaryEndDate]);
 
-  if (isLoading) {
+  if (isLoading || isCustomersLoading) {
     return <Loading />;
   }
   const topSales = (data && data.customers_top_sales) || [];
   const topOrders = (data && data.customers_top_orders) || [];
   const leastSales = (data && data.customers_least_sales) || [];
   const summary = (data && data.customers_summary) || {};
+  console.log('customer summary ', summary);
   const customerCat = (data && data.customers_pie_chart) || {};
   const colors_ = {
     NEW: '#6C9BCF',
@@ -1908,12 +1926,8 @@ const Customers = () => {
               </View>
 
               <Pressable
-                style={{
-                  marginLeft: 'auto',
-                  marginRight: Dimensions.get('window').width * 0.03,
-                }}
+                style={{ marginLeft: 'auto' }}
                 onPress={() => {
-                  console.log('prrrrrrrr');
                   SheetManager.show('AnalyticsFilter', {
                     payload: {
                       startDate: summaryStartDate,
@@ -1929,8 +1943,8 @@ const Customers = () => {
                     ss.headerText,
                     {
                       color: '#006DFF',
-                      fontFamily: 'ReadexPro-Medium',
-                      fontSize: 17.5,
+                      fontFamily: 'SFProDisplay-Medium',
+                      fontSize: 14.5,
                     },
                   ]}>
                   {range.label}
@@ -1938,19 +1952,14 @@ const Customers = () => {
               </Pressable>
             </View>
 
-            <View
-              style={{
-                alignItems: 'flex-start',
-                marginLeft: Dimensions.get('window').width * 0.02,
-                paddingBottom: 22,
-              }}>
-              {chartData.length > 0 && (
+            <View style={{ alignItems: 'flex-start', marginLeft: 20 }}>
+              {chartData?.length > 0 && (
                 <PieChart
                   data={chartData}
                   donut
                   // showGradient
                   // focusOnPress
-                  radius={140}
+                  radius={106}
                   innerRadius={80}
                   innerCircleColor={'#232B5D'}
                   showText
@@ -1972,7 +1981,7 @@ const Customers = () => {
                           {((chartData[0] && chartData[0]).value || 0) +
                             ((chartData[1] && chartData[1]).value || 0)}
                         </Text>
-                        <Text style={{ fontSize: 12, color: 'white' }}>
+                        <Text style={{ fontSize: 13, color: 'white' }}>
                           Total
                         </Text>
                       </View>
@@ -1982,7 +1991,7 @@ const Customers = () => {
               )}
             </View>
             {chartData.length > 0 && (
-              <View style={{ paddingHorizontal: 18 }}>
+              <View style={{ paddingHorizontal: 26 }}>
                 {chartData.map(item => {
                   if (!item) {
                     return;
@@ -2003,24 +2012,24 @@ const Customers = () => {
                       />
                       <Text
                         style={{
-                          fontFamily: 'ReadexPro-Medium',
+                          fontFamily: 'SFProDisplay-Medium',
                           color: '#091D60',
-                          fontSize: 17,
+                          fontSize: 14,
                         }}>
                         {item.name.slice(0, 1).toUpperCase() +
                           item.name.slice(1).toLowerCase()}{' '}
                         -{' '}
                         <Text
                           style={{
-                            fontFamily: 'ReadexPro-Medium',
+                            fontFamily: 'SFProDisplay-Medium',
                             color: '#091D60',
-                            fontSize: 17,
+                            fontSize: 14,
                           }}>
                           {item.value}{' '}
                           <Text
                             style={{
                               color: '#656',
-                              fontFamily: 'ReadexPro-Regular',
+                              fontFamily: 'SFProDisplay-Regular',
                             }}>
                             ({item.percent})
                           </Text>
@@ -2036,10 +2045,7 @@ const Customers = () => {
             <View style={[ss.header, { flexDirection: 'row' }]}>
               <Text style={ss.headerText}>Customer Summary</Text>
               <Pressable
-                style={{
-                  marginLeft: 'auto',
-                  marginRight: Dimensions.get('window').width * 0.03,
-                }}
+                style={{ marginLeft: 'auto' }}
                 onPress={() => {
                   console.log('prrrrrrrr');
                   SheetManager.show('AnalyticsFilter', {
@@ -2057,8 +2063,8 @@ const Customers = () => {
                     ss.headerText,
                     {
                       color: '#006DFF',
-                      fontFamily: 'ReadexPro-Medium',
-                      fontSize: 17.5,
+                      fontFamily: 'SFProDisplay-Medium',
+                      fontSize: 14.5,
                     },
                   ]}>
                   {range.label}
@@ -2070,32 +2076,34 @@ const Customers = () => {
               <Text style={ss.name} numberOfLines={1}>
                 Total Customers
               </Text>
-              <Text style={ss.amount}>{summary.TOTAL_CUSTOMERS}</Text>
+              <Text style={ss.amount}>{summary?.TOTAL_CUSTOMERS}</Text>
             </View>
             <View style={ss.item}>
               <Text style={ss.name} numberOfLines={1}>
                 Avg Spend per Customer
               </Text>
               <Text style={ss.amount}>
-                GHS {new Intl.NumberFormat().format(summary.AVG_SPEND)}
+                GHS{' '}
+                {new Intl.NumberFormat('en-US', {
+                  maximumFractionDigits: 2,
+                  minimumFractionDigits: 2,
+                }).format(summary?.AVG_SPEND || 0)}
               </Text>
             </View>
             <View style={ss.item}>
               <Text style={ss.name} numberOfLines={1}>
                 Avg Orders per Customer
               </Text>
-              <Text style={ss.amount}>{summary.AVG_ORDERS}</Text>
+              <Text style={ss.amount}>{summary?.AVG_ORDERS}</Text>
             </View>
           </View>
           <View style={ss.card}>
             <View style={ss.header}>
               <Text style={ss.headerText}>Top 5 Customers by Spend</Text>
               <Pressable
-                style={{
-                  marginLeft: 'auto',
-                  marginRight: Dimensions.get('window').width * 0.03,
-                }}
+                style={{ marginLeft: 'auto' }}
                 onPress={() => {
+                  console.log('prrrrrrrr');
                   SheetManager.show('AnalyticsFilter', {
                     payload: {
                       startDate: summaryStartDate,
@@ -2111,8 +2119,8 @@ const Customers = () => {
                     ss.headerText,
                     {
                       color: '#006DFF',
-                      fontFamily: 'ReadexPro-Medium',
-                      fontSize: 17.5,
+                      fontFamily: 'SFProDisplay-Medium',
+                      fontSize: 14.5,
                     },
                   ]}>
                   {range.label}
@@ -2149,11 +2157,9 @@ const Customers = () => {
             <View style={ss.header}>
               <Text style={ss.headerText}>Top 5 Customers by Orders</Text>
               <Pressable
-                style={{
-                  marginLeft: 'auto',
-                  marginRight: Dimensions.get('window').width * 0.03,
-                }}
+                style={{ marginLeft: 'auto' }}
                 onPress={() => {
+                  console.log('prrrrrrrr');
                   SheetManager.show('AnalyticsFilter', {
                     payload: {
                       startDate: summaryStartDate,
@@ -2169,8 +2175,8 @@ const Customers = () => {
                     ss.headerText,
                     {
                       color: '#006DFF',
-                      fontFamily: 'ReadexPro-Medium',
-                      fontSize: 17.5,
+                      fontFamily: 'SFProDisplay-Medium',
+                      fontSize: 14.5,
                     },
                   ]}>
                   {range.label}
@@ -2205,10 +2211,7 @@ const Customers = () => {
             <View style={ss.header}>
               <Text style={ss.headerText}>Least Performing Customers (5)</Text>
               <Pressable
-                style={{
-                  marginLeft: 'auto',
-                  marginRight: Dimensions.get('window').width * 0.03,
-                }}
+                style={{ marginLeft: 'auto' }}
                 onPress={() => {
                   SheetManager.show('AnalyticsFilter', {
                     payload: {
@@ -2225,8 +2228,8 @@ const Customers = () => {
                     ss.headerText,
                     {
                       color: '#006DFF',
-                      fontFamily: 'ReadexPro-Medium',
-                      fontSize: 17.5,
+                      fontFamily: 'SFProDisplay-Medium',
+                      fontSize: 14.5,
                     },
                   ]}>
                   {range.label}
@@ -2259,6 +2262,68 @@ const Customers = () => {
               })}
             </View>
           </View>
+          <View style={ss.card}>
+            <View style={ss.header}>
+              <Text style={ss.headerText}>Top 5 Debtors</Text>
+              {/* <Pressable
+                style={{ marginLeft: 'auto' }}
+                onPress={() => {
+                  SheetManager.show('AnalyticsFilter', {
+                    payload: {
+                      startDate: summaryStartDate,
+                      endDate: summaryEndDate,
+                      setStartDate: setSummaryStartDate,
+                      setEndDate: setSummaryEndDate,
+                      startIndex: 4,
+                    },
+                  });
+                }}>
+                <Text
+                  style={[
+                    ss.headerText,
+                    {
+                      color: '#006DFF',
+                      fontFamily: 'SFProDisplay-Medium',
+                      fontSize: 14.5,
+                    },
+                  ]}>
+                  {range.label}
+                </Text>
+              </Pressable> */}
+            </View>
+
+            {customersData?.length > 0 && (
+              <View>
+                {customersData
+                  ?.sort(
+                    (a, b) =>
+                      Number(a?.customer_credit_limit) -
+                      Number(b?.customer_credit_limit),
+                  )
+                  ?.slice(0, 5)
+                  ?.map(i => {
+                    if (!i) {
+                      return;
+                    }
+
+                    return (
+                      <View style={ss.item}>
+                        <Text style={ss.name} numberOfLines={1}>
+                          {i?.customer_name}
+                        </Text>
+                        <Text style={[ss.amount, {}]}>
+                          GHS{' '}
+                          {new Intl.NumberFormat('en-US', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          }).format(i?.customer_credit_limit)}
+                        </Text>
+                      </View>
+                    );
+                  })}
+              </View>
+            )}
+          </View>
         </View>
       </ScrollView>
     </View>
@@ -2271,11 +2336,10 @@ const ss = StyleSheet.create({
     backgroundColor: '#F9F9F9',
   },
   headerText: {
-    fontFamily: 'ReadexPro-bold',
+    fontFamily: 'SFProDisplay-Semibold',
     color: '#191825',
-    fontSize: 17.5,
+    fontSize: 14.8,
     letterSpacing: 0.2,
-    marginLeft: Dimensions.get('window').width * 0.01,
   },
   card: {
     // marginHorizontal: 12,
@@ -2286,9 +2350,8 @@ const ss = StyleSheet.create({
   },
   item: {
     flexDirection: 'row',
-    paddingHorizontal: Dimensions.get('window').width * 0.05,
-    paddingLeft: Dimensions.get('window').width * 0.03,
-    paddingVertical: 10,
+    paddingHorizontal: 14,
+    paddingVertical: 5,
   },
   header: {
     backgroundColor: '#fff',
@@ -2299,19 +2362,451 @@ const ss = StyleSheet.create({
     flexDirection: 'row',
   },
   name: {
-    fontFamily: 'ReadexPro-Regular',
-    color: '#003',
-    fontSize: 18,
-    maxWidth: '60%',
+    fontFamily: 'SFProDisplay-Regular',
+    color: '#30475e',
+    fontSize: 15.2,
+    // maxWidth: '60%',
     letterSpacing: 0.2,
+    flex: 1,
+    marginRight: 18,
   },
   amount: {
-    fontFamily: 'ReadexPro-Regular',
-    color: '#003',
-    fontSize: 18,
+    fontFamily: 'SFProDisplay-Regular',
+    color: '#30475e',
+    fontSize: 15.2,
     marginLeft: 'auto',
   },
 });
+
+const expensesColors = ['#BB67FE', '#A4A5E9', '#66CDB0', '#F97668', '#F49D72'];
+
+const ExpensesInsights = props => {
+  const { summaryStartDate, summaryEndDate, range } = useSelector(
+    state => state.merchant,
+  );
+
+  const { user } = useSelector(state => state.auth);
+
+  const { setSummaryStartDate, setSummaryEndDate } = useActionCreator();
+
+  const { data, isLoading, refetch, isFetching } = useGetExpensesHistory(
+    user.merchant,
+    moment(summaryStartDate).format('DD-MM-YYYY'),
+    moment(summaryEndDate).format('DD-MM-YYYY'),
+  );
+  const [avgWidth, setAvgWidth] = React.useState(0);
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  const expensesData = data?.data?.data;
+
+  let pieData = {};
+
+  expensesData?.forEach((item, idx) => {
+    if (item) {
+      if (pieData[item?.expense_category_name]) {
+        pieData[item?.expense_category_name].percentage += Number(
+          item?.expense_amount_paid,
+        );
+        pieData[item?.expense_category_name].amount += Number(
+          item?.expense_amount_paid,
+        );
+      } else {
+        pieData[item?.expense_category_name] = {
+          percentage: Number(item?.expense_amount_paid),
+          color: expensesColors[idx % expensesColors.length],
+          category: item?.expense_category_name,
+          amount: Number(item?.expense_amount_paid),
+        };
+      }
+    }
+  });
+
+  const categoryCount = {};
+
+  expensesData?.forEach((item, idx) => {
+    if (item) {
+      if (categoryCount[item?.expense_category_name]) {
+        categoryCount[item?.expense_category_name].percentage += 1;
+        categoryCount[item?.expense_category_name].count += 1;
+      } else {
+        categoryCount[item?.expense_category_name] = {
+          percentage: 1,
+          color: expensesColors[idx % expensesColors.length],
+          category: item?.expense_category_name,
+          count: 1,
+        };
+      }
+    }
+  });
+
+  const totalAmount = Object.values(pieData).reduce(
+    (acc, curr) => acc + curr.percentage,
+    0,
+  );
+
+  const totalCount = Object.values(categoryCount).reduce(
+    (acc, curr) => acc + curr.percentage,
+    0,
+  );
+
+  Object.values(pieData).forEach(i => {
+    pieData[i.category] = {
+      ...pieData[i.category],
+      percentage: (i.percentage / totalAmount) * 100,
+    };
+  });
+
+  Object.values(categoryCount).forEach(i => {
+    categoryCount[i.category] = {
+      ...categoryCount[i.category],
+      percentage: (i.percentage / totalCount) * 100,
+    };
+  });
+
+  const expenseAvgs = Object.values(pieData).map(
+    i => i?.amount / categoryCount[i?.category].count,
+  );
+
+  const maxAvg = _.max(expenseAvgs);
+
+  pieData = Object.values(pieData).map(i => {
+    return {
+      ...i,
+      name: i?.category,
+      percentage: i?.percentage.toFixed(2),
+      value: Number(i?.amount.toFixed(2)),
+    };
+  });
+
+  console.log('pieData', pieData);
+
+  return (
+    <ScrollView
+      style={{ backgroundColor: '#fafafa', flex: 1 }}
+      refreshControl={
+        <RefreshControl refreshing={isFetching} onRefresh={refetch} />
+      }>
+      <View style={[ss.header, { paddingTop: 14 }]}>
+        <View>
+          <Text style={[ss.headerText]} numberOfLines={2}>
+            Expenses Amount Summary
+          </Text>
+        </View>
+
+        <Pressable
+          style={{ marginLeft: 'auto' }}
+          onPress={() => {
+            SheetManager.show('AnalyticsFilter', {
+              payload: {
+                startDate: summaryStartDate,
+                endDate: summaryEndDate,
+                setStartDate: setSummaryStartDate,
+                setEndDate: setSummaryEndDate,
+                startIndex: 4,
+              },
+            });
+          }}>
+          <Text
+            style={[
+              ss.headerText,
+              {
+                color: '#006DFF',
+                fontFamily: 'SFProDisplay-Medium',
+                fontSize: 14.5,
+              },
+            ]}>
+            {range.label}
+          </Text>
+        </Pressable>
+      </View>
+      <View style={{ backgroundColor: '#fff', paddingBottom: 20 }}>
+        <View style={{ flexDirection: 'row' }}>
+          <View
+            style={{
+              alignItems: 'center',
+              marginLeft: 18,
+              backgroundColor: '#fff',
+              alignSelf: 'flex-start',
+            }}>
+            <PieChart
+              data={pieData}
+              showText
+              textColor="#000"
+              radius={85}
+              textSize={12}
+              donut
+              innerRadius={62}
+              innerCircleColor={'#232B5D'}
+              centerLabelComponent={() => {
+                return (
+                  <View
+                    style={{
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        color: 'white',
+                        // fontWeight: 'bold',
+                      }}>
+                      {new Intl.NumberFormat('en-US', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      }).format(totalAmount)}
+                    </Text>
+                    <Text style={{ fontSize: 12, color: 'white' }}>Total</Text>
+                  </View>
+                );
+              }}
+            />
+            {/* <View style={styles.gauge}>
+              <Text style={styles.gaugeText}>
+                GHS
+                {new Intl.NumberFormat('en-US', {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                }).format(totalAmount)}
+              </Text>
+            </View> */}
+          </View>
+          <View>
+            {Object.values(pieData).map(i => {
+              return (
+                <View style={{ paddingVertical: 6, marginLeft: 10 }}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      flex: 1,
+                      backgroundColor: '#fff',
+                      alignItems: 'center',
+                    }}>
+                    <View
+                      style={{
+                        height: 5,
+                        width: 5,
+                        backgroundColor: i.color,
+                        marginRight: 4,
+                        borderRadius: 20,
+                      }}
+                    />
+                    <Text
+                      style={{
+                        color: '#30475e',
+                        // fontFamily: 'ReadexPro-Regular',
+                        opacity: 0.9,
+                      }}>
+                      {i.category}
+                    </Text>
+                    <View style={{ marginHorizontal: 4 }} />
+                  </View>
+                  <Text
+                    style={{
+                      color: '#30475e',
+                      // fontFamily: 'ReadexPro-Regular',
+                      opacity: 0.8,
+                    }}>
+                    GHS{formatNumberTwoSig(i?.amount)}
+                  </Text>
+                </View>
+              );
+            })}
+          </View>
+        </View>
+
+        <View style={{ marginBottom: 14 }} />
+        {/* <View style={ss.header}>
+          <View>
+            <Text style={[ss.headerText]} numberOfLines={2}>
+              Expenses Category Count
+            </Text>
+          </View>
+
+          <Pressable
+            style={{ marginLeft: 'auto' }}
+            onPress={() => {
+              SheetManager.show('AnalyticsFilter', {
+                payload: {
+                  startDate: summaryStartDate,
+                  endDate: summaryEndDate,
+                  setStartDate: setSummaryStartDate,
+                  setEndDate: setSummaryEndDate,
+                  startIndex: 4,
+                },
+              });
+            }}>
+            <Text
+              style={[
+                ss.headerText,
+                {
+                  color: '#006DFF',
+                  fontFamily: 'SFProDisplay-Medium',
+                  fontSize: 14.5,
+                },
+              ]}>
+              {range.label}
+            </Text>
+          </Pressable>
+        </View> */}
+        {/* <View style={{ flexDirection: 'row' }}>
+          <View
+            style={{
+              // width: 175,
+              alignItems: 'center',
+              marginLeft: 18,
+              marginTop: 8,
+              backgroundColor: '#fff',
+              alignSelf: 'flex-start',
+            }}>
+            <Pie
+              radius={100}
+              innerRadius={85}
+              sections={Object.values(categoryCount)}
+              backgroundColor="#ddd"
+            />
+            <View style={styles.gauge}>
+              <Text style={styles.gaugeText}>{totalCount}</Text>
+            </View>
+          </View>
+          <View>
+            {Object.values(categoryCount).map(i => {
+              return (
+                <View style={{ paddingVertical: 6, marginLeft: 10 }}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      flex: 1,
+                      backgroundColor: '#fff',
+                      alignItems: 'center',
+                    }}>
+                    <View
+                      style={{
+                        height: 5,
+                        width: 5,
+                        backgroundColor: i.color,
+                        marginRight: 4,
+                        borderRadius: 20,
+                      }}
+                    />
+                    <Text
+                      style={{
+                        color: '#30475e',
+                      }}>
+                      {i?.category}
+                    </Text>
+                    <View style={{ marginHorizontal: 4 }} />
+                  </View>
+                  <Text
+                    style={{
+                      color: '#30475e',
+                    }}>
+                    {i?.count}
+                  </Text>
+                </View>
+              );
+            })}
+          </View>
+        </View> */}
+        <View
+          style={{ paddingVertical: 16 }}
+          onLayout={e => setAvgWidth(e.nativeEvent.layout.width)}>
+          <View style={ss.header}>
+            <View>
+              <Text style={[ss.headerText]} numberOfLines={2}>
+                Avg Spend Per Category
+              </Text>
+            </View>
+
+            <Pressable
+              style={{ marginLeft: 'auto' }}
+              onPress={() => {
+                SheetManager.show('AnalyticsFilter', {
+                  payload: {
+                    startDate: summaryStartDate,
+                    endDate: summaryEndDate,
+                    setStartDate: setSummaryStartDate,
+                    setEndDate: setSummaryEndDate,
+                    startIndex: 4,
+                  },
+                });
+              }}>
+              <Text
+                style={[
+                  ss.headerText,
+                  {
+                    color: '#006DFF',
+                    fontFamily: 'SFProDisplay-Medium',
+                    fontSize: 14.5,
+                  },
+                ]}>
+                {range.label}
+              </Text>
+            </Pressable>
+          </View>
+          <View>
+            {Object.values(pieData).map(i => {
+              const avgValue =
+                Number(i?.amount) / (categoryCount[i?.category]?.count || 1);
+              return (
+                <View style={{ paddingHorizontal: 14, paddingVertical: 8 }}>
+                  <View style={{ flexDirection: 'row' }}>
+                    <Text
+                      style={{
+                        backgroundColor: 'transparent',
+                        color: '#000',
+                        fontSize: 14,
+                        fontFamily: 'ReadexPro-Medium',
+                        marginBottom: 2,
+                      }}>
+                      {i?.category}
+                    </Text>
+                    <Text
+                      style={{
+                        backgroundColor: 'transparent',
+                        color: '#000',
+                        fontSize: 14,
+                        fontFamily: 'ReadexPro-Medium',
+                        marginLeft: 'auto',
+                      }}>
+                      GHS{formatNumberTwoSig(avgValue)}
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      width: `${(Number(avgValue) / maxAvg) * 100}%`,
+                      height: 6,
+                      backgroundColor: i?.color,
+                      borderRadius: 10,
+                    }}
+                  />
+                </View>
+              );
+            })}
+          </View>
+        </View>
+      </View>
+    </ScrollView>
+  );
+};
+
+const renderLabel = ({ route }) => {
+  return (
+    <Text
+      numberOfLines={1}
+      style={{
+        fontFamily: 'ReadexPro-Medium',
+        fontSize: 12.6,
+        color: '#30475e',
+        textTransform: 'capitalize',
+        letterSpacing: -0.2,
+      }}>
+      {route.title}
+    </Text>
+  );
+};
 
 const Analytics = () => {
   const layout = useWindowDimensions();
@@ -2321,6 +2816,7 @@ const Analytics = () => {
     { key: 'second', title: 'Sales' },
     { key: 'third', title: 'Products' },
     { key: 'fourth', title: 'Customers' },
+    { key: 'fifth', title: 'Expenses' },
   ]);
   const renderScene = ({ route }) => {
     switch (route.key) {
@@ -2332,6 +2828,8 @@ const Analytics = () => {
         return <Products />;
       case 'fourth':
         return <Customers />;
+      case 'fifth':
+        return <ExpensesInsights />;
       default:
         return null;
     }
@@ -2345,18 +2843,18 @@ const Analytics = () => {
       initialLayout={{ width: layout.width }}
       lazy
       swipeEnabled={false}
-      animationEnabled={false}
       renderTabBar={props => (
         <TabBar
+          renderLabel={renderLabel}
           {...props}
-          style={{ backgroundColor: '#fff', elevation: 0 }}
+          style={{ backgroundColor: '#fafafa', elevation: 0 }}
           activeColor="#000"
           labelStyle={{
             fontFamily: 'ReadexPro-Medium',
-            fontSize: 16,
+            fontSize: 12.6,
             color: '#30475e',
             textTransform: 'capitalize',
-            letterSpacing: 0,
+            letterSpacing: -0.2,
           }}
           indicatorStyle={{
             backgroundColor: '#2F66F6',
@@ -2378,32 +2876,46 @@ const styles = StyleSheet.create({
     backgroundColor: '#F9F9F9',
   },
   cardMain: {
-    marginHorizontal: 4,
-    paddingRight: 17.5,
-    paddingLeft: 17.5,
+    borderRadius: 6,
+    marginHorizontal: '1%',
     width: '50%',
     marginTop: 8,
-    paddingTop: 12,
-    paddingVertical: 20,
-    backgroundColor: '#537FE7',
-    maxWidth: Dimensions.get('window').width * 0.3,
-    borderRadius: 18,
+    paddingVertical: 12,
+    paddingBottom: 10,
+    backgroundColor: '#F5F7F8',
+    maxWidth: Dimensions.get('window').width * 0.46,
+    alignItems: 'center',
   },
   cardTitle: {
     fontFamily: 'ReadexPro-Medium',
-    color: '#002',
-    fontSize: 17,
-    marginTop: 7,
+    color: '#7F8487',
+    fontSize: 13,
+    marginTop: 8,
     marginBottom: 6,
     letterSpacing: 0.3,
   },
+  gauge: {
+    position: 'absolute',
+    width: 100,
+    height: 200,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  gaugeText: {
+    backgroundColor: 'transparent',
+    color: '#000',
+    fontSize: 14,
+    fontFamily: 'ReadexPro-Medium',
+  },
   amount: {
     fontFamily: 'ReadexPro-bold',
-    color: '#003',
-    fontSize: 40,
+    color: '#002',
+    fontSize: 17,
     letterSpacing: 0.5,
-    marginTop: 10,
+    marginTop: 2,
     opacity: 1,
+    // marginTop: 18,
+    // marginHorizontal: 18,
   },
   ArrowUpIcon: {
     marginRight: 3,
@@ -2411,6 +2923,8 @@ const styles = StyleSheet.create({
   stats: {
     flexDirection: 'row',
     alignItems: 'center',
+    // justifyContent: 'center',
+    // marginTop: 12,
     borderTopRightRadius: 0,
     borderTopLeftRadius: 0,
     borderRadius: 7,

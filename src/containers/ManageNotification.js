@@ -31,8 +31,8 @@ function ManageNotifications(props) {
       <View style={{ paddingHorizontal: 22, marginBottom: 13 }}>
         <Text
           style={{
-            fontFamily: 'SFProDisplay-Medium',
-            fontSize: 26,
+            fontFamily: 'ReadexPro-Medium',
+            fontSize: 22,
             color: '#002',
             marginBottom: Dimensions.get('window').height * 0.02,
           }}>
@@ -48,8 +48,8 @@ function ManageNotifications(props) {
             <View style={{ maxWidth: '80%' }}>
               <Text
                 style={{
-                  fontFamily: 'SFProDisplay-Medium',
-                  fontSize: 19,
+                  fontFamily: 'ReadexPro-Medium',
+                  fontSize: 15,
                   color: '#30475e',
                 }}>
                 Turn on/off notification sound
@@ -57,9 +57,9 @@ function ManageNotifications(props) {
               <View style={{ marginVertical: 1 }} />
               <Text
                 style={{
-                  fontFamily: 'SFProDisplay-Regular',
-                  fontSize: 16,
-                  color: '#7B8FA1',
+                  fontFamily: 'ReadexPro-Regular',
+                  fontSize: 13,
+                  color: '#888',
                 }}>
                 Play sound for incoming notifications
               </Text>

@@ -1,7 +1,14 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable eqeqeq */
 import React from 'react';
-import { StyleSheet, View, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, Pressable, ScrollView } from 'react-native';
+import ActionSheet from 'react-native-actions-sheet';
+import { Picker as RNPicker } from 'react-native-ui-lib';
+import { SheetManager } from 'react-native-actions-sheet';
+
+import { TextInput } from 'react-native-paper';
+
+import { useAddProductCategory } from '../hooks/useAddProductCategory';
 import { useSelector } from 'react-redux';
 import PrimaryButton from '../components/PrimaryButton';
 import { useAddMerchantRoute } from '../hooks/useAddMerchantRoute';
@@ -89,6 +96,7 @@ const AddDelivery = ({ navigation }) => {
           <Input
             placeholder="Enter Shipping rate for location"
             val={state.rate}
+            showError={showError && state.rate.length === 0}
             setVal={text =>
               handleTextChange({
                 type: 'rate',
@@ -104,8 +112,12 @@ const AddDelivery = ({ navigation }) => {
           style={styles.btn}
           disabled={addDelivery.isLoading}
           handlePress={() => {
-            if (state.location.length === 0) {
+            if (state.location.length === 0 || state.rate.length === 0) {
               setShowError(true);
+              toast.show('Please provide all required details.', {
+                placement: 'top',
+                type: 'danger',
+              });
               return;
             }
             addDelivery.mutate({

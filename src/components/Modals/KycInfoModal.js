@@ -1,19 +1,9 @@
 /* eslint-disable react-native/no-inline-styles */
-import {
-  Dimensions,
-  Linking,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { Linking, Pressable, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
-import { Dialog } from 'react-native-ui-lib';
 import Warning from '../../../assets/icons/Info';
-import { useNavigation } from '@react-navigation/native';
 import Modal from '../Modal';
 const KycInfoModal = ({ dialog, setDialog }) => {
-  const navigation = useNavigation();
   return (
     <Modal modalState={dialog} changeModalState={setDialog}>
       <View style={styles.modalView}>
@@ -99,7 +89,7 @@ const styles = StyleSheet.create({
   },
   modal: { alignItems: 'center' },
   modalView: {
-    width: '56%',
+    width: '96%',
     backgroundColor: '#fff',
     paddingHorizontal: 10,
     paddingVertical: 26,

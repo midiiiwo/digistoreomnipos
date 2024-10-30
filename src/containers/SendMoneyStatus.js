@@ -21,7 +21,7 @@ export const DetailItem = ({ label, value, firstItem }) => {
       <Text
         style={{
           color: '#4B6587',
-          fontFamily: 'SFProDisplay-Regular',
+          fontFamily: 'ReadexPro-Regular',
           fontSize: 16,
         }}>
         {label}{' '}
@@ -29,7 +29,7 @@ export const DetailItem = ({ label, value, firstItem }) => {
       <Text
         style={{
           color: '#4B6587',
-          fontFamily: 'SFProDisplay-Regular',
+          fontFamily: 'ReadexPro-Regular',
           fontSize: 16,
           marginLeft: 'auto',
           width: '60%',
@@ -80,7 +80,7 @@ const SendMoneyStatus = ({ route, navigation }) => {
               </View>
               <Text
                 style={{
-                  fontFamily: 'Inter-SemiBold',
+                  fontFamily: 'ReadexPro-Medium',
                   color: '#FFB84C',
                   marginBottom: 16,
                   fontSize: 16,
@@ -89,7 +89,7 @@ const SendMoneyStatus = ({ route, navigation }) => {
               </Text>
               <Text
                 style={{
-                  fontFamily: 'Inter-Medium',
+                  fontFamily: 'ReadexPro-Medium',
                   color: '#30475e',
                   marginBottom: 26,
                   fontSize: 15,
@@ -129,7 +129,7 @@ const SendMoneyStatus = ({ route, navigation }) => {
               </View>
               <Text
                 style={{
-                  fontFamily: 'Inter-SemiBold',
+                  fontFamily: 'ReadexPro-Medium',
                   color: '#EB455F',
                   marginBottom: 16,
                   fontSize: 16,
@@ -138,7 +138,56 @@ const SendMoneyStatus = ({ route, navigation }) => {
               </Text>
               <Text
                 style={{
-                  fontFamily: 'Inter-Medium',
+                  fontFamily: 'ReadexPro-Medium',
+                  color: '#30475e',
+                  marginBottom: 26,
+                  fontSize: 15,
+                  textAlign: 'center',
+                  paddingHorizontal: 14,
+                }}>
+                {payStatus.message}
+              </Text>
+              <DetailItem
+                label="Transaction ID"
+                value={payStatus && payStatus.id}
+                firstItem
+              />
+            </View>
+          )}
+          {payStatus && payStatus.status == 93 && (
+            <View
+              style={{
+                alignItems: 'center',
+                height: '100%',
+              }}>
+              <View
+                style={{
+                  height: 140,
+                  width: '100%',
+                  top: 20,
+                  justifyContent: 'flex-end',
+                  alignItems: 'center',
+                  marginTop: 22,
+                }}>
+                <Lottie
+                  source={require('../lottie/94303-failed.json')}
+                  autoPlay
+                  loop={false}
+                  style={{ marginBottom: 20 }}
+                />
+              </View>
+              <Text
+                style={{
+                  fontFamily: 'ReadexPro-Medium',
+                  color: '#EB455F',
+                  marginBottom: 16,
+                  fontSize: 16,
+                }}>
+                Transfer Failed
+              </Text>
+              <Text
+                style={{
+                  fontFamily: 'ReadexPro-Medium',
                   color: '#30475e',
                   marginBottom: 26,
                   fontSize: 15,
@@ -174,7 +223,7 @@ const SendMoneyStatus = ({ route, navigation }) => {
               <View style={{ alignItems: 'center' }}>
                 <Text
                   style={{
-                    fontFamily: 'Inter-SemiBold',
+                    fontFamily: 'ReadexPro-Medium',
                     color: '#59CE8F',
                     textAlign: 'center',
                     width: '80%',

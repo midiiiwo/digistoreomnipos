@@ -34,14 +34,18 @@ const networks = [
 ];
 
 const AddRider = ({ navigation }) => {
-  const { user } = useSelector(state => state.auth);
+  const { user, outlet } = useSelector(state => state.auth);
+  const outlet_id = outlet.outlet_id;
+
   const [saved, setSaved] = React.useState();
   const [showError, setShowError] = React.useState(false);
   const [state, dispatch] = React.useReducer(reducer, {
     name: '',
-    contact: '',
-    network: null,
-    licence: '',
+    telephone: '',
+    outlet: outlet_id,
+    license: '',
+    vehicle: '',
+    merchant_id: user,
   });
   console.log(state);
   const toast = useToast();
@@ -105,7 +109,7 @@ const AddRider = ({ navigation }) => {
             }
             keyboardType="phone-pad"
           />
-          <Picker
+          {/* <Picker
             // extraStyleOuter={{ flex: 2, marginRight: 6 }}
             showError={showError && !state.network}
             extraStyleOuter={{ marginVertical: 6, paddingTop: 0 }}
@@ -122,9 +126,19 @@ const AddRider = ({ navigation }) => {
                 <RNPicker.Item key={i.code} label={i.name} value={i.code} />
               );
             })}
-          </Picker>
+          </Picker> */}
           <Input
             placeholder="Enter motor bike or vehicle registration number"
+            val={state.licence}
+            setVal={text =>
+              handleTextChange({
+                type: 'vehicle',
+                payload: text,
+              })
+            }
+          />
+          <Input
+            placeholder="Enter licence Number"
             val={state.licence}
             setVal={text =>
               handleTextChange({
@@ -142,24 +156,29 @@ const AddRider = ({ navigation }) => {
           handlePress={() => {
             if (
               state.name.length === 0 ||
-              state.contact.length === 0 ||
-              !state.network
+              state.contact.length === 0
             ) {
               setShowError(true);
+              toast.show('Please provide all required details.', {
+                placement: 'top',
+                type: 'danger',
+              });
               return;
             }
             console.log(state);
             addRider.mutate({
-              merchant: user.merchant,
-              phone: state.contact,
-              network: state.network.value,
-              vehicle: state.licence,
               name: state.name,
-              mod_by: user.login,
+              vehicle: state.vehicle || '',
+              telephone: state.contact,
+              outlet: outlet_id,
+              license: state.licence || '',
+              merchant_id: user.merchant,
             });
-          }}>
+          }}
+        >
           {addRider.isLoading ? 'Processing' : 'Save Rider'}
         </PrimaryButton>
+
       </View>
     </View>
   );

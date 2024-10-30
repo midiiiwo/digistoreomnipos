@@ -11,7 +11,7 @@ export function usePayBill(handleSuccess) {
     },
     {
       onSuccess(data) {
-        handleSuccess(data.data);
+        handleSuccess(data?.data);
       },
     },
   );

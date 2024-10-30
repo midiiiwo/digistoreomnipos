@@ -238,7 +238,7 @@ const styles = StyleSheet.create({
   },
   flatgrid: { marginVertical: 32, marginBottom: 0 },
   modalContainer: {
-    width: '56%',
+    width: '100%',
     alignItems: 'center',
   },
   lottie: {
@@ -246,7 +246,7 @@ const styles = StyleSheet.create({
   },
   modal: { alignItems: 'center' },
   modalView: {
-    width: '56%',
+    width: '96%',
     backgroundColor: '#fff',
     paddingHorizontal: 12,
     paddingVertical: 26,

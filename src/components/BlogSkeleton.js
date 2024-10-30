@@ -1,14 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  Pressable,
-  Dimensions,
-} from 'react-native';
+import { StyleSheet, View, Dimensions } from 'react-native';
 import React from 'react';
-import { SheetManager } from 'react-native-actions-sheet';
 import { Skeleton } from '@rneui/themed';
 
 const BlogSkeleton = ({ item, navigation }) => {
@@ -33,7 +25,7 @@ export default BlogSkeleton;
 const styles = StyleSheet.create({
   recentCard: {
     height: '100%',
-    width: Dimensions.get('window').width * 0.24,
+    width: Dimensions.get('window').width * 0.6,
     backgroundColor: '#fff',
     borderRadius: 6,
     marginRight: 12,

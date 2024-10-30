@@ -17,6 +17,8 @@ const Picker = ({
   showSearch = false,
   searchPlaceholder,
   extraStyleOuter,
+  main,
+  ...props
 }) => {
   return (
     <View style={[styles.dWrapper, extraStyleOuter]}>
@@ -40,14 +42,17 @@ const Picker = ({
           placeholderTextColor: '#ccc',
         }}
         searchPlaceholder={searchPlaceholder}
-        labelStyle={{ fontFamily: 'SFProDisplay-Medium', fontSize: 18 }}
+        labelStyle={{ fontFamily: 'Lato-Medium' }}
         containerStyle={[
           dd.main,
+          main,
           {
             // backgroundColor: showError ? 'rgba(235, 69, 95, 0.04)' : '#F5FAFF',
             borderColor: '#fff',
             // borderTopColor: '#fff'
-            borderBottomColor: showError ? '#EB455F' : '#ddd',
+            borderBottomColor: showError
+              ? '#EB455F'
+              : 'rgba(183, 196, 207,0.8)',
             borderBottomWidth: 0.9,
             borderRadius: 0,
           },
@@ -56,7 +61,8 @@ const Picker = ({
         // disableFullscreenUI={true}
         // useWheelPicker
         trailingAccessory={<CaretDown fill={showError ? '#EB455F' : '#777'} />}
-        migrateTextField>
+        migrateTextField
+        {...props}>
         {children}
       </RNPicker>
     </View>
@@ -71,12 +77,10 @@ const styles = StyleSheet.create({
 
 const dd = StyleSheet.create({
   placeholder: {
-    fontFamily: 'SFProDisplay-Regular',
-    fontSize: 16,
-    // paddingHorizontal: 10,
+    fontFamily: 'IBMPlexSans-Regular',
+    fontSize: 15,
     height: '100%',
     zIndex: 100,
-    letterSpacing: 0.2,
   },
   main: {
     // borderWidth: 1.2,

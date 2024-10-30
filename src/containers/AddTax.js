@@ -3,14 +3,16 @@
 import React from 'react';
 import { StyleSheet, View, ScrollView } from 'react-native';
 
+import Input from '../components/Input';
+
 import { useSelector } from 'react-redux';
 import PrimaryButton from '../components/PrimaryButton';
 import { useToast } from 'react-native-toast-notifications';
 import { useQueryClient } from 'react-query';
 import { useAddTax } from '../hooks/useAddTax';
 import { CheckItem } from './ReceiptDetails';
-import { useChangeTaxStatus } from '../hooks/useChangeTaxStatus';
-import Input from '../components/Input';
+import Picker from '../components/Picker';
+import { Picker as RNPicker } from 'react-native-ui-lib';
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -30,6 +32,8 @@ const reducer = (state, action) => {
       return { ...state, showTax: action.payload };
     case 'status':
       return { ...state, status: action.payload };
+    case 'type':
+      return { ...state, taxType: action.payload };
     case 'update_all':
       return { ...state, ...action.payload };
     default:
@@ -41,8 +45,6 @@ const AddTax = ({ navigation, route }) => {
   const { user } = useSelector(state => state.auth);
   const [saved, setSaved] = React.useState();
   const [showError, setShowError] = React.useState(false);
-  const [taxStatus, setTaxStatus] = React.useState(false);
-
   const [state, dispatch] = React.useReducer(reducer, {
     id: '',
     name: '',
@@ -52,6 +54,7 @@ const AddTax = ({ navigation, route }) => {
     value: '',
     showTax: false,
     status: false,
+    taxType: null,
   });
   const toast = useToast();
   const client = useQueryClient();
@@ -72,11 +75,6 @@ const AddTax = ({ navigation, route }) => {
     // }
   });
 
-  console.log('cccccccc', saved);
-
-  const { mutate: changeStatus, isLoading: isStatusLoading } =
-    useChangeTaxStatus(setTaxStatus);
-
   // const { data: verifyData } = useVerifyMerchantUserUsername(
   //   user.merchant,
   //   state.username,
@@ -96,13 +94,14 @@ const AddTax = ({ navigation, route }) => {
           type: 'success',
         });
         navigation.goBack();
+        client.invalidateQueries('merchant-taxes');
         setSaved(null);
         return;
       }
       toast.show(saved.message, { placement: 'top', type: 'danger' });
       setSaved(null);
     }
-  }, [saved, toast, navigation]);
+  }, [saved, toast, navigation, client]);
 
   const handleTextChange = React.useCallback(
     ({ type, payload }) => {
@@ -130,7 +129,7 @@ const AddTax = ({ navigation, route }) => {
             }
           />
           <Input
-            placeholder="Enter Tax Tag"
+            placeholder="Abbreviation"
             val={state.tag}
             // nLines={3}
             setVal={text =>
@@ -139,6 +138,39 @@ const AddTax = ({ navigation, route }) => {
                 payload: text,
               })
             }
+            showError={showError && state.tag.length === 0}
+          />
+          <Input
+            placeholder="Enter Tax Description"
+            val={state.description}
+            setVal={text =>
+              handleTextChange({
+                type: 'description',
+                payload: text,
+              })
+            }
+            nLines={3}
+          />
+          <Input
+            placeholder="Enter TIN Number"
+            val={state.tin}
+            setVal={text =>
+              handleTextChange({
+                type: 'tin',
+                payload: text,
+              })
+            }
+            // showError={showError && state.tin.length === 0}
+          />
+          <CheckItem
+            placeholder="Show tax number on invoices?"
+            value={state.showTax}
+            onValueChange={() => {
+              dispatch({
+                type: 'show_tax',
+                payload: !state.showTax,
+              });
+            }}
           />
           <Input
             placeholder="Enter Tax Value (Without %)"
@@ -153,39 +185,28 @@ const AddTax = ({ navigation, route }) => {
               })
             }
           />
-          <Input
-            placeholder="Enter Tax Description"
-            val={state.description}
-            setVal={text =>
+          <Picker
+            placeholder="Select Type"
+            showError={showError && !state.taxType}
+            value={state.taxType}
+            setValue={item => {
               handleTextChange({
-                type: 'description',
-                payload: text,
-              })
-            }
-            // showError={showError && state.username.length === 0}
-          />
-          <Input
-            placeholder="Enter TIN Number"
-            val={state.tin}
-            setVal={text =>
-              handleTextChange({
-                type: 'tin',
-                payload: text,
-              })
-            }
-            // showError={showError && state.tin.length === 0}
-          />
-
-          <CheckItem
-            placeholder="Show Tax?"
-            value={state.showTax}
-            onValueChange={() => {
-              dispatch({
-                type: 'show_tax',
-                payload: !state.showTax,
+                type: 'type',
+                payload: item,
               });
-            }}
-          />
+            }}>
+            <RNPicker.Item
+              key={'INCLUSIVE'}
+              label={'Inclusive in product price'}
+              value={'INCLUSIVE'}
+            />
+            <RNPicker.Item
+              key={'EXCLUSIVE'}
+              label={'Apply to product price'}
+              value={'EXCLUSIVE'}
+            />
+          </Picker>
+
           {/* <CheckItem
             placeholder="Activate Tax"
             value={state.status}
@@ -206,11 +227,15 @@ const AddTax = ({ navigation, route }) => {
             console.log(state);
             if (
               state.name.length === 0 ||
-              // !state.tin ||
               state.value.length === 0 ||
-              state.showTax.length === 0
+              state.tag.length === 0 ||
+              !state.taxType
             ) {
               setShowError(true);
+              toast.show('Please provide all required details.', {
+                placement: 'top',
+                type: 'danger',
+              });
               return;
             }
             mutate({
@@ -222,10 +247,11 @@ const AddTax = ({ navigation, route }) => {
               merchant: user.merchant,
               mod_by: user.login,
               show_tax: state.showTax ? 'YES' : 'NO',
+              tax_applied_as: state.taxType.value,
               // user_type: 'MERCHANT',
             });
           }}>
-          {isLoading || isStatusLoading ? 'Processing' : 'Save Tax'}
+          {isLoading ? 'Processing' : 'Save Tax'}
         </PrimaryButton>
       </View>
     </View>
@@ -238,7 +264,7 @@ const styles = StyleSheet.create({
     height: '100%',
     paddingHorizontal: 26,
     marginBottom: 78,
-    marginTop: 26,
+    marginTop: 16,
     backgroundColor: '#fff',
   },
   indicatorStyle: {
@@ -268,25 +294,5 @@ const styles = StyleSheet.create({
   },
   dWrapper: {
     paddingTop: 12,
-  },
-});
-
-const dd = StyleSheet.create({
-  placeholder: {
-    fontFamily: 'Inter-Medium',
-    fontSize: 14,
-    paddingHorizontal: 14,
-    height: '100%',
-    zIndex: 100,
-  },
-  main: {
-    borderWidth: 1.2,
-    borderStyle: 'dashed',
-    borderColor: '#B7D9F8',
-    paddingHorizontal: 14,
-    height: 54,
-    borderRadius: 5,
-    justifyContent: 'center',
-    backgroundColor: '#F5FAFF',
   },
 });

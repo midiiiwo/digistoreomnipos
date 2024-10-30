@@ -1,13 +1,9 @@
 /* eslint-disable react-native/no-inline-styles */
 import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
-// import SalesIcon from '../../assets/icons/tag';
-// import Transfer from '../../assets/icons/fundsTransfer.svg';
-// import Internet from '../../assets/icons/internet';
-import SendMoney from '../../assets/icons/send-2.svg';
 import ReceiveMoney from '../../assets/icons/wallet-3.svg';
 import Invoice from '../../assets/icons/invoice.svg';
-// import Ticket from '../../assets/icons/ticket.svg';
+import Ticket from '../../assets/icons/ticket.svg';
 import { Pressable } from 'react-native';
 import { useSelector } from 'react-redux';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
@@ -21,11 +17,11 @@ const Inflows = ({ navigation }) => {
         <View style={{ paddingHorizontal: 22, marginBottom: 18 }}>
           <Text
             style={{
-              fontFamily: 'ReadexPro-bold',
+              fontFamily: 'ReadexPro-Medium',
               fontSize: 22,
               color: '#002',
             }}>
-            Transaction History
+            Inflows
           </Text>
         </View>
         <Pressable
@@ -56,21 +52,10 @@ const Inflows = ({ navigation }) => {
             }
             navigation.navigate('Sales History');
           }}>
-          <ReceiveMoney height={35} width={35} />
+          <ReceiveMoney height={30} width={30} />
           <View style={styles.wrapper}>
             <Text style={styles.itemHeader}>Received Payments</Text>
             <Text style={styles.caption}>History of Payments</Text>
-          </View>
-        </Pressable>
-        {/* <Pressable
-          style={styles.item}
-          onPress={() => {
-            navigation.navigate('Invoice History');
-          }}>
-          <Invoice height={35} width={35} />
-          <View style={styles.wrapper}>
-            <Text style={styles.itemHeader}>Invoices</Text>
-            <Text style={styles.caption}>History of Invoices</Text>
           </View>
         </Pressable>
         <Pressable
@@ -79,7 +64,7 @@ const Inflows = ({ navigation }) => {
             if (
               user &&
               user.user_merchant_agent == '6' &&
-              !user.user_permissions.includes('VIEWSPAY')
+              !user.user_permissions.includes('VIEWMPAY')
             ) {
               Toast.show({
                 type: ALERT_TYPE.WARNING,
@@ -90,7 +75,7 @@ const Inflows = ({ navigation }) => {
               return;
             }
 
-            if (!user.user_permissions.includes('VIEWSPAY')) {
+            if (!user.user_permissions.includes('VIEWMPAY')) {
               Toast.show({
                 type: ALERT_TYPE.WARNING,
                 title: 'Upgrade Needed',
@@ -99,14 +84,48 @@ const Inflows = ({ navigation }) => {
               });
               return;
             }
-            navigation.navigate('Send Money History');
+            navigation.navigate('Invoice History');
           }}>
-          <SendMoney height={35} width={35} />
+          <Invoice height={30} width={30} />
           <View style={styles.wrapper}>
-            <Text style={styles.itemHeader}>Send Money</Text>
-            <Text style={styles.caption}>View Send money payments history</Text>
+            <Text style={styles.itemHeader}>Invoices</Text>
+            <Text style={styles.caption}>History of Invoices</Text>
           </View>
-        </Pressable> */}
+        </Pressable>
+        <Pressable
+          style={styles.item}
+          onPress={() => {
+            // if (
+            //   user &&
+            //   user.user_merchant_agent == '6' &&
+            //   !user.user_permissions.includes('VIEWTKT')
+            // ) {
+            //   Toast.show({
+            //     type: ALERT_TYPE.WARNING,
+            //     title: 'No Access',
+            //     textBody:
+            //       'Service not available on your account. Please contact Ecobank support',
+            //   });
+            //   return;
+            // }
+
+            // if (!user.user_permissions.includes('VIEWTKT')) {
+            //   Toast.show({
+            //     type: ALERT_TYPE.WARNING,
+            //     title: 'Upgrade Needed',
+            //     textBody:
+            //       "You don't have access to this feature. Please upgrade your account",
+            //   });
+            //   return;
+            // }
+            navigation.navigate('Ticket Sold History');
+          }}>
+          <Ticket height={30} width={30} />
+          <View style={styles.wrapper}>
+            <Text style={styles.itemHeader}>Tickets</Text>
+            <Text style={styles.caption}>Ticket Purchases</Text>
+          </View>
+        </Pressable>
         {/* <View style={styles.item}>
         <PaymentsIcon height={35} width={35} />
         <View style={{ marginLeft: 18 }}>
@@ -129,14 +148,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   itemHeader: {
-    fontSize: 16,
+    fontSize: 15,
     color: '#30475e',
-    fontFamily: 'ReadexPro-bold',
+    fontFamily: 'ReadexPro-Medium',
   },
   item: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 20,
+    paddingVertical: 17,
     borderRadius: 5,
     // borderWidth: 0.5,
     // borderColor: '#ddd',
@@ -145,7 +164,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
   },
   caption: {
-    fontSize: 13.5,
+    fontSize: 13,
     color: '#748DA6',
     fontFamily: 'ReadexPro-Regular',
   },

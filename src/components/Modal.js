@@ -1,8 +1,15 @@
 import React from 'react';
-import { StyleSheet, InteractionManager } from 'react-native';
+import { View, StyleSheet, InteractionManager } from 'react-native';
 import RNModal from 'react-native-modal';
 
-const Modal = ({ children, modalState, onModalHide, ...otherProps }) => {
+const Modal = ({
+  children,
+  modalState,
+  onModalHide,
+  onModalShow,
+  onModalWillShow,
+  ...otherProps
+}) => {
   return (
     // <View style={styles.modalContainer}>
     <RNModal
@@ -11,6 +18,9 @@ const Modal = ({ children, modalState, onModalHide, ...otherProps }) => {
       onModalHide={() => {
         InteractionManager.runAfterInteractions(onModalHide);
       }}
+      onModalShow={() => {
+        InteractionManager.runAfterInteractions(onModalShow);
+      }}
       {...otherProps}
       animationIn="zoomIn"
       animationOut="zoomOut"
@@ -18,6 +28,7 @@ const Modal = ({ children, modalState, onModalHide, ...otherProps }) => {
 
       backdropTransitionOutTiming={0}
       supportedOrientations={['portrait', 'landscape']}
+      onModalWillShow={onModalWillShow}
       // onBackdropPress={() => changeModalState(false)}
     >
       {children}

@@ -39,7 +39,7 @@ const StoreCreditStatus = ({
               <>
                 <Text
                   style={{
-                    fontFamily: 'SFProDisplay-Regular',
+                    fontFamily: 'ReadexPro-Regular',
                     fontSize: 15,
                     color: '#30475e',
                     marginBottom: 12,
@@ -55,14 +55,14 @@ const StoreCreditStatus = ({
                 />
                 <Text
                   style={{
-                    fontFamily: 'SFProDisplay-Regular',
+                    fontFamily: 'ReadexPro-Regular',
                     fontSize: 16,
                     color: '#5C6E91',
                     textAlign: 'center',
                     marginHorizontal: 12,
                     width: '80%',
                   }}>
-                  {((invoice && invoice.message) || '').toUpperCase()}
+                  Order raised successfully
                 </Text>
               </>
             )}
@@ -77,7 +77,7 @@ const StoreCreditStatus = ({
                 />
                 <Text
                   style={{
-                    fontFamily: 'SFProDisplay-Regular',
+                    fontFamily: 'ReadexPro-Regular',
                     fontSize: 16,
                     color: '#5C6E91',
                     textAlign: 'center',
@@ -90,6 +90,7 @@ const StoreCreditStatus = ({
             )}
             {/* <Text style={styles.status}>{data.data.message}</Text> */}
             {invoice && invoice.status == 0 && (
+              // eslint-disable-next-line react-native/no-inline-styles
               <View style={{ flexDirection: 'row' }}>
                 <PrimaryButton
                   handlePress={() => {
@@ -104,6 +105,8 @@ const StoreCreditStatus = ({
                     setInvoice(null);
                   }}
                   style={styles.goToReceipt}>
+                  {/* <Text style={styles.goToReceiptText}>Sale Receipt</Text> */}
+                  {/* <ArrowRight /> */}
                   Sale Receipt
                 </PrimaryButton>
               </View>
@@ -161,7 +164,7 @@ const styles = StyleSheet.create({
   },
   modal: { alignItems: 'center' },
   modalView: {
-    width: '56%',
+    width: '96%',
     backgroundColor: '#fff',
     paddingHorizontal: 12,
     paddingVertical: 26,

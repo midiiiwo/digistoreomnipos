@@ -66,6 +66,7 @@ const Signup = ({ navigation, route }) => {
   const [country, setCountry] = React.useState();
   const [aboutUs, setAboutUs] = React.useState();
   const [referal, setReferal] = React.useState('');
+  const [btnText, setBtnText] = React.useState('Get started');
   const [showError, setShowError] = React.useState(false);
   const [onboardStatus, setOnboardStatus] = React.useState();
   const toast = useToast();
@@ -81,12 +82,12 @@ const Signup = ({ navigation, route }) => {
     'Retail or Corner Shop',
     'Medium/Large Business',
   ];
-  console.log('ooooooooooo', onboardStatus);
 
   React.useEffect(() => {
     if (onboardStatus && onboardStatus.status == 0) {
       // toast.show(onboardStatus.message, { placement: 'top', type: 'success' });
       navigation.navigate('Signup Success');
+      setBtnText('Sign in');
     } else if (onboardStatus && onboardStatus.status != 0) {
       toast.show(onboardStatus.message, { placement: 'top', type: 'danger' });
     }
@@ -217,15 +218,8 @@ const Signup = ({ navigation, route }) => {
 
         {/* <View style={{ alignItems: 'center' }}> */}
 
-        <AuthInput
-          // Icon={Email}
-          placeholder="Referal Code (Optional)"
-          value={referal}
-          setValue={setReferal}
-          // disabled={true}
-          // keyboardType="number-pad"
-        />
         <View>
+          <View style={{ marginVertical: 10 }} />
           <Picker
             // extraStyleOuter={{ flex: 2, marginRight: 6 }}
             showError={showError && !desc}
@@ -272,6 +266,14 @@ const Signup = ({ navigation, route }) => {
             })}
           </Picker>
         </View>
+        <AuthInput
+          // Icon={Email}
+          placeholder="Referal Code (Optional)"
+          value={referal}
+          setValue={setReferal}
+          // disabled={true}
+          // keyboardType="number-pad"
+        />
         {/* </View> */}
 
         {/* <AuthInput

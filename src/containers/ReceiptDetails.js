@@ -1,19 +1,25 @@
 /* eslint-disable eqeqeq */
 /* eslint-disable react-native/no-inline-styles */
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import {
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  TextInput as RNTextInput,
+} from 'react-native';
 import React from 'react';
 import PrimaryButton from '../components/PrimaryButton';
 import { useGetReceiptDetails } from '../hooks/useGetReceiptDetails';
 import { useEditReceipt } from '../hooks/useEditReceiptDetails';
 import { useSelector } from 'react-redux';
+import Input from '../components/Input';
 import { Checkbox } from 'react-native-ui-lib';
 import Loading from '../components/Loading';
 import { useQueryClient } from 'react-query';
 import { useToast } from 'react-native-toast-notifications';
-
 import { Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import Input from '../components/Input';
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -23,6 +29,8 @@ const reducer = (state, action) => {
       return { ...state, receiptHeader: action.payload };
     case 'footer':
       return { ...state, receiptFooter: action.payload };
+    case 'website':
+      return { ...state, receiptWebsite: action.payload };
     case 'show_business':
       return { ...state, showBusiness: action.payload };
     case 'show_phone':
@@ -39,6 +47,8 @@ const reducer = (state, action) => {
       return { ...state, showAttendant: action.payload };
     case 'show_customer':
       return { ...state, showCustomer: action.payload };
+    case 'show_store':
+      return { ...state, showStore: action.payload };
     case 'update_all':
       return { ...state, ...action.payload };
     default:
@@ -51,6 +61,7 @@ export const CheckItem = ({
   onValueChange,
   placeholder,
   showBorder = true,
+  ...props
 }) => {
   return (
     <Pressable
@@ -60,16 +71,15 @@ export const CheckItem = ({
         paddingVertical: 16,
         borderBottomColor: '#ddd',
         borderBottomWidth: showBorder ? 0.6 : 0,
-        // borderTopColor: '#ddd',
-        // borderTopWidth: 0.7,
-        // marginVertical: 4,
+        ...props.style,
       }}>
       <Text
         style={{
-          fontFamily: 'SFProDisplay-Regular',
+          fontFamily: 'ReadexPro-Regular',
           color: '#30475e',
-          fontSize: 18,
-          letterSpacing: 0.2,
+          fontSize: 14,
+          letterSpacing: -0.1,
+          maxWidth: '90%',
         }}>
         {placeholder}
       </Text>
@@ -83,14 +93,23 @@ export const CheckItem = ({
           marginRight: 8,
           marginLeft: 'auto',
         }}
-
-        // label="By clicking to create an account, you agree to iPay's Terms of Use
-        // and Privacy Policy"
       />
     </Pressable>
   );
 };
 
+function isValidUrl(str) {
+  var pattern = new RegExp(
+    '^(https?:\\/\\/)?' +
+      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' +
+      '((\\d{1,3}\\.){3}\\d{1,3}))' +
+      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' +
+      '(\\?[;&a-z\\d%_.~+=-]*)?' +
+      '(\\#[-a-z\\d_]*)?$',
+    'i',
+  ); // fragment locator
+  return !!pattern.test(str);
+}
 const ReceiptDetails = () => {
   const { user } = useSelector(state => state.auth);
   const [status, setStatus] = React.useState();
@@ -100,6 +119,7 @@ const ReceiptDetails = () => {
     receiptId: '',
     receiptHeader: '',
     receiptFooter: '',
+    receiptWebsite: '',
     showBusiness: null,
     showPhone: null,
     showEmail: null,
@@ -108,6 +128,7 @@ const ReceiptDetails = () => {
     showTin: null,
     showAttendant: null,
     showCustomer: null,
+    showStore: null,
   });
   const { data, isLoading } = useGetReceiptDetails(user.merchant);
   const navigation = useNavigation();
@@ -124,14 +145,15 @@ const ReceiptDetails = () => {
   const toast = useToast();
 
   React.useEffect(() => {
-    if (data && data.data && data.data.data && data.data.status == 0) {
-      const receiptItem = data && data.data && data.data.data;
+    if (data?.data?.status == 0) {
+      const receiptItem = data?.data?.data;
       dispatch({
         type: 'update_all',
         payload: {
           receiptId: receiptItem.receipt_id,
           receiptHeader: receiptItem.receipt_header,
           receiptFooter: receiptItem.receipt_footer,
+          receiptWebsite: receiptItem.receipt_website_url,
           showBusiness:
             receiptItem.receipt_show_business === 'YES' ? true : false,
           showPhone: receiptItem.receipt_show_phone === 'YES' ? true : false,
@@ -171,6 +193,8 @@ const ReceiptDetails = () => {
     }
   }, [toast, status]);
 
+  const isUrlValid = isValidUrl('https://' + state?.receiptWebsite);
+
   if (isLoading) {
     return <Loading />;
   }
@@ -179,11 +203,11 @@ const ReceiptDetails = () => {
       <View style={{ paddingHorizontal: 22, marginBottom: 13 }}>
         <Text
           style={{
-            fontFamily: 'SFProDisplay-Medium',
-            fontSize: 26,
+            fontFamily: 'ReadexPro-Medium',
+            fontSize: 22,
             color: '#002',
           }}>
-          Configure Receipt
+          Configure Receipt & Invoice
         </Text>
       </View>
       <ScrollView contentContainerStyle={styles.container}>
@@ -208,6 +232,76 @@ const ReceiptDetails = () => {
               });
             }}
           />
+          <View
+            style={{
+              flexDirection: 'row',
+              height: 48,
+              borderColor: !isUrlValid ? '#EB455F' : '#B7C4CF',
+              borderWidth: 0.8,
+              borderRadius: 5,
+              marginTop: 6,
+            }}>
+            <View
+              style={{
+                backgroundColor: 'rgba(231, 241, 255, 0.5)',
+                justifyContent: 'center',
+                paddingHorizontal: 8,
+                borderTopLeftRadius: 5,
+                borderBottomLeftRadius: 5,
+              }}>
+              <Text
+                style={{
+                  fontFamily: 'ReadexPro-Medium',
+                  fontSize: 13.6,
+                  color: isUrlValid ? '#1D73FF' : '#EB455F',
+                  letterSpacing: 0.3,
+                }}>
+                Https://
+              </Text>
+            </View>
+            <RNTextInput
+              value={state.receiptWebsite}
+              style={{
+                flex: 1,
+                color: '#30475e',
+                fontFamily: 'ReadexPro-Regular',
+                fontSize: 14,
+                paddingLeft: 8,
+              }}
+              autoCapitalize="none"
+              cursorColor="#6DA9E4"
+              onChangeText={val =>
+                dispatch({
+                  type: 'website',
+                  payload: val,
+                })
+              }
+            />
+          </View>
+
+          <Pressable
+            onPress={async () => {
+              navigation.navigate('Edit Profile');
+            }}
+            style={{
+              marginTop: 14,
+              paddingVertical: 12,
+              alignItems: 'center',
+              borderColor: '#B7C4CF',
+              borderWidth: 0.9,
+              // borderStyle: 'dashed',
+              marginBottom: 8,
+              borderRadius: 4,
+            }}>
+            <Text
+              style={{
+                fontFamily: 'ReadexPro-Medium',
+                color: 'rgba(25, 66, 216, 0.87)',
+                fontSize: 15,
+              }}>
+              Update Logo
+            </Text>
+          </Pressable>
           <View style={{ marginTop: 12, paddingHorizontal: 6 }}>
             <CheckItem
               value={state.showBusiness}
@@ -289,6 +383,16 @@ const ReceiptDetails = () => {
               }}
               placeholder="Customer Details"
             />
+            {/* <CheckItem
+              value={state.showStore}
+              onValueChange={() => {
+                dispatch({
+                  type: 'show_store',
+                  payload: !state.showStore,
+                });
+              }}
+              placeholder="Online Store"
+            /> */}
           </View>
         </View>
       </ScrollView>
@@ -302,6 +406,13 @@ const ReceiptDetails = () => {
           style={[styles.btn, { width: '45%' }]}
           disabled={editingReceipt}
           handlePress={() => {
+            if (state?.receiptWebsite?.length > 0 && !isUrlValid) {
+              toast.show(
+                'Please provide a correct url for the receipt website',
+                { placement: 'top', type: 'danger' },
+              );
+              return;
+            }
             mutate({
               id: state.receiptId,
               header: state.receiptHeader,
@@ -314,6 +425,7 @@ const ReceiptDetails = () => {
               show_tin: state.showTin ? 'YES' : 'NO',
               show_performed_by: state.showAttendant ? 'YES' : 'NO',
               show_customer_info: state.showCustomer ? 'YES' : 'NO',
+              website: state.receiptWebsite,
               merchant: user.merchant,
               mod_by: user.login,
             });

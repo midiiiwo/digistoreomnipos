@@ -1,13 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import {
-  StyleSheet,
-  Text,
-  View,
-  Pressable,
-  TextInput,
-  FlatList,
-  ScrollView,
-} from 'react-native';
+import { StyleSheet, Text, View, Pressable, TextInput } from 'react-native';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import moment from 'moment';
@@ -22,23 +14,7 @@ import { SheetManager } from 'react-native-actions-sheet';
 import { Dimensions } from 'react-native';
 import TransactionItem from '../components/TransactionItem';
 import Search from '../../assets/icons/search.svg';
-import { Table, Row, Rows } from 'react-native-reanimated-table';
-import { SafeAreaView } from 'react-native-safe-area-context';
 // import { printTransactionSummary } from '../modules/printer';
-const headers = [
-  'Date',
-  'Invoice',
-  'Payment Status',
-  'Payment Channel',
-  'Payment Number',
-  'Payment Reference',
-  'Amount',
-  'Fee',
-  'Source',
-  'Customer Name',
-  'Customer Phone',
-  'Description',
-];
 
 const SaleHistoryScreen = () => {
   // const [startDate, setStartDate] = React.useState(
@@ -52,7 +28,7 @@ const SaleHistoryScreen = () => {
   const { user } = useSelector(state => state.auth);
   const { sStartDate, sEndDate } = useSelector(state => state.transactions);
 
-  const { data, isLoading, refetch } = useGetSalesHistory(
+  const { data, isFetching, isLoading, refetch } = useGetSalesHistory(
     user.merchant,
     user.login,
     user.user_merchant_group === 'Administrators',
@@ -96,14 +72,18 @@ const SaleHistoryScreen = () => {
     return acc + Number(curr.BILL_AMOUNT);
   }, 0);
 
-  const cashEntities = ((data && data.data && data.data.data) || [])
-    .filter(i => {
-      if (!i) {
-        return;
-      }
-      return i.PAYMENT_CHANNEL === 'CASH';
-    })
-    .filter(i => i.PAYMENT_STATUS === 'Successful');
+  const cashEntities =
+    data &&
+    data.data &&
+    data.data.data &&
+    data.data.data
+      .filter(i => {
+        if (!i) {
+          return;
+        }
+        return i.PAYMENT_CHANNEL === 'CASH';
+      })
+      .filter(i => i.PAYMENT_STATUS === 'Successful');
 
   const cashAmount = (cashEntities || []).reduce((acc, curr) => {
     if (!curr) {
@@ -112,52 +92,9 @@ const SaleHistoryScreen = () => {
     return acc + Number(curr.BILL_AMOUNT);
   }, 0);
 
-  const transactionData =
-    handleSearch(searchTerm, data && data.data && data.data.data) || {};
-
-  const transactionTableData = [];
-
-  for (const item of transactionData) {
-    if (item) {
-      const {
-        TRANSACTION_DATE,
-        PAYMENT_INVOICE,
-        PAYMENT_STATUS,
-        PAYMENT_CHANNEL,
-        PAYMENT_NUMBER,
-        PAYMENT_REFERENCE,
-        BILL_AMOUNT,
-        TRANSACTION_CHARGE,
-        NOTIFICATION_SOURCE,
-        CUSTOMER_NAME,
-        CUSTOMER_CONTACTNO,
-        PAYMENT_DESCRIPTION,
-      } = item;
-      const rowItem = [
-        TRANSACTION_DATE,
-        PAYMENT_INVOICE,
-        PAYMENT_STATUS,
-        PAYMENT_CHANNEL,
-        PAYMENT_NUMBER,
-        PAYMENT_REFERENCE,
-        BILL_AMOUNT,
-        TRANSACTION_CHARGE,
-        NOTIFICATION_SOURCE,
-        CUSTOMER_NAME,
-        CUSTOMER_CONTACTNO,
-        PAYMENT_DESCRIPTION,
-      ];
-      transactionTableData.push(rowItem);
-    }
-  }
-
   return (
-    <SafeAreaView style={styles.main}>
-      <View
-        style={{
-          backgroundColor: '#fff',
-          paddingHorizontal: 10,
-        }}>
+    <View style={styles.main}>
+      <View style={{ backgroundColor: '#fff', paddingBottom: 12 }}>
         <View style={styles.topIcons}>
           <View style={styles.searchBox}>
             <Search
@@ -188,20 +125,94 @@ const SaleHistoryScreen = () => {
           <Filter stroke="#30475e" height={33} width={33} />
         </Pressable> */}
         </View>
-        <Table
-          style={{
-            paddingTop: 12,
-            paddingBottom: Dimensions.get('window').height * 0.1,
-          }}
-          borderStyle={{
-            borderWidth: 0,
-            borderColor: '#c8e1ff',
-          }}>
-          <Row data={headers} style={styles.head} textStyle={styles.text} />
-          <Rows data={transactionTableData} textStyle={[styles.text]} />
-        </Table>
       </View>
 
+      <FlashList
+        estimatedItemSize={160}
+        ListHeaderComponent={() => {
+          return (
+            <View
+              style={{
+                alignItems: 'flex-end',
+                paddingRight: 12,
+                backgroundColor: '#fff',
+                paddingVertical: 6,
+                paddingHorizontal: 8,
+                borderRadius: 10,
+              }}>
+              <Text
+                style={{
+                  fontFamily: 'ReadexPro-Medium',
+                  letterSpacing: 0.3,
+                  color: '#748DA6',
+                  fontSize: 14.5,
+                }}>
+                Total Transactions:{' '}
+                {
+                  ((data && data.data && data.data.data) || [])
+                    .filter(i => i !== null)
+                    .filter(i => i.PAYMENT_STATUS === 'Successful').length
+                }
+              </Text>
+              <Text
+                style={{
+                  fontFamily: 'ReadexPro-Medium',
+                  letterSpacing: 0.3,
+                  color: '#748DA6',
+                  fontSize: 14.5,
+                  marginTop: 4,
+                }}>
+                Non-Cash Amount: GHS{' '}
+                {new Intl.NumberFormat().format(totalAmount - cashAmount)}
+              </Text>
+              <Text
+                style={{
+                  fontFamily: 'ReadexPro-Medium',
+                  letterSpacing: 0.3,
+                  color: '#748DA6',
+                  fontSize: 14.5,
+                  marginTop: 4,
+                }}>
+                Cash Amount: GHS{' '}
+                {new Intl.NumberFormat().format(Number(cashAmount).toFixed(2))}
+                {/* {new Intl.NumberFormat().format(cashAmount.toFixed(2))} */}
+              </Text>
+
+              <Text
+                style={{
+                  fontFamily: 'ReadexPro-Medium',
+                  letterSpacing: 0.3,
+                  color: '#748DA6',
+                  fontSize: 14.5,
+                  marginTop: 4,
+                }}>
+                Total Amount: GHS{' '}
+                {new Intl.NumberFormat().format(Number(totalAmount).toFixed(2))}
+                {/* {new Intl.NumberFormat().format(totalAmount.toFixed(2))} */}
+              </Text>
+            </View>
+          );
+        }}
+        refreshControl={
+          <RefreshControl
+            onRefresh={() => {
+              refetch();
+            }}
+            refreshing={isLoading || isFetching}
+          />
+        }
+        // ItemSeparatorComponent={() => (
+        //   <View style={{ borderBottomColor: '#ddd', borderBottomWidth: 0.5 }} />
+        // )}
+        contentContainerStyle={{ paddingHorizontal: 10, paddingVertical: 8 }}
+        data={handleSearch(searchTerm, data && data.data && data.data.data)}
+        renderItem={({ item }) => {
+          if (!item) {
+            return;
+          }
+          return <TransactionItem item={item} />;
+        }}
+      />
       {/* <View style={styles.btnWrapper}>
         <PrimaryButton
           style={styles.btn}
@@ -225,7 +236,7 @@ const SaleHistoryScreen = () => {
           Print Transaction Summary
         // </PrimaryButton>
       </View> */}
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -242,13 +253,6 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     // borderWidth: 0.7,
     // borderColor: '#ddd',
-  },
-  head: { backgroundColor: '#f1f8ff' },
-  text: {
-    margin: 6,
-    color: '#272829',
-    fontFamily: 'ReadexPro-Regular',
-    fontSize: 13,
   },
   btn: {
     borderRadius: 4,
@@ -293,7 +297,6 @@ const styles = StyleSheet.create({
     color: '#30475e',
     fontFamily: 'ReadexPro-Regular',
     letterSpacing: 0.3,
-    marginTop: 5,
   },
   headerText: {
     fontFamily: 'Lato-Semibold',

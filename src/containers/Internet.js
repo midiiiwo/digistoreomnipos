@@ -2,23 +2,13 @@
 import { StyleSheet, FlatList, View, Text } from 'react-native';
 import React from 'react';
 import PaypointVendorCard from '../components/PaypointVendorCard';
-import { InternetImages } from '../utils/internetOptions';
-import { SheetManager } from 'react-native-actions-sheet';
 import { useSelector } from 'react-redux';
-
-const mapBillNameToCode = {
-  'Mtn Fibre Broadband': 'MTNBB',
-  'Vodafone Broadband': 'ADSL',
-  'Surfline LTE Data': 'SURF',
-  'Busy 4G Data': 'BUSY',
-};
 
 const Internet = ({ navigation, route }) => {
   const { user } = useSelector(state => state.auth);
-  const internet = route.params.internet.filter(item =>
+  const internet = route?.params?.internet?.filter(item =>
     user.user_permissions.includes(item.biller_id),
   );
-  console.log('internetttttt', internet);
   return (
     <View style={styles.main}>
       <FlatList
@@ -36,8 +26,8 @@ const Internet = ({ navigation, route }) => {
             }}>
             <Text
               style={{
-                fontFamily: 'Lato-Semibold',
-                fontSize: 22,
+                fontFamily: 'ReadexPro-Regular',
+                fontSize: 20,
                 color: '#30475e',
               }}>
               Buy Internet

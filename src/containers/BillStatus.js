@@ -56,6 +56,9 @@ const mapProviderToName = {
   MTNPP: 'MTN Postpaid',
   VPP: 'Vodafone Postpaid',
   GWCL: 'Ghana Water',
+  MTNMD: 'MTN Data Bundle',
+  VODAMD: 'Telecel Data Bundle',
+  TIGOMD: 'At Data Bundle',
 };
 
 const BillStatus = ({ route, navigation }) => {
@@ -66,7 +69,7 @@ const BillStatus = ({ route, navigation }) => {
     <>
       <ScrollView style={styles.main}>
         <View style={{ height: '100%' }}>
-          {payStatus && payStatus.status != 0 && (
+          {payStatus?.status != 0 && (
             <View
               style={{
                 height: '100%',
@@ -107,7 +110,7 @@ const BillStatus = ({ route, navigation }) => {
                   textAlign: 'center',
                   paddingHorizontal: 12,
                 }}>
-                {payStatus.message}
+                {payStatus?.message}
               </Text>
               <DetailItem
                 label="Transaction ID"
@@ -120,7 +123,7 @@ const BillStatus = ({ route, navigation }) => {
               />
             </View>
           )}
-          {payStatus && payStatus.status == 0 && (
+          {payStatus?.status == 0 && (
             <View style={{ marginTop: 22 }}>
               <View
                 style={{
@@ -159,10 +162,10 @@ const BillStatus = ({ route, navigation }) => {
                 <DetailItem label="Account Number" value={accountNumber} />
                 <DetailItem
                   label="Commission Earned"
-                  value={`GHS ${payStatus.commission}`}
+                  value={`GHS ${payStatus?.commission}`}
                 />
-                <DetailItem label="Transaction ID" value={payStatus.id} />
-                <DetailItem label="Reference ID" value={payStatus.reference} />
+                <DetailItem label="Transaction ID" value={payStatus?.id} />
+                <DetailItem label="Reference ID" value={payStatus?.reference} />
                 <DetailItem
                   label="Service Provider"
                   value={mapProviderToName[bill]}
@@ -174,7 +177,7 @@ const BillStatus = ({ route, navigation }) => {
       </ScrollView>
       <PrimaryButton
         handlePress={() => {
-          if (payStatus.status == '0') {
+          if (payStatus?.status == '0') {
             navigation.navigate('Bill Receipt', {
               accountName: name,
               accountNumber,
@@ -196,7 +199,7 @@ const BillStatus = ({ route, navigation }) => {
           position: 'absolute',
           bottom: 12,
         }}>
-        {payStatus.status == '0'
+        {payStatus?.status == '0'
           ? 'Transaction receipt'
           : 'Restart transaction'}
       </PrimaryButton>

@@ -1,134 +1,23 @@
 /* eslint-disable react-native/no-inline-styles */
-import { StyleSheet, Text, View, Pressable, Image } from 'react-native';
+import { StyleSheet, Text, View, Pressable } from 'react-native';
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
-
-const mapChannelToName = {
-  MTNMM: 'MTN Mobile Money',
-  VODAC: 'Vodafone Cash',
-  AIRTELM: 'AirtelTigo Money',
-  CASH: 'Cash',
-  TIGOC: 'AirtelTigo Money',
-  DISC: 'Discount',
-  UNKNOWN: 'Unknown',
-  VISAG: 'Card',
-  LPTS: 'Loyalty Points',
-  OFFMOMO: 'Offline MoMo',
-  OFFCARD: 'Offline Card',
-  BANK: 'Bank',
-  QRPAY: 'GHQR',
-  CREDITBAL: 'Store Credit',
-  DEBITBAL: 'Pay Later',
-};
-
-// const mapSalesChannelToName = {
-//   INSHOP: 'In-shop',
-//   INSHP: 'In-shop',
-//   ONLINE: 'Online Store',
-//   SNAPCHAT: 'Snapchat',
-//   INSTAGRAM: 'Instagram',
-//   TWITTER: 'Twitter',
-//   WHATSAPP: 'Whatsapp',
-//   TIKTOK: 'Tiktok',
-//   FACEBOOK: 'Facebook',
-//   'WEB POS': 'Web POS',
-//   OTHERS: 'Others',
-//   MOBILE: 'Mobile',
-// };
-
-const ImageItem = ({ PAYMENT_CHANNEL }) => {
-  return (
-    <View
-      style={{
-        // backgroundColor: 'orange',
-        justifyContent: 'center',
-      }}>
-      {PAYMENT_CHANNEL === 'MTNMM' && (
-        <Image
-          source={require('../../assets/images/mtn-momo.png')}
-          style={styles.img}
-        />
-      )}
-      {PAYMENT_CHANNEL === 'LPTS' && (
-        <Image
-          source={require('../../assets/images/present-box.png')}
-          style={styles.img}
-        />
-      )}
-      {PAYMENT_CHANNEL === 'VODAC' && (
-        <Image
-          source={require('../../assets/images/voda-cash.png')}
-          style={styles.img}
-        />
-      )}
-      {PAYMENT_CHANNEL === 'AIRTELM' && (
-        <Image
-          source={require('../../assets/images/AirtelTigo-Money.jpeg')}
-          style={styles.img}
-        />
-      )}
-      {PAYMENT_CHANNEL === 'TIGOC' && (
-        <Image
-          source={require('../../assets/images/AirtelTigo-Money.jpeg')}
-          style={styles.img}
-        />
-      )}
-      {PAYMENT_CHANNEL === 'UNKNOWN' && (
-        <Image
-          source={require('../../assets/images/payment.png')}
-          style={styles.img}
-        />
-      )}
-      {PAYMENT_CHANNEL === 'DISC' && (
-        <Image
-          source={require('../../assets/images/sale.png')}
-          style={styles.img}
-        />
-      )}
-      {PAYMENT_CHANNEL === 'CASH' && (
-        <Image
-          source={require('../../assets/images/cash1.jpeg')}
-          style={styles.img}
-        />
-      )}
-      {PAYMENT_CHANNEL === 'VISAG' && (
-        <Image
-          source={require('../../assets/images/credit-card.png')}
-          style={styles.img}
-        />
-      )}
-      {PAYMENT_CHANNEL === 'OFFMOMO' && (
-        <Image
-          source={require('../../assets/images/offline-momo.png')}
-          style={styles.img}
-        />
-      )}
-      {PAYMENT_CHANNEL === 'OFFCARD' && (
-        <Image
-          source={require('../../assets/images/no-wifi.png')}
-          style={styles.img}
-        />
-      )}
-      {PAYMENT_CHANNEL === 'DEBITBAL' && (
-        <Image
-          style={[styles.img, { borderRadius: 0 }]}
-          source={require('../../assets/images/paylater.png')}
-        />
-      )}
-      {PAYMENT_CHANNEL === 'CREDITBAL' && (
-        <Image
-          style={[styles.img, { borderRadius: 0 }]}
-          source={require('../../assets/images/storecredit.png')}
-        />
-      )}
-    </View>
-  );
-};
+import moment from 'moment/moment';
 
 const InvoiceItem = ({ item }) => {
-  // const navigation = useNavigation();
+  const navigation = useNavigation();
+  const currentDate = moment(new Date());
+  const dueDate = moment(item.PAYMENT_DUE_DATE);
   return (
-    <Pressable style={styles.wrapper}>
+    <Pressable
+      style={[
+        styles.wrapper,
+        { borderBottomColor: '#ddd', borderBottomWidth: 0.5 },
+      ]}
+      onPress={() => {
+        navigation.navigate('Invoice Details', { item, isEstimate: false });
+        // navigation.navigate('Order Details', { id: item.order_no });
+      }}>
       <View style={styles.details}>
         <View
           style={{
@@ -141,22 +30,23 @@ const InvoiceItem = ({ item }) => {
               style={[
                 styles.name,
                 {
-                  fontFamily: 'ReadexPro-bold',
+                  fontFamily: 'ReadexPro-Medium',
                   fontSize: 16,
-                  marginBottom: 4,
+                  marginBottom: 0,
                 },
               ]}
               numberOfLines={1}>
-              {item.PAYMENT_INVOICE}
+              INV {item.external_invoice}
             </Text>
             <Text
               style={[
                 styles.name,
                 {
-                  fontFamily: 'ReadexPro-Regular',
-                  fontSize: 14,
-                  color: '#6D8299',
+                  fontFamily: 'IBMPlexSans-Regular',
+                  fontSize: 15,
+                  color: '#30475e',
                   marginBottom: 4,
+                  opacity: 0.7,
                 },
               ]}
               numberOfLines={1}>
@@ -164,89 +54,35 @@ const InvoiceItem = ({ item }) => {
                 ? item.CUSTOMER_NAME
                 : 'No Customer'}
             </Text>
-
             <Text
               style={[
                 styles.name,
 
                 {
-                  fontFamily: 'ReadexPro-Regular',
+                  fontFamily: 'IBMPlexSans-Medium',
                   fontSize: 14,
-                  color: '#6D8299',
-                  marginBottom: 12,
+                  color: '#000',
+                  opacity: 0.7,
+                  marginTop: 12,
                 },
               ]}>
-              {item.TRANSACTION_DATE.slice(0, 16)}
+              {dueDate.diff(currentDate, 'days') < 0 &&
+              item.PAYMENT_STATUS !== 'Successful'
+                ? `Due ${Math.abs(dueDate.diff(currentDate, 'days'))} days ago`
+                : moment(new Date(item?.TRANSACTION_DATE)).format(
+                    'DD MMM, YYYY',
+                  )}
             </Text>
           </View>
         </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            // backgroundColor: 'red',
-            marginTop: 'auto',
-          }}>
-          <ImageItem PAYMENT_CHANNEL={item.PAYMENT_CHANNEL} />
-          <Text
-            style={[
-              styles.name,
-              {
-                marginLeft: 6,
-                fontFamily: 'ReadexPro-Medium',
-                fontSize: 14,
-              },
-            ]}
-            numberOfLines={1}>
-            {mapChannelToName[item.PAYMENT_CHANNEL]}
-          </Text>
-        </View>
-
-        {/* <View style={{ marginTop: 'auto' }}>
-          {item.customer_name.length > 0 && (
-            <Text
-              style={[
-                styles.name,
-                { fontSize: 15, fontFamily: 'SFProDisplay-Medium' },
-              ]}
-              numberOfLines={1}>
-              {item.customer_name}
-            </Text>
-          )}
-        </View> */}
       </View>
 
       <View style={styles.status}>
         <Text style={[styles.count, { textAlign: 'right' }]}>
-          GHS{' '}
-          {new Intl.NumberFormat().format(Number(item.BILL_AMOUNT).toFixed(2))}
+          Due GHS{' '}
+          {new Intl.NumberFormat().format(Number(item?.BILL_AMOUNT).toFixed(2))}
         </Text>
-        {/* <View style={[styles.statusWrapper, { alignSelf: 'flex-end' }]}>
-          <View
-            style={[
-              styles.statusIndicator,
-              {
-                backgroundColor:
-                  item.order_status !== 'NEW' &&
-                  item.order_status !== 'PENDING' &&
-                  item.order_status !== 'FAILED' &&
-                  item.order_status !== 'PAYMENT_CANCELLED' &&
-                  item.order_status !== 'PAYMENT_FAILED'
-                    ? '#87C4C9'
-                    : '#FD8A8A',
-              },
-            ]}
-          />
-          <Text style={styles.orderStatus}>
-            {item.order_status !== 'NEW' &&
-            item.order_status !== 'PENDING' &&
-            item.order_status !== 'FAILED' &&
-            item.order_status !== 'PAYMENT_CANCELLED' &&
-            item.order_status !== 'PAYMENT_FAILED'
-              ? 'Paid'
-              : 'Unpaid'}
-          </Text>
-        </View> */}
+
         <View style={[styles.statusWrapper]}>
           <View
             style={[
@@ -255,13 +91,21 @@ const InvoiceItem = ({ item }) => {
                 backgroundColor:
                   item.PAYMENT_STATUS === 'Successful'
                     ? '#87C4C9'
+                    : dueDate.diff(currentDate, 'days') < 0
+                    ? '#D24545'
                     : item.PAYMENT_STATUS === 'Pending'
-                    ? '#FFDB89'
+                    ? '#F5A25D'
                     : '#FD8A8A',
               },
             ]}
           />
-          <Text style={styles.orderStatus}>{item.PAYMENT_STATUS}</Text>
+          <Text style={styles.orderStatus}>
+            {item.PAYMENT_STATUS === 'Successful'
+              ? 'Paid'
+              : dueDate.diff(currentDate, 'days') < 0
+              ? 'Overdue'
+              : item.PAYMENT_STATUS}
+          </Text>
         </View>
       </View>
     </Pressable>
@@ -280,6 +124,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
     paddingHorizontal: 12,
     borderRadius: 6,
+
     // alignItems: 'center',
   },
   listWrapper: {
@@ -291,8 +136,8 @@ const styles = StyleSheet.create({
   },
   count: {
     fontFamily: 'ReadexPro-Medium',
-    color: '#6D8299',
-    fontSize: 16,
+    color: '#30475e',
+    fontSize: 15,
     marginBottom: 6,
     // marginTop: 8,
   },
@@ -302,7 +147,6 @@ const styles = StyleSheet.create({
   orderStatus: {
     fontFamily: 'ReadexPro-Medium',
     color: '#30475e',
-    fontSize: 15,
   },
   statusIndicator: {
     height: 8,
@@ -326,7 +170,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     paddingHorizontal: 7,
     paddingRight: 14,
-    paddingVertical: 6,
+    paddingVertical: 3.5,
     backgroundColor: '#f9f9f9',
     alignSelf: 'flex-end',
     marginTop: 'auto',
@@ -334,9 +178,8 @@ const styles = StyleSheet.create({
     // right: 18,
   },
   name: {
-    fontFamily: 'Lato-Bold',
+    fontFamily: 'SFProDisplay-Medium',
     color: '#30475e',
-    // marginBottom: 0,
-    fontSize: 15,
+    fontSize: 14,
   },
 });

@@ -12,28 +12,40 @@ import {
 import QRCode from 'react-native-qrcode-svg';
 
 import ReceiptItem from '../components/ReceiptItem';
-import ShareReceiptButton from '../components/ShareReceiptButton';
 import ReceiptTaxItem from '../components/ReceiptTaxItem';
 import { useSelector } from 'react-redux';
 
-import SendNotification from '../components/Modals/SendNotification';
 import moment from 'moment';
+import { useGetMerchantDetails } from '../hooks/useGetMerchantDetails';
+import Loading from '../components/Loading';
 
 // moment()
 const orderDate = moment().format('DD-MM-YYYY, h:mm:ss a');
 
 const ReceiptPreview = ({ navigation, route }) => {
-  const { customerPayment, customer } = useSelector(state => state.sale);
   const { user } = useSelector(state => state.auth);
 
   const item = route.params.state;
 
   const viewRef = React.useRef();
+  const cacheBust = new Date().toString();
 
-  console.log('invoice in receipt******', user);
+  const { data: details, isLoading } = useGetMerchantDetails(user.merchant);
 
-  const [notification, toggleNotification] = React.useState(false);
-  const [notificationType, setNotificationType] = React.useState();
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  const merchantDetails = details && details.data && details.data.data;
+
+  const imgUrl =
+    ((merchantDetails &&
+      merchantDetails.merchant_brand_logo.length > 0 &&
+      'https://payments.ipaygh.com/app/webroot/img/logo/' +
+        merchantDetails.merchant_brand_logo) ||
+      user.user_merchant_logo) +
+    '?' +
+    cacheBust;
 
   return (
     <>
@@ -53,27 +65,28 @@ const ReceiptPreview = ({ navigation, route }) => {
                 <View style={{ width: '95%' }}>
                   {item.showBusiness && (
                     <Text style={styles.receipt}>
-                      {user && user.user_merchant}
+                      {merchantDetails && merchantDetails.merchant_name}
                     </Text>
                   )}
                   {item.showTin && (
                     <Text style={styles.merchantDetail}>
-                      Tin: {user && user.user_merchant_tin}
+                      Tin:{' '}
+                      {merchantDetails && merchantDetails.merchant_reg_number}
                     </Text>
                   )}
                   {item.showAddress && (
                     <Text style={styles.merchantDetail}>
-                      {user && user.user_merchant_address}
+                      {merchantDetails && merchantDetails.merchant_address}
                     </Text>
                   )}
                   {item.showPhone && (
                     <Text style={styles.merchantDetail}>
-                      Tel: {user.user_merchant_phone}
+                      Tel: {merchantDetails && merchantDetails.merchant_phone}
                     </Text>
                   )}
                   {item.showEmail && (
                     <Text style={styles.merchantDetail}>
-                      Email: {user.user_merchant_email}
+                      Email: {merchantDetails && merchantDetails.merchant_email}
                     </Text>
                   )}
                 </View>
@@ -85,7 +98,9 @@ const ReceiptPreview = ({ navigation, route }) => {
                     }}>
                     <Image
                       style={{ height: 90, width: 90, resizeMode: 'contain' }}
-                      source={{ uri: user.user_merchant_logo }}
+                      source={{
+                        uri: imgUrl,
+                      }}
                     />
                   </View>
                 )}
@@ -164,28 +179,67 @@ const ReceiptPreview = ({ navigation, route }) => {
                 ]}>
                 PAYMENT: GHS XX.XX
               </Text>
-              <View style={styles.qr}>
-                <View style={{ alignItems: 'center' }}>
-                  <QRCode value={'123'} size={84} />
+              {item?.receiptWebsite?.length > 0 && (
+                <View style={styles.qr}>
+                  <View style={{ alignItems: 'center' }}>
+                    <Text
+                      style={{
+                        fontFamily: 'Inter-Regular',
+                        color: '#30475e',
+                        textAlign: 'center',
+                        marginBottom: 12,
+                        fontSize: 15,
+                        marginTop: 6,
+                      }}>
+                      {item.receiptFooter}
+                    </Text>
+                    <QRCode value={item?.receiptWebsite} size={84} />
+                    {/* <Text
+                      style={[
+                        {
+                          fontFamily: 'SFProDisplay-Regular',
+                          fontSize: 15,
+                          color: '#30475e',
+                          marginTop: 10,
+                        },
+                      ]}>
+                      SCAN TO ORDER NEXT TIME
+                    </Text>
+                    <Text
+                      style={[
+                        {
+                          fontFamily: 'SFProDisplay-Regular',
+                          fontSize: 15,
+                          color: '#30475e',
+                          marginTop: 5,
+                        },
+                      ]}>
+                      OR VISIT
+                    </Text> */}
+                    <Text
+                      onPress={() =>
+                        Linking.openURL('https://' + item?.receiptWebsite)
+                      }
+                      style={[
+                        {
+                          fontFamily: 'SFProDisplay-Regular',
+                          fontSize: 15,
+                          color: '#30475e',
+                          marginTop: 5,
+                          textDecorationLine: 'underline',
+                        },
+                      ]}>
+                      {item?.receiptWebsite}
+                    </Text>
+                  </View>
                 </View>
-              </View>
+              )}
               <View
                 style={{
                   marginTop: 8,
                   borderTopColor: '#ddd',
                   borderTopWidth: 0.6,
                 }}>
-                <Text
-                  style={{
-                    fontFamily: 'Inter-Regular',
-                    color: '#5C6E91',
-                    textAlign: 'center',
-                    marginBottom: 12,
-                    fontSize: 15,
-                    marginTop: 6,
-                  }}>
-                  {item.receiptFooter}
-                </Text>
                 <Text
                   style={{
                     fontFamily: 'Lato-Bold',
@@ -195,30 +249,6 @@ const ReceiptPreview = ({ navigation, route }) => {
                     fontSize: 15,
                   }}>
                   Powered by Digistore POS
-                </Text>
-
-                <Text
-                  style={{
-                    fontFamily: 'Lato-Regular',
-                    color: '#5C6E91',
-                    textAlign: 'center',
-                    marginBottom: 12,
-                    fontSize: 15,
-                    marginTop: 6,
-                  }}>
-                  Visit{' '}
-                  <Text
-                    style={{
-                      color: '#1942D8',
-                      fontFamily: 'Lato-Medium',
-                      fontSize: 15,
-                    }}
-                    onPress={() =>
-                      Linking.openURL('https://sell.digistoreafrica.com/')
-                    }>
-                    www.digistoreafrica.com
-                  </Text>{' '}
-                  for more details
                 </Text>
               </View>
             </View>

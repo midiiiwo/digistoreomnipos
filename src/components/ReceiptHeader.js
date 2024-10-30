@@ -6,7 +6,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 const ReceiptHeader = ({
   navigation,
   text = 'New sale',
-  navigateTo = 'Inventory',
+  navigateTo = 'Home',
+  onNavigate,
+  backgroundColor,
 }) => {
   const { resetCart, selectCustomer, setInvoice, setCustomerPayment } =
     useActionCreator();
@@ -15,16 +17,17 @@ const ReceiptHeader = ({
     <Pressable
       style={[
         styles.headerMain,
-        {
-          paddingTop: Platform.OS === 'android' ? 22 : top + 12,
-          paddingBottom: 22,
-        },
+        { paddingTop: Platform.OS === 'android' ? 22 : top, backgroundColor },
       ]}
       onPress={() => {
         resetCart();
         selectCustomer(null);
         setInvoice(null);
         setCustomerPayment({});
+        if (onNavigate) {
+          onNavigate();
+          return;
+        }
         navigation.navigate(navigateTo);
       }}>
       <Text style={styles.prev}>{text}</Text>
@@ -39,7 +42,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 18,
-    paddingVertical: 22,
+    paddingVertical: 14,
   },
   headerText: {
     color: '#1942D8',

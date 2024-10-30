@@ -1,13 +1,14 @@
 /* eslint-disable react-native/no-inline-styles */
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
-import SalesIcon from '../../assets/icons/tag';
-import PaymentsIcon from '../../assets/icons/empty-wallet.svg';
+
 import Transfer from '../../assets/icons/fundsTransfer.svg';
 import Internet from '../../assets/icons/internet';
 import SendMoney from '../../assets/icons/send-2';
 import Airtime from '../../assets/icons/airtime.svg';
 import Bill from '../../assets/icons/bill.svg';
+import SMS from '../../assets/icons/sms.svg';
+import Expenses from '../../assets/icons/expenses.svg';
 import { Pressable } from 'react-native';
 import { useSelector } from 'react-redux';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
@@ -20,8 +21,8 @@ const Outflows = ({ navigation }) => {
         <View style={{ paddingHorizontal: 22, marginBottom: 18 }}>
           <Text
             style={{
-              fontFamily: 'SFProDisplay-Semibold',
-              fontSize: 26,
+              fontFamily: 'ReadexPro-Medium',
+              fontSize: 22,
               color: '#002',
             }}>
             Outflows
@@ -63,7 +64,7 @@ const Outflows = ({ navigation }) => {
             }
             navigation.navigate('Funds Transfer');
           }}>
-          <Transfer height={35} width={35} />
+          <Transfer height={30} width={30} />
           <View style={styles.wrapper}>
             <Text style={styles.itemHeader}>Transfer</Text>
             <Text style={styles.caption}>
@@ -99,7 +100,7 @@ const Outflows = ({ navigation }) => {
             }
             navigation.navigate('Send Money History');
           }}>
-          <SendMoney height={35} width={35} />
+          <SendMoney height={30} width={30} />
           <View style={styles.wrapper}>
             <Text style={styles.itemHeader}>Send Money</Text>
             <Text style={styles.caption}>View Send money payments history</Text>
@@ -133,7 +134,7 @@ const Outflows = ({ navigation }) => {
             }
             navigation.navigate('Airtime History');
           }}>
-          <Airtime height={35} width={35} />
+          <Airtime height={30} width={30} />
           <View style={styles.wrapper}>
             <Text style={styles.itemHeader}>Airtime Top-up</Text>
             <Text style={styles.caption}>View prepaid top-up history</Text>
@@ -168,7 +169,7 @@ const Outflows = ({ navigation }) => {
             }
             navigation.navigate('Bill History');
           }}>
-          <Bill height={35} width={35} />
+          <Bill height={30} width={30} />
           <View style={styles.wrapper}>
             <Text style={styles.itemHeader}>Bill Payment</Text>
             <Text style={styles.caption}>View bill payment history</Text>
@@ -203,12 +204,34 @@ const Outflows = ({ navigation }) => {
             }
             navigation.navigate('Internet History');
           }}>
-          <Internet height={35} width={35} />
+          <Internet height={30} width={30} />
           <View style={styles.wrapper}>
             <Text style={styles.itemHeader}>Buy Internet</Text>
             <Text style={styles.caption}>
               View Broadband and Internet payment history
             </Text>
+          </View>
+        </Pressable>
+        <Pressable
+          style={styles.item}
+          onPress={() => {
+            navigation.navigate('Expenses');
+          }}>
+          <Expenses height={30} width={30} />
+          <View style={styles.wrapper}>
+            <Text style={styles.itemHeader}>Expenses</Text>
+            <Text style={styles.caption}>View expenses history</Text>
+          </View>
+        </Pressable>
+        <Pressable
+          style={styles.item}
+          onPress={() => {
+            navigation.navigate('Sms History');
+          }}>
+          <SMS height={30} width={30} />
+          <View style={styles.wrapper}>
+            <Text style={styles.itemHeader}>SMS</Text>
+            <Text style={styles.caption}>View SMS cost history</Text>
           </View>
         </Pressable>
       </ScrollView>
@@ -224,9 +247,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   itemHeader: {
-    fontSize: 18,
+    fontSize: 15,
     color: '#30475e',
-    fontFamily: 'SFProDisplay-Semibold',
+    fontFamily: 'ReadexPro-Medium',
   },
   item: {
     flexDirection: 'row',
@@ -240,9 +263,9 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
   },
   caption: {
-    fontSize: 16,
+    fontSize: 13,
     color: '#748DA6',
-    fontFamily: 'SFProDisplay-Regular',
+    fontFamily: 'ReadexPro-Regular',
   },
   wrapper: {
     width: '85%',

@@ -11,6 +11,7 @@ const Tv = ({ navigation, route }) => {
   const tv = route.params.tv.filter(item =>
     user.user_permissions.includes(item.biller_id),
   );
+
   return (
     <View style={styles.main}>
       <FlatList
@@ -28,8 +29,8 @@ const Tv = ({ navigation, route }) => {
             }}>
             <Text
               style={{
-                fontFamily: 'Lato-Semibold',
-                fontSize: 22,
+                fontFamily: 'ReadexPro-Regular',
+                fontSize: 20,
                 color: '#30475e',
               }}>
               Pay Tv Bills

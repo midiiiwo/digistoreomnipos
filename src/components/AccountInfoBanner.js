@@ -4,7 +4,6 @@ import React from 'react';
 import { Text, View, StyleSheet, Pressable, Dimensions } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
-import ArrowRight from '../../assets/icons/arrow-right-white.svg';
 import Dots from '../../assets/icons/dot.svg';
 import { useSelector } from 'react-redux';
 import { useGetAccountBalance } from '../hooks/useGetAccountBalance';
@@ -78,29 +77,29 @@ const AccountInfoBanner = React.forwardRef(
 
 const styles = StyleSheet.create({
   main: {
-    width: Dimensions.get('window').width * 0.54 + 20,
+    width: '100%',
     marginTop: 2,
     flexDirection: 'row',
     // paddingBottom: 10,
-    borderRadius: 5,
+    borderRadius: 8,
     alignItems: 'center',
   },
   welcomeText: {
     // marginTop: 12,
-    fontFamily: 'SFProDisplay-Medium',
-    fontSize: 18,
+    fontFamily: 'ReadexPro-Medium',
+    fontSize: 15,
     color: '#fff',
   },
   accountBalanceLabel: {
     marginTop: 4,
-    fontFamily: 'SFProDisplay-Regular',
-    fontSize: 16,
+    fontFamily: 'ReadexPro-Regular',
+    fontSize: 13,
     color: '#fff',
   },
   accountBalance: {
     marginTop: 4,
-    fontSize: 26,
-    fontFamily: 'SFProDisplay-Medium',
+    fontSize: 24,
+    fontFamily: 'ReadexPro-Medium',
     letterSpacing: 0.5,
     color: '#fff',
     // letterSpacing: -1.2,
@@ -116,11 +115,7 @@ const styles = StyleSheet.create({
     marginRight: 30,
     // marginTop: 13,
   },
-  addButtonWrapper: {
-    marginLeft: 'auto',
-    justifyContent: 'center',
-    padding: 6,
-  },
+  addButtonWrapper: { marginLeft: 'auto', justifyContent: 'center' },
   accountTextWrapper: { marginLeft: 26 },
 });
 

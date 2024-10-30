@@ -2,6 +2,7 @@
 import { StyleSheet, FlatList, View, Text } from 'react-native';
 import React from 'react';
 import PaypointVendorCard from '../components/PaypointVendorCard';
+
 import { useSelector } from 'react-redux';
 
 const Utilities = ({ navigation, route }) => {
@@ -10,7 +11,6 @@ const Utilities = ({ navigation, route }) => {
   const utilities = route.params.utilities.filter(item =>
     user.user_permissions.includes(item.biller_id),
   );
-  console.log('----,,,,', utilities);
   return (
     <View style={styles.main}>
       <FlatList
@@ -27,7 +27,7 @@ const Utilities = ({ navigation, route }) => {
             }}>
             <Text
               style={{
-                fontFamily: 'Lato-Semibold',
+                fontFamily: 'ReadexPro-Regular',
                 fontSize: 22,
                 color: '#30475e',
               }}>

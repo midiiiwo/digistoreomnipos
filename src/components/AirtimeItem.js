@@ -85,6 +85,7 @@ const AirtelItem = ({ item }) => {
           transactionId: item.transaction_id,
           referenceId: item.etz_reference,
           serviceProvider: item.topup_network,
+          transactionStatus: item.transaction_status,
         })
       }>
       <View style={styles.details}>
@@ -99,7 +100,7 @@ const AirtelItem = ({ item }) => {
               style={[
                 styles.name,
                 {
-                  fontFamily: 'SFProDisplay-Semibold',
+                  fontFamily: 'ReadexPro-Medium',
                   fontSize: 15,
                   marginBottom: 4,
                   letterSpacing: 0.2,
@@ -112,7 +113,7 @@ const AirtelItem = ({ item }) => {
               style={[
                 styles.name,
                 {
-                  fontFamily: 'SFProDisplay-Regular',
+                  fontFamily: 'ReadexPro-Regular',
                   fontSize: 13.7,
                   color: '#6D8299',
                   marginBottom: 4,
@@ -127,7 +128,7 @@ const AirtelItem = ({ item }) => {
                 styles.name,
 
                 {
-                  fontFamily: 'SFProDisplay-Regular',
+                  fontFamily: 'ReadexPro-Regular',
                   fontSize: 13.4,
                   color: '#6D8299',
                   marginBottom: 12,
@@ -150,7 +151,7 @@ const AirtelItem = ({ item }) => {
               styles.name,
               {
                 marginLeft: 6,
-                fontFamily: 'SFProDisplay-Medium',
+                fontFamily: 'ReadexPro-Medium',
                 fontSize: 14.3,
               },
             ]}
@@ -164,7 +165,6 @@ const AirtelItem = ({ item }) => {
             <Text
               style={[
                 styles.name,
-                { fontSize: 15, fontFamily: 'SFProDisplay-Medium' },
               ]}
               numberOfLines={1}>
               {item.customer_name}
@@ -214,11 +214,7 @@ const AirtelItem = ({ item }) => {
               },
             ]}
           />
-          <Text style={styles.orderStatus}>
-            {item.transfer_status === 'INVALID'
-              ? 'CANCELLED'
-              : item.topup_status}
-          </Text>
+          <Text style={styles.orderStatus}>{item.transaction_status}</Text>
         </View>
       </View>
     </Pressable>

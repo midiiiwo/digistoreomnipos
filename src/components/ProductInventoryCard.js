@@ -2,16 +2,14 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View, Dimensions } from 'react-native';
 import Image from 'react-native-fast-image';
-
 import ImageIcon from '../../assets/icons/ImageIcon.svg';
 import { useNavigation } from '@react-navigation/native';
-import { SheetManager } from 'react-native-actions-sheet';
 import { useSelector } from 'react-redux';
 import { useToast } from 'react-native-toast-notifications';
+import { SheetManager } from 'react-native-actions-sheet';
+import FastImage from 'react-native-fast-image';
 
-const ProductInventoryCard = ({ item, setHeight, setWidth }) => {
-  // const { addToCart, deleteItemFromCart } = useActionCreator();
-  console.log('ittttt', item?.product_price);
+const ProductInventoryCard = ({ item, setHeight, setWidth, setInventoryOutlet }) => {
   let {
     product_id: id,
     product_name: itemName,
@@ -22,25 +20,23 @@ const ProductInventoryCard = ({ item, setHeight, setWidth }) => {
     product_quantity,
     product_stock_level,
   } = item;
-  amount = Number(amount);
   const navigation = useNavigation();
   const { inventoryOutlet } = useSelector(state => state.products);
   const toast = useToast();
+  const { user } = useSelector(state => state.auth);
 
   const cacheBust = new Date().toString();
-  const isProductStockLow =
-    Number(product_quantity) <= Number(product_stock_level);
-
+  const isProductStockLow = Number(product_quantity) <= Number(product_stock_level);
   const outOfStock = Number(product_quantity) === 0;
+  const productHasNoLogo = product_image?.includes('digiproduct-bg.png');
+  const imgUrlBase = 'https://payments.ipaygh.com/app/webroot/img/products/';
 
   return (
     <Pressable
       onPress={() => {
         if (inventoryOutlet && inventoryOutlet.outlet_id === 'ALL') {
-          toast.show('Please select outlet to edit product', {
-            placement: 'top',
-          });
-          SheetManager.show('inventoryOutlet');
+          toast.show('Please select outlet to edit product', { placement: 'top' });
+          SheetManager.show('inventoryOutlet', { payload: { inventoryOutlet, setInventoryOutlet } });
           return;
         }
         navigation.navigate('Product Options', {
@@ -51,138 +47,74 @@ const ProductInventoryCard = ({ item, setHeight, setWidth }) => {
           product_outlets,
           product_quantity,
           inventoryOutlet,
+          setInventoryOutlet,
           product_stock_level,
           product_price: amount,
         });
       }}
-      style={[styles.main]}
+      style={styles.card}
       onLayout={e => {
         setHeight && setHeight(e.nativeEvent.layout.height);
-        setHeight && setWidth(e.nativeEvent.layout.width);
+        setWidth && setWidth(e.nativeEvent.layout.width);
       }}>
-      {isProductStockLow &&
-        !outOfStock &&
-        product_stock_level !== '-99' &&
-        product_quantity !== '-99' && (
-          <View style={[styles.checkWrapper, { backgroundColor: '#EE9322' }]}>
-            <Text style={{ fontFamily: 'ReadexPro-Medium', color: '#fff' }}>
-              Low Stock
-            </Text>
-          </View>
-        )}
+      {isProductStockLow && !outOfStock && product_stock_level !== '-99' && product_quantity !== '-99' && (
+        <View style={[styles.checkWrapper, { backgroundColor: '#EE9322' }]}>
+          <Text style={styles.checkText}>Low Stock</Text>
+        </View>
+      )}
       {outOfStock && (
         <View style={styles.checkWrapper}>
-          <Text style={{ fontFamily: 'ReadexPro-Medium', color: '#fff' }}>
-            Out of Stock
-          </Text>
+          <Text style={styles.checkText}>Out of Stock</Text>
         </View>
       )}
       <View style={styles.imageWrapper}>
-        {product_image && product_image.length > 0 ? (
+        {product_image?.length > 0 ? (
           <Image
             source={{
-              uri:
-                'https://payments.ipaygh.com/app/webroot/img/products/' +
-                product_image +
-                '?' +
-                cacheBust,
+              uri: (productHasNoLogo ? user?.user_merchant_logo : imgUrlBase + product_image) + '?' + cacheBust,
+              cache: FastImage.cacheControl.web,
+              priority: FastImage.priority.low,
             }}
-            style={styles.image}
+            style={[styles.image, { opacity: productHasNoLogo ? 0.3 : 1 }]}
           />
         ) : (
           <ImageIcon fill="rgba(96, 126, 170, 0.3)" height={65} width={65} />
         )}
       </View>
-
       <View style={styles.textWrapper}>
-        <Text numberOfLines={1} style={styles.itemName}>
-          {itemName}
-        </Text>
+        <Text numberOfLines={1} style={styles.itemName}>{itemName}</Text>
         <View style={styles.metrics}>
-          <Text style={styles.amount}>GHS {amount}</Text>
-          <Text
-            style={[
-              styles.amount,
-              {
-                fontFamily: 'ReadexPro-Regular',
-                fontSize: 11,
-                marginLeft: 'auto',
-                marginRight: 6,
-                color: '#888',
-              },
-            ]}>
-            {product_quantity == '-99' || product_quantity == 'Unlimited'
-              ? 'UNLT'
-              : product_quantity}
+          <Text style={styles.amount}>
+            <Text style={{ fontSize: 11.4 }}>GHS</Text>{' '}
+            {new Intl.NumberFormat('en-US', {
+              minimumFractionDigits: 1,
+              maximumFractionDigits: 1,
+            }).format(Number(amount))}
           </Text>
-          {/* <Text style={[styles.amount, { fontSize: 12 }]}>
-            Qty: {product_quantity}
-          </Text> */}
+          <Text style={styles.quantity}>
+            {product_quantity === '-99' || product_quantity === 'Unlimited' ? 'UNLT' : product_quantity}
+          </Text>
         </View>
       </View>
-      {/* <View style={styles.addToCartWrapper}>
-        <Text style={styles.addToCart}>Add to Cart</Text>
-      </View> */}
     </Pressable>
   );
 };
 
 const styles = StyleSheet.create({
-  main: {
+  card: {
     backgroundColor: '#fff',
     borderWidth: 0.9,
     borderColor: '#F2F2F2',
     marginBottom: 10,
-    margin: Dimensions.get('window').width * 0.005,
-    width: Dimensions.get('screen').width * 0.15,
+    marginRight: Dimensions.get('window').width * 0.01,
+    width: Dimensions.get('screen').width * 0.309,
     borderRadius: 6,
-  },
-  text: {
-    fontSize: 18,
-    fontFamily: 'ReadexPro-bold',
-  },
-  metrics: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  imageWrapper: {
-    alignItems: 'center',
-    // paddingTop: 6,
-    // margin: 2.6,
-  },
-  check: { zIndex: 100 },
-  textWrapper: { paddingLeft: 12, marginTop: 12, paddingBottom: 8 },
-  itemName: {
-    fontFamily: 'ReadexPro-Regular',
-    color: '#3C4959',
-    width: '85%',
-    fontSize: 14.8,
-    flex: 1,
-    letterSpacing: 0.2,
-  },
-  amount: {
-    fontFamily: 'SQ Market Medium Medium',
-    color: '#0069FF',
-    fontSize: 17,
-    marginTop: 2,
-  },
-  image: {
-    height: 150,
-    width: '100%',
-    // borderRadius: 4,
-    borderTopRightRadius: 4,
-    borderTopLeftRadius: 4,
-  },
-  addToCartWrapper: {
-    alignItems: 'center',
-    paddingVertical: 6,
-    backgroundColor: 'rgba(25, 66, 216, 0.9)',
-    marginTop: 4,
-  },
-  addToCart: {
-    color: '#fff',
-    fontFamily: 'SourceSansPro-Regular',
-    fontSize: 13,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 2,
+    overflow: 'hidden', // Ensure the border radius is applied to the shadows
   },
   checkWrapper: {
     position: 'absolute',
@@ -194,6 +126,47 @@ const styles = StyleSheet.create({
     paddingVertical: 3,
     borderTopRightRadius: 6,
   },
+  checkText: {
+    fontFamily: 'ReadexPro-Medium',
+    color: '#fff',
+  },
+  imageWrapper: {
+    alignItems: 'center',
+    marginBottom: 8, // Add some margin below the image
+  },
+  textWrapper: {
+    paddingLeft: 8,
+    paddingBottom: 8,
+  },
+  itemName: {
+    fontFamily: 'ReadexPro-Regular',
+    color: '#435560',
+    fontSize: 14,
+  },
+  metrics: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  amount: {
+    fontFamily: 'ReadexPro-Medium',
+    color: '#4477CE',
+    fontSize: 12.5,
+    marginTop: 2,
+    letterSpacing: -0.5,
+  },
+  quantity: {
+    fontFamily: 'SFProDisplay-Regular',
+    fontSize: 11,
+    marginLeft: 'auto',
+    marginRight: 6,
+    color: '#888',
+  },
+  image: {
+    height: 100,
+    width: '100%',
+    borderTopRightRadius: 6,
+    borderTopLeftRadius: 6,
+  },
 });
 
-export default React.memo(ProductInventoryCard);
+export default ProductInventoryCard;

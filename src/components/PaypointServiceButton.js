@@ -1,22 +1,18 @@
-/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable prettier/prettier */
 import React from 'react';
 import { View, StyleSheet, Text, Pressable, Dimensions } from 'react-native';
 
-const PaypointServiceButton = ({
+const ServiceButton = ({
   Icon,
   service,
-  color,
   backgroundColor,
   handlePress,
   extraStyles,
-  copilot,
 }) => {
   return (
-    <Pressable
-      style={[styles.main, { backgroundColor, borderRadius: 5 }]}
-      onPress={handlePress}>
-      <View style={[styles.button, extraStyles]}>
-        <Icon height={36} width={36} />
+    <Pressable style={[styles.main]} onPress={handlePress}>
+      <View style={[styles.button, { backgroundColor }, extraStyles]}>
+        <Icon height={34} width={34} />
       </View>
       <Text style={styles.serviceButtonText}>{service}</Text>
     </Pressable>
@@ -25,21 +21,27 @@ const PaypointServiceButton = ({
 
 const styles = StyleSheet.create({
   main: {
-    // alignItems: 'center',
-    width: Dimensions.get('window').width * 0.18,
-    marginHorizontal: 2,
-    // backgroundColor: 'red',
-    paddingVertical: 18,
-    paddingLeft: 20,
+    alignItems: 'center',
+    marginVertical: 8,
+    width: Dimensions.get('window').width * 0.17,
+    marginHorizontal: Dimensions.get('window').width * 0.033,
   },
-
+  button: {
+    backgroundColor: '#f9f9f9',
+    borderRadius: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 60,
+    width: 60,
+  },
   serviceButtonText: {
-    fontFamily: 'SFProDisplay-Medium',
-    color: '#091D60',
-    fontSize: 17,
-    marginTop: Dimensions.get('window').height * 0.04,
-    letterSpacing: 0.3,
+    fontFamily: 'ReadexPro-Medium',
+    marginTop: -10,
+    color: '#30475e',
+    fontSize: 12.4,
+    textAlign: 'center',
   },
 });
 
-export default PaypointServiceButton;
+export default ServiceButton;
+

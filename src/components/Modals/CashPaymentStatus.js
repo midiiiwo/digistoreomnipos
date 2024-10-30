@@ -20,17 +20,13 @@ const CashPaymentStatus = ({
   const { setInvoice } = useActionCreator();
   useQueryClient().setQueryData('transaction-fee', null);
   const { invoice } = useSelector(state => state.sale);
-  console.log('ivnvid---->', invoice);
   return (
     <Modal
       modalState={cashPaymentStatus}
       changeModalState={toggleCashPaymentStatus}>
       <View style={styles.modalView}>
         <ModalCancel
-          handlePress={() => {
-            toggleCashPaymentStatus(false);
-            setInvoice(null);
-          }}
+          handlePress={() => toggleCashPaymentStatus(false)}
           newSale
           cancel={(invoice && invoice.status != 0) || !invoice}
           navigation={navigation}
@@ -40,7 +36,7 @@ const CashPaymentStatus = ({
           <View style={{ alignItems: 'center', paddingVertical: 18 }}>
             <Text
               style={{
-                fontFamily: 'SFProDisplay-Regular',
+                fontFamily: 'ReadexPro-Regular',
                 fontSize: 15,
                 color: '#30475e',
                 marginBottom: 12,
@@ -56,14 +52,14 @@ const CashPaymentStatus = ({
             />
             <Text
               style={{
-                fontFamily: 'SFProDisplay-Regular',
+                fontFamily: 'ReadexPro-Regular',
                 fontSize: 16,
                 color: '#30475e',
                 textAlign: 'center',
                 marginHorizontal: 12,
                 width: '80%',
               }}>
-              {invoice && invoice.message}
+              Order raised successfully.
             </Text>
           </View>
         )}
@@ -71,7 +67,7 @@ const CashPaymentStatus = ({
           <View style={{ alignItems: 'center', paddingVertical: 18 }}>
             <Text
               style={{
-                fontFamily: 'SFProDisplay-Regular',
+                fontFamily: 'ReadexPro-Regular',
                 fontSize: 15,
                 color: '#30475e',
                 marginBottom: 0,
@@ -86,7 +82,7 @@ const CashPaymentStatus = ({
             />
             <Text
               style={{
-                fontFamily: 'SFProDisplay-Regular',
+                fontFamily: 'ReadexPro-Regular',
                 fontSize: 16,
                 color: '#30475e',
                 textAlign: 'center',
@@ -116,8 +112,8 @@ const CashPaymentStatus = ({
               setInvoice(null);
               return;
             }
-            setInvoice(null);
             toggleCashPaymentStatus(false);
+            setInvoice(null);
           }}>
           {!invoice
             ? 'Processing'
@@ -138,7 +134,7 @@ const styles = StyleSheet.create({
 
   modal: { alignItems: 'center' },
   modalView: {
-    width: '50%',
+    width: '96%',
     backgroundColor: '#fff',
     paddingHorizontal: 12,
     paddingVertical: 26,

@@ -1,91 +1,29 @@
 /* eslint-disable eqeqeq */
 /* eslint-disable react-native/no-inline-styles */
-import {
-  StyleSheet,
-  Text,
-  View,
-  Pressable,
-  ScrollView,
-  Image,
-  Platform,
-  PermissionsAndroid,
-} from 'react-native';
+import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import React from 'react';
-import { useGetOutletCategories } from '../hooks/useGetOutletCategories';
 import { useSelector } from 'react-redux';
 
-import {
-  Picker as RNPicker,
-  RadioButton,
-  RadioGroup,
-} from 'react-native-ui-lib';
-import { SheetManager } from 'react-native-actions-sheet';
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import { Picker as RNPicker } from 'react-native-ui-lib';
 // import { IndexPath, Menu, MenuItem } from '@ui-kitten/components';
-import Scanner from '../../assets/icons/barscanner';
-import {
-  Menu,
-  MenuOptions,
-  MenuOption,
-  MenuTrigger,
-} from 'react-native-popup-menu';
 
 import Loading from '../components/Loading';
 
-import { TextInput } from 'react-native-paper';
-import DocumentPicker from 'react-native-document-picker';
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 navigator.geolocation = require('@react-native-community/geolocation');
 
 // import { Switch } from 'react-native-ui-lib';
 
 import PrimaryButton from '../components/PrimaryButton';
-import { useAddCategoryProduct } from '../hooks/useAddCategoryProduct';
 import Picker from '../components/Picker';
-import AddImage from '../../assets/icons/add-image.svg';
-import { useGetStoreOutlets } from '../hooks/useGetStoreOutlets';
 import { useToast } from 'react-native-toast-notifications';
 import { useQueryClient } from 'react-query';
-import { Switch } from '@rneui/themed';
-import { useGetAllProductsCategories } from '../hooks/useGetAllProductsCategories';
-import { DateTimePicker } from 'react-native-ui-lib';
-import Check from '../../assets/icons/verified.svg';
 import { useGetOnboardingRequirements } from '../hooks/useGetOnboardingRequirements';
 import { useGetPreactiveState } from '../hooks/useGetPreactiveState';
 import { useLookupAccount } from '../hooks/useLookupAccount';
 import { useAddSettlementAccount } from '../hooks/useAddSettlementAccount';
 import { useNavigation } from '@react-navigation/native';
-
-export const Input = ({
-  placeholder,
-  val,
-  setVal,
-  nLines,
-  showError,
-  ...props
-}) => {
-  return (
-    <TextInput
-      label={placeholder}
-      textColor="#30475e"
-      value={val}
-      onChangeText={setVal}
-      mode="outlined"
-      outlineColor={showError ? '#EB455F' : '#B7C4CF'}
-      activeOutlineColor={showError ? '#EB455F' : '#1942D8'}
-      outlineStyle={{
-        borderWidth: 0.9,
-        borderRadius: 4,
-        // borderColor: showError ? '#EB455F' : '#B7C4CF',
-      }}
-      placeholderTextColor="#B7C4CF"
-      style={styles.input}
-      numberOfLines={nLines}
-      multiline={nLines ? true : false}
-      {...props}
-    />
-  );
-};
+import Input from '../components/Input';
+import { UIActivityIndicator } from 'react-native-indicators';
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -139,6 +77,7 @@ const SettlementInformation = ({ route }) => {
   const {
     data: lookup,
     // isLookupLoading,
+    isFetching,
     refetch,
   } = useLookupAccount(
     mapCodeToProvider[(state.momo && state.momo.value) || ''],
@@ -181,6 +120,7 @@ const SettlementInformation = ({ route }) => {
     if (state.momoNumber && state.momoNumber.length === 10) {
       refetch();
     }
+    handleTextChange({ type: 'momo_name', payload: '' });
   }, [
     state.momoNumber,
     handleTextChange,
@@ -212,7 +152,7 @@ const SettlementInformation = ({ route }) => {
     if (lookup && lookup.data && lookup.data) {
       handleTextChange({
         type: 'momo_name',
-        payload: lookup.data.name,
+        payload: lookup.data.name || '',
       });
     }
   }, [handleTextChange, state.momoNumber, lookup]);
@@ -220,7 +160,6 @@ const SettlementInformation = ({ route }) => {
   React.useEffect(() => {
     if (pData) {
       const settlement = pData.settlement;
-      console.log('ssssssssssssssss', settlement);
       if (settlement.settlement_channel === 'MOBILEMONEY') {
         const momo =
           requirements &&
@@ -471,7 +410,11 @@ const SettlementInformation = ({ route }) => {
               </Picker>
               <Input
                 placeholder="Enter Account Number"
-                showError={showError && state.momoNumber.length === 0}
+                showError={
+                  showError &&
+                  (state.momoNumber.length === 0 ||
+                    state.momoNumber.length !== 10)
+                }
                 val={state.momoNumber}
                 setVal={text =>
                   handleTextChange({
@@ -502,15 +445,35 @@ const SettlementInformation = ({ route }) => {
                   }}>
                   Account Name
                 </Text>
-                <Text
-                  style={{
-                    fontFamily: 'SFProDisplay-Medium',
-                    fontSize: 16,
-                    color: '#5C6E91',
-                    marginTop: 4,
-                  }}>
-                  {state.momoName}
-                </Text>
+                {!isFetching && (
+                  <Text
+                    style={{
+                      fontFamily: 'SFProDisplay-Medium',
+                      fontSize: 16,
+                      color: '#30475e',
+                      marginTop: 4,
+                    }}>
+                    {state.momoName}
+                  </Text>
+                )}
+                {showError && state.momoName.length === 0 && !isFetching && (
+                  <Text
+                    style={{
+                      fontFamily: 'Lato-Regular',
+                      fontSize: 15,
+                      color: '#EB455F',
+                    }}>
+                    Account does not exist. Please check number and service
+                    provider
+                  </Text>
+                )}
+                {isFetching && (
+                  <UIActivityIndicator
+                    size={24}
+                    color="#068FFF"
+                    style={{ alignSelf: 'flex-start', marginTop: 12 }}
+                  />
+                )}
               </View>
             </>
           )}
@@ -521,6 +484,10 @@ const SettlementInformation = ({ route }) => {
           style={styles.btn}
           handlePress={() => {
             if (!state.accountType) {
+              toast.show('Please provide the required details', {
+                placement: 'top',
+                type: 'danger',
+              });
               setShowError(true);
               return;
             }
@@ -528,8 +495,13 @@ const SettlementInformation = ({ route }) => {
               if (
                 !state.momo ||
                 state.momoNumber.length === 0 ||
+                state.momoNumber.length !== 10 ||
                 state.momoName.length === 0
               ) {
+                toast.show('Please provide the required details', {
+                  placement: 'top',
+                  type: 'danger',
+                });
                 setShowError(true);
                 return;
               }
@@ -551,6 +523,10 @@ const SettlementInformation = ({ route }) => {
                 state.accountName.length === 0 ||
                 state.accountNumber.length === 0
               ) {
+                toast.show('Please provide the required details', {
+                  placement: 'top',
+                  type: 'danger',
+                });
                 setShowError(true);
                 return;
               }

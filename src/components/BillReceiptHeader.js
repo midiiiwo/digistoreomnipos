@@ -2,7 +2,7 @@ import React from 'react';
 import { Pressable, StyleSheet, Text } from 'react-native';
 import { useActionCreator } from '../hooks/useActionCreator';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-const BillReceiptHeader = ({ navigation, handleNavigation }) => {
+const BillReceiptHeader = ({ navigation }) => {
   const { resetCart, selectCustomer, setInvoice, setCustomerPayment } =
     useActionCreator();
 
@@ -15,11 +15,7 @@ const BillReceiptHeader = ({ navigation, handleNavigation }) => {
         selectCustomer(null);
         setInvoice(null);
         setCustomerPayment({});
-        if (!handleNavigation) {
-          navigation.navigate('Paypoint');
-        } else if (handleNavigation && typeof handleNavigation === 'function') {
-          handleNavigation();
-        }
+        navigation.navigate('Paypoint');
       }}>
       <Text style={styles.prev}>New transaction</Text>
     </Pressable>

@@ -20,7 +20,6 @@ import { useQueryClient } from 'react-query';
 import AddImage from '../../assets/icons/add-image.svg';
 import Loading from '../components/Loading';
 import { PERMISSIONS, RESULTS, request } from 'react-native-permissions';
-import Input from '../components/Input';
 
 import {
   Menu,
@@ -32,6 +31,7 @@ import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { useUpdateProfile } from '../hooks/useUpdateProfile';
 import { useGetMerchantDetails } from '../hooks/useGetMerchantDetails';
 import { useNavigation } from '@react-navigation/native';
+import Input from '../components/Input';
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -55,9 +55,6 @@ const reducer = (state, action) => {
 const Profile = ({ route }) => {
   const { user } = useSelector(state => state.auth);
   const [saved, setSaved] = React.useState();
-  const [showError, setShowError] = React.useState(false);
-  const [verify, setVerify] = React.useState(false);
-  const [verifyStatus, setVerifyStatus] = React.useState();
   const navigation = useNavigation();
   const [openMenu, setOpenMenu] = React.useState(false);
   const [state, dispatch] = React.useReducer(reducer, {
@@ -95,7 +92,7 @@ const Profile = ({ route }) => {
       } else {
         toast.show(saved.message, { placement: 'top', type: 'danger' });
       }
-      setVerifyStatus(null);
+      setSaved(null);
     }
   }, [toast, saved]);
 
@@ -112,18 +109,13 @@ const Profile = ({ route }) => {
   // const pData = data && data.data && data.data.data;
   const merchantDetails = details && details.data && details.data.data;
 
-  console.log(
-    'lllllllllll',
-    merchantDetails && merchantDetails.merchant_brand_logo,
-  );
-
   React.useEffect(() => {
     if (merchantDetails) {
       // console.log('pddddd', merchantDetails);
       dispatch({
         type: 'update_all',
         payload: {
-          phone: merchantDetails.merchant_contact_phone,
+          phone: merchantDetails.merchant_phone,
           email: merchantDetails.merchant_email,
           description: merchantDetails.merchant_business_desc,
           image: merchantDetails.merchant_brand_logo,
@@ -156,6 +148,8 @@ const Profile = ({ route }) => {
     '?' +
     imageRef.current;
 
+  console.log('fsdgsgsgsg', remoteImage);
+
   return (
     <View style={{ flex: 1, backgroundColor: '#fff' }}>
       <View style={{ height: '100%' }}>
@@ -170,11 +164,11 @@ const Profile = ({ route }) => {
                   >
                     {(!state.image ||
                       (state.image && state.image.length === 0)) && (
-                      <AddImage height={150} width={150} />
+                      <AddImage height={100} width={100} />
                     )}
                     {state.image && typeof state.image === 'string' && (
                       <Image
-                        style={{ height: 150, width: 150, borderRadius: 5 }}
+                        style={{ height: 100, width: 100, borderRadius: 5 }}
                         source={{
                           uri: remoteImage,
                         }}
@@ -182,7 +176,7 @@ const Profile = ({ route }) => {
                     )}
                     {state.image && typeof state.image === 'object' && (
                       <Image
-                        style={{ height: 150, width: 150, borderRadius: 5 }}
+                        style={{ height: 100, width: 100, borderRadius: 5 }}
                         source={{ uri: state.image.uri }}
                       />
                     )}
@@ -234,6 +228,7 @@ const Profile = ({ route }) => {
                         console.log('andandad');
                       } else if (Platform.OS === 'ios') {
                         granted = await request(PERMISSIONS.IOS.CAMERA);
+                        console.log('ggagagaggag', granted);
                         if (granted === RESULTS.GRANTED) {
                           const result = await launchCamera({
                             includeBase64: false,
@@ -252,7 +247,9 @@ const Profile = ({ route }) => {
                           });
                         }
                       }
-                    } catch (error) {}
+                    } catch (error) {
+                      console.error('=>>>>>>>>>>>>>>>>,', error);
+                    }
                   }}>
                   <Text
                     style={{
@@ -296,8 +293,7 @@ const Profile = ({ route }) => {
               <Text
                 style={{
                   fontFamily: 'Inter-Medium',
-                  color: showError && !state.image ? '#EB455F' : '#30475e',
-                  fontSize: 17,
+                  color: '#30475e',
                 }}>
                 Upload/Change Business Logo
               </Text>
@@ -355,19 +351,21 @@ const Profile = ({ route }) => {
             }}
             style={{
               marginTop: 14,
-              paddingVertical: 16,
+              paddingVertical: 12,
               alignItems: 'center',
               borderColor: '#B7C4CF',
-              borderWidth: 1.6,
+              borderWidth: 0.9,
               // borderStyle: 'dashed',
               marginBottom: 8,
-              borderRadius: 5,
+              borderRadius: 4,
+              paddingHorizontal: 10,
             }}>
             <Text
               style={{
-                fontFamily: 'SFProDisplay-Medium',
+                fontFamily: 'SFProDisplay-Semibold',
                 color: 'rgba(25, 66, 216, 0.87)',
-                fontSize: 18,
+                fontSize: 15,
+                textAlign: 'center',
               }}>
               {!state.address
                 ? 'Physical Location of Business'
@@ -395,7 +393,6 @@ const Profile = ({ route }) => {
             //   return;
             // }
 
-            console.log('iaamtaetatea', state.image);
             const payload = {
               merchant_id: user.merchant,
               buss_address:
@@ -468,25 +465,5 @@ const styles = StyleSheet.create({
   },
   dWrapper: {
     paddingTop: 12,
-  },
-});
-
-const dd = StyleSheet.create({
-  placeholder: {
-    fontFamily: 'Inter-Medium',
-    fontSize: 14,
-    paddingHorizontal: 14,
-    height: '100%',
-    zIndex: 100,
-  },
-  main: {
-    borderWidth: 1.2,
-    borderStyle: 'dashed',
-    borderColor: '#B7D9F8',
-    paddingHorizontal: 14,
-    height: 54,
-    borderRadius: 5,
-    justifyContent: 'center',
-    backgroundColor: '#F5FAFF',
   },
 });

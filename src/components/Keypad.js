@@ -81,6 +81,7 @@ const styles = StyleSheet.create({
     borderTopColor: '#ddd',
     borderTopWidth: 0.5,
     flex: 1,
+    backgroundColor: '#fff',
   },
   keypadRow: {
     width: '100%',
@@ -98,7 +99,7 @@ const styles = StyleSheet.create({
   },
   keyVal: {
     fontFamily: 'SQ Market Regular Regular',
-    fontSize: 30,
+    fontSize: 24,
     color: '#30475E',
     fontWeight: '100',
   },

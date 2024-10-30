@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 /* eslint-disable react-native/no-inline-styles */
 import {
   StyleSheet,
@@ -12,19 +13,18 @@ import PhoneInput from 'react-native-phone-number-input';
 import { useGetOnboardingOtp } from '../hooks/useGetOnboardingOtp';
 import { useToast } from 'react-native-toast-notifications';
 import { SheetManager } from 'react-native-actions-sheet';
-import { FloatingButton } from 'react-native-ui-lib';
 import Help from '../../assets/icons/help.svg';
 import { FAB } from 'react-native-paper';
 const NewUserPhone = ({ navigation, route }) => {
   const [value, setValue] = React.useState('');
-  const [formattedValue, setFormattedValue] = React.useState('');
+  const [_, setFormattedValue] = React.useState('');
   // const [valid, setValid] = React.useState(false);
   // const [showMessage, setShowMessage] = React.useState(false);
   const phoneInput = React.useRef(null);
   const [otpStatus, setOtpStatus] = React.useState();
   const { mutate, isLoading } = useGetOnboardingOtp(setOtpStatus);
   const toast = useToast();
-  const imgWidth = Dimensions.get('window').width * 0.3;
+  const imgWidth = Dimensions.get('window').width * 0.58;
 
   React.useEffect(() => {
     if (otpStatus && otpStatus.status == 0 && otpStatus.has_pin == 'YES') {
@@ -35,7 +35,7 @@ const NewUserPhone = ({ navigation, route }) => {
       setOtpStatus(null);
     } else if (otpStatus && otpStatus.status == 0) {
       if (otpStatus.message == 'Success: User exist') {
-        toast.show('User already exists', { placement: 'top' });
+        toast.show('User already exists', { placement: 'top', type: 'danger' });
         setOtpStatus(null);
         return;
       }
@@ -58,8 +58,6 @@ const NewUserPhone = ({ navigation, route }) => {
       setValue(route.params.username);
     }
   }, [route]);
-
-  console.log('valllllllllll', value);
 
   return (
     <View style={styles.main}>
@@ -155,7 +153,7 @@ const NewUserPhone = ({ navigation, route }) => {
             styles.btn,
             {
               marginTop: 22,
-              width: '90%',
+              width: '100%',
               backgroundColor: '#47B749',
               borderRadius: 8,
             },
@@ -179,7 +177,7 @@ const NewUserPhone = ({ navigation, route }) => {
 
             // console.log('callllll_---');
             mutate({
-              contact_phone: ph,
+              contact_phone: '+' + ph,
             });
           }}
           disabled={isLoading}>

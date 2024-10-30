@@ -17,6 +17,21 @@ import { SegmentedControl } from 'react-native-ui-lib';
 import PhoneInput from 'react-native-phone-number-input';
 import Help from '../../assets/icons/help.svg';
 import { FAB } from 'react-native-paper';
+import { useQuery } from 'react-query';
+import axios from 'axios';
+import Loading from '../components/Loading';
+
+function useGetAvailableCountries() {
+  const queryResult = useQuery(
+    ['available-countries'],
+    () =>
+      axios.get(
+        'https://storage.googleapis.com/digibox-managed/be/ur210328401d1ca816804f171a933e3ca31ff6IPBM.json',
+      ),
+    { staleTime: Infinity, cacheTime: 1000 * 60 * 60 * 24 },
+  );
+  return queryResult;
+}
 
 const Login = ({ navigation }) => {
   const [username, setUsername] = React.useState('');
@@ -24,81 +39,30 @@ const Login = ({ navigation }) => {
   // const [password, setPassword] = React.useState('');
   const [btnText, setBtnText] = React.useState('Continue');
   const segments = [{ label: 'Use Mobile Number' }, { label: 'Use Username' }];
+  const { data, isLoading } = useGetAvailableCountries();
   // const [verifyUserStatus, setVerifyUserStatus] = React.useState(false);
   const toast = useToast();
   const [usernameType, setUsernameType] = React.useState(0);
   const phoneInput = React.useRef(null);
 
-  // const { setAuth, setPinState } = useActionCreator();
-  // const [secureEntry, setSecureEntry] = React.useState(true);
-
-  // const showEnterPinLock = React.useCallback(async () => {
-  //   const hasPin = await hasUserSetPinCode();
-  //   if (hasPin) {
-  //     setPinState(() => ({ pinStatus: 'enter', showPin: true }));
-  //   } else {
-  //     setPinState(() => ({ pinStatus: 'choose', showPin: true }));
-  //   }
-  // }, [setPinState]);
-
-  // React.useEffect(() => {
-  //   showEnterPinLock();
-  // }, [showEnterPinLock]);
-
-  // React.useLayoutEffect(() => {
-  //   const verifyUser = async () => {
-  //     const user_ = await AsyncStorage.getItem('user');
-  //     const user = JSON.parse(user_);
-  //     // appGlobal.setAppGlobal({...appGlobal.appGlobal, user});
-
-  //     if (user && user.sid) {
-  //       navigation.replace('Home');
-  //     }
-  //   };
-
-  //   verifyUser();
-  // }, [navigation]);
-
   const checkUser = async user_ => {
     setBtnText('Processing');
-    const response = await loginApi.get(`/login/pin/user/${user_}`);
-    setBtnText('Continue');
+    const response = await loginApi.get(`/login/pin/user/${user_?.trim()}`);
     return response;
   };
+  const imgWidth = Dimensions.get('window').width * 0.58;
 
-  // React.useEffect(() => {
-  //   setVerifyUserStatus(false);
-  // }, []);
-
-  // const { setCurrentUser } = useActionCreator();
-  const imgWidth = Dimensions.get('window').width * 0.3;
+  if (isLoading) {
+    return <Loading />;
+  }
+  const availableCountries = data && data.data;
   return (
     <View style={styles.main}>
-      {/* <FloatingButton
-        visible={true}
-        hideBackgroundOverlay
-        style={{ height: 28, width: 28 }}
-        // bottomMargin={Dimensions.get('window').width * 0.2}
-        button={{
-          // label: 'Share',
-          onPress: () => {},
-          round: true,
-          backgroundColor: '#F3F3F3',
-          height: 32,
-          width: 32,
-          // iconstyle: {
-          //   height: '100%',
-          //   width: '100%',
-          // },
-          // iconSource: require('../../assets/images/image-removebg-preview (1).png'),
-        }}
-      /> */}
-
       <View style={styles.wrapper}>
         <View style={styles.imageWrapper}>
           <Image
             source={require('../../assets/images/POS_logo_png.png')}
-            style={{ marginTop: 10, height: imgWidth * 0.2, width: imgWidth }}
+            style={{ marginTop: 10, height: imgWidth * 0.3, width: imgWidth }}
             resizeMode="contain"
           />
         </View>
@@ -109,16 +73,15 @@ const Login = ({ navigation }) => {
           style={{
             // backgroundColor: 'red',
             alignItems: 'center',
-            marginTop: 10,
+            marginTop: 38,
           }}>
           <Text
             numberOfLines={2}
             style={{
               fontFamily: 'SFProDisplay-Medium',
               color: '#204391',
-              fontSize: 28,
-              // marginVertical: Dimensions.get('window').height * 0.03,
-              // width: Dimensions.get('window').width * 0.45,
+              fontSize: 26,
+
               textAlign: 'center',
             }}>
             Let's get you
@@ -128,11 +91,9 @@ const Login = ({ navigation }) => {
             style={{
               fontFamily: 'SFProDisplay-Medium',
               color: '#204391',
-              fontSize: 28,
-              // marginVertical: Dimensions.get('window').height * 0.03,
-              // marginTop: Dimensions.get('window').height * 0.01,
-              // width: Dimensions.get('window').width * 0.45,
-              marginBottom: Dimensions.get('window').height * 0.03,
+              fontSize: 26,
+
+              marginBottom: Dimensions.get('window').height * 0.05,
               textAlign: 'center',
             }}>
             back in
@@ -147,13 +108,10 @@ const Login = ({ navigation }) => {
             initialIndex={0}
             onChangeIndex={i => setUsernameType(i)}
           />
-          <View style={{ marginVertical: 20 }} />
+          <View style={{ marginVertical: 8 }} />
         </View>
-        <View
-          style={[
-            styles.form,
-            { paddingHorizontal: Dimensions.get('window').width * 0.083 },
-          ]}>
+
+        <View style={styles.form}>
           {usernameType === 1 && (
             <View style={styles.inputWrapper}>
               <TextInput
@@ -168,11 +126,6 @@ const Login = ({ navigation }) => {
           )}
 
           {usernameType === 0 && (
-            // <View
-            //   style={{
-            //     // alignItems: 'center',
-            //     backgroundColor: 'red',
-            //   }}>
             <PhoneInput
               ref={phoneInput}
               defaultCode="GH"
@@ -181,12 +134,9 @@ const Login = ({ navigation }) => {
               onChangeText={text => {
                 setPhone(text);
               }}
-              containerStyle={{
-                paddingHorizontal: Dimensions.get('window').width * 0.07,
+              textInputProps={{
+                editable: true,
               }}
-              // onChangeFormattedText={text => {
-              //   setUsername(text);
-              // }}
               placeholder="Enter Mobile Number"
               textContainerStyle={{
                 borderColor: '#ddd',
@@ -198,7 +148,6 @@ const Login = ({ navigation }) => {
                 borderBottomLeftRadius: 0,
                 paddingVertical: 0,
                 paddingTop: 4,
-                // backgroundColor: '#fff'
               }}
               flagButtonStyle={{
                 borderColor: '#ddd',
@@ -212,6 +161,10 @@ const Login = ({ navigation }) => {
                 // height: '100%',
                 alignItems: 'center',
                 justifyContent: 'center',
+              }}
+              countryPickerProps={{
+                withFlag: false,
+                countryCodes: Object.keys(availableCountries),
               }}
               // autoFocus
             />
@@ -229,44 +182,20 @@ const Login = ({ navigation }) => {
             },
           ]}
           onPress={async () => {
-            // if (verifyUserStatus) {
-            //   try {
-            //     const { data } = await signin(username, password);
-            //     if (data.status == '0') {
-            //       await AsyncStorage.setItem('user', JSON.stringify(data));
-            //       setCurrentUser({
-            //         ...data,
-            //         merchant: data.user_merchant_id,
-            //         outlet: data.user_merchant_group_id,
-            //       });
-            //       setAuth(true);
-            //       // setPinState({ pinStatus: 'enter', showPin: false });
-            //       navigation.replace('Dashboard');
-
-            //       setBtnText('Sign in');
-            //       return;
-            //     }
-            //     toast.show(data.message, {
-            //       placement: 'top',
-            //       type: 'danger',
-            //     });
-            //     setVerifyUserStatus(false);
-            //     setBtnText('Get started');
-            //   } catch (error) {}
-            // } else {
             try {
               let userCred;
               // const userCred = usernameType === 1 ? username : ph;
               let data;
               if (usernameType === 1) {
-                const out = await checkUser(encodeURIComponent(username));
+                const out = await checkUser(
+                  encodeURIComponent(username?.trim()),
+                );
                 userCred = username;
                 data = out.data;
               } else {
                 const ph = phone.startsWith('0')
                   ? '+' + phoneInput.current.getCallingCode() + phone.slice(1)
                   : '+' + phoneInput.current.getCallingCode() + phone;
-                console.log('phohphphphphp', ph);
                 const out = await checkUser(encodeURIComponent(ph));
                 userCred = ph;
                 data = out.data;
@@ -276,13 +205,18 @@ const Login = ({ navigation }) => {
                 // if (data.is_admin !== 'YES') {
                 if (data && data.has_pin == 'YES') {
                   navigation.navigate('LockScreen', { username: userCred });
+                } else if (
+                  data &&
+                  data.has_pin == 'NO' &&
+                  data.has_otp == 'YES'
+                ) {
+                  navigation.navigate('Reset Otp', {
+                    uid: data.uid,
+                    destination: userCred,
+                  });
                 } else {
                   navigation.navigate('Set Pin', { uid: data.uid });
                 }
-
-                // } else {
-                // navigation.navigate('Password', { username });
-                // }
                 setBtnText('Get started');
                 return;
               }
@@ -293,18 +227,19 @@ const Login = ({ navigation }) => {
                 });
                 return;
               }
-              toast.show(`User ${userCred} does not exist`, {
+              toast.show(data?.message, {
                 type: 'danger',
                 placement: 'top',
               });
-              console.log(userCred);
               const usernameIsPhone =
                 userCred.match(
                   /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/im,
                 ) &&
-                (userCred.length === 10 || userCred.length === 9);
+                (userCred.length === 13 || userCred.length === 14);
               if (usernameIsPhone) {
-                navigation.navigate('NewUserPhone', { username: userCred });
+                navigation.navigate('NewUserPhone', {
+                  username: userCred.slice(4),
+                });
               } else {
                 navigation.navigate('NewUserPhone');
               }
@@ -313,7 +248,7 @@ const Login = ({ navigation }) => {
             } catch (error) {
               console.log(error);
               toast.show('Check your network');
-              setBtnText('Continue');
+              setBtnText('Get started');
             }
             // }
           }}>
@@ -412,7 +347,6 @@ const styles = StyleSheet.create({
     height: '100%',
     width: '100%',
     alignItems: 'center',
-    paddingHorizontal: Dimensions.get('window').width * 0.1,
 
     // position: 'absolute',
     // bottom: 0,
@@ -421,9 +355,10 @@ const styles = StyleSheet.create({
   },
   imageWrapper: {
     alignItems: 'center',
-    marginTop: Dimensions.get('window').height * 0.04,
+    marginTop: Dimensions.get('window').height * 0.1,
   },
   form: {
+    paddingHorizontal: 30,
     // paddingTop: 5,
   },
   input: {

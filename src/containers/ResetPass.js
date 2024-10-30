@@ -1,34 +1,20 @@
 /* eslint-disable react-native/no-inline-styles */
-import {
-  StyleSheet,
-  TextInput,
-  View,
-  Pressable,
-  Text,
-  Image,
-  Dimensions,
-} from 'react-native';
+import { StyleSheet, TextInput, View, Pressable, Text } from 'react-native';
 import React from 'react';
 import { useToast } from 'react-native-toast-notifications';
-import { RadioGroup, RadioButton } from 'react-native-ui-lib';
 import Pass from '../../assets/icons/pass.svg';
 import { useNavigation } from '@react-navigation/native';
 import { loginApi } from '../api/axiosInstance';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useActionCreator } from '../hooks/useActionCreator';
-import { Switch } from '@rneui/themed';
 
 const ResetPass = ({ route }) => {
   const [pin, setPin] = React.useState('');
   const [pinRepeat, setPinRepeat] = React.useState('');
-  const { setAuth, setCurrentUser } = useActionCreator();
   const [secureEntry, setSecureEntry] = React.useState(true);
   const [secureEntry1, setSecureEntry1] = React.useState(true);
   const navigation = useNavigation();
   const { uid } = route.params;
   const toast = useToast();
   const [loading, setLoading] = React.useState(false);
-  const [radio, setRadio] = React.useState('password');
   // const imgWidth = Dimensions.get('window').width * 0.7;
 
   // const resetPass = async _password => {

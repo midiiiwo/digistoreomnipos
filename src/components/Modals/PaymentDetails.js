@@ -58,16 +58,16 @@ const PaymentDetailsModal = ({
   paymentDetails,
   togglePaymentDetails,
   togglePaymentPreview,
-  navigation,
-  paymentType,
   toggleOtpModal,
+  navigation,
+  payment,
 }) => {
   PrimaryButton;
   const { idx } = useRadioButton();
   const { setCustomerPayment } = useActionCreator();
   const { customer, phone } = useSelector(state => state.sale);
-  const { user } = useSelector(state => state.auth);
   const next = React.useRef(false);
+  const { user } = useSelector(state => state.auth);
   return (
     <Modal
       modalState={paymentDetails}
@@ -76,7 +76,7 @@ const PaymentDetailsModal = ({
         if (next.current) {
           if (
             user.user_permissions.includes('REQCUSOTP') &&
-            momoPayments.includes(paymentType)
+            momoPayments.includes(payment)
           ) {
             toggleOtpModal(true);
           } else {
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
     marginTop: 42,
   },
   choose: {
-    fontFamily: 'SFProDisplay-Regular',
+    fontFamily: 'ReadexPro-Regular',
     fontSize: 18,
     color: '#30475E',
   },
@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
   },
   modal: { alignItems: 'center' },
   modalView: {
-    width: '50%',
+    width: '99%',
     backgroundColor: '#fff',
     paddingHorizontal: 12,
     paddingVertical: 26,
@@ -172,11 +172,11 @@ const styles = StyleSheet.create({
     // borderColor: 'rgba(96, 126, 170, 0.4)',
     // borderWidth: 0.4,
     width: '100%',
-    paddingVertical: 18,
+    paddingVertical: 14,
     paddingHorizontal: 12,
-    fontFamily: 'SFProDisplay-Regular',
+    fontFamily: 'ReadexPro-Regular',
     color: '#30475E',
-    fontSize: 18,
+    fontSize: 15,
     paddingLeft: 14,
   },
   textInputWrapper: {
@@ -185,24 +185,23 @@ const styles = StyleSheet.create({
   },
   option1Text: {
     color: 'rgba(48, 71, 94, 0.9)',
-    fontFamily: 'SFProDisplay-Regular',
-    fontSize: 19,
-    letterSpacing: 0.3,
+    fontFamily: 'ReadexPro-Regular',
+    fontSize: 16,
   },
   customerName: {
     color: 'rgba(48, 71, 94, 0.7)',
-    fontFamily: 'SFProDisplay-Regular',
+    fontFamily: 'ReadexPro-Regular',
     fontSize: 15,
   },
   customerNumber: {
     color: 'rgba(48, 71, 94, 0.7)',
-    fontFamily: 'SFProDisplay-Regular',
+    fontFamily: 'ReadexPro-Regular',
     fontSize: 14,
   },
   primaryButton: {
     marginTop: 19,
     borderRadius: 5,
-    paddingVertical: 20,
+    paddingVertical: 16,
   },
   paymentReviewItem: {
     flexDirection: 'row',

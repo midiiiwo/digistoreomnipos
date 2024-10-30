@@ -5,7 +5,6 @@ import { PaymentReviewItem } from './CustomerDetails';
 import { useSelector } from 'react-redux';
 import ModalCancel from '../ModalCancel';
 import { useNavigation } from '@react-navigation/native';
-import LoadingModal from '../LoadingModal';
 import Modal from '../Modal';
 import PrimaryButton from '../PrimaryButton';
 import { useRaiseOrder } from '../../hooks/useRaiseOrder';
@@ -15,6 +14,7 @@ import { useReceiveQuickPayment } from '../../hooks/useReceiveQuickPayment';
 import { useGetApplicableTaxes } from '../../hooks/useGetApplicableTaxes';
 import moment from 'moment';
 import _ from 'lodash';
+import { useToast } from 'react-native-toast-notifications';
 
 const PayLater = ({
   payLaterVisible,
@@ -37,13 +37,13 @@ const PayLater = ({
   const {
     cart,
     delivery,
-    deliveryNote,
-    deliveryDueDate,
     orderNotes,
     // subTotal: orderSubTotal,
     discountPayload,
     addTaxes,
     orderDate,
+    deliveryNote,
+    deliveryDueDate,
   } = useSelector(state => state.sale);
 
   const {
@@ -54,10 +54,13 @@ const PayLater = ({
   } = useSelector(state => state.quickSale);
   let pay_date = moment().format('YYYY-MM-DD H:mm:ss');
 
+  console.log('ordddddd', orderDate);
+
   const order_outlet = user.outlet;
   const mutation = useRaiseOrder(i => {
     client.invalidateQueries('summary-filter');
     client.invalidateQueries('all-orders');
+    client.invalidateQueries('merchant-customers');
     setInvoice(i);
   });
   const receiveQuickPaymentMutation = useReceiveQuickPayment(i => {
@@ -65,37 +68,24 @@ const PayLater = ({
     client.invalidateQueries('all-orders');
     setInvoice(i);
   });
-  // const { data, isLoading, isFetching } = useGetTransactionFee(
-  //   payment,
-  //   quickSaleInAction ? subTotal : total,
-  //   user.merchant,
-  //   customerDetails,
-  // );
-  // const {
-  //   data: lookup,
-  //   isLookupLoading,
-  //   isFetching: isLookupFetching,
-  //   // isError,
-  //   // error,
-  // } = useLookupAccount(
-  //   mapChannelToName[payment],
-  //   (customerPayment && customerPayment.phone) || '',
-  //   customerDetails,
-  // );
-  // if (isError) {
-  //   console.log('hterererereriissss', error.message);
-  //   toast.show(error.message);
-  // }
-
-  // console.log('islllllllll', payment);
-
-  // React.useEffect(() => {
-  //   if (data && data.data && data.data.charge) {
-  //     setCharge(data.data.charge);
-  //   }
-  // }, [data, setCharge]);
 
   const { data: taxData } = useGetApplicableTaxes(user.merchant);
+
+  const toast = useToast();
+
+  const orderItems = {};
+  const orderTaxes = {};
+  cart.forEach((item, idx) => {
+    orderItems[idx] = {
+      order_item_no:
+        item.type && item.type === 'non-inventory-item' ? '' : item.id,
+      order_item_qty: item && item.quantity,
+      order_item: item && item.itemName,
+      order_item_amt: item && item.amount,
+      order_item_prop: (item && item.order_item_props) || {},
+      order_item_prop_id: item && item.order_item_prop_id,
+    };
+  });
 
   const orderAmount = (cart || []).reduce((prev, curr) => {
     if (curr) {
@@ -104,27 +94,17 @@ const PayLater = ({
     return prev;
   }, 0);
 
-  const orderItems = {};
-  const orderTaxes = {};
-  cart.forEach((item, idx) => {
-    orderItems[idx] = {
-      order_item_no:
-        item.type && item.type === 'non-inventory-item' ? '' : item.id,
-      order_item_qty: item.quantity,
-      order_item: item.itemName,
-      order_item_amt: item.amount,
-      order_item_prop: item.order_item_props || {},
+  taxData?.data?.data?.map((item, idx) => {
+    orderTaxes[idx] = {
+      tax_no: item.tax_id,
+      tax_value: Number(
+        (
+          item.tax_value *
+          (orderAmount - (discountPayload?.discount || 0))
+        ).toFixed(2),
+      ),
     };
   });
-  taxData &&
-    taxData.data &&
-    taxData.data.data &&
-    taxData.data.data.map((item, idx) => {
-      orderTaxes[idx] = {
-        tax_no: item.tax_id,
-        tax_value: item.tax_value,
-      };
-    });
 
   return (
     <Modal
@@ -143,24 +123,15 @@ const PayLater = ({
           handlePress={() => togglePayLater(false)}
         />
         <View style={styles.nameWrapper}>
-          {/* <Text
-            style={{
-              fontFamily: 'SFProDisplay-Regular',
-              fontSize: 13.2,
-              color: '#5C6E91',
-              marginBottom: 6,
-            }}>
-            CUSTOMER NAME
-          </Text> */}
           <Text style={[styles.name, { textAlign: 'center' }]}>
-            {((customer && customer.customer_name) || '').toUpperCase()}
+            {(customer?.customer_name || '').toUpperCase()}
           </Text>
           <Text
             style={[
               styles.name,
               { textAlign: 'center', fontSize: 14.5, marginTop: 4 },
             ]}>
-            {(customer && customer.customer_phone) || ''}
+            {customer?.customer_phone || ''}
           </Text>
         </View>
         <View style={styles.details}>
@@ -194,6 +165,13 @@ const PayLater = ({
         <PrimaryButton
           style={styles.primaryButton}
           handlePress={() => {
+            if (Number(customer?.customer_credit_limit) >= Number(amount)) {
+              toast.show(
+                'Customer has credits in the account. Try using their credits to pay.',
+                { placement: 'top', duration: 5000 },
+              );
+              return;
+            }
             const mod_date = moment().format('YYYY-MM-DD H:mm:ss');
             const payload = quickSaleInAction
               ? {
@@ -255,7 +233,6 @@ const PayLater = ({
                         ? moment(deliveryDueDate).format('YYYY-MM-DD')
                         : ''
                       : deliveryNote,
-
                   // order_taxes: (addTaxes && JSON.stringify(orderTaxes)) || '',
                   customer: (customer && customer.customer_id) || '',
                   order_date:
@@ -298,7 +275,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   modalView: {
-    width: '56%',
+    width: '96%',
     backgroundColor: '#fff',
     paddingHorizontal: 12,
     paddingVertical: 26,
@@ -306,7 +283,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   name: {
-    fontFamily: 'SFProDisplay-Regular',
+    fontFamily: 'ReadexPro-Regular',
     fontSize: 18,
     color: '#6096B4',
   },

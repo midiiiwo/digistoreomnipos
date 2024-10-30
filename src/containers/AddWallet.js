@@ -1,21 +1,24 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import { Image, StyleSheet, View, Text, Dimensions } from 'react-native';
-import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import {
+  Image,
+  StyleSheet,
+  View,
+  Text,
+  Dimensions,
+  ScrollView,
+} from 'react-native';
 
-RadioButton;
-import { Input } from '../components/BottomSheets/AddProductSheet';
 import PrimaryButton from '../components/PrimaryButton';
 import { useRadioButton } from '../hooks/useRadioButton';
 import { useAddWallet } from '../hooks/useAddWallet';
 import { useToast } from 'react-native-toast-notifications';
 import { useSelector } from 'react-redux';
 import moment from 'moment';
-import { useQueryClient } from 'react-query';
 import { RadioButtonProvider } from '../context/RadioButtonContext';
 import RadioButton from '../components/RadioButton';
 import { useNavigation } from '@react-navigation/native';
+import Input from '../components/Input';
 
 const AccountCard = ({ network, index }) => {
   return (
@@ -61,7 +64,7 @@ const AccountCard = ({ network, index }) => {
             />
           ) : (
             <Image
-              source={require('../../assets/images/AirtelTigo-Money.jpeg')}
+              source={require('../../assets/images/atmoney.png')}
               style={{
                 height: 48,
                 width: 48,
@@ -74,7 +77,7 @@ const AccountCard = ({ network, index }) => {
           <View>
             <Text
               style={{
-                fontFamily: 'Lato-Bold',
+                fontFamily: 'ReadexPro-Medium',
                 color: '#30475e',
                 fontSize: 15,
               }}>
@@ -82,7 +85,7 @@ const AccountCard = ({ network, index }) => {
             </Text>
             <Text
               style={{
-                fontFamily: 'Lato-Medium',
+                fontFamily: 'ReadexPro-Medium',
                 color: '#6B728E',
                 fontSize: 13,
               }}>
@@ -97,86 +100,90 @@ const AccountCard = ({ network, index }) => {
 
 const networkCodes = ['MTNMM', 'VODAC', 'TIGOC'];
 
-function AddWalletSheet(props) {
+function AddWallet() {
   const [number, setNumber] = React.useState('');
   const toast = useToast();
   const [showError, setShowError] = React.useState(false);
   const [transactStatus, setTransactStatus] = React.useState();
   const { idx } = useRadioButton();
-  const queryClient = useQueryClient();
   const navigation = useNavigation();
   const { mutate, isLoading } = useAddWallet(i => {
     setTransactStatus(i);
     // queryClient.invalidateQueries('account-list');
   });
-  const inset = useSafeAreaInsets();
-  console.log('inisertsetes', inset);
   const { user } = useSelector(state => state.auth);
 
   React.useEffect(() => {
     if (transactStatus && transactStatus.status == 0) {
       navigation.navigate('Verify Account', { number });
-      setTransactStatus(null);
+
       // SheetManager.hideAll();
     } else if (transactStatus && transactStatus.status != 0) {
       toast.show(transactStatus.message && transactStatus.message, {
         placement: 'top',
       });
+      setTransactStatus(null);
       // SheetManager.hideAll();
     }
   }, [transactStatus, toast, number, navigation]);
   return (
     <View style={styles.main}>
-      <View style={{ paddingHorizontal: 22, marginBottom: 18 }}>
-        <Text
-          style={{
-            fontFamily: 'Roboto-Medium',
-            fontSize: 26,
-            color: '#002',
-          }}>
-          Add Wallet
-        </Text>
-      </View>
-      <AccountCard index={1} network="MTN Mobile Money" />
-      <AccountCard index={2} network="Vodafone Cash" />
-      <AccountCard index={3} network="AirtelTigo Money" />
-
-      <View style={{ paddingHorizontal: 18 }}>
-        <Input
-          placeholder="Enter wallet phone number"
-          val={number}
-          setVal={text => setNumber(text)}
-          style={{
-            width: '100%',
-            backgroundColor: '#fff',
-            marginTop: 12,
-            marginBottom: 90,
-          }}
-          keyboardType="phone-pad"
-          showError={showError && number.length === 0}
-        />
-        <View style={[styles.btnWrapper]}>
-          <PrimaryButton
-            style={[styles.btn, { borderRadius: 5, marginTop: 0 }]}
-            handlePress={() => {
-              if (number.length === 0) {
-                setShowError(true);
-                return;
-              }
-              const mod_date = moment().format('YYYY-MM-DD h:mm:ss');
-              mutate({
-                account_no: user.user_merchant_account,
-                topup_network: networkCodes[idx - 1],
-                topup_number: number,
-                mod_date: mod_date,
-                mod_by: user.login,
-              });
-            }}
-            disabled={isLoading}>
-            {isLoading ? 'Processing' : 'Proceed'}
-          </PrimaryButton>
+      <ScrollView>
+        <View style={{ paddingHorizontal: 22, marginBottom: 18 }}>
+          <Text
+            style={{
+              fontFamily: 'ReadexPro-Medium',
+              fontSize: 22,
+              color: '#002',
+            }}>
+            Add Wallet
+          </Text>
         </View>
-      </View>
+        <AccountCard index={1} network="MTN Mobile Money" />
+        <AccountCard index={2} network="Vodafone Cash" />
+        <AccountCard index={3} network="AirtelTigo Money" />
+
+        <View style={{ paddingHorizontal: 18 }}>
+          <Input
+            placeholder="Enter wallet phone number"
+            val={number}
+            setVal={text => setNumber(text)}
+            style={{
+              width: '100%',
+              backgroundColor: '#fff',
+              marginTop: 12,
+              marginBottom: 90,
+            }}
+            keyboardType="phone-pad"
+            showError={showError && number.length === 0}
+          />
+          <View style={[styles.btnWrapper]}>
+            <PrimaryButton
+              style={[styles.btn, { borderRadius: 5, marginTop: 0 }]}
+              handlePress={() => {
+                if (number.length === 0) {
+                  setShowError(true);
+                  toast.show('Please provide all required details.', {
+                    placement: 'top',
+                    type: 'danger',
+                  });
+                  return;
+                }
+                const mod_date = moment().format('YYYY-MM-DD h:mm:ss');
+                mutate({
+                  account_no: user.user_merchant_account,
+                  topup_network: networkCodes[idx - 1],
+                  topup_number: number,
+                  mod_date: mod_date,
+                  mod_by: user.login,
+                });
+              }}
+              disabled={isLoading}>
+              {isLoading ? 'Processing' : 'Proceed'}
+            </PrimaryButton>
+          </View>
+        </View>
+      </ScrollView>
     </View>
   );
 }
@@ -191,6 +198,7 @@ const styles = StyleSheet.create({
     borderTopColor: '#ddd',
     borderTopWidth: 0.4,
     justifyContent: 'center',
+    marginBottom: 14,
   },
   btn: {
     borderRadius: 4,
@@ -205,8 +213,12 @@ const styles = StyleSheet.create({
   },
 });
 
-export default props => (
-  <RadioButtonProvider>
-    <AddWalletSheet {...props} />
-  </RadioButtonProvider>
-);
+const AddWallet_ = props => {
+  return (
+    <RadioButtonProvider>
+      <AddWallet {...props} />
+    </RadioButtonProvider>
+  );
+};
+
+export default AddWallet_;

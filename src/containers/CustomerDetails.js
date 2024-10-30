@@ -22,8 +22,8 @@ import moment from 'moment';
 // import { FlashList } from '@shopify/flash-list';
 import { FlatList } from 'react-native-gesture-handler';
 import PrimaryButton from '../components/PrimaryButton';
-import AddBalance from '../../assets/icons/addbalance.svg';
-import PayBalance from '../../assets/icons/paybalance.svg';
+// import AddBalance from '../../assets/icons/addbalance.svg';
+// import PayBalance from '../../assets/icons/paybalance.svg';
 import { SheetManager } from 'react-native-actions-sheet';
 import { useState } from 'react';
 import AddBalanceInstructions from '../components/Modals/AddBalanceInstructions';
@@ -31,7 +31,6 @@ import AddBalanceStatus from '../components/Modals/AddBalanceStatus';
 import { useNavigation } from '@react-navigation/native';
 
 const FirstRoute = ({ item }) => {
-  console.log('oooooooooooo', item);
   // console.log(item);
   return (
     <View style={styles.detailsMain}>
@@ -339,6 +338,7 @@ const CustomerDetails = ({ route, navigation }) => {
   const { id } = route.params;
   const { user } = useSelector(state => state.auth);
   const layout = useWindowDimensions();
+  const [filterPaylater, setFilterPaylater] = React.useState(false);
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
     { key: 'first', title: 'Details' },
@@ -349,7 +349,6 @@ const CustomerDetails = ({ route, navigation }) => {
   const [balanceInstructions, setBalanceInstructions] = React.useState(false);
   const [confirmed, setConfirmed] = React.useState(false);
   const { data, isLoading } = useGetCustomerDetails(user.merchant, id);
-  const [filterPaylater, setFilterPaylater] = React.useState(false);
 
   React.useEffect(() => {
     if (index === 0 || index === 1) {
@@ -383,7 +382,7 @@ const CustomerDetails = ({ route, navigation }) => {
         return (
           <SecondRoute
             merchant={user.merchant}
-            customerPhone={item && item.customer_phone}
+            customerPhone={item?.customer_phone}
             filterPaylater={filterPaylater}
           />
         );
@@ -394,11 +393,11 @@ const CustomerDetails = ({ route, navigation }) => {
 
   const splitName = item && item.customer_name.split(' ');
   const first =
-    (splitName[0] || '').slice(0, 1).toUpperCase() +
-    (splitName[0] || '').slice(1).toLowerCase();
+    ((splitName && splitName[0]) || '').slice(0, 1).toUpperCase() +
+    ((splitName && splitName[0]) || '').slice(1).toLowerCase();
   const second =
-    (splitName[1] || '').slice(0, 1).toUpperCase() +
-    (splitName[1] || '').slice(1).toLowerCase();
+    ((splitName && splitName[1]) || '').slice(0, 1).toUpperCase() +
+    ((splitName && splitName[1]) || '').slice(1).toLowerCase();
 
   return (
     <View style={styles.main}>
@@ -426,7 +425,12 @@ const CustomerDetails = ({ route, navigation }) => {
         <View
           style={[styles.stats, { paddingVertical: index === 1 ? 16 : 25 }]}>
           <View style={[styles.statsItem]}>
-            <Text style={styles.statsName}>{item.total_spends}</Text>
+            <Text style={styles.statsName}>
+              {new Intl.NumberFormat('en-US', {
+                maximumFractionDigits: 2,
+                minimumFractionDigits: 2,
+              }).format(Number(item.total_spends))}
+            </Text>
             <Text style={styles.statsMetric}>Total Spend</Text>
           </View>
           <View style={styles.sep} />
@@ -454,7 +458,7 @@ const CustomerDetails = ({ route, navigation }) => {
             activeColor="#000"
             labelStyle={{
               fontFamily: 'ReadexPro-Regular',
-              fontSize: 16,
+              fontSize: 15,
               color: '#002',
               textTransform: 'capitalize',
               letterSpacing: 0.3,
@@ -480,6 +484,19 @@ const CustomerDetails = ({ route, navigation }) => {
           </PrimaryButton>
         </View>
       )}
+      {/* {index === 1 && (
+        <View style={styles.btnWrapper}>
+          <PrimaryButton
+            style={styles.btn}
+            handlePress={() => {
+              navigation.navigate('Edit Customer', {
+                id: item && item.customer_id,
+              });
+            }}>
+            Pay Balance
+          </PrimaryButton>
+        </View>
+      )} */}
       <AddBalanceInstructions
         invoice={invoice}
         paymentInstructions={balanceInstructions}
@@ -501,15 +518,15 @@ export default CustomerDetails;
 const ss = StyleSheet.create({
   main: {
     flexDirection: 'row',
-    paddingHorizontal: 17,
-    paddingVertical: 15,
+    paddingHorizontal: 14,
+    paddingVertical: 11,
     borderRadius: 34,
-    marginHorizontal: 8,
+    marginHorizontal: 4,
     justifyContent: 'center',
     alignItems: 'center',
   },
   txt: {
-    fontFamily: 'ReadexPro-Medium',
+    fontFamily: 'SFProDisplay-Medium',
     letterSpacing: 0.3,
     marginLeft: 5,
   },
@@ -526,22 +543,23 @@ const styles = StyleSheet.create({
   },
   detailsMain: { flex: 1, backgroundColor: '#fff', paddingVertical: 14 },
   detailItem: {
-    paddingHorizontal: 24,
-    paddingVertical: 15,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
   },
   detailsItemName: {
     fontFamily: 'ReadexPro-Regular',
-    fontSize: 16.6,
+    fontSize: 14,
     color: '#738598',
     maxWidth: '90%',
     letterSpacing: 0.3,
   },
   detailsItemValue: {
     fontFamily: 'ReadexPro-Medium',
-    fontSize: 17.5,
-    marginTop: 2,
+    fontSize: 15.5,
+    marginTop: -2,
     color: '#30475e',
     maxWidth: '90%',
+    letterSpacing: 0.3,
   },
   btnWrapper: {
     position: 'absolute',
@@ -554,7 +572,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 0.6,
   },
   btn: {
-    borderRadius: 100,
+    borderRadius: 4,
     width: '90%',
   },
   circle: {
@@ -562,8 +580,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#98A8F8',
     borderRadius: 100,
-    height: 100,
-    width: 100,
+    height: 84,
+    width: 84,
     // marginTop: 16,
     marginLeft: 'auto',
     marginRight: 'auto',
@@ -593,8 +611,8 @@ const styles = StyleSheet.create({
   name: {
     fontFamily: 'ReadexPro-Medium',
     color: '#30475e',
-    fontSize: 21,
-    marginTop: 16,
+    fontSize: 17,
+    marginTop: 8,
     textAlign: 'center',
   },
   addressWrapper: {
@@ -609,7 +627,7 @@ const styles = StyleSheet.create({
   },
   stats: {
     flexDirection: 'row',
-    width: '60%',
+    width: '90%',
     // backgroundColor: 'rgba(185, 224, 255, 0.1)',
     marginTop: 0,
     paddingVertical: 15,
@@ -621,14 +639,13 @@ const styles = StyleSheet.create({
   },
   statsName: {
     fontFamily: 'ReadexPro-Medium',
-    fontSize: 20,
+    fontSize: 16,
     color: '#30475e',
   },
   statsMetric: {
     fontFamily: 'ReadexPro-Regular',
-    fontSize: 16.5,
+    fontSize: 14.1,
     color: '#738598',
-    marginTop: 2,
-    letterSpacing: 0.3,
+    marginTop: -2,
   },
 });

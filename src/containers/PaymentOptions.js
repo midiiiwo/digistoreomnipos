@@ -1,8 +1,9 @@
-/* eslint-disable prettier/prettier */
+/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable eqeqeq */
-/* eslint-disable prettier/prettier */
 import React from 'react';
 import { Text, View, StyleSheet, FlatList } from 'react-native';
+
+import Modal from '../components/Modal';
 import PaymentCard from '../components/PaymentCard';
 import { RadioButtonProvider } from '../context/RadioButtonContext';
 import { useSelector } from 'react-redux';
@@ -25,6 +26,10 @@ import StoreCredit from '../components/Modals/StoreCredit';
 import StoreCreditStatus from '../components/Modals/StoreCreditStatus';
 import PayLater from '../components/Modals/PayLater';
 import OtpModal from '../components/Modals/OtpModal';
+import PartialPayModal from '../components/Modals/PartialPayModal';
+import PartialPayCashConfirm from '../components/Modals/PartialPayCashConfirm';
+import PartialPayMomoConfirm from '../components/Modals/PartialPayMomoConfirm';
+import PatPayMomoOtp from '../components/Modals/PatPayMomoOtp';
 
 const styles = StyleSheet.create({
   main: {
@@ -37,8 +42,8 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   choose: {
-    fontFamily: 'ReadexPro-Medium',
-    fontSize: 26,
+    fontFamily: 'ReadexPro-bold',
+    fontSize: 22,
     color: '#30475E',
   },
   amount: {
@@ -54,7 +59,7 @@ const styles = StyleSheet.create({
   },
   modal: { alignItems: 'center' },
   modalView: {
-    width: '55%',
+    width: '90%',
     backgroundColor: '#fff',
     paddingHorizontal: 32,
     paddingVertical: 26,
@@ -123,7 +128,9 @@ const styles = StyleSheet.create({
   },
   primary: { marginTop: 28 },
   container: {
-    justifyContent: 'space-between',
+    paddingVertical: 5,   // Reduce padding between items
+    marginVertical: 2,
+    // justifyContent: 'space-between',
   },
   paymentLabel: { width: '100%', alignItems: 'center' },
   paymentReceivedLabel: { width: '100%', alignItems: 'center', paddingTop: 40 },
@@ -162,29 +169,51 @@ const styles = StyleSheet.create({
   },
 });
 
-const nonDeliveryOptions = ['CASH', 'CREDITBAL', 'DEBITBAL'];
+const nonDeliveryOptions = [
+  'CASH',
+  'CREDITBAL',
+  'DEBITBAL',
+  'BANK',
+  'PATPAY',
+  'OFFCARD',
+  'OFFMOMO',
+];
 
 const PaymentOptions = ({ navigation }) => {
   const [paymentDetails, togglePaymentDetails] = React.useState(false);
   const [paymentPreview, togglePaymentPreview] = React.useState(false);
-  const [otpModal, toggleOtpModal] = React.useState(false);
-  const [otp, setOtp] = React.useState(false);
   const [paymentInstructions, togglePaymentInstructions] =
     React.useState(false);
   // const [paymentDone, togglePaymentDone] = React.useState(false);
   const [paymentConfirmed, togglePaymentConfirmed] = React.useState(false);
   const [cashPaymentStatus, toggleCashPaymentStatus] = React.useState(false);
   const [cashModal, toggleCashModal] = React.useState(false);
+  const [patModal, togglePatModal] = React.useState(false);
   const [cashConfirmed, toggleCashConfirmed] = React.useState(false);
+  const [patPayConfirmed, togglePatPayConfirmed] = React.useState(false);
+  const [patPayMomoConfirmed, togglePatPayMomoConfirmed] =
+    React.useState(false);
   const [offline, toggleOffline] = React.useState(false);
+  const [otpModal, toggleOtpModal] = React.useState(false);
+  const [otp, setOtp] = React.useState('');
+  const [patOtpModal, togglePatOtpModal] = React.useState(false);
+  const [patOtp, setPatOtp] = React.useState('');
   const [payment, setPayment] = React.useState(null);
   const [amount, setAmount] = React.useState('');
   const [receiptNumber, setReceiptNumber] = React.useState('');
+  const [patPaymentNumber, setPatPaymentNumber] = React.useState('');
+  const [paymentType, setPaymentType] = React.useState();
+
   const toast = useToast();
-  const { delivery, totalAmount, customer } = useSelector(state => state.sale);
+  const { delivery, totalAmount, customer, orderCheckoutTaxes } = useSelector(
+    state => state.sale,
+  );
+
+  console.log('cusssss', customer);
   const [dialog, setDialog] = React.useState(false);
   const { user } = useSelector(state => state.auth);
   const { quickSaleInAction, subTotal } = useSelector(state => state.quickSale);
+  // const { isLoading } = useGetApplicableTaxes(user.merchant);
   const { data: activeVendors, isActiveVendorsLoading } =
     useGetAllActiveVendors();
   const [storeCreditVisible, toggleStoreCredit] = React.useState(false);
@@ -195,10 +224,20 @@ const PaymentOptions = ({ navigation }) => {
     user.merchant,
   );
 
+  console.log('odertetererstadg', orderCheckoutTaxes);
+
   const [charge, setCharge] = React.useState('');
 
   if (isActiveVendorsLoading || stepLoading) {
-    return <Loading />;
+    return (
+      <Modal
+        modalState={paymentInstructions}
+        changeModalState={togglePaymentInstructions}>
+        <View style={[styles.modalView, { height: 100 }]}>
+          <Loading />
+        </View>
+      </Modal>
+    );
   }
 
   const payOptions = [];
@@ -226,6 +265,8 @@ const PaymentOptions = ({ navigation }) => {
   //       (delivery && (JSON.parse(delivery.price.toFixed(2)) || 0))
   //     : 0);
 
+  console.log('dddddd', delivery.value);
+
   let options = payOptions
     .map(i => {
       if (
@@ -239,13 +280,23 @@ const PaymentOptions = ({ navigation }) => {
         delivery.value === 'DELIVERY' &&
         delivery.delivery_config === 'IPAY'
       ) {
-        if (!nonDeliveryOptions.includes(i.biller_id)) {
-          return i;
+        if (nonDeliveryOptions.includes(i.biller_id)) {
+          return;
         }
+        return i;
       }
       return i;
     })
     .filter(i => i);
+
+  // const ecobankOmissions = [
+  //   'INVPAY',
+  //   'BANK',
+  //   'OFFCARD',
+  //   'OFFMOMO',
+  //   'VISAG',
+  //   'CASH',
+  // ];
 
   const offlinePaymentOptions = ['OFFCARD', 'OFFMOMO', 'BANK'];
 
@@ -256,13 +307,9 @@ const PaymentOptions = ({ navigation }) => {
   //   return i;
   // });
 
-  const step =
-    step_ &&
-    step_.data &&
-    step_.data.data &&
-    step_.data.data.account_setup_step;
+  const step = step_?.data?.data?.account_setup_step;
 
-  console.log('susususususus', subTotal);
+  console.log('usssss', user);
 
   return (
     <View style={styles.main}>
@@ -283,12 +330,24 @@ const PaymentOptions = ({ navigation }) => {
         <FlatList
           style={styles.flatgrid}
           contentContainerStyle={styles.container}
-          data={options}
+          data={options.filter(
+            i => i?.biller_id !== 'INVPAY' && i?.biller_id !== 'DISC',
+            // &&
+            // i?.biller_id !== 'PATPAY',
+          )}
           scrollEnabled={true}
           numColumns={3}
           // itemDimension={100}
           renderItem={({ item }) => {
-            if (item.biller_id === 'PATPAY' || item.biller_id === 'DISC') {
+            /**
+             * @todo
+             * implement partial payment
+             */
+            if (
+              // item.biller_id === 'PATPAY' ||
+              item.biller_id === 'DISC' ||
+              item.biller_id === 'INVPAY'
+            ) {
               return;
             }
             return (
@@ -333,6 +392,19 @@ const PaymentOptions = ({ navigation }) => {
                     toggleStoreCredit(true);
                     return;
                   }
+                  // console.log('custetererere', customer);
+                  if (item.biller_id === 'PATPAY') {
+                    if (!customer || _.isEmpty(customer)) {
+                      toast.show(
+                        'Please add a customer to proceed with Partial Payment',
+                        { placement: 'top', type: 'danger' },
+                      );
+                      navigation.navigate('Customer Select');
+                      return;
+                    }
+                    togglePatModal(true);
+                    return;
+                  }
                   if (item.biller_id === 'DEBITBAL') {
                     if (!customer || _.isEmpty(customer)) {
                       toast.show(
@@ -363,6 +435,15 @@ const PaymentOptions = ({ navigation }) => {
 
                     return;
                   }
+                  if (item.biller_id === 'OFFUSSD') {
+                    navigation.navigate('Ussd Offline', {
+                      amount: quickSaleInAction
+                        ? subTotal
+                        : Number(totalAmount?.toFixed(2)),
+                    });
+
+                    return;
+                  }
                   setPayment(item.biller_id);
                   togglePaymentDetails(true);
                 }}
@@ -386,7 +467,9 @@ const PaymentOptions = ({ navigation }) => {
             togglePaymentPreview={togglePaymentPreview}
             toggleCashModal={toggleCashModal}
             paymentType={payment}
+            otpModal={otpModal}
             toggleOtpModal={toggleOtpModal}
+            payment={payment}
           />
           {/* )} */}
         </RadioButtonProvider>
@@ -463,7 +546,25 @@ const PaymentOptions = ({ navigation }) => {
         setAmount={setAmount}
         navigation={navigation}
         cashConfirmed={cashConfirmed}
-        // togglePaymentDetails={togglePaymentDetails}
+      // togglePaymentDetails={togglePaymentDetails}
+      />
+      <PartialPayModal
+        cashModal={patModal}
+        toggleCashModal={togglePatModal}
+        toggleCashConfirmed={togglePatPayConfirmed}
+        togglePatPayMomoConfirmed={togglePatPayMomoConfirmed}
+        payment={payment}
+        total={totalAmount}
+        amount={amount}
+        setAmount={setAmount}
+        navigation={navigation}
+        cashConfirmed={patPayConfirmed}
+        patPaymentNumber={patPaymentNumber}
+        setPatPaymentNumber={setPatPaymentNumber}
+        paymentType={paymentType}
+        setPaymentType={setPaymentType}
+        togglePatOtpModal={togglePatOtpModal}
+      // togglePaymentDetails={togglePaymentDetails}
       />
       {/* )} */}
       {/* </View> */}
@@ -477,8 +578,28 @@ const PaymentOptions = ({ navigation }) => {
         navigation={navigation}
         toggleCashPaymentStatus={toggleCashPaymentStatus}
         receiptNumber={receiptNumber}
-        // navigation={navigation}
-        // togglePaymentDetails={togglePaymentDetails}
+      />
+      <PartialPayCashConfirm
+        cashConfirmed={patPayConfirmed}
+        toggleCashConfirmed={togglePatPayConfirmed}
+        payment={payment}
+        amount={amount}
+        navigation={navigation}
+        toggleCashPaymentStatus={toggleCashPaymentStatus}
+        receiptNumber={receiptNumber}
+      />
+      <PartialPayMomoConfirm
+        paymentType={paymentType}
+        patPaymentNumber={patPaymentNumber}
+        cashConfirmed={patPayMomoConfirmed}
+        toggleCashConfirmed={togglePatPayMomoConfirmed}
+        payment={payment}
+        amount={amount}
+        navigation={navigation}
+        toggleCashPaymentStatus={toggleCashPaymentStatus}
+        receiptNumber={receiptNumber}
+        togglePaymentDone={togglePaymentInstructions}
+        otp={patOtp}
       />
       {/* )} */}
       {/* </View> */}
@@ -490,8 +611,8 @@ const PaymentOptions = ({ navigation }) => {
         payment={payment}
         navigation={navigation}
         cashAmount={amount}
-        // navigation={navigation}
-        // togglePaymentDetails={togglePaymentDetails}
+      // navigation={navigation}
+      // togglePaymentDetails={togglePaymentDetails}
       />
       <StoreCredit
         storeCreditVisible={storeCreditVisible}
@@ -520,6 +641,14 @@ const PaymentOptions = ({ navigation }) => {
         otp={otp}
         setOtp={setOtp}
       />
+      <PatPayMomoOtp
+        dialog={patOtpModal}
+        togglePaymentPreview={togglePatPayMomoConfirmed}
+        setDialog={togglePatOtpModal}
+        otp={patOtp}
+        setOtp={setPatOtp}
+        phone={patPaymentNumber}
+      />
 
       {/* )} */}
       {/* </View> */}
@@ -528,4 +657,3 @@ const PaymentOptions = ({ navigation }) => {
 };
 
 export default PaymentOptions;
-

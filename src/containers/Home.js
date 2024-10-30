@@ -6,6 +6,7 @@ import {
   View,
   StyleSheet,
   ScrollView,
+  FlatList,
   Pressable,
   RefreshControl,
   Linking,
@@ -16,10 +17,10 @@ import { decode } from 'he';
 
 import { SheetManager } from 'react-native-actions-sheet';
 
-// import AccountInfoBanner from '../components/AccountInfoBanner';
-import CaretRight from '../../assets/icons/cart-right';
+import AccountInfoBanner from '../components/AccountInfoBanner';
+// import FrameIcon from '../../assets/icons/frame.svg';
+import StatsCard from '../components/StatsCard';
 import ServiceButton from '../components/ServiceButton';
-// import StatsCard from '../components/StatsCard';
 
 import PaymentsIcon from '../../assets/icons/empty-wallet.svg';
 import SalesIcon from '../../assets/icons/tag.svg';
@@ -31,10 +32,12 @@ import MoreIcon from '../../assets/icons/settings-bold.svg';
 import { useActionCreator } from '../hooks/useActionCreator';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useGetMerchantOutlets } from '../hooks/useGetMerchantOutlets';
+// import { useSalesInsights } from '../hooks/useSalesInsights';
 import { useSelector } from 'react-redux';
 // import moment from 'moment';
 import { useGetSummaryFilter } from '../hooks/useGetSummaryFilter';
 import moment from 'moment';
+import CaretOutline from '../../assets/icons/caret-outline.svg';
 import { useQuery } from 'react-query';
 import { Platform } from 'react-native';
 // import SoundPlayer from 'react-native-sound-player';
@@ -42,10 +45,11 @@ import { Platform } from 'react-native';
 import NotificationModal from '../components/Modals/NotificationModal';
 import { showLocalNotification } from '../utils/pushNotification';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
+import Spinner from 'react-native-spinkit';
 import { Dimensions } from 'react-native';
 import BlogItem from '../components/BlogItem';
 import { useTodoList } from '../hooks/useGetTodoList';
-// import CaretOutline from '../../assets/icons/caret-outline.svg';
+import CaretRight from '../../assets/icons/cart-right';
 import { useGetCurrentActivationStep } from '../hooks/useGetCurrentActivationStep';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
@@ -53,25 +57,26 @@ import BlogSkeleton from '../components/BlogSkeleton';
 import { uniqBy } from 'lodash';
 import ActivationDialog from '../components/ActivationDialog';
 import { PERMISSIONS, request } from 'react-native-permissions';
-// import Spinner from 'react-native-spinkit';
+// import { formatNumberTwoSig } from '../utils/shared';
 
 // import { Alert } from 'react-native';
 
-// const mapDisplayToSummary = {
-//   GROSS_SALES: 'Gross Sales',
-//   VOLUME_SALES: 'No. of Orders',
-//   ACTIVE_CUSTOMERS: 'Customers',
-//   DISCOUNTS: 'Discounts',
-//   NET_SALES: 'Net Sales',
-// };
+const mapDisplayToSummary = {
+  GROSS_SALES: 'Gross Sales',
+  VOLUME_SALES: 'No. of Orders',
+  EXPENSES: 'Expenses',
+  GROSS_PROFIT: 'Gross Profit',
+  NET_PROFIT: 'Net Profit',
+  DIRECT_COST: 'Direct Cost',
+};
 
-// const backgroundColors = [
-//   'rgba(44, 116, 179, 0.07)',
-//   'rgba(44, 116, 179, 0.07)',
-//   'rgba(44, 116, 179, 0.07)',
-//   'rgba(44, 116, 179, 0.07)',
-//   'rgba(44, 116, 179, 0.07)',
-// ];
+const backgroundColors = [
+  'rgba(44, 116, 179, 0.07)',
+  'rgba(44, 116, 179, 0.07)',
+  'rgba(44, 116, 179, 0.07)',
+  'rgba(44, 116, 179, 0.07)',
+  'rgba(44, 116, 179, 0.07)',
+];
 
 const todoDescOptions = {
   setup_first_sale: 'Record your first Sale and avoid losing sales books.',
@@ -128,26 +133,37 @@ export const TodoItem = ({ item }) => {
   );
 };
 
-// const titleColors = ['#2C74B3', '#2C74B3', '#2C74B3', '#2C74B3', '#2C74B3'];
+const titleColors = ['#2C74B3', '#2C74B3', '#2C74B3', '#2C74B3', '#2C74B3'];
 
 let list = [];
 
-const Home = ({ navigation }) => {
+const Home = () => {
   const {
     setCurrentUser,
     setCurrentOutlet,
+    setSummaryStartDate,
+    setSummaryEndDate,
+    setPrevSummaryStartDate,
+    setPrevSummaryEndDate,
     setNotification,
+    // setNotificationPriority,
     setNotificationSound,
+    setInventoryOutlet,
 
     // setDateRange,
   } = useActionCreator();
+  const navigation = useNavigation();
   const { user } = useSelector(state => state.auth);
   const [toggleModal, setToggleModal] = React.useState(false);
   const [id, setId] = React.useState();
   const checkListener = React.useRef(true);
   const loggedIn = React.useRef(true);
   const [dialog, setDialog] = React.useState(false);
+  // const [insightSummary, setInsightSummary] = React.useState({});
+  // const [prevInsightSummary, setPrevInsightSummary] = React.useState({});
+  // const copilot = useTourGuideController();
   const scrollRef = React.useRef();
+  // const [showFTE, setShowFTE] = React.useState(false);
   const targets = React.useRef({});
 
   const messageListener = React.useRef();
@@ -155,6 +171,14 @@ const Home = ({ navigation }) => {
   const dupNotif = React.useRef();
 
   let step = React.useRef();
+
+  const {
+    summaryStartDate,
+    summaryEndDate,
+    summaryPrevStartDate,
+    summaryPrevEndDate,
+    range,
+  } = useSelector(state => state.merchant);
 
   // const titles = [
   //   'Account Balance & Store Name',
@@ -180,8 +204,6 @@ const Home = ({ navigation }) => {
   //   'Get all the latest blogs from Digistore',
   // ];
 
-  // console.log('user', user);
-
   const {
     data: blogData,
     refetch: blogRefetch,
@@ -196,35 +218,18 @@ const Home = ({ navigation }) => {
     state => state.merchant,
   );
 
-  // React.useEffect(() => {
-  //   if (
-  //     user &&
-  //     user.user_permissions.includes('BCKRMORDER') &&
-  //     user.user_permissions.includes('ORDERMGT')
-  //   ) {
-  //     navigation.navigate('Orders');
-  //   }
-  // });
-
-  // React.useLayoutEffect(() => {
-  //   list = [];
-  // });
-
-  // React.useEffect(() => {
-  //   (async () => {
-  //     const version = await checkVersion();
-  //     if (version.needsUpdate) {
-  //       navigation.navigate('Update', { url: version.url });
-  //     }
-  //   })();
-  // }, [navigation]);
-
   const {
     data: todoList,
     refetch: refetchTodoList,
     isFetching: isTodoListFetching,
     isLoading: isTodoLoading,
   } = useTodoList(user.merchant);
+
+  const step_ =
+    activationStep &&
+    activationStep.data &&
+    activationStep.data.data &&
+    activationStep.data.data.account_setup_step;
 
   React.useEffect(() => {
     if (loggedIn.current) {
@@ -250,7 +255,7 @@ const Home = ({ navigation }) => {
         });
       }
 
-      if (step.current != 8) {
+      if (step && step.current && step.current != 8) {
         list.unshift({
           code: 'activation',
           instruction: 'Complete Account Activation',
@@ -266,7 +271,7 @@ const Home = ({ navigation }) => {
   React.useEffect(() => {
     if (
       loggedIn.current &&
-      list.length !== 0 &&
+      list.length > 0 &&
       !isTodoLoading &&
       user.user_merchant_group === 'Administrators'
     ) {
@@ -276,47 +281,11 @@ const Home = ({ navigation }) => {
     }
   }, [isTodoLoading, user]);
 
-  // React.useEffect(() => {
-  //   (async () => {
-  //     if (
-  //       !(
-  //         isFetching &&
-  //         isOutletFetching &&
-  //         isPrevFetching &&
-  //         isTodoListFetching &&
-  //         blogFetching
-  //       )
-  //     ) {
-  //       const firstLogin = await AsyncStorage.getItem('firstLogin');
-  //       // setShowFTE(true);
-  //       if (!firstLogin) {
-  //         await AsyncStorage.setItem('firstLogin', 'firstLogin');
-  //         setShowFTE(true);
-  //       }
-  //     }
-  //   })();
-  // }, [
-  //   isFetching,
-  //   isOutletFetching,
-  //   isPrevFetching,
-  //   isTodoListFetching,
-  //   blogFetching,
-  // ]);
-
-  // React.useEffect(() => {
-  //   (async () => {
-  //     const status = await AsyncStorage.getItem('useSound');
-  //     if (!status) {
-  //       setNotificationSound(true);
-  //       return;
-  //     }
-  //     if (status === 'YES') {
-  //       setNotificationSound(true);
-  //     } else {
-  //       setNotificationSound(false);
-  //     }
-  //   })();
-  // }, [setNotificationSound]);
+  const addTarget = (ref, id) => {
+    if (ref && !targets.current[id]) {
+      targets.current[id] = ref;
+    }
+  };
 
   React.useEffect(() => {
     (async () => {
@@ -336,7 +305,6 @@ const Home = ({ navigation }) => {
         //     }
         //   }
         // } catch (err) {
-        //   console.warn(err);
         // }
 
         if (checkListener.current) {
@@ -351,7 +319,7 @@ const Home = ({ navigation }) => {
               });
           }
 
-          await messaging().subscribeToTopic('thomasdavisiostest1234567891');
+          await messaging().subscribeToTopic('thomasdavisiostest1234567891234');
           await messaging().subscribeToTopic('announcement');
           if (checkListener.current) {
             await messaging().subscribeToTopic('global');
@@ -383,9 +351,7 @@ const Home = ({ navigation }) => {
           granted = await request(PERMISSIONS.IOS.CAMERA);
           console.log('ggagagaggag', granted);
         }
-      } catch (error) {
-        console.error('=>>>>>>>>>>>>>>>>,', error);
-      }
+      } catch (error) {}
 
       // await messaging().registerDeviceForRemoteMessages();
     })();
@@ -408,21 +374,148 @@ const Home = ({ navigation }) => {
     })();
   }, [setNotificationSound]);
 
+  const {
+    data: summaryData,
+    isLoading,
+    refetch: refetchSummary,
+  } = useGetSummaryFilter(
+    user.merchant,
+    user.login,
+    moment(summaryStartDate).format('DD-MM-YYYY'),
+    moment(summaryEndDate).format('DD-MM-YYYY'),
+    user.user_merchant_group === 'Administrators',
+  );
+
+  const { data: summaryPrevData, refetch: refetchPrevData } =
+    useGetSummaryFilter(
+      user.merchant,
+      user.login,
+      moment(summaryPrevStartDate).format('DD-MM-YYYY'),
+      moment(summaryPrevEndDate).format('DD-MM-YYYY'),
+      user.user_merchant_group === 'Administrators',
+    );
+
+  React.useEffect(() => {
+    refetchSummary();
+    refetchPrevData();
+  }, [
+    summaryStartDate,
+    summaryEndDate,
+    summaryPrevEndDate,
+    summaryPrevStartDate,
+    refetchSummary,
+    refetchPrevData,
+  ]);
+
+  // const { mutate, isLoading: isInsightsLoading } = useSalesInsights(res => {
+  //   setInsightSummary(res?.sales_summary);
+  // });
+
+  let summary_ = [];
+  const summaryDataItems = summaryData?.data?.summary;
+  const summaryOrdered = {
+    GROSS_SALES: summaryDataItems?.GROSS_SALES,
+    VOLUME_SALES: summaryDataItems?.VOLUME_SALES,
+    GROSS_PROFIT: summaryDataItems?.GROSS_PROFIT,
+    EXPENSES: summaryDataItems?.EXPENSES,
+    NET_PROFIT: summaryDataItems?.NET_PROFIT,
+    ...summaryDataItems,
+  };
+  const summaryDirectCost =
+    Math.abs(Number(summaryOrdered?.REFUNDED_SALES?.replaceAll(',', '') || 0)) +
+    Math.abs(Number(summaryOrdered?.DISCOUNTS?.replaceAll(',', '') || 0)) +
+    Math.abs(
+      Number(summaryOrdered?.TRANSACTION_FEES?.replaceAll(',', '') || 0),
+    ) +
+    Math.abs(Number(summaryOrdered?.SHIPPING_FEES?.replaceAll(',', '') || 0)) +
+    Math.abs(Number(summaryOrdered?.SMS_COST?.replaceAll(',', '') || 0)) +
+    Math.abs(Number(summaryOrdered?.SALES_TAX?.replaceAll(',', '') || 0)) +
+    Math.abs(Number(summaryOrdered?.COST_OF_GOODS?.replaceAll(',', '') || 0));
+  for (let i in (summaryData?.data?.status == 0 && summaryOrdered) || {}) {
+    summary_.push({ value: summaryData?.data?.summary[i], displayName: i });
+  }
+  if (summary_) {
+    summary_ = [
+      ...summary_?.slice(0, 2),
+      {
+        displayName: 'DIRECT_COST',
+        value: new Intl.NumberFormat('en-US', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }).format(summaryDirectCost),
+      },
+      ...summary_?.slice(2),
+    ];
+  }
+
+  // console.log(user);pm
+
+  let prevSummary_ = [];
+  const $summaryDataItems = summaryPrevData?.data?.summary;
+  const $summaryOrdered = {
+    GROSS_SALES: $summaryDataItems?.GROSS_SALES,
+    VOLUME_SALES: $summaryDataItems?.VOLUME_SALES,
+    GROSS_PROFIT: $summaryDataItems?.GROSS_PROFIT,
+    EXPENSES: $summaryDataItems?.EXPENSES,
+    NET_PROFIT: $summaryDataItems?.NET_PROFIT,
+    ...$summaryDataItems,
+  };
+
+  const $summaryDirectCost =
+    Math.abs(
+      Number($summaryOrdered?.REFUNDED_SALES?.replaceAll(',', '') || 0),
+    ) +
+    Math.abs(Number($summaryOrdered?.DISCOUNTS?.replaceAll(',', '') || 0)) +
+    Math.abs(
+      Number($summaryOrdered?.TRANSACTION_FEES?.replaceAll(',', '') || 0),
+    ) +
+    Math.abs(Number($summaryOrdered?.SHIPPING_FEES?.replaceAll(',', '') || 0)) +
+    Math.abs(Number($summaryOrdered?.SMS_COST?.replaceAll(',', '') || 0)) +
+    Math.abs(Number($summaryOrdered?.SALES_TAX?.replaceAll(',', '') || 0)) +
+    Math.abs(Number($summaryOrdered?.COST_OF_GOODS?.replaceAll(',', '') || 0));
+  for (let i in (summaryPrevData?.data?.status == 0 && $summaryOrdered) || {}) {
+    prevSummary_.push({
+      value: summaryPrevData.data.summary[i],
+      displayName: i,
+    });
+  }
+
+  if (prevSummary_?.length > 0) {
+    prevSummary_ = [
+      ...prevSummary_?.slice(0, 2),
+      {
+        displayName: 'DIRECT_COST',
+        value: new Intl.NumberFormat('en-US', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }).format($summaryDirectCost),
+      },
+      ...prevSummary_?.slice(2),
+    ];
+  }
+
+  // step == 3 || step == 7 || step == 8; settlement
+
+  const onRefresh = () => {
+    refetchOutlet();
+    refetchSummary();
+    refetchPrevData();
+    refetchTodoList();
+    blogRefetch();
+  };
+
   React.useEffect(() => {
     if (messageListener.current) {
       messageListener.current();
     }
     messageListener.current = messaging().onMessage(async remoteMessage => {
-      console.log('messsssssssss');
-      if (
-        remoteMessage &&
-        !remoteMessage.notification &&
-        !remoteMessage.collapseKey
-      ) {
+      if (!remoteMessage?.notification && !remoteMessage?.collapseKey) {
         return;
       }
 
-      const { body, title } = (remoteMessage && remoteMessage.notification) || {
+      console.log('=====', remoteMessage);
+
+      const { body, title } = remoteMessage?.notification || {
         body: '',
         title: '',
       };
@@ -447,7 +540,7 @@ const Home = ({ navigation }) => {
           JSON.stringify(initNotification),
         );
       } else {
-        const notifs = JSON.parse(cachedNotifications);
+        const notifs = JSON.parse(cachedNotifications || '{}');
         notifs.unshift({
           title,
           body,
@@ -503,7 +596,7 @@ const Home = ({ navigation }) => {
           return;
         }
         dupNotif.current = remoteMessage.messageId;
-        console.log(remoteMessage);
+        console.log('wwwwww', remoteMessage);
         showLocalNotification(
           {
             title:
@@ -586,7 +679,7 @@ const Home = ({ navigation }) => {
           JSON.stringify(initNotification),
         );
       } else {
-        const notifs = JSON.parse(cachedNotifications);
+        const notifs = JSON.parse(cachedNotifications || '{}');
         notifs.unshift({
           title,
           body,
@@ -676,7 +769,7 @@ const Home = ({ navigation }) => {
             JSON.stringify(initNotification),
           );
         } else {
-          const notifs = JSON.parse(cachedNotifications);
+          const notifs = JSON.parse(cachedNotifications || '{}');
           notifs.unshift({
             title,
             body,
@@ -722,14 +815,6 @@ const Home = ({ navigation }) => {
   // const { outlet } = useSelector(state => state.auth);
 
   const {
-    summaryStartDate,
-    summaryEndDate,
-    summaryPrevStartDate,
-    summaryPrevEndDate,
-  } = useSelector(state => state.merchant);
-  // useGetMerchantOutlets()
-  // console.log('rannnnnnnnnnnngeggg', range);
-  const {
     data,
     refetch: refetchOutlet,
     isFetching: isOutletFetching,
@@ -739,11 +824,14 @@ const Home = ({ navigation }) => {
       // await AsyncStorage.removeItem('outlet');
       const ot = await AsyncStorage.getItem('outlet');
       if (ot) {
-        setCurrentUser({
-          ...user,
-          outlet: JSON.parse(ot).outlet_id,
-        });
-        setCurrentOutlet(JSON.parse(ot));
+        try {
+          setCurrentUser({
+            ...user,
+            outlet: JSON.parse(ot || '{}')?.outlet_id,
+          });
+          setCurrentOutlet(JSON.parse(ot || '{}'));
+          setInventoryOutlet(JSON.parse(ot || '{}'));
+        } catch (error) {}
       } else {
         if (user.user_merchant_group === 'Administrators') {
           await AsyncStorage.setItem(
@@ -762,6 +850,7 @@ const Home = ({ navigation }) => {
             outlet: currentOt.outlet_id,
           });
           setCurrentOutlet(currentOt);
+          setInventoryOutlet(currentOt);
           return;
         }
         let currentOt;
@@ -788,6 +877,7 @@ const Home = ({ navigation }) => {
               outlet: currentOt.outlet_id,
             });
             setCurrentOutlet(currentOt);
+            setInventoryOutlet(currentOt);
             break;
           }
         }
@@ -797,79 +887,9 @@ const Home = ({ navigation }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, setCurrentUser]);
 
-  // console.log('userer---------', user);
+  const blogs = blogData?.data || [];
 
-  const {
-    data: summaryData,
-    refetch: refetchSummary,
-    isFetching,
-  } = useGetSummaryFilter(
-    user.merchant,
-    user.user_merchant_group === 'Administrators' ? undefined : user.login,
-    moment(summaryStartDate).format('DD-MM-YYYY'),
-    moment(summaryEndDate).format('DD-MM-YYYY'),
-  );
-
-  const {
-    data: summaryPrevData,
-    refetch: refetchPrevData,
-    isFetching: isPrevFetching,
-  } = useGetSummaryFilter(
-    user.merchant,
-    user.user_merchant_group === 'Administrators' ? undefined : user.login,
-    moment(summaryPrevStartDate).format('DD-MM-YYYY'),
-    moment(summaryPrevEndDate).format('DD-MM-YYYY'),
-  );
-
-  React.useEffect(() => {
-    refetchSummary();
-    refetchPrevData();
-  }, [
-    summaryStartDate,
-    summaryEndDate,
-    summaryPrevEndDate,
-    summaryPrevStartDate,
-    refetchSummary,
-    refetchPrevData,
-  ]);
-
-  const summary_ = [];
-  const prevSummary_ = [];
-  for (let i in (summaryData &&
-    summaryData.data &&
-    summaryData.data.status == 0 &&
-    summaryData.data.report) ||
-    {}) {
-    summary_.push({ ...summaryData.data.report[i], displayName: i });
-  }
-
-  for (let i in (summaryPrevData &&
-    summaryPrevData.data &&
-    summaryPrevData.data.status == 0 &&
-    summaryPrevData.data.report) ||
-    {}) {
-    prevSummary_.push({ ...summaryPrevData.data.report[i], displayName: i });
-  }
-  // step == 3 || step == 7 || step == 8; settlement
-
-  const onRefresh = () => {
-    refetchOutlet();
-    refetchSummary();
-    refetchPrevData();
-    refetchTodoList();
-    blogRefetch();
-  };
-
-  // React.useEffect(() => {
-  //   if (copilot.canStart) {
-  //     copilot.start(1);
-  //   }
-
-  //   return () => copilot.stop();
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [copilot.canStart]);
-
-  // console.log('blog dadatatatatatatatatat', blogData.data);
+  // step == 3 || step == 7 || step == 8; settlemen
 
   return (
     <View style={styles.topMain}>
@@ -881,82 +901,118 @@ const Home = ({ navigation }) => {
           <RefreshControl
             onRefresh={onRefresh}
             refreshing={
-              isFetching &&
-              isOutletFetching &&
-              isPrevFetching &&
-              isTodoListFetching &&
+              // isInsightsLoading ||
+              isOutletFetching ||
+              // $isInsightsLoading ||
+              isTodoListFetching ||
               blogFetching
             }
           />
         }>
-        <View style={{ flexDirection: 'row' }}>
+        <View style={styles.accountInfoBannerWrapper}>
+          <AccountInfoBanner
+            handleAddPress={() => {
+              SheetManager.show('add-funds');
+            }}
+            navigation={navigation}
+            ref={r => addTarget(r, '0')}
+          />
+        </View>
+
+        <View style={[styles.statsWrapper]} ref={r => addTarget(r, '1')}>
+          <View style={[styles.summaryWrapper]}>
+            <Text
+              style={[
+                styles.dateText,
+                {
+                  textAlign: 'left',
+                  marginLeft: 14,
+                  fontSize: 15,
+                  color: '#002',
+                  letterSpacing: -0.2,
+                },
+              ]}>
+              Overview
+            </Text>
+            <Pressable
+              style={[styles.summary]}
+              onPress={() => {
+                if (user.user_merchant_group === 'Operators') {
+                  return;
+                }
+                SheetManager.show('summaryFilter', {
+                  payload: {
+                    startDate: summaryStartDate,
+                    endDate: summaryEndDate,
+                    setStartDate: setSummaryStartDate,
+                    setEndDate: setSummaryEndDate,
+                    setPrevStartDate: setPrevSummaryStartDate,
+                    setPrevEndDate: setPrevSummaryEndDate,
+                    // range,
+                    // setDateRange,
+                  },
+                });
+              }}>
+              <Text style={[styles.dateText]}>{range.label}</Text>
+              <CaretOutline />
+            </Pressable>
+          </View>
+          {/* {(isLoading || isFetching) && ( */}
+          <Spinner
+            type="Bounce"
+            isVisible={isLoading}
+            style={{ alignSelf: 'center' }}
+            color="#2F66F6"
+            size={45}
+          />
+          {!isLoading && (
+            <FlatList
+              contentContainerStyle={styles.list}
+              renderItem={({ item: { displayName, value }, index }) => {
+                if (!mapDisplayToSummary[displayName]) {
+                  return <></>;
+                }
+                return (
+                  <>
+                    <StatsCard
+                      key={displayName}
+                      title={mapDisplayToSummary[displayName]}
+                      metric={value}
+                      prevData={prevSummary_ && prevSummary_[index]}
+                      backgroundColor={backgroundColors[index]}
+                      titleColor={titleColors[index]}
+                      // ref={index === 0 ? r => addTarget(r, '7') : null}
+                    />
+                    <View style={{ marginHorizontal: 4 }} />
+                  </>
+                );
+              }}
+              scrollEnabled
+              horizontal
+              data={summary_}
+              showsHorizontalScrollIndicator={false}
+              // ItemSeparatorComponent={() => <View style={styles.separator} />}
+            />
+          )}
+        </View>
+        {/* {Platform.OS === 'ios' && (
           <View style={styles.servicesWrapper}>
-            {/* <View style={styles.accountInfoBannerWrapper}>
-              <AccountInfoBanner
-                handleAddPress={() => {
-                  SheetManager.show('add-funds');
-                }}
-                navigation={navigation}
-                ref={r => addTarget(r, '0')}
-              />
-            </View> */}
             <View style={styles.serviceButtons}>
               <View style={[styles.serviceRow, styles.firstRow]}>
                 <ServiceButton
-                  color="#21438F"
-                  service="Payments"
-                  Icon={PaymentsIcon}
-                  backgroundColor="rgba(117, 164, 242, 0.2)"
-                  handlePress={() => {
-                    if (step.current != 8) {
-                      setDialog(true);
-                      return;
-                    }
-                    if (
-                      user &&
-                      user.user_merchant_agent == '6'
-                      // !user.user_permissions.includes('ORDERMGT')
-                    ) {
-                      Toast.show({
-                        type: ALERT_TYPE.WARNING,
-                        title: 'No Access',
-                        textBody:
-                          'Service not available on your account. Please contact Ecobank support',
-                      });
-                      return;
-                    }
-                    if (
-                      !(
-                        user.user_permissions.includes('TRANMGT') &&
-                        user.user_permissions.includes('MKPAYMT')
-                      )
-                    ) {
-                      Toast.show({
-                        type: ALERT_TYPE.WARNING,
-                        title: 'Upgrade needed',
-                        textBody:
-                          "You don't have access to this feature. Please upgrade your account",
-                      });
-                      return;
-                    }
-                    navigation.navigate('Paypoint');
-                  }}
-                />
-
-                <ServiceButton
-                  backgroundColor="rgba(243, 144, 161, 0.2)"
+                  backgroundColor="rgba(33, 70, 199, 0.1)"
                   color="#21438F"
                   service="Sales"
                   Icon={SalesIcon}
                   handlePress={() => {
-                    if (
-                      user &&
-                      user.user_merchant_agent == '6' &&
-                      !user.user_permissions.includes('ORDERMGT')
-                    ) {
-                      navigation.navigate('Quick Sale');
-                      return;
-                    }
+                    // if (
+                    //   user &&
+                    //   user.user_merchant_agent == '6' &&
+                    //   !user.user_permissions.includes('ORDERMGT')
+                    // ) {
+                    //   navigation.navigate('Quick Sale');
+                    //   return;
+                    // }
                     if (!user.user_permissions.includes('ORDERMGT')) {
                       Toast.show({
                         type: ALERT_TYPE.WARNING,
@@ -966,18 +1022,41 @@ const Home = ({ navigation }) => {
                       });
                       return;
                     }
-                    SheetManager.show('sales-type', {
-                      payload: { navigation },
-                    });
+                    navigation.navigate('Inventory');
+                    // SheetManager.show('sales-type', {
+                    //   payload: { navigation },
+                    // });
+                  }}
+                />
+
+                <ServiceButton
+                  backgroundColor="rgba(49, 198, 212, 0.1)"
+                  color="#21438F"
+                  service="Online Store"
+                  Icon={Online}
+                  ref={r => addTarget(r, '4')}
+                  handlePress={() => {
+                    navigation.navigate('Manage Store');
+                  }}
+                />
+                <ServiceButton
+                  backgroundColor="rgba(49, 198, 212, 0.1)"
+                  color="#21438F"
+                  service="Users"
+                  Icon={UserService}
+                  ref={r => addTarget(r, '4')}
+                  handlePress={() => {
+                    navigation.navigate('Manage Users');
                   }}
                 />
               </View>
               <View style={styles.serviceRow}>
                 <ServiceButton
-                  backgroundColor="rgba(127, 188, 210, 0.2)"
+                  backgroundColor="rgba(127, 188, 210, 0.1)"
                   color="#21438F"
                   service="Transactions"
                   Icon={HistoryIcon}
+                  ref={r => addTarget(r, '5')}
                   handlePress={() => {
                     if (
                       user &&
@@ -1006,10 +1085,11 @@ const Home = ({ navigation }) => {
                 />
 
                 <ServiceButton
-                  backgroundColor="rgba(177, 141, 220, 0.2)"
+                  backgroundColor="rgba(122, 134, 182, 0.1)"
                   color="#21438F"
                   service="Products"
                   Icon={ProductsIcon}
+                  ref={r => addTarget(r, '6')}
                   handlePress={() => {
                     if (
                       user &&
@@ -1037,109 +1117,202 @@ const Home = ({ navigation }) => {
                     navigation.navigate('Products');
                   }}
                 />
-              </View>
-              <View style={[styles.serviceRow, { marginTop: 8 }]}>
-                <ServiceButton
-                  backgroundColor="rgba(239, 199, 132, 0.2))"
-                  color="#21438F"
-                  service="Expenses"
-                  Icon={ExpensesIcon}
-                  handlePress={() => {
-                    // navigation.navigate('Manage Users');
-                  }}
-                />
 
                 <ServiceButton
-                  backgroundColor="rgba(132, 197, 243, 0.2)"
+                  backgroundColor="rgba(235, 83, 83, 0.1)"
                   color="#21438F"
-                  service="More Services"
+                  service="Outlets"
                   Icon={MoreIcon}
+                  ref={r => addTarget(r, '7')}
                   handlePress={() => {
-                    // navigation.navigate('Manage Outlets');
+                    navigation.navigate('Manage Outlets');
                   }}
                 />
               </View>
             </View>
           </View>
-          {/* <View style={[styles.statsWrapper]}>
-            <View style={[styles.summaryWrapper]}>
-              <Text
-                style={[
-                  styles.dateText,
-                  {
-                    textAlign: 'left',
-                    marginLeft: 14,
-                    fontSize: 18,
-                    color: '#002',
-                  },
-                ]}>
-                Overview
-              </Text>
-              <Pressable
-                style={[styles.summary]}
-                onPress={() =>
-                  SheetManager.show('summaryFilter', {
-                    payload: {
-                      startDate: summaryStartDate,
-                      endDate: summaryEndDate,
-                      setStartDate: setSummaryStartDate,
-                      setEndDate: setSummaryEndDate,
-                      setPrevStartDate: setPrevSummaryStartDate,
-                      setPrevEndDate: setPrevSummaryEndDate,
-                      // range,
-                      // setDateRange,
-                    },
-                  })
-                }>
-                <Text style={[styles.dateText]}>{range.label}</Text>
-                <CaretOutline />
-              </Pressable>
-            </View>
-            <Spinner
-              type="Bounce"
-              isVisible={isLoading || isFetching}
-              style={{ alignSelf: 'center' }}
-              color="#2F66F6"
-              size={45}
-            />
-            {!(isLoading || isPrevLoading || isPrevFetching || isFetching) && (
-              <FlatList
-                contentContainerStyle={styles.list}
-                numColumns={2}
-                renderItem={({ item: { displayName, value }, index }) => {
-                  return (
-                    <>
-                      <StatsCard
-                        key={displayName}
-                        title={mapDisplayToSummary[displayName]}
-                        metric={value}
-                        prevData={prevSummary_[index]}
-                        backgroundColor={backgroundColors[index]}
-                        titleColor={titleColors[index]}
-                      />
-                      <View style={{ marginHorizontal: 4 }} />
-                    </>
-                  );
+        )} */}
+        <View style={styles.servicesWrapper}>
+          <View style={styles.serviceButtons}>
+            <View style={[styles.serviceRow, styles.firstRow]}>
+              <ServiceButton
+                color="#21438F"
+                service="Paypoint"
+                Icon={PaymentsIcon}
+                backgroundColor="rgba(141, 114, 225, 0.9)"
+                handlePress={() => {
+                  if (!step_ || step_ != 8) {
+                    setDialog(true);
+                    return;
+                  }
+                  if (
+                    user &&
+                    user.user_merchant_agent == '6'
+                    // !user.user_permissions.includes('ORDERMGT')
+                  ) {
+                    Toast.show({
+                      type: ALERT_TYPE.WARNING,
+                      title: 'No Access',
+                      textBody:
+                        'Service not available on your account. Please contact Ecobank support',
+                    });
+                    return;
+                  }
+                  if (
+                    !(
+                      user.user_permissions.includes('TRANMGT') &&
+                      user.user_permissions.includes('MKPAYMT')
+                    )
+                  ) {
+                    Toast.show({
+                      type: ALERT_TYPE.WARNING,
+                      title: 'Upgrade needed',
+                      textBody:
+                        "You don't have access to this feature. Please upgrade your account",
+                    });
+                    return;
+                  }
+                  navigation.navigate('Paypoint');
                 }}
-                scrollEnabled
-                data={summary_}
-                showsHorizontalScrollIndicator={false}
               />
-            )}
-          </View> */}
+              <ServiceButton
+                backgroundColor="rgba(33, 70, 199, 0.1)"
+                color="#21438F"
+                service="Sales"
+                Icon={SalesIcon}
+                handlePress={() => {
+                  // if (
+                  //   user &&
+                  //   user.user_merchant_agent == '6' &&
+                  //   !user.user_permissions.includes('ORDERMGT')
+                  // ) {
+                  //   navigation.navigate('Quick Sale');
+                  //   return;
+                  // }
+                  if (!user.user_permissions.includes('ORDERMGT')) {
+                    Toast.show({
+                      type: ALERT_TYPE.WARNING,
+                      title: 'Upgrade needed',
+                      textBody:
+                        "You don't have access to this feature. Please upgrade your account",
+                    });
+                    return;
+                  }
+                  navigation.navigate('Inventory');
+                  // SheetManager.show('sales-type', {
+                  //   payload: { navigation },
+                  // });
+                }}
+              />
+              <ServiceButton
+                backgroundColor="rgba(49, 198, 212, 0.1)"
+                color="#21438F"
+                service="Invoices"
+                Icon={HistoryIcon}
+                handlePress={() => {
+                  if (
+                    user &&
+                    user.user_merchant_agent == '6' &&
+                    !user.user_permissions.includes('VIEWMPAY')
+                  ) {
+                    Toast.show({
+                      type: ALERT_TYPE.WARNING,
+                      title: 'No Access',
+                      textBody:
+                        'Service not available on your account. Please contact Ecobank support',
+                    });
+                    return;
+                  }
+
+                  if (!user.user_permissions.includes('VIEWMPAY')) {
+                    Toast.show({
+                      type: ALERT_TYPE.WARNING,
+                      title: 'Upgrade Needed',
+                      textBody:
+                        "You don't have access to this feature. Please upgrade your account",
+                    });
+                    return;
+                  }
+                  console.log('hellll');
+                  navigation.navigate('Invoices');
+                }}
+              />
+            </View>
+            <View style={styles.serviceRow}>
+              <ServiceButton
+                backgroundColor="rgba(127, 188, 210, 0.1)"
+                color="#21438F"
+                service="Expenses"
+                Icon={ExpensesIcon}
+                handlePress={() => {
+                  navigation.navigate('Expenses');
+                }}
+              />
+
+              <ServiceButton
+                backgroundColor="rgba(122, 134, 182, 0.1)"
+                color="#21438F"
+                service="Products"
+                Icon={ProductsIcon}
+                handlePress={() => {
+                  if (
+                    user &&
+                    user.user_merchant_agent == '6' &&
+                    !user.user_permissions.includes('PRODMGT')
+                  ) {
+                    Toast.show({
+                      type: ALERT_TYPE.WARNING,
+                      title: 'No Access',
+                      textBody:
+                        'Service not available on your account. Please contact Ecobank support',
+                    });
+                    return;
+                  }
+                  if (!user.user_permissions.includes('PRODMGT')) {
+                    Toast.show({
+                      type: ALERT_TYPE.WARNING,
+                      title: 'Upgrade Needed',
+                      textBody:
+                        "You don't have access to this feature. Please upgrade your account",
+                    });
+                    return;
+                  }
+
+                  navigation.navigate('Products');
+                }}
+              />
+              <ServiceButton
+                backgroundColor="rgba(235, 83, 83, 0.1)"
+                color="#21438F"
+                service="More"
+                Icon={MoreIcon}
+                handlePress={() => {
+                  // if (
+                  //   user &&
+                  //   user.user_merchant_agent == '6' &&
+                  //   !user.user_permissions.includes('ORDERMGT')
+                  // ) {
+                  //   Toast.show({
+                  //     type: ALERT_TYPE.WARNING,
+                  //     title: 'No Access',
+                  //     textBody:
+                  //       'Service not available on your account. Please contact Ecobank support',
+                  //   });
+                  //   return;
+                  // }
+                  navigation.navigate('More');
+                }}
+              />
+            </View>
+          </View>
         </View>
 
-        <View
-          style={[
-            styles.summaryWrapper,
-            { flexDirection: 'column', marginTop: 18 },
-          ]}>
+        <View style={[styles.summaryWrapper, { flexDirection: 'column' }]}>
           <View
             style={{
               flexDirection: 'row',
               alignItems: 'center',
               paddingHorizontal: 12,
-              paddingRight: 0,
             }}>
             <Text
               style={[
@@ -1147,10 +1320,11 @@ const Home = ({ navigation }) => {
                 {
                   textAlign: 'left',
                   // marginLeft: 12,
-                  fontSize: 16,
+                  fontSize: 15,
                   color: '#091D60',
                   paddingVertical: 10,
                   paddingBottom: 5,
+                  letterSpacing: -0.2,
                 },
               ]}>
               Latest from Digistore
@@ -1168,7 +1342,7 @@ const Home = ({ navigation }) => {
                   {
                     // textAlign: 'left',
                     // marginLeft: 0,
-                    fontSize: 17,
+                    fontSize: 15,
                     color: '#2F66F6',
                     width: '100%',
                     // paddingVertical: 10,
@@ -1180,16 +1354,15 @@ const Home = ({ navigation }) => {
           </View>
 
           <ScrollView style={styles.blog} scrollEnabled horizontal>
-            {blogData &&
+            {blogs &&
               !blogLoading &&
-              blogData.data
-                .filter(i => i)
-                .slice(0, 6)
-                .map(i => {
+              (blogs || [])
+                ?.filter(i => i)
+                ?.slice(0, 6)
+                ?.map(i => {
                   if (!i) {
                     return;
                   }
-                  // console.log('iiiiiiiii--------', i);
                   return (
                     <BlogItem
                       link={i.link}
@@ -1202,7 +1375,10 @@ const Home = ({ navigation }) => {
                       }
                       date={new Date(i.date).toString().slice(4).slice(0, 6)}
                       excerpt={decode(
-                        i.title.rendered.replace(/(<([^>]+)>)/gi, ''),
+                        ((i && i.title && i.title.rendered) || '').replace(
+                          /(<([^>]+)>)/gi,
+                          '',
+                        ),
                       )}
                       key={i.link}
                     />
@@ -1210,8 +1386,6 @@ const Home = ({ navigation }) => {
                 })}
             {blogLoading && (
               <>
-                <BlogSkeleton />
-                <BlogSkeleton />
                 <BlogSkeleton />
                 <BlogSkeleton />
               </>
@@ -1258,7 +1432,7 @@ const styles = StyleSheet.create({
     marginTop: 6,
     // backgroundColor: '#fff',
     borderRadius: 14,
-    maxHeight: Dimensions.get('window').height * 0.38,
+    maxHeight: Dimensions.get('window').height * 0.35,
     minHeight: Dimensions.get('window').height * 0.3,
     marginBottom: 6,
     paddingVertical: 4,
@@ -1273,7 +1447,7 @@ const styles = StyleSheet.create({
   },
   summaryWrapper: {
     flexDirection: 'row',
-    // marginTop: 4,
+    marginTop: 4,
     backgroundColor: '#fff',
     // paddingVertical: 2,
     borderRadius: 8,
@@ -1297,19 +1471,19 @@ const styles = StyleSheet.create({
     marginTop: 'auto',
     marginBottom: 2,
     marginRight: 4,
-    fontFamily: 'Inter-Medium',
+    fontFamily: 'ReadexPro-Medium',
   },
   accountInfoBannerWrapper: {
     flexDirection: 'row',
-    // justifyContent: 'center',
+    justifyContent: 'center',
   },
   dateText: {
     color: '#2F66F6',
-    fontFamily: 'SFProDisplay-Medium',
-    fontSize: 18,
+    fontFamily: 'ReadexPro-Medium',
+    fontSize: 15.5,
     width: '90%',
     textAlign: 'right',
-    letterSpacing: 0.4,
+    letterSpacing: -0.2,
   },
   summary: {
     flexDirection: 'row',
@@ -1317,22 +1491,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   statsWrapper: {
+    marginTop: 6,
     backgroundColor: '#fff',
-    flex: 1,
-
-    height: '100%',
+    borderRadius: 8,
     // justifyContent: 'center',
-    // minHeight: 146,
+    minHeight: 146,
   },
   servicesWrapper: {
-    // marginTop: 4,
-    // paddingVertical: Dimensions.get('window').height * 0.006,
-    alignItems: 'flex-start',
+    marginTop: 4,
+    flex: 1,
+    paddingVertical: Dimensions.get('window').height * 0.006,
+    justifyContent: 'center',
+    backgroundColor: '#fff',
     borderRadius: 10,
   },
   serviceButtons: {
-    // alignItems: 'center',
-    paddingVertical: Dimensions.get('window').height * 0.01,
+    alignItems: 'center',
   },
   serviceLabel: {
     color: '#000',

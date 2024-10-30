@@ -11,7 +11,7 @@ export function useGetPaymentStatus(
     ['payment-status', merchant, invoice],
     () => getPaymentStatus(merchant, invoice),
     {
-      enabled,
+      enabled: !!enabled,
       refetchInterval,
       staleTime: 0,
       cacheTime: 0,

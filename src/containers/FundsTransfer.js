@@ -1,8 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import { StyleSheet, Text, View, Pressable, TextInput } from 'react-native';
 import React from 'react';
-// import { DateTimePicker } from 'react-native-ui-lib';
-// import { useAccountStatementHistory } from '../hooks/useAccountStatementHistory';
+
 import { useSelector } from 'react-redux';
 import moment from 'moment';
 import { FlashList } from '@shopify/flash-list';
@@ -18,13 +17,7 @@ import Loading from '../components/Loading';
 import { SheetManager } from 'react-native-actions-sheet';
 import Search from '../../assets/icons/search.svg';
 
-const d = new Date();
-
 const FundsTransfer = () => {
-  const [startDate, setStartDate] = React.useState(
-    new Date(new Date().setDate(d.getDate() - 30)),
-  );
-  const [endDate, setEndDate] = React.useState(new Date());
   const [searchTerm, setSearchTerm] = React.useState('');
   const [cancelledStatus, setCancelledStatus] = React.useState();
   const client = useQueryClient();
@@ -32,12 +25,11 @@ const FundsTransfer = () => {
 
   const { user } = useSelector(state => state.auth);
 
-  const { mutate, isLoading: isCancelLoading } = useCancelFundsTransfer(i => {
+  const { mutate } = useCancelFundsTransfer(i => {
     setCancelledStatus(i);
     client.invalidateQueries('funds-transfer-history');
   });
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   // React.useEffect(() => refetch(), [startDate, endDate]);
 
   const { tStartDate, tEndDate } = useSelector(state => state.transactions);

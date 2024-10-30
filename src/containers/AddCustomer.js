@@ -10,7 +10,6 @@ import { useToast } from 'react-native-toast-notifications';
 import { useQueryClient } from 'react-query';
 import { useAddCustomer } from '../hooks/useAddCustomer';
 import moment from 'moment';
-
 import Input from '../components/Input';
 
 const reducer = (state, action) => {
@@ -105,6 +104,7 @@ const AddCustomer = ({ navigation }) => {
             placeholder="Enter Customer Phone"
             val={state.phone}
             keyboardType="phone-pad"
+            showError={showError && state.phone.length === 0}
             // nLines={3}
             setVal={text =>
               handleTextChange({
@@ -148,11 +148,16 @@ const AddCustomer = ({ navigation }) => {
           disabled={addCustomer.isLoading}
           handlePress={() => {
             if (
-              state.name.length === 0
+              state.name.length === 0 ||
+              state.phone.length === 0
               // state.email.length === 0 ||
               // state.phone.length === 0 ||
             ) {
               setShowError(true);
+              toast.show('Please provide all required details', {
+                placement: 'top',
+                type: 'danger',
+              });
               return;
             }
             addCustomer.mutate({
@@ -160,7 +165,10 @@ const AddCustomer = ({ navigation }) => {
               client_email: state.email,
               client_phone: state.phone,
               client_alt_phone: state.alt,
-              client_dob: moment(state.dob).format('DD-MM-YYYY'),
+              client_dob:
+                state.dob.length > 0 && moment(state.dob).isValid()
+                  ? moment(state.dob).format('DD-MM-YYYY')
+                  : '',
               client_merchant: user.merchant,
               mod_by: user.login,
             });
@@ -178,7 +186,7 @@ const styles = StyleSheet.create({
     height: '100%',
     paddingHorizontal: 26,
     marginBottom: 78,
-    marginTop: 4,
+    marginTop: 26,
     backgroundColor: '#fff',
   },
   indicatorStyle: {
@@ -208,25 +216,5 @@ const styles = StyleSheet.create({
   },
   dWrapper: {
     paddingTop: 12,
-  },
-});
-
-const dd = StyleSheet.create({
-  placeholder: {
-    fontFamily: 'Inter-Medium',
-    fontSize: 14,
-    paddingHorizontal: 14,
-    height: '100%',
-    zIndex: 100,
-  },
-  main: {
-    borderWidth: 1.2,
-    borderStyle: 'dashed',
-    borderColor: '#B7D9F8',
-    paddingHorizontal: 14,
-    height: 54,
-    borderRadius: 5,
-    justifyContent: 'center',
-    backgroundColor: '#F5FAFF',
   },
 });

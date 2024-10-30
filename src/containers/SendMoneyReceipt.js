@@ -8,9 +8,9 @@ import {
   Image,
   Linking,
   ScrollView,
-  Dimensions,
 } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
+
 import ReceiptTaxItem from '../components/ReceiptTaxItem';
 import { useSelector } from 'react-redux';
 
@@ -19,7 +19,7 @@ import SendNotification from '../components/Modals/SendNotification';
 import moment from 'moment';
 import BillReceiptShareButton from '../components/BillReceiptShareButton';
 import { useGetReceiptDetails } from '../hooks/useGetReceiptDetails';
-import { ShadowedView, shadowStyle } from 'react-native-fast-shadow';
+import { useGetMerchantDetails } from '../hooks/useGetMerchantDetails';
 
 const mapPaymentChannelToName = {
   SMTNMM: 'MTN Mobile Money',
@@ -39,9 +39,10 @@ const mapPaymentChannelToName = {
 const orderDate = moment().format('DD-MM-YYYY, h:mm:ss a');
 
 const SendMoneyReceipt = ({ route, navigation }) => {
-  const { user, outlet } = useSelector(state => state.auth);
+  const { user } = useSelector(state => state.auth);
 
   const viewRef = React.useRef();
+  const cacheBust = new Date().toString();
 
   const {
     recipientName,
@@ -51,194 +52,187 @@ const SendMoneyReceipt = ({ route, navigation }) => {
     referenceId,
     amount,
     serviceProvider,
-  } = route && route.params && route.params;
+  } = route?.params;
+  console.log('nameeee', route?.params);
   const [notification, toggleNotification] = React.useState(false);
   const [notificationType, setNotificationType] = React.useState();
 
   const { data, isLoading } = useGetReceiptDetails(user.merchant);
+  const { data: details, isLoading: isDetailsLoading } = useGetMerchantDetails(
+    user.merchant,
+  );
 
   const receiptItem = data && data.data && data.data.data;
 
-  if (isLoading) {
+  if (isLoading || isDetailsLoading) {
     return <Loading />;
   }
+
+  const merchantDetails = details && details.data && details.data.data;
+  const imgUrl =
+    ((merchantDetails &&
+      merchantDetails.merchant_brand_logo.length > 0 &&
+      'https://payments.ipaygh.com/app/webroot/img/logo/' +
+        merchantDetails.merchant_brand_logo) ||
+      user.user_merchant_logo) +
+    '?' +
+    cacheBust;
   return (
     <>
-      <View
-        style={{
-          backgroundColor: '#EEEEEE',
-          paddingHorizontal: Dimensions.get('window').width * 0.3,
-          flex: 1,
-        }}>
-        <ShadowedView
-          style={[
-            shadowStyle({
-              opacity: 0.5,
-              radius: 1,
-              offset: [0, 0],
-            }),
-            {
-              flex: 1,
-              backgroundColor: '#fff',
-              marginVertical: 10,
-            },
-          ]}>
-          <SafeAreaView style={styles.main}>
-            <ScrollView style={styles.wrapper}>
-              <View collapsable={false} ref={viewRef} style={{ marginTop: 12 }}>
-                <Text style={[styles.receipt, { textAlign: 'center' }]}>
-                  {receiptItem && receiptItem.receipt_header}
-                </Text>
-                <View style={styles.upper}>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      paddingLeft: 12,
-                    }}>
-                    <View style={{ width: '95%' }}>
-                      {receiptItem &&
-                        receiptItem.receipt_show_business === 'YES' && (
-                          <Text style={styles.receipt}>
-                            {user && user.user_merchant}
-                          </Text>
-                        )}
-                      {receiptItem &&
-                        receiptItem.receipt_show_tin === 'YES' && (
-                          <Text style={styles.merchantDetail}>
-                            Tin: C01432532532
-                          </Text>
-                        )}
-                      {receiptItem &&
-                        receiptItem.receipt_show_address === 'YES' && (
-                          <Text style={styles.merchantDetail}>
-                            {outlet && outlet.outlet_address}
-                          </Text>
-                        )}
-                      {receiptItem &&
-                        receiptItem.receipt_show_phone === 'YES' && (
-                          <Text style={styles.merchantDetail}>
-                            Tel: {user.user_merchant_phone}
-                          </Text>
-                        )}
-                      {receiptItem &&
-                        receiptItem.receipt_show_email === 'YES' && (
-                          <Text style={styles.merchantDetail}>
-                            Email: {user.user_merchant_email}
-                          </Text>
-                        )}
-                    </View>
-                    {receiptItem && receiptItem.receipt_show_logo === 'YES' && (
-                      <View
-                        style={{
-                          marginLeft: 'auto',
-                          marginRight: 12,
-                          // alignSelf: 'flex-start',
-                        }}>
-                        <Image
-                          style={{ height: 90, width: 90 }}
-                          source={{ uri: user.user_merchant_logo }}
-                        />
-                      </View>
+      <SafeAreaView style={styles.main}>
+        <ScrollView style={styles.wrapper}>
+          <View collapsable={false} ref={viewRef} style={{ marginTop: 12 }}>
+            <Text style={[styles.receipt, { textAlign: 'center' }]}>
+              {receiptItem && receiptItem.receipt_header}
+            </Text>
+            <View style={styles.upper}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  paddingLeft: 12,
+                }}>
+                <View style={{ width: '95%' }}>
+                  {receiptItem &&
+                    receiptItem.receipt_show_business === 'YES' && (
+                      <Text style={styles.receipt}>
+                        {merchantDetails && merchantDetails.merchant_name}
+                      </Text>
                     )}
-                  </View>
+                  {receiptItem && receiptItem.receipt_show_tin === 'YES' && (
+                    <Text style={styles.merchantDetail}>
+                      Tin:{' '}
+                      {merchantDetails && merchantDetails.merchant_reg_number}
+                    </Text>
+                  )}
+                  {receiptItem &&
+                    receiptItem.receipt_show_address === 'YES' && (
+                      <Text style={styles.merchantDetail}>
+                        {merchantDetails && merchantDetails.merchant_address}
+                      </Text>
+                    )}
+                  {receiptItem && receiptItem.receipt_show_phone === 'YES' && (
+                    <Text style={styles.merchantDetail}>
+                      Tel: {merchantDetails && merchantDetails.merchant_phone}
+                    </Text>
+                  )}
+                  {receiptItem && receiptItem.receipt_show_email === 'YES' && (
+                    <Text style={styles.merchantDetail}>
+                      Email: {merchantDetails && merchantDetails.merchant_email}
+                    </Text>
+                  )}
+                </View>
+                {receiptItem && receiptItem.receipt_show_logo === 'YES' && (
                   <View
                     style={{
-                      flexDirection: 'row',
-                      // paddingHorizontal: 12,
-                      marginTop: 14,
-                      alignItems: 'center',
+                      marginLeft: 'auto',
+                      marginRight: 12,
+                      // alignSelf: 'flex-start',
                     }}>
-                    <View style={{ marginLeft: 12 }}>
+                    <Image
+                      style={{ height: 90, width: 90 }}
+                      source={{
+                        uri: imgUrl,
+                      }}
+                    />
+                  </View>
+                )}
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  // paddingHorizontal: 12,
+                  marginTop: 14,
+                  alignItems: 'center',
+                }}>
+                <View style={{ marginLeft: 12 }}>
+                  <Text
+                    style={[
+                      styles.customerDetails,
+                      { fontFamily: 'SFProDisplay-Medium', fontSize: 15 },
+                    ]}>
+                    RECEIPT #: {invoiceId}
+                  </Text>
+                  <Text style={styles.customerDetails}>
+                    <Text
+                      style={{
+                        fontFamily: 'SFProDisplay-Medium',
+                        fontSize: 15,
+                        color: '#30475e',
+                      }}>
+                      Date & Time:
+                    </Text>{' '}
+                    {orderDate}
+                  </Text>
+                  {receiptItem && receiptItem.receipt_show_attendant === 'YES' && (
+                    <Text style={styles.customerDetails}>
                       <Text
-                        style={[
-                          styles.customerDetails,
-                          { fontFamily: 'SFProDisplay-Medium', fontSize: 15 },
-                        ]}>
-                        RECEIPT #: {invoiceId}
+                        style={{
+                          fontFamily: 'SFProDisplay-Medium',
+                          fontSize: 15,
+                          color: '#30475e',
+                        }}>
+                        Served By:
+                      </Text>{' '}
+                      {user.name}
+                    </Text>
+                  )}
+                  {receiptItem && receiptItem.receipt_show_customer === 'YES' && (
+                    <Text style={styles.customerDetails}>
+                      <Text
+                        style={{
+                          fontFamily: 'SFProDisplay-Medium',
+                          fontSize: 15,
+                          color: '#30475e',
+                        }}>
+                        Customer:{' '}
                       </Text>
-                      <Text style={styles.customerDetails}>
-                        <Text
-                          style={{
-                            fontFamily: 'SFProDisplay-Medium',
-                            fontSize: 15,
-                            color: '#30475e',
-                          }}>
-                          Date & Time:
-                        </Text>{' '}
-                        {orderDate}
-                      </Text>
-                      {receiptItem &&
-                        receiptItem.receipt_show_attendant === 'YES' && (
-                          <Text style={styles.customerDetails}>
-                            <Text
-                              style={{
-                                fontFamily: 'SFProDisplay-Medium',
-                                fontSize: 15,
-                                color: '#30475e',
-                              }}>
-                              Served By:
-                            </Text>{' '}
-                            {user.name}
-                          </Text>
-                        )}
-                      {receiptItem &&
-                        receiptItem.receipt_show_customer === 'YES' && (
-                          <Text style={styles.customerDetails}>
-                            <Text
-                              style={{
-                                fontFamily: 'SFProDisplay-Medium',
-                                fontSize: 15,
-                                color: '#30475e',
-                              }}>
-                              Customer:{' '}
-                            </Text>
-                            {recipientNumber}
-                          </Text>
-                        )}
-                    </View>
-                  </View>
+                      {recipientNumber}
+                    </Text>
+                  )}
+                </View>
+              </View>
 
-                  <View style={styles.scanWrapper}>
-                    <Text style={styles.scan}>Transaction Summary</Text>
-                  </View>
-                </View>
-                <View>
-                  <ReceiptTaxItem taxName="Amount Sent" amount={amount} />
-                  <ReceiptTaxItem
-                    taxName="Recipient Name"
-                    amount={recipientName}
-                    showSymbol={false}
-                  />
-                  <ReceiptTaxItem
-                    taxName="Recipient Number"
-                    amount={recipientNumber}
-                    showSymbol={false}
-                  />
-                  {/* <ReceiptTaxItem taxName="Commission Earned" amount={commission} /> */}
-                  <ReceiptTaxItem
-                    taxName="Invoice ID"
-                    amount={invoiceId}
-                    showSymbol={false}
-                  />
-                  <ReceiptTaxItem
-                    taxName="Reference ID"
-                    amount={referenceId}
-                    showSymbol={false}
-                  />
-                  <ReceiptTaxItem
-                    taxName="Service Provider"
-                    amount={mapPaymentChannelToName[serviceProvider]}
-                    showSymbol={false}
-                  />
-                  <ReceiptTaxItem
-                    taxName="Description"
-                    amount={description}
-                    showSymbol={false}
-                  />
-                </View>
-                <View>
-                  {/* <Text style={styles.totalAmount}>
+              <View style={styles.scanWrapper}>
+                <Text style={styles.scan}>Transaction Summary</Text>
+              </View>
+            </View>
+            <View>
+              <ReceiptTaxItem taxName="Amount Sent" amount={amount} />
+              <ReceiptTaxItem
+                taxName="Recipient Name"
+                amount={recipientName}
+                showSymbol={false}
+              />
+              <ReceiptTaxItem
+                taxName="Recipient Number"
+                amount={recipientNumber}
+                showSymbol={false}
+              />
+              {/* <ReceiptTaxItem taxName="Commission Earned" amount={commission} /> */}
+              <ReceiptTaxItem
+                taxName="Invoice ID"
+                amount={invoiceId}
+                showSymbol={false}
+              />
+              <ReceiptTaxItem
+                taxName="Reference ID"
+                amount={referenceId}
+                showSymbol={false}
+              />
+              <ReceiptTaxItem
+                taxName="Service Provider"
+                amount={mapPaymentChannelToName[serviceProvider]}
+                showSymbol={false}
+              />
+              <ReceiptTaxItem
+                taxName="Description"
+                amount={description}
+                showSymbol={false}
+              />
+            </View>
+            <View>
+              {/* <Text style={styles.totalAmount}>
                 Total: GHS{' '}
                 {cashEntered.length > 0 && quickSaleInAction
                   ? subTotal
@@ -254,23 +248,9 @@ const SendMoneyReceipt = ({ route, navigation }) => {
                   ? subTotal
                   : totalOtherAmount.toFixed(2)}
               </Text> */}
-                  {invoiceId && (
-                    <View style={styles.qr}>
-                      <View style={{ marginTop: 14, alignItems: 'center' }}>
-                        <QRCode
-                          value={invoiceId}
-                          size={84}
-                          style={{ position: 'absolute' }}
-                        />
-                      </View>
-                    </View>
-                  )}
-                  <View
-                    style={{
-                      marginTop: 8,
-                      borderTopColor: '#ddd',
-                      borderTopWidth: 0.6,
-                    }}>
+              {receiptItem?.receipt_website_url?.length > 0 && (
+                <View style={styles.qr}>
+                  <View style={{ alignItems: 'center' }}>
                     <Text
                       style={{
                         fontFamily: 'SFProDisplay-Regular',
@@ -280,47 +260,84 @@ const SendMoneyReceipt = ({ route, navigation }) => {
                         fontSize: 15,
                         marginTop: 6,
                       }}>
-                      {receiptItem && receiptItem.receipt_footer}
+                      {receiptItem?.receipt_footer}
                     </Text>
+                    <QRCode
+                      value={receiptItem?.receipt_website_url}
+                      size={84}
+                    />
                     <Text
-                      style={{
-                        fontFamily: 'SFProDisplay-Semibold',
-                        color: '#5C6E91',
-                        textAlign: 'center',
-                        marginTop: 12,
-                      }}>
-                      Powered by Digistore POS
-                    </Text>
-                    <Text
-                      style={{
-                        fontFamily: 'SFProDisplay-Regular',
-                        color: '#5C6E91',
-                        textAlign: 'center',
-                        marginBottom: 12,
-                        fontSize: 15,
-                        marginTop: 6,
-                      }}>
-                      Visit{' '}
-                      <Text
-                        style={{
-                          color: '#1942D8',
+                      onPress={() =>
+                        Linking.openURL(
+                          'https://' + receiptItem?.receipt_website_url,
+                        )
+                      }
+                      style={[
+                        {
                           fontFamily: 'SFProDisplay-Regular',
                           fontSize: 15,
-                        }}
-                        onPress={() =>
-                          Linking.openURL('https://sell.digistoreafrica.com/')
-                        }>
-                        www.digistoreafrica.com
-                      </Text>{' '}
-                      for more details
+                          color: '#30475e',
+                          marginTop: 5,
+                          textDecorationLine: 'underline',
+                        },
+                      ]}>
+                      {receiptItem?.receipt_website_url}
                     </Text>
                   </View>
                 </View>
+              )}
+              <View
+                style={{
+                  marginTop: 8,
+                  borderTopColor: '#ddd',
+                  borderTopWidth: 0.6,
+                }}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginTop: 12,
+                    marginBottom: 4,
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: 'SFProDisplay-Regular',
+                      color: '#5C6E91',
+                      textAlign: 'center',
+                    }}>
+                    Receipt created using Digistore Business Manager
+                  </Text>
+                  <Image
+                    style={{ height: 20, width: 50, marginLeft: 4 }}
+                    resizeMode="contain"
+                    source={{
+                      uri: 'https://payments.ipaygh.com/app/webroot/img/logo/DSBMLogo.jpg',
+                    }}
+                  />
+                </View>
+                <Text
+                  style={{
+                    fontFamily: 'SFProDisplay-Regular',
+                    color: '#5C6E91',
+                    textAlign: 'center',
+                    marginBottom: 14,
+                  }}>
+                  Download the App or Visit{' '}
+                  <Text
+                    style={{ color: 'blue' }}
+                    onPress={() =>
+                      Linking.openURL('https://digistoreafrica.com')
+                    }>
+                    www.digistoreafrica.com
+                  </Text>{' '}
+                  to sign up and create professional Receipts
+                </Text>
               </View>
-            </ScrollView>
-          </SafeAreaView>
-        </ShadowedView>
-      </View>
+            </View>
+          </View>
+        </ScrollView>
+      </SafeAreaView>
       <BillReceiptShareButton
         viewRef={viewRef}
         orderNumber={invoiceId}

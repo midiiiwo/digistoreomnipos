@@ -1,19 +1,11 @@
-import { useMutation } from 'react-query';
-import { getAllOrders_ } from '../api/orders';
+import { useQuery } from 'react-query';
+import { getAllOrders } from '../api/orders';
 
-export function useGetAllOrders(handleSuccess) {
-  const queryResult = useMutation(
-    ['all-orders'],
-    payload => {
-      try {
-        return getAllOrders_(payload);
-      } catch (error) {}
-    },
-    {
-      onSuccess(data) {
-        handleSuccess(data.data);
-      },
-    },
+export function useGetAllOrders(startDate, endDate, merchant, enabled = false) {
+  const queryResult = useQuery(
+    ['all-orders', merchant],
+    () => getAllOrders(startDate, endDate, merchant),
+    { staleTime: 0, enabled, cacheTime: 0 },
   );
   return queryResult;
 }

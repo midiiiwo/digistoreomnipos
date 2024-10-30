@@ -22,6 +22,7 @@ import Search from '../../assets/icons/search.svg';
 import Date from '../../assets/icons/date.svg';
 import ProductCard from '../components/ProductCard';
 import Flash from '../../assets/icons/flash.svg';
+import { BackHandler, Alert } from 'react-native';
 // import ButtonLargeBottom from '../components/ButtonLargeBottom';
 // import ButtonCancelBottom from '../components/ButtonCancelBottom';
 import { useSelector } from 'react-redux';
@@ -53,7 +54,7 @@ import InventoryLoading from '../components/InventoryLoading';
 
 const Viewer = ({
   refetchCategories,
-  isCategoryFetching,
+  //isCategoryFetching,
   category,
   searchTerm,
 }) => {
@@ -67,8 +68,8 @@ const Viewer = ({
   } = useGetCategoryProducts(
     user.merchant,
     user.outlet,
-    category.id,
-    category.name !== 'All',
+    category?.id,
+    category?.name !== 'All',
   );
   const {
     data: allProducts,
@@ -76,7 +77,7 @@ const Viewer = ({
     isFetching: isOutletProductsFetching,
     refetch: refetchOutletProducts,
   } = useGetOutletProducts(user.merchant, user.outlet);
-  const renderAllItems = React.useCallback(({ item, index }) => {
+  const renderAllItems = React.useCallback(({ item }) => {
     if (!item) {
       return;
     }
@@ -243,6 +244,19 @@ const Viewer = ({
 // }
 
 const Inventory = ({ navigation }) => {
+  React.useEffect(() => {
+    const handleBackPress = () => {
+      // Return true to prevent default back button behavior
+      return true;
+    };
+
+    // Add event listener for back button
+    BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+
+    // Clean up the event listener when the component unmounts
+    return () =>
+      BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
+  }, []);
   const { user } = useSelector(state => state.auth);
   const { quickSaleInAction } = useSelector(state => state.quickSale);
   const { data, isLoading, refetch, isRefetching } = useGetOutletCategories(
@@ -784,7 +798,6 @@ const Inventory = ({ navigation }) => {
     );
   }
 
-
   const orderAmount = (cart || []).reduce((acc, curr) => {
     if (!curr) {
       return acc;
@@ -914,7 +927,7 @@ const Inventory = ({ navigation }) => {
                       alignItems: 'center',
                     }}
                     onPress={() => {
-                      navigation.navigate('Inventory Quick Sale');
+                      navigation.navigate('Quick Sale');
                     }}>
                     <Flash stroke="#30475e" height={32} width={32} />
                     {/* <Text
@@ -1449,6 +1462,26 @@ const Inventory = ({ navigation }) => {
                   marginTop: 0,
                 }}>
                 <PrimaryButton
+                  style={[
+                    styles.btn,
+                    {
+                      backgroundColor: '#03C988',
+                      width: '47%',
+                      borderRadius: 5,
+                      paddingVertical: 6,
+                    },
+                  ]}
+                  textStyle={{ fontSize: 14.5 }}
+                  handlePress={() => {
+                    SheetManager.show('cartOptions', {
+                      payload: { navigation },
+                    });
+                  }}>
+                  More Options
+                </PrimaryButton>
+
+                <View style={{ marginHorizontal: 4 }} />
+                <PrimaryButton
                   // disabled={cart.length === 0}
                   style={[
                     styles.btn,
@@ -1485,25 +1518,6 @@ const Inventory = ({ navigation }) => {
                     navigation.navigate('Payments');
                   }}>
                   Checkout
-                </PrimaryButton>
-                <View style={{ marginHorizontal: 4 }} />
-                <PrimaryButton
-                  style={[
-                    styles.btn,
-                    {
-                      backgroundColor: '#03C988',
-                      width: '47%',
-                      borderRadius: 5,
-                      paddingVertical: 6,
-                    },
-                  ]}
-                  textStyle={{ fontSize: 14.5 }}
-                  handlePress={() => {
-                    SheetManager.show('cartOptions', {
-                      payload: { navigation },
-                    });
-                  }}>
-                  More Options
                 </PrimaryButton>
               </View>
             </View>

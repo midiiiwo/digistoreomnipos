@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
 
 import Settings from '../../assets/icons/drawersettings.svg';
+import Invoices from '../../assets/icons/drawerinvoice.svg'
 import Order from '../../assets/icons/drawerorder.svg';
 import Analytics_ from '../../assets/icons/draweranalytics.svg';
 import Money from '../../assets/icons/drawerpaypoint.svg'
@@ -35,7 +36,7 @@ import PercentageCircle from 'react-native-percentage-circle';
 import { uniqBy } from 'lodash';
 import { useTodoList } from '../hooks/useGetTodoList';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import OnlineStore from '../../assets/icons/drawerweb';
+import DrawerDeliveries from '../../assets/icons/drawerdeliveries.svg';
 import { useGetMerchantDetails } from '../hooks/useGetMerchantDetails';
 import { useToast } from 'react-native-toast-notifications';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
@@ -275,7 +276,7 @@ const Drawer = props => {
             }}
           />
         )} */}
-        <DrawerItem
+        {/* <DrawerItem
           labelStyle={[
             styles.label, // Keep your existing label styles
             {
@@ -300,6 +301,34 @@ const Drawer = props => {
           onPress={() => {
             setActiveItem('Checkout');
             props.navigation.navigate('Inventory');
+          }}
+        /> */}
+        <DrawerItem
+          labelStyle={[
+            styles.label, // Keep your existing label styles
+            {
+              color: activeItem === 'Checkout' ? '#fff' : '#000', // Text color based on active state
+              fontWeight: activeItem === 'Checkout' ? 'bold' : 'normal', // Bold text if active
+            },
+          ]}
+          style={{
+            paddingVertical: -10,
+            marginVertical: -1.5,
+            backgroundColor: activeItem === 'Checkout' ? '#3C79F5' : '#fff',
+            borderRadius: 15,
+
+          }}
+          label="Checkout"
+          icon={({ color }) => (
+            <Checkout height={30} width={30} />
+          )}
+          inactiveBackgroundColor="#fff"
+          activeBackgroundColor="#3C79F5"
+          activeTintColor="#fff"
+          inactiveTintColor="#4C4C4C"
+          onPress={() => {
+            setActiveItem('Checkout');
+            navigation.navigate('Inventory')
           }}
         />
 
@@ -442,19 +471,19 @@ const Drawer = props => {
             labelStyle={[
               styles.label, // Keep your existing label styles
               {
-                color: activeItem === 'Online Store' ? '#fff' : '#000', // Text color based on active state
-                fontWeight: activeItem === 'Online Store' ? 'bold' : 'normal', // Bold text if active
+                color: activeItem === 'Manage Deliveries' ? '#fff' : '#000', // Text color based on active state
+                fontWeight: activeItem === 'Manage Deliveries' ? 'bold' : 'normal', // Bold text if active
               },
             ]}
             style={{
               paddingVertical: -10,
               marginVertical: -1.5,
-              backgroundColor: activeItem === 'Online Store' ? '#3C79F5' : '#fff',
+              backgroundColor: activeItem === 'Manage Deliveries' ? '#3C79F5' : '#fff',
               borderRadius: 15,
             }}
-            label="Online Store"
+            label="Manage Deliveries"
             icon={({ color }) => (
-              <OnlineStore height={30} width={30} />
+              <DrawerDeliveries height={30} width={30} />
             )}
             inactiveBackgroundColor="#fff"
             activeBackgroundColor="#3C79F5"
@@ -463,7 +492,7 @@ const Drawer = props => {
             onPress={() => {
               if (step != '8') {
                 toast.show(
-                  'You must complete account activation before you can setup online store.',
+                  'You must complete account activation before you can setup Deliveries.',
                   { placement: 'top' },
                 );
                 return;
@@ -479,7 +508,7 @@ const Drawer = props => {
               }
               setActiveItem('Online Store');
 
-              props.navigation.navigate('Manage Store');
+              props.navigation.navigate('Manage Deliveries');
             }}
           />
         )}
@@ -564,28 +593,28 @@ const Drawer = props => {
           labelStyle={[
             styles.label, // Keep your existing label styles
             {
-              color: activeItem === 'Backoffice' ? '#fff' : '#000', // Text color based on active state
-              fontWeight: activeItem === 'Backoffice' ? 'bold' : 'normal', // Bold text if active
+              color: activeItem === 'Invoices' ? '#fff' : '#000', // Text color based on active state
+              fontWeight: activeItem === 'Invoices' ? 'bold' : 'normal', // Bold text if active
             },
           ]}
           style={{
             paddingVertical: -10,
             marginVertical: -1.5,
-            backgroundColor: activeItem === 'Backoffice' ? '#3C79F5' : '#fff',
+            backgroundColor: activeItem === 'Invoices' ? '#3C79F5' : '#fff',
             borderRadius: 15,
 
           }}
-          label="Backoffice"
+          label="Invoices"
           icon={({ color }) => (
-            <Money height={30} width={30} />
+            <Invoices height={30} width={30} borderWidth={20} />
           )}
           inactiveBackgroundColor="#fff"
           activeBackgroundColor="#3C79F5"
           activeTintColor="#fff"
           inactiveTintColor="#4C4C4C"
           onPress={() => {
-            setActiveItem('Backoffice');
-            navigation.navigate('Backoffice')
+            setActiveItem('Invoices');
+            navigation.navigate('Invoices')
           }}
         />
         {isAdmin && (

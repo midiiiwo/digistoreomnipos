@@ -6,11 +6,12 @@ export function useGetSummaryFilter(
   userLogin,
   startDate,
   endDate,
-  enabled,
+  isAdmin,
+  enabled = true,
 ) {
   const queryResult = useQuery(
     ['summary-filter', startDate, endDate],
-    () => getReportSummary(merchant, userLogin, startDate, endDate),
+    () => getReportSummary(merchant, userLogin, startDate, endDate, isAdmin),
     { staleTime: 0, cacheTime: 0, enabled },
   );
   return queryResult;

@@ -1,7 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
-import { StyleSheet, Text, View, Image, Pressable } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import React from 'react';
-import { SheetManager } from 'react-native-actions-sheet';
 import { Skeleton } from '@rneui/themed';
 
 const RecentCardSkeleton = ({ item, navigation }) => {

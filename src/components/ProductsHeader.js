@@ -1,7 +1,7 @@
-/* eslint-disable prettier/prettier */
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import { StyleSheet, View, Pressable } from 'react-native';
-import ProfileIcon from '../../assets/icons/profile-circle.svg';
+import ProfileIcon from '../../assets/icons/transactions.svg';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import { useSelector } from 'react-redux';
 import { useActionCreator } from '../hooks/useActionCreator';
@@ -19,14 +19,10 @@ const ProductsHeader = ({ navigation }) => {
         onPress={() => {
           navigation.openDrawer();
         }}
-        style={{
-          backgroundColor: '#fff',
-          borderRadius: 60,
-          padding: 10,
-        }}>
+        style={styles.back}
+      >
         <ProfileIcon height={28} width={27} stroke="#30475e" />
       </Pressable>
-
       <View style={styles.segmentedControlWrapper}>
         <SegmentedControl
           values={tabValues}
@@ -40,6 +36,8 @@ const ProductsHeader = ({ navigation }) => {
           activeFontStyle={styles.activeText}
           fontStyle={styles.inactiveText}
           style={styles.arbitrary}
+          sliderStyle={{ borderRadius: 40 }}
+        // enabled={false}
         />
       </View>
     </View>
@@ -57,33 +55,32 @@ const styles = StyleSheet.create({
     paddingLeft: 22,
   },
   arbitrary: {
-    height: 50,
-    width: 300,
+    height: 42,
+    width: 220,
+    borderRadius: 40,
   },
   segmentedControlWrapper: {
-    marginLeft: 400,
-    alignItems: 'center',
-    justifyContent: 'center'
+    marginRight: 'auto',
   },
   activeText: {
-    fontSize: 18,
+    fontSize: 15,
     color: '#fff',
-    fontFamily: 'SFProDisplay-Medium',
+    fontFamily: 'ReadexPro-Medium',
     fontWeight: '100',
-    letterSpacing: 0.5,
+    letterSpacing: 0.4,
   },
   inactiveText: {
-    fontSize: 18,
+    fontSize: 15,
     color: '#30475e',
-    fontFamily: 'SFProDisplay-Medium',
+    fontFamily: 'ReadexPro-Medium',
     fontWeight: '100',
-    letterSpacing: 0.5,
+    letterSpacing: 0.4,
   },
   headerText: {
     marginLeft: 'auto',
     marginRight: 14,
     color: '#1942D8',
-    fontFamily: 'SFProDisplay-Medium',
+    fontFamily: 'ReadexPro-Medium',
   },
 
   back: {
@@ -94,4 +91,3 @@ const styles = StyleSheet.create({
 });
 
 export default ProductsHeader;
-

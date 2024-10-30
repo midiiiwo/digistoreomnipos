@@ -1,7 +1,7 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import { StyleSheet, TextInput, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import Modal from '../Modal';
-import ModalCancel from '../ModalCancel';
 import PrimaryButton from '../PrimaryButton';
 import { useGetTransactionDetails } from '../../hooks/useGetTransactionDetails';
 import { useSelector } from 'react-redux';
@@ -17,6 +17,17 @@ const NotificationModal = ({ toggleModal, setToggleModal, id }) => {
   return (
     <Modal modalState={toggleModal} changeModalState={setToggleModal}>
       <View style={styles.modalView}>
+        <View style={{ marginBottom: 12 }}>
+          <Text
+            style={{
+              color: '#30475e',
+              fontFamily: 'ReadexPro-Medium',
+              fontSize: 16,
+              textAlign: 'center',
+            }}>
+            Payment Received
+          </Text>
+        </View>
         {isLoading && <LoadingModal />}
         {!isLoading && (
           <>
@@ -82,7 +93,7 @@ const styles = StyleSheet.create({
   },
   modal: { alignItems: 'center' },
   modalView: {
-    width: '56%',
+    width: '96%',
     backgroundColor: '#fff',
     paddingHorizontal: 12,
     paddingVertical: 26,

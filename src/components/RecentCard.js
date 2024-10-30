@@ -1,32 +1,43 @@
 /* eslint-disable react-native/no-inline-styles */
-import { StyleSheet, Text, View, Image, Pressable } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  Pressable,
+  Platform,
+} from 'react-native';
 import React from 'react';
-import { SheetManager } from 'react-native-actions-sheet';
+import { useNavigation } from '@react-navigation/native';
 
 const mapCodeToName = {
   MTN: 'MTN Mobile',
-  VODAFONE: 'Vodafone Mobile',
+  VODAFONE: 'Telecel Mobile',
   TIGO: 'Tigo Mobile',
   AIRTEL: 'Airtel Mobile',
   GLO: 'Glo Mobile',
-  ADSL: 'Vodafone Broadband',
+  ADSL: 'Telecel Broadband',
   SURF: 'Surfline LTE',
   MTNBB: 'MTN Fibre Broadband',
   BUSY: 'Busy Internet',
   ECGP: 'ECG Postpaid',
   GWCL: 'Water Bill',
   MTNPP: 'MTN postpaid',
-  VPP: 'Vodafone Postpaid',
+  VPP: 'Telecel Postpaid',
   DSTV: 'Multichoice - DStv',
   GOTV: 'Multichoice - GOtv',
   BO: 'Box Office',
   MTNMM: 'MTN Mobile Money',
   AIRTELM: 'AirtelTigo Money',
-  VODAC: 'Vodafone Cash',
+  VODAC: 'Telecel Cash',
   TIGOC: 'AirtelTigo Money',
+  BANK: 'Bank Payout',
+  MTNMD: 'MTN Data Bundle',
+  VODAMD: 'Telecel Data Bundle',
+  TIGOMD: 'At Data Bundle',
 };
 
-const RecentCard = ({ item, navigation }) => {
+const RecentCard = ({ item, options }) => {
   const {
     CHANNEL: name,
     AMOUNT: amount,
@@ -34,12 +45,16 @@ const RecentCard = ({ item, navigation }) => {
     STATUS: status,
     CUSTOMER_NAME: customerName,
   } = item;
+  const navigation = useNavigation();
   return (
     <Pressable
       style={styles.recentCard}
       onPress={() => {
-        SheetManager.show('transaction', {
-          payload: { item, name: mapCodeToName[name], navigation },
+        // SheetManager.show('transaction', {
+        //   payload: { item, name: mapCodeToName[name], navigation, options },
+        // });
+        navigation.navigate('Paypoint Transaction', {
+          payload: { item, name: mapCodeToName[name], navigation, options },
         });
       }}>
       {name === 'ADSL' && (
@@ -66,6 +81,18 @@ const RecentCard = ({ item, navigation }) => {
           style={styles.img}
         />
       )}
+      {name === 'MTNMD' && (
+        <Image
+          source={require('../../assets/images/mtn.png')}
+          style={styles.img}
+        />
+      )}
+      {name === 'VODAMD' && (
+        <Image
+          source={require('../../assets/images/vodafone-broadband.png')}
+          style={styles.img}
+        />
+      )}
       {name === 'VODAFONE' && (
         <Image
           source={require('../../assets/images/vodafone-broadband.png')}
@@ -86,8 +113,8 @@ const RecentCard = ({ item, navigation }) => {
       )}
       {name === 'TIGOC' && (
         <Image
-          source={require('../../assets/images/AirtelTigo-Money.jpeg')}
-          style={styles.img}
+          source={require('../../assets/images/atmoney.png')}
+          style={[styles.img, { borderColor: '#eee', borderWidth: 0.8 }]}
         />
       )}
       {name === 'GLO' && (
@@ -150,6 +177,12 @@ const RecentCard = ({ item, navigation }) => {
           style={styles.img}
         />
       )}
+      {name === 'BANK' && (
+        <Image
+          source={require('../../assets/images/saving.png')}
+          style={styles.img}
+        />
+      )}
       {name === 'BO' && (
         <Image
           source={require('../../assets/images/boxoffice.png')}
@@ -159,27 +192,35 @@ const RecentCard = ({ item, navigation }) => {
       <View style={styles.details}>
         {customerName.trim().length === 0 ? (
           <Text style={styles.name} numberOfLines={1}>
-            {mapCodeToName[name]}
+            {mapCodeToName[name]?.toUpperCase()}
           </Text>
         ) : (
           <Text style={styles.name} numberOfLines={1}>
-            {customerName}
+            {customerName?.toUpperCase()}
           </Text>
         )}
         <Text style={styles.customer}>{recipient}</Text>
       </View>
-      <View style={{ marginLeft: 'auto', marginRight: 6 }}>
+      <View
+        style={{
+          marginLeft: 'auto',
+          marginRight: 6,
+        }}>
         <Text style={styles.transactAmount}>
-          <Text style={{ fontSize: 10 }}>GHS</Text> {Number(amount).toFixed(2)}
+          <Text style={{ fontSize: 11 }}>GHS</Text>{' '}
+          {new Intl.NumberFormat('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }).format(Number(amount))}
         </Text>
         <Text
           style={[
             styles.transactAmount,
             {
-              fontSize: 16,
+              fontSize: 13,
               color:
                 status === 'Completed'
-                  ? '#10A19D'
+                  ? '#22A699'
                   : status === 'Pending'
                   ? '#FFB84C'
                   : '#D61355',
@@ -196,8 +237,8 @@ export default RecentCard;
 
 const styles = StyleSheet.create({
   img: {
-    height: 48,
-    width: 48,
+    height: 35,
+    width: 35,
     borderRadius: 24,
     // borderWidth: 0.7,
     // borderColor: '#ddd',
@@ -209,10 +250,8 @@ const styles = StyleSheet.create({
   },
   recentCard: {
     width: '100%',
-    // borderBottomColor: '#ddd',
-    // borderBottomWidth: 0.5,
     padding: 5,
-    paddingVertical: 12,
+    paddingVertical: 8,
     borderRadius: 3,
     flexDirection: 'row',
     alignItems: 'center',
@@ -223,24 +262,23 @@ const styles = StyleSheet.create({
     width: '50%',
   },
   transactAmount: {
-    fontFamily: 'SFProDisplay-Medium',
-    fontSize: 18,
-    color: '#748DA6',
+    fontFamily: 'ReadexPro-Medium',
+    fontSize: 15,
+    color: '#30475e',
     textAlign: 'right',
   },
   name: {
-    fontFamily: 'SFProDisplay-Medium',
+    fontFamily: 'ReadexPro-Medium',
     color: '#30475E',
-    fontSize: 16,
-    letterSpacing: 0.5,
-
-    // width: '50%',
+    fontSize: 14,
+    letterSpacing: -0.3,
   },
   customer: {
     color: '#748DA6',
-    fontFamily: 'SFProDisplay-Regular',
-    fontSize: 15,
-    letterSpacing: 0.0,
-    marginTop: 2,
+    fontFamily: 'ReadexPro-Regular',
+    fontSize: 13,
+    letterSpacing: -0.1,
+    marginTop: Platform.OS === 'android' ? -1 : 5,
+    opacity: 0.65,
   },
 });

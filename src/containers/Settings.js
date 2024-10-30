@@ -1,59 +1,47 @@
 /* eslint-disable react-native/no-inline-styles */
-import {
-  StyleSheet,
-  Text,
-  View,
-  Pressable,
-  ScrollView,
-  Button,
-} from 'react-native';
+import { Text, View, Pressable, ScrollView } from 'react-native';
 import Store from '../../assets/icons/store.svg';
 import Taxes from '../../assets/icons/tax.svg';
-import Users from '../../assets/icons/users-multiple.svg';
 import Caret from '../../assets/icons/cart-right.svg';
 import Users_ from '../../assets/icons/users_';
-import Store_ from '../../assets/icons/store-1';
 import Delivery from '../../assets/icons/delivery-icon';
-import OnlineStore from '../../assets/icons/online-store';
 import SalesChannel from '../../assets/icons/saleschannel';
 import UserSingle from '../../assets/icons/user-single';
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { useSelector } from 'react-redux';
 import Alert from '../../assets/icons/notifications-icon.svg';
 import DeviceInfo from 'react-native-device-info';
-import { SheetManager } from 'react-native-actions-sheet';
-import Receipt from './Receipt';
+import { useSelector } from 'react-redux';
+import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 
 export const SettingsItem = ({ title, Icon, handlePress, extraStyles }) => {
-  console.log('dddddddd', extraStyles);
   return (
     <Pressable
       onPress={handlePress}
       style={{
         paddingHorizontal: 8,
-        paddingVertical: 18,
+        paddingVertical: 16,
         flexDirection: 'row',
         alignItems: 'center',
       }}>
       {Icon && (
         <Icon
-          height={20}
-          width={20}
+          height={17}
+          width={17}
           stroke="#002"
           style={{ marginRight: 13 }}
         />
       )}
       <Text
         style={{
-          fontFamily: 'SFProDisplay-Regular',
+          fontFamily: 'ReadexPro-Regular',
           color: '#002',
-          fontSize: 18.8,
+          fontSize: 14.8,
         }}>
         {title}
       </Text>
       <View style={{ marginLeft: 'auto' }}>
-        <Caret height={16} width={16} />
+        <Caret height={13} width={13} />
       </View>
     </Pressable>
   );
@@ -61,6 +49,7 @@ export const SettingsItem = ({ title, Icon, handlePress, extraStyles }) => {
 
 const Settings = () => {
   const navigation = useNavigation();
+  const { user } = useSelector(state => state.auth);
   return (
     <ScrollView style={{ backgroundColor: '#F7F8FA' }}>
       <View>
@@ -95,29 +84,62 @@ const Settings = () => {
             <SettingsItem
               title="Users"
               Icon={Users_}
-              handlePress={() => navigation.navigate('Manage Users')}
+              handlePress={() => {
+                if (!user.user_permissions.includes('MGUSSD')) {
+                  Toast.show({
+                    type: ALERT_TYPE.WARNING,
+                    title: 'Upgrade needed',
+                    textBody:
+                      "You don't have access to this feature. Please upgrade your account",
+                  });
+                  return;
+                }
+                navigation.navigate('Manage Users');
+              }}
             />
             <View
               style={{ borderBottomColor: '#eee', borderBottomWidth: 0.5 }}
             />
-            <SettingsItem
+            {/* <SettingsItem
               title="Deliveries"
               Icon={Delivery}
-              handlePress={() => navigation.navigate('Manage Deliveries')}
-            />
+              handlePress={() => {
+                if (!user.user_permissions.includes('MGSHOP')) {
+                  Toast.show({
+                    type: ALERT_TYPE.WARNING,
+                    title: 'Upgrade needed',
+                    textBody:
+                      "You don't have access to this feature. Please upgrade your account",
+                  });
+                  return;
+                }
+                navigation.navigate('Manage Deliveries');
+              }}
+            /> */}
             <View
               style={{ borderBottomColor: '#eee', borderBottomWidth: 0.5 }}
             />
             <SettingsItem
               title="Sales Channels"
               Icon={SalesChannel}
-              handlePress={() => navigation.navigate('Sales Channels')}
+              handlePress={() => {
+                if (!user.user_permissions.includes('CHNMGT')) {
+                  Toast.show({
+                    type: ALERT_TYPE.WARNING,
+                    title: 'Upgrade needed',
+                    textBody:
+                      "You don't have access to this feature. Please upgrade your account",
+                  });
+                  return;
+                }
+                navigation.navigate('Sales Channels');
+              }}
             />
             <View
               style={{ borderBottomColor: '#eee', borderBottomWidth: 0.5 }}
             />
             <SettingsItem
-              title="Receipt"
+              title="Receipt & Invoice"
               Icon={Store}
               handlePress={() => navigation.navigate('Receipt Details')}
             />
@@ -141,12 +163,7 @@ const Settings = () => {
         </View>
 
         <View style={{ alignItems: 'center' }}>
-          <Text
-            style={{
-              fontFamily: 'SFProDisplay-Regular',
-              color: '#777',
-              fontSize: 17,
-            }}>
+          <Text style={{ fontFamily: 'SFProDisplay-Regular', color: '#777' }}>
             V{DeviceInfo.getVersion()} - Build: {DeviceInfo.getBuildNumber()}
           </Text>
         </View>

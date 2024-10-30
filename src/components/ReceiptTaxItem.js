@@ -27,11 +27,7 @@ const ReceiptTaxItem = ({ taxName, amount, taxType, showSymbol = true }) => {
         </View>
         <View style={styles.amountWrapper}>
           <Text style={styles.amount}>
-            {showSymbol ? 'GHS' : ' '}{' '}
-            {new Intl.NumberFormat('en-US', {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            }).format(Number(amount))}
+            {showSymbol ? 'GHS' : ' '} {amount}
           </Text>
         </View>
       </View>

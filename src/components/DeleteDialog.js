@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import Dialog from 'react-native-dialog';
 
 import React from 'react';

@@ -177,7 +177,7 @@ export function DeliveryLocation(props) {
           );
         }}
         query={{
-          key: 'AIzaSyCEhoYQkAxqs75nVsS_xUWg2w5DVFZ_p_4',
+          key: 'AIzaSyDz3nLNtITAtLX-Iju3-Tvn1xHREaI9yB0',
           language: 'en',
           components: 'country:gh',
         }}
@@ -248,7 +248,7 @@ export function DeliveryLocation(props) {
                     item_ = {};
                   }
 
-                  console.log(item);
+                  console.log(deliveryOptions);
 
                   return (
                     <TouchableOpacity
@@ -267,6 +267,8 @@ export function DeliveryLocation(props) {
                             config_.data &&
                             config_.data.data &&
                             config_.data.data.option_delivery,
+                          estimate_id: item.estimateId,
+                          chargeType: item.pricingtype,
                         });
                         setDeliveryOptions(null);
                         navigation.goBack();
@@ -310,9 +312,10 @@ export function DeliveryLocation(props) {
                           price,
                           label: 'Delivery',
                           delivery_gps: '',
-                          delivery_location: JSON.parse(item.value)
-                            .delivery_location,
-                          delivery_id: JSON.parse(item.value).delivery_id,
+                          delivery_location: JSON.parse(item?.value || '{}')
+                            ?.delivery_location,
+                          delivery_id: JSON.parse(item?.value || '{}')
+                            ?.delivery_id,
                           delivery_config:
                             config_ &&
                             config_.data &&

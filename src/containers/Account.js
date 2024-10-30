@@ -1,6 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
 import { Text, View, Pressable, ScrollView } from 'react-native';
-
 import Users from '../../assets/icons/users-multiple.svg';
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
@@ -16,8 +15,8 @@ const Account = () => {
       <View style={{ paddingHorizontal: 17, marginBottom: 18 }}>
         <Text
           style={{
-            fontFamily: 'SFProDisplay-Medium',
-            fontSize: 26,
+            fontFamily: 'ReadexPro-Medium',
+            fontSize: 22,
             color: '#002',
           }}>
           My Account
@@ -59,7 +58,7 @@ const Account = () => {
           <Text
             style={{
               fontFamily: 'SFProDisplay-Medium',
-              fontSize: 18.5,
+              fontSize: 15.5,
               color: '#002',
               marginBottom: 8,
             }}>
@@ -70,7 +69,7 @@ const Account = () => {
               backgroundColor: '#cf222e',
               justifyContent: 'center',
               alignItems: 'center',
-              paddingVertical: 18,
+              paddingVertical: 12,
               borderRadius: 6,
               marginTop: 14,
             }}
@@ -79,7 +78,7 @@ const Account = () => {
               style={{
                 fontFamily: 'SFProDisplay-Medium',
                 color: '#fff',
-                fontSize: 18,
+                fontSize: 15,
               }}>
               Delete Account
             </Text>

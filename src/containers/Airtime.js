@@ -1,11 +1,16 @@
 /* eslint-disable react-native/no-inline-styles */
-import { StyleSheet, FlatList, View, Text } from 'react-native';
+import {
+  StyleSheet,
+  FlatList,
+  View,
+  Text,
+  InteractionManager,
+} from 'react-native';
 import React from 'react';
 import PaypointVendorCard from '../components/PaypointVendorCard';
-import { InternetImages } from '../utils/internetOptions';
 import { SheetManager } from 'react-native-actions-sheet';
-import { AirtimeOptions } from '../utils/AirtimeOptions';
 import { useSelector } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
 
 export const mapAirtimeNameToCode = {
   'Mtn Top-up': 'MTN',
@@ -14,12 +19,45 @@ export const mapAirtimeNameToCode = {
   'AirtelTigo Top-up': 'AIRTEL',
 };
 
-const Airtime = ({ navigation, route }) => {
+const Airtime = ({ route }) => {
+  const navigation = useNavigation();
   const { user } = useSelector(state => state.auth);
-  const airtime = route.params.airtime.filter(item =>
-    user.user_permissions.includes(item.biller_id),
-  );
-  console.log('cluststsgsgsgsgsgsgsg', airtime);
+  const airtime =
+    route.params &&
+    route.params.airtime &&
+    route.params.airtime.filter(item =>
+      user.user_permissions.includes(item.biller_id),
+    );
+
+  const [rerender, forceUpdate] = React.useReducer(x => x + 1, 0);
+
+  const airtimePreviousData = route.params.airtimePreviousData;
+
+  React.useEffect(() => {
+    setTimeout(() => {
+      forceUpdate();
+    }, 300);
+  }, []);
+
+  React.useEffect(() => {
+    if (airtimePreviousData) {
+      console.log(airtimePreviousData);
+      InteractionManager.runAfterInteractions(() => {
+        SheetManager.show('buyAirtime', {
+          payload: {
+            airtime: airtimePreviousData.channel,
+            airtimeCode: airtimePreviousData.channel,
+            navigation,
+            number: airtimePreviousData.recipientNumber,
+            amount: airtimePreviousData.amount,
+          },
+        });
+      });
+    }
+  }, [airtimePreviousData, navigation, rerender]);
+
+  // console.log(item);
+
   return (
     <View style={styles.main}>
       <FlatList
@@ -37,8 +75,8 @@ const Airtime = ({ navigation, route }) => {
             }}>
             <Text
               style={{
-                fontFamily: 'Lato-Semibold',
-                fontSize: 22,
+                fontFamily: 'ReadexPro-Regular',
+                fontSize: 20,
                 color: '#30475e',
               }}>
               Buy Airtime

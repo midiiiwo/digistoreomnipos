@@ -57,8 +57,8 @@ const BlogItem = ({ imgUrl, excerpt, link, date }) => {
             styles.blogSubtitle,
             {
               color: '#738598',
-              fontSize: 15,
-              fontFamily: 'SFProDisplay-Regular',
+              fontSize: 13.5,
+              fontFamily: 'ReadexPro-Regular',
             },
           ]}>
           {date}
@@ -86,23 +86,20 @@ export default BlogItem;
 
 const styles = StyleSheet.create({
   blogItem: {
-    // backgroundColor: 'red',
     height: '100%',
-    width: Dimensions.get('window').width * 0.21,
+    width: Dimensions.get('window').width * 0.6,
     borderRadius: 6,
     borderColor: '#ddd',
     borderWidth: 0.5,
     paddingBottom: 4,
-    // marginHorizontal: 8,
-    marginRight: 20,
+    marginRight: 12,
   },
   blogSubtitle: {
-    fontFamily: 'SFProDisplay-Medium',
+    fontFamily: 'ReadexPro-Medium',
     color: '#091D60',
-    fontSize: 15,
+    fontSize: 13.5,
     textAlign: 'left',
     lineHeight: 23,
-    letterSpacing: 0.3,
     opacity: 1,
   },
   blogImage: {

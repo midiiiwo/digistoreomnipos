@@ -9,13 +9,12 @@ import {
   Image,
   RefreshControl,
   Platform,
-  Dimensions,
 } from 'react-native';
 
 import { SheetManager } from 'react-native-actions-sheet';
 
 import SendMoney from '../../assets/icons/send-2.svg';
-import ReceiveMoney from '../../assets/icons/wallet-3.svg';
+// import ReceiveMoney from '../../assets/icons/wallet-3.svg';
 import PaypointServiceButton from '../components/PaypointServiceButton';
 
 import InternetIcon from '../../assets/icons/internet.svg';
@@ -24,22 +23,17 @@ import TvIcon from '../../assets/icons/tv.svg';
 import AirtimeIcon from '../../assets/icons/airtime.svg';
 import BillIcon from '../../assets/icons/bill.svg';
 import TicketIcon from '../../assets/icons/ticket.svg';
-import Fees from '../../assets/icons/Fees.svg';
+// import Fees from '../../assets/icons/Fees.svg';
 import Voucher from '../../assets/icons/voucher.svg';
 import { useSelector } from 'react-redux';
-import { Sheet } from 'react-native-share';
 import { useGetAccountBalance } from '../hooks/useGetAccountBalance';
 import { useGetAllActiveVendors } from '../hooks/useGetAllActiveVendors';
 import { useGetRecentPaypointTransactions } from '../hooks/useGetRecentPaypointTransactions';
 import moment from 'moment';
-import Loading from '../components/Loading';
 import RecentCard from '../components/RecentCard';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
-import { Skeleton } from '@rneui/themed';
 import RecentCardSkeleton from '../components/RecentSkeleton';
-import Announcement from '../../assets/icons/announcement.svg';
 import CustomStatusBar from '../components/StatusBar';
-import { Shadow } from 'react-native-shadow-2';
 
 const Services = ({ navigation, options }) => {
   const { bills, airtime, tv, utilities, internet } = options;
@@ -49,7 +43,7 @@ const Services = ({ navigation, options }) => {
       <View style={styles.serviceButtons}>
         <View style={[styles.serviceRow, styles.firstRow]}>
           <PaypointServiceButton
-            backgroundColor="rgba(254, 190, 140, 0.1)"
+            backgroundColor="#fff"
             extraStyles={styles.service}
             color="#21438F"
             service="Airtime"
@@ -102,7 +96,7 @@ const Services = ({ navigation, options }) => {
             color="#21438F"
             service="Internet"
             Icon={InternetIcon}
-            backgroundColor="rgba(177, 175, 255, 0.1)"
+            backgroundColor="#fff"
             extraStyles={styles.service}
             // handlePress={() => navigation.navigate('Internet', { internet })}
             handlePress={() => {
@@ -150,7 +144,7 @@ const Services = ({ navigation, options }) => {
             }}
           />
           <PaypointServiceButton
-            backgroundColor="rgba(127, 188, 210, 0.1)"
+            backgroundColor="#fff"
             extraStyles={styles.service}
             color="#21438F"
             service="Utilities"
@@ -202,7 +196,7 @@ const Services = ({ navigation, options }) => {
           />
 
           <PaypointServiceButton
-            backgroundColor="rgba(151, 210, 236, 0.1)"
+            backgroundColor="#fff"
             extraStyles={styles.service}
             color="#21438F"
             service="Bills"
@@ -255,70 +249,23 @@ const Services = ({ navigation, options }) => {
         </View>
         <View style={styles.serviceRow}>
           <PaypointServiceButton
-            backgroundColor="rgba(224, 217, 140, 0.1)"
+            backgroundColor="#fff"
             extraStyles={styles.service}
             color="#21438F"
             service="Tv"
             Icon={TvIcon}
             // handlePress={() => navigation.navigate('Tv', { tv })}
             handlePress={() => {
-              return;
-              // const tv_ = tv.filter(item =>
-              //   user.user_permissions.includes(item.biller_id),
-              // );
-              // if (
-              //   user &&
-              //   user.user_merchant_agent == '6' &&
-              //   (!user.user_permissions.includes('TRANMGT') ||
-              //     !user.user_permissions.includes('MKPAYMT') ||
-              //     !user.user_permissions.includes('BILLMGT'))
-              // ) {
-              //   Toast.show({
-              //     type: ALERT_TYPE.WARNING,
-              //     title: 'No Access',
-              //     textBody:
-              //       'Service not available on your account. Please contact Ecobank support',
-              //   });
-              //   return;
-              // }
-              // if (
-              //   !user.user_permissions.includes('TRANMGT') ||
-              //   !user.user_permissions.includes('MKPAYMT') ||
-              //   !user.user_permissions.includes('BILLMGT')
-              // ) {
-              //   Toast.show({
-              //     type: ALERT_TYPE.WARNING,
-              //     title: 'Upgrade Needed',
-              //     textBody:
-              //       "You don't have access to this feature. Please upgrade your account",
-              //   });
-              //   return;
-              // }
-              // // if (tv_.length === 0) {
-              // //   Toast.show({
-              // //     type: ALERT_TYPE.WARNING,
-              // //     title: 'Upgrade needed',
-              // //     textBody:
-              // //       "You don't have access to this feature. Please upgrade your account",
-              // //   });
-              // //   return;
-              // // }
-              // navigation.navigate('Tv', { tv: tv_ });
-            }}
-          />
-          <PaypointServiceButton
-            backgroundColor="rgba(253, 138, 138, 0.1)"
-            extraStyles={styles.service}
-            color="#21438F"
-            service="Tickets"
-            Icon={TicketIcon}
-            handlePress={() => {
+              // return;
+              const tv_ = tv.filter(item =>
+                user.user_permissions.includes(item.biller_id),
+              );
               if (
                 user &&
                 user.user_merchant_agent == '6' &&
                 (!user.user_permissions.includes('TRANMGT') ||
                   !user.user_permissions.includes('MKPAYMT') ||
-                  !user.user_permissions.includes('SELTKTS'))
+                  !user.user_permissions.includes('BILLMGT'))
               ) {
                 Toast.show({
                   type: ALERT_TYPE.WARNING,
@@ -331,7 +278,7 @@ const Services = ({ navigation, options }) => {
               if (
                 !user.user_permissions.includes('TRANMGT') ||
                 !user.user_permissions.includes('MKPAYMT') ||
-                !user.user_permissions.includes('SELTKTS')
+                !user.user_permissions.includes('BILLMGT')
               ) {
                 Toast.show({
                   type: ALERT_TYPE.WARNING,
@@ -341,33 +288,80 @@ const Services = ({ navigation, options }) => {
                 });
                 return;
               }
+              // if (tv_.length === 0) {
+              //   Toast.show({
+              //     type: ALERT_TYPE.WARNING,
+              //     title: 'Upgrade needed',
+              //     textBody:
+              //       "You don't have access to this feature. Please upgrade your account",
+              //   });
+              //   return;
+              // }
+              navigation.navigate('Tv', { tv: tv_ });
             }}
-            // handlePress={() => navigation.navigate('Tickets')}
-            // handlePress={() => {
-            //   const tv_ = tv.filter(item =>
-            //     user.user_permissions.includes(item.biller_id),
-            //   );
-            //   if (tv_.length === 0) {
-            //     Toast.show({
-            //       type: ALERT_TYPE.WARNING,
-            //       title: 'Upgrade needed',
-            //       textBody:
-            //         "You don't have access to this feature. Please upgrade your account",
-            //     });
-            //     return;
-            //   }
-            //   navigation.navigate('Tv', { tv: tv_ });
-            // }}
           />
           <PaypointServiceButton
-            backgroundColor="rgba(98, 205, 255, 0.1)"
+            backgroundColor="#fff"
             extraStyles={styles.service}
             color="#21438F"
-            service="Suppliers"
-            Icon={Fees}
+            service="Tickets"
+            Icon={TicketIcon}
+            handlePress={() => {}}
           />
           <PaypointServiceButton
-            backgroundColor="rgba(134, 200, 188, 0.1)"
+            backgroundColor="#fff"
+            extraStyles={styles.service}
+            color="#21438F"
+            service="Send Money"
+            Icon={SendMoney}
+            handlePress={() => {
+              const sendMoneyOptions_ = (options.sendMoney || []).filter(item =>
+                user.user_permissions.includes(item.biller_id),
+              );
+              // if (
+              //   user &&
+              //   user.user_merchant_agent == '6' &&
+              //   (!user.user_permissions.includes('TRANMGT') ||
+              //     !user.user_permissions.includes('MKPAYMT') ||
+              //     !user.user_permissions.includes('MMMGT'))
+              // ) {
+              //   Toast.show({
+              //     type: ALERT_TYPE.WARNING,
+              //     title: 'No Access',
+              //     textBody:
+              //       'Service not available on your account. Please contact Ecobank support',
+              //   });
+              //   return;
+              // }
+              // if (
+              //   !user.user_permissions.includes('TRANMGT') ||
+              //   !user.user_permissions.includes('MKPAYMT') ||
+              //   !user.user_permissions.includes('MMMGT')
+              // ) {
+              //   Toast.show({
+              //     type: ALERT_TYPE.WARNING,
+              //     title: 'Upgrade Needed',
+              //     textBody:
+              //       "You don't have access to this feature. Please upgrade your account",
+              //   });
+              //   return;
+              // }
+              // if (sendMoneyOptions_.length === 0) {
+              //   Toast.show({
+              //     type: ALERT_TYPE.WARNING,
+              //     title: 'Upgrade Needed',
+              //     textBody:
+              //       "You don't have access to this feature. Please upgrade your account",
+              //   });
+              //   return;
+              // }
+              navigation.navigate('Send', {
+                sendMoneyOptions: sendMoneyOptions_,
+              });
+            }}
+          />
+          <PaypointServiceButton
+            backgroundColor="#fff"
             extraStyles={styles.service}
             color="#21438F"
             service="Vouchers"
@@ -378,39 +372,6 @@ const Services = ({ navigation, options }) => {
     </View>
   );
 };
-
-const TransactMoneyButton = ({
-  Icon,
-  label,
-  backgroundColor,
-  color,
-  handlePress,
-}) => {
-  return (
-    <Pressable style={[ss.main, { backgroundColor }]} onPress={handlePress}>
-      <Icon height={32} width={32} />
-      <Text style={[ss.txt, { color }]}>{label}</Text>
-    </Pressable>
-  );
-};
-
-const ss = StyleSheet.create({
-  main: {
-    flexDirection: 'row',
-    paddingHorizontal: 16,
-    paddingVertical: 18,
-    borderRadius: 34,
-    marginHorizontal: 4,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  txt: {
-    fontFamily: 'SFProDisplay-Medium',
-    letterSpacing: 0.3,
-    marginLeft: 5,
-    fontSize: 18,
-  },
-});
 
 const Paypoint = ({ navigation }) => {
   const billOptions = [];
@@ -528,7 +489,7 @@ const Paypoint = ({ navigation }) => {
               Account {balanceToShow === 0 ? 'Balance' : 'Commission'}
             </Text>
             <Text style={styles.amount}>
-              <Text style={{ fontSize: 18 }}>GHS</Text>{' '}
+              <Text style={{ fontSize: 15 }}>GHS</Text>{' '}
               {balanceToShow === 0
                 ? data &&
                   data.data &&
@@ -616,7 +577,7 @@ const Paypoint = ({ navigation }) => {
             </Pressable>
           )}
         </View>
-        <View style={styles.moneyTransact}>
+        {/* <View style={styles.moneyTransact}>
           <TransactMoneyButton
             label="Send Money"
             Icon={SendMoney}
@@ -708,25 +669,63 @@ const Paypoint = ({ navigation }) => {
               navigation.navigate('Quick Sale');
             }}
           />
-        </View>
+        </View> */}
         <Services navigation={navigation} options={options} />
         <View style={styles.recentLabelWrapper}>
           <Text
             style={{
-              fontFamily: 'SFProDisplay-Medium',
-              fontSize: 17,
+              fontFamily: 'ReadexPro-Medium',
+              fontSize: 14.8,
               color: '#30475e',
+              letterSpacing: -0.3,
             }}>
             Recent Transactions
           </Text>
-          <Pressable
-            style={styles.moreWrapper}
-            onPress={() => navigation.navigate('Transaction History')}>
-            <Text style={styles.more}>More</Text>
-            {/* <ArrowRight stroke="#21438F" height={18} width={18} /> */}
-          </Pressable>
+          {(
+            (recentTransactions &&
+              recentTransactions.data &&
+              recentTransactions.data.data) ||
+            []
+          ).length > 0 && (
+            <Pressable
+              style={styles.moreWrapper}
+              onPress={() =>
+                navigation.navigate('Transaction History', { options })
+              }>
+              <Text style={styles.more}>More</Text>
+              {/* <ArrowRight stroke="#21438F" height={18} width={18} /> */}
+            </Pressable>
+          )}
         </View>
         <View style={styles.recentsWrapper}>
+          {!(isLoading || isFetching) &&
+            (
+              (recentTransactions &&
+                recentTransactions.data &&
+                recentTransactions.data.data) ||
+              []
+            ).length === 0 && (
+              <View
+                style={{
+                  paddingVertical: 12,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <Image
+                  source={require('../../assets/images/empty-cart.jpg')}
+                  style={{ height: 120, width: 120 }}
+                />
+                <Text
+                  style={{
+                    fontSize: 15,
+                    color: '#8E8FFA',
+                    textAlign: 'center',
+                    fontFamily: 'ReadexPro-Medium',
+                  }}>
+                  NO TRANSACTIONS
+                </Text>
+              </View>
+            )}
           {(isLoading || isFetching) && (
             <>
               <RecentCardSkeleton />
@@ -735,18 +734,23 @@ const Paypoint = ({ navigation }) => {
             </>
           )}
           {!(isLoading || isFetching) &&
-            recentTransactions &&
-            recentTransactions.data &&
-            recentTransactions.data.data &&
-            recentTransactions.data.data.slice(0, 3).map(item => {
-              return (
-                <RecentCard
-                  item={item}
-                  key={item.TRANSACTION_ID}
-                  navigation={navigation}
-                />
-              );
-            })}
+            (
+              (recentTransactions &&
+                recentTransactions.data &&
+                recentTransactions.data.data) ||
+              []
+            )
+              .slice(0, 3)
+              .map(item => {
+                return (
+                  <RecentCard
+                    item={item}
+                    key={item.TRANSACTION_ID}
+                    navigation={navigation}
+                    options={options}
+                  />
+                );
+              })}
         </View>
         <View style={styles.adWrapper}>
           <Image
@@ -765,25 +769,26 @@ const styles = StyleSheet.create({
     marginTop: 'auto',
     marginRight: 20,
     marginBottom: 20,
-    backgroundColor: '#fff',
-    paddingHorizontal: 28,
-    paddingVertical: 12,
-    borderRadius: 3,
+    backgroundColor: 'rgba(225, 225, 224, 0.15)',
+    paddingHorizontal: 18,
+    paddingVertical: 8,
+    borderRadius: 40,
   },
   transferText: {
-    fontFamily: 'SFProDisplay-Medium',
-    color: '#21438F',
-    fontSize: 18,
+    fontFamily: 'ReadexPro-Medium',
+    color: '#f9f9f9',
+    fontSize: 14.5,
+    letterSpacing: 0.3,
   },
   topMain: {
     flex: 1,
     backgroundColor: '#fff',
   },
   main: {
-    backgroundColor: '#fff',
+    backgroundColor: '#ffffff',
   },
   InfoBanner: {
-    height: 100,
+    height: 86,
     backgroundColor: '#21438F',
     flexDirection: 'row',
     // borderBottomLeftRadius: 40,
@@ -795,8 +800,8 @@ const styles = StyleSheet.create({
     marginLeft: 20,
   },
   amountLabel: {
-    fontFamily: 'SFProDisplay-Regular',
-    fontSize: 17,
+    fontFamily: 'ReadexPro-Regular',
+    fontSize: 14,
     color: '#fff',
     marginBottom: 4,
   },
@@ -805,7 +810,7 @@ const styles = StyleSheet.create({
     // borderColor: '#ddd',
   },
   amount: {
-    fontFamily: 'SFProDisplay-Medium',
+    fontFamily: 'ReadexPro-Medium',
     fontSize: 24,
     color: '#fff',
   },
@@ -829,7 +834,7 @@ const styles = StyleSheet.create({
   },
   recentLabelWrapper: {
     flexDirection: 'row',
-    paddingHorizontal: Dimensions.get('window').width * 0.14,
+    paddingHorizontal: 18,
     marginTop: 16,
   },
   moreWrapper: {
@@ -841,16 +846,16 @@ const styles = StyleSheet.create({
   more: {
     color: '#1942D8',
     marginRight: 3,
-    fontFamily: 'SFProDisplay-Medium',
-    fontSize: 17.5,
+    fontFamily: 'ReadexPro-Medium',
+    fontSize: 15.5,
     opacity: 0.9,
   },
   recents: {
-    fontFamily: 'SFProDisplay-Medium',
+    fontFamily: 'ReadexPro-Medium',
     color: '#30475E',
   },
   recentsWrapper: {
-    paddingHorizontal: Dimensions.get('window').width * 0.14,
+    paddingHorizontal: 10,
   },
   ad: {
     height: 200,

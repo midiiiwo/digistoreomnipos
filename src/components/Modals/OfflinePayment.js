@@ -1,14 +1,11 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import { useRadioButton } from '../../hooks/useRadioButton';
 import { useSelector } from 'react-redux';
-import { useActionCreator } from '../../hooks/useActionCreator';
 import { RadioButtonProvider } from '../../context/RadioButtonContext';
-import { StyleSheet, Text, TextInput, View } from 'react-native';
+import { StyleSheet, TextInput, View } from 'react-native';
 import Modal from '../Modal';
 import ModalCancel from '../ModalCancel';
 import PrimaryButton from '../PrimaryButton';
-import RadioButton from '../RadioButton';
 
 const OfflinePayment = ({
   offline,
@@ -24,8 +21,6 @@ const OfflinePayment = ({
   total,
 }) => {
   PrimaryButton;
-  const { idx } = useRadioButton();
-  const { setCustomerPayment } = useActionCreator();
   const next = React.useRef(false);
   // const [amount, setAmount] = React.useState('');
   const { subTotal } = useSelector(state => state.sale);
@@ -116,12 +111,12 @@ const styles = StyleSheet.create({
     marginTop: 42,
   },
   choose: {
-    fontFamily: 'SFProDisplay-Regular',
+    fontFamily: 'ReadexPro-Regular',
     fontSize: 18,
     color: '#30475E',
   },
   amount: {
-    fontFamily: 'SourceSansPro-Bold',
+    fontFamily: 'ReadexPro-Medium',
     fontSize: 38,
     marginVertical: 12,
     color: '#30475E',
@@ -133,7 +128,7 @@ const styles = StyleSheet.create({
   },
   modal: { alignItems: 'center' },
   modalView: {
-    width: '50%',
+    width: '99%',
     backgroundColor: '#fff',
     paddingHorizontal: 12,
     paddingVertical: 26,
@@ -153,11 +148,11 @@ const styles = StyleSheet.create({
     // borderColor: 'rgba(96, 126, 170, 0.4)',
     // borderWidth: 0.4,
     width: '100%',
-    paddingVertical: 20,
+    paddingVertical: 14,
     paddingHorizontal: 12,
-    fontFamily: 'SFProDisplay-Regular',
+    fontFamily: 'ReadexPro-Regular',
     color: '#30475E',
-    fontSize: 18,
+    fontSize: 15,
     paddingLeft: 14,
   },
   textInputWrapper: {
@@ -166,23 +161,23 @@ const styles = StyleSheet.create({
   },
   option1Text: {
     color: 'rgba(48, 71, 94, 0.9)',
-    fontFamily: 'SFProDisplay-Regular',
+    fontFamily: 'ReadexPro-Regular',
     fontSize: 16,
   },
   customerName: {
     color: 'rgba(48, 71, 94, 0.7)',
-    fontFamily: 'SFProDisplay-Regular',
+    fontFamily: 'ReadexPro-Regular',
     fontSize: 15,
   },
   customerNumber: {
     color: 'rgba(48, 71, 94, 0.7)',
-    fontFamily: 'SFProDisplay-Regular',
+    fontFamily: 'ReadexPro-Regular',
     fontSize: 14,
   },
   primaryButton: {
     marginTop: 19,
     borderRadius: 5,
-    paddingVertical: 20,
+    paddingVertical: 16,
   },
   paymentReviewItem: {
     flexDirection: 'row',

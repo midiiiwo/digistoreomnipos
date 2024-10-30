@@ -90,10 +90,11 @@ function InvoicePay({ route }) {
     orderItems[idx] = {
       order_item_no:
         item.type && item.type === 'non-inventory-item' ? '' : item.id,
-      order_item_qty: item.quantity,
-      order_item: item.itemName,
-      order_item_amt: item.amount,
-      order_item_prop: item.order_item_props || {},
+      order_item_qty: item && item.quantity,
+      order_item: item && item.itemName,
+      order_item_amt: item && item.amount,
+      order_item_prop: (item && item.order_item_props) || {},
+      order_item_prop_id: item && item.order_item_prop_id,
     };
   });
 
@@ -114,6 +115,8 @@ function InvoicePay({ route }) {
   });
 
   const transactionFee = data && data.data;
+
+  console.log('trrrrr', transactionFee);
 
   return (
     <>
@@ -147,7 +150,7 @@ function InvoicePay({ route }) {
             <Text
               style={{
                 fontSize: 16,
-                fontFamily: 'SFProDisplay-Regular',
+                fontFamily: 'ReadexPro-Regular',
                 color: '#30475e',
               }}>
               Subtotal
@@ -156,7 +159,7 @@ function InvoicePay({ route }) {
               style={{
                 marginLeft: 'auto',
                 fontSize: 16,
-                fontFamily: 'SFProDisplay-Regular',
+                fontFamily: 'ReadexPro-Regular',
                 color: '#30475e',
               }}>
               {amount}
@@ -174,7 +177,7 @@ function InvoicePay({ route }) {
             <Text
               style={{
                 fontSize: 16,
-                fontFamily: 'SFProDisplay-Regular',
+                fontFamily: 'ReadexPro-Regular',
                 color: '#30475e',
               }}>
               Fee
@@ -183,10 +186,10 @@ function InvoicePay({ route }) {
               style={{
                 marginLeft: 'auto',
                 fontSize: 16,
-                fontFamily: 'SFProDisplay-Regular',
+                fontFamily: 'ReadexPro-Regular',
                 color: '#30475e',
               }}>
-              {transactionFee && transactionFee.charge}
+              {transactionFee?.charge}
             </Text>
           </View>
           <View
@@ -201,7 +204,7 @@ function InvoicePay({ route }) {
             <Text
               style={{
                 fontSize: 16,
-                fontFamily: 'SFProDisplay-Regular',
+                fontFamily: 'ReadexPro-Regular',
                 color: '#30475e',
               }}>
               Total
@@ -210,7 +213,7 @@ function InvoicePay({ route }) {
               style={{
                 marginLeft: 'auto',
                 fontSize: 16,
-                fontFamily: 'SFProDisplay-Regular',
+                fontFamily: 'ReadexPro-Regular',
                 color: '#30475e',
               }}>
               {transactionFee && transactionFee.total}
@@ -288,8 +291,7 @@ function InvoicePay({ route }) {
                   amount,
                   quantity: 1,
                   channel: 'INVPAY',
-                  notify_source:
-                    Platform.OS === 'android' ? 'ANDROID POS V2' : 'IOS V2',
+                  notify_source: 'Digistore Business',
                   notify_device: '',
                   name: (customerPayment && customerPayment.name) || '',
                   mod_by: user.login,

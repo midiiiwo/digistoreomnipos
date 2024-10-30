@@ -90,8 +90,6 @@ const CustomerDetailsModal = ({
     deliveryDueDate,
   } = useSelector(state => state.sale);
 
-  console.log('apppp', addTaxes);
-
   const order_outlet = user.outlet;
   const mutation = useRaiseOrder(i => {
     client.invalidateQueries('summary-filter');
@@ -115,7 +113,6 @@ const CustomerDetailsModal = ({
     }
     return prev;
   }, 0);
-  console.log('cccc', orderAmount);
   const {
     data: lookup,
     isLookupLoading,
@@ -159,10 +156,11 @@ const CustomerDetailsModal = ({
     orderItems[idx] = {
       order_item_no:
         item.type && item.type === 'non-inventory-item' ? '' : item.id,
-      order_item_qty: item.quantity,
-      order_item: item.itemName,
-      order_item_amt: item.amount,
-      order_item_prop: item.order_item_props || {},
+      order_item_qty: item && item.quantity,
+      order_item: item && item.itemName,
+      order_item_amt: item && item.amount,
+      order_item_prop: (item && item.order_item_props) || {},
+      order_item_prop_id: item && item.order_item_prop_id,
     };
   });
 
@@ -186,8 +184,6 @@ const CustomerDetailsModal = ({
   //     };
   //   });
 
-  console.log('llili', payment);
-
   return (
     <Modal
       modalState={paymentPreview}
@@ -208,28 +204,26 @@ const CustomerDetailsModal = ({
         {!isLoading && !isFetching && !isLookupFetching && !isLookupLoading && (
           <View style={styles.details}>
             <View style={styles.nameWrapper}>
-              {lookup &&
-                lookup.data &&
-                (lookup.data.name || lookup.data.message) && (
-                  <>
-                    <Text
-                      style={{
-                        fontFamily: 'SFProDisplay-Regular',
-                        fontSize: 13.2,
-                        color: '#5C6E91',
-                        marginBottom: 6,
-                      }}>
-                      MOMO ACCOUNT NAME
-                    </Text>
-                    <Text style={[styles.name, { textAlign: 'center' }]}>
-                      {lookup &&
-                        lookup.data &&
-                        ((lookup.data.name && lookup.data.name.toUpperCase()) ||
-                          (lookup.data.message &&
-                            lookup.data.message.toUpperCase()))}
-                    </Text>
-                  </>
-                )}
+              {(lookup?.data?.name || lookup?.data?.message) && (
+                <>
+                  <Text
+                    style={{
+                      fontFamily: 'ReadexPro-Regular',
+                      fontSize: 13.2,
+                      color: '#5C6E91',
+                      marginBottom: 6,
+                    }}>
+                    MOMO ACCOUNT NAME
+                  </Text>
+                  <Text style={[styles.name, { textAlign: 'center' }]}>
+                    {lookup &&
+                      lookup.data &&
+                      ((lookup.data.name && lookup.data.name.toUpperCase()) ||
+                        (lookup.data.message &&
+                          lookup.data.message.toUpperCase()))}
+                  </Text>
+                </>
+              )}
             </View>
             <PaymentReviewItem
               name="Purchase Total"
@@ -307,15 +301,6 @@ const CustomerDetailsModal = ({
                     (customerPayment && customerPayment.phone) || '',
                   delivery_email:
                     (customerPayment && customerPayment.email) || '',
-                  delivery_charge: delivery.price,
-                  service_charge: data && data.data && data.data.charge,
-                  order_coupon:
-                    (discountPayload && discountPayload.discountCode) || '',
-                  order_discount_code:
-                    (discountPayload && discountPayload.discountCode) || '',
-                  order_discount:
-                    (discountPayload && discountPayload.discount) || 0,
-                  order_amount: orderAmount,
                   delivery_notes:
                     user &&
                     user.user_permissions &&
@@ -326,6 +311,15 @@ const CustomerDetailsModal = ({
                         ? moment(deliveryDueDate).format('YYYY-MM-DD')
                         : ''
                       : deliveryNote,
+                  delivery_charge: delivery.price,
+                  service_charge: data && data.data && data.data.charge,
+                  order_coupon:
+                    (discountPayload && discountPayload.discountCode) || '',
+                  order_discount_code:
+                    (discountPayload && discountPayload.discountCode) || '',
+                  order_discount:
+                    (discountPayload && discountPayload.discount) || 0,
+                  order_amount: orderAmount,
                   // total + (data && data.data && data.data.charge && data.data.charge),
                   total_amount: data && data.data && data.data.total,
                   // +
@@ -343,8 +337,10 @@ const CustomerDetailsModal = ({
                   order_notes: orderNotes,
                   // order_taxes: (addTaxes && JSON.stringify(orderTaxes)) || '',
                   order_date:
-                    orderDate && orderDate.toString().length > 0
-                      ? moment(orderDate).format('YYYY-MM-DD H:mm:ss')
+                    orderDate?.toString()?.length > 0
+                      ? moment(orderDate?.setTime(Date.now())).format(
+                          'YYYY-MM-DD H:mm:ss',
+                        )
                       : pay_date,
                   mod_date:
                     orderDate && orderDate.toString().length > 0
@@ -375,7 +371,7 @@ export default CustomerDetailsModal;
 
 const styles = StyleSheet.create({
   modalView: {
-    width: '50%',
+    width: '96%',
     backgroundColor: '#fff',
     paddingHorizontal: 12,
     paddingVertical: 26,
@@ -397,7 +393,7 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   name: {
-    fontFamily: 'SFProDisplay-Regular',
+    fontFamily: 'ReadexPro-Regular',
     fontSize: 18,
     color: '#6096B4',
   },
@@ -417,12 +413,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   paymentReviewItemName: {
-    fontFamily: 'SFProDisplay-Regular',
+    fontFamily: 'ReadexPro-Regular',
     color: '#30475e',
     fontSize: 15,
+    flex: 1,
   },
   paymentReviewItemAmount: {
-    fontFamily: 'SFProDisplay-Regular',
+    fontFamily: 'ReadexPro-Regular',
     color: '#30475e',
     fontSize: 15,
     marginLeft: 'auto',

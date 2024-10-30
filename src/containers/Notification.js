@@ -195,7 +195,7 @@ const Notification = () => {
                           ? 'ReadexPro-bold'
                           : 'ReadexPro-Medium',
                       color: item.status === 'NEW' ? '#30475e' : '#6D8299',
-                      fontSize: 17,
+                      fontSize: 15,
                     }}>
                     {item.title}
                   </Text>
@@ -205,7 +205,7 @@ const Notification = () => {
                     style={{
                       fontFamily: 'ReadexPro-Regular',
                       color: item.status === 'NEW' ? '#30475e' : '#6D8299',
-                      fontSize: 15,
+                      fontSize: 14,
                     }}>
                     {item.body}
                   </Text>
@@ -213,7 +213,7 @@ const Notification = () => {
                     style={{
                       fontFamily: 'ReadexPro-Regular',
                       color: item.status === 'NEW' ? '#30475e' : '#6D8299',
-                      fontSize: 14,
+                      fontSize: 13,
                       marginTop: 6,
                       // textAlign: 'right',
                     }}>

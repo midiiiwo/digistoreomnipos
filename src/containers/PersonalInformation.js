@@ -9,16 +9,13 @@ import {
   Image,
   Platform,
   PermissionsAndroid,
+  Dimensions,
 } from 'react-native';
 import React from 'react';
-import { useGetOutletCategories } from '../hooks/useGetOutletCategories';
 import { useSelector } from 'react-redux';
 
 import { Picker as RNPicker } from 'react-native-ui-lib';
-import { SheetManager } from 'react-native-actions-sheet';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
-// import { IndexPath, Menu, MenuItem } from '@ui-kitten/components';
-import Scanner from '../../assets/icons/barscanner';
 import {
   Menu,
   MenuOptions,
@@ -28,54 +25,18 @@ import {
 
 import Loading from '../components/Loading';
 
-import { TextInput } from 'react-native-paper';
-// import { Switch } from 'react-native-ui-lib';
-
 import PrimaryButton from '../components/PrimaryButton';
-import { useAddCategoryProduct } from '../hooks/useAddCategoryProduct';
 import Picker from '../components/Picker';
 import AddImage from '../../assets/icons/add-image.svg';
-import { useGetStoreOutlets } from '../hooks/useGetStoreOutlets';
 import { useToast } from 'react-native-toast-notifications';
 import { useQueryClient } from 'react-query';
-import { Switch } from '@rneui/themed';
-import { useGetAllProductsCategories } from '../hooks/useGetAllProductsCategories';
 import { DateTimePicker } from 'react-native-ui-lib';
 import { useAddPersonalDetails } from '../hooks/useAddPersonalDetails';
 import moment from 'moment';
 import { useGetPreactiveState } from '../hooks/useGetPreactiveState';
 import { useGetOnboardingRequirements } from '../hooks/useGetOnboardingRequirements';
-
-export const Input = ({
-  placeholder,
-  val,
-  setVal,
-  nLines,
-  showError,
-  ...props
-}) => {
-  return (
-    <TextInput
-      label={placeholder}
-      textColor="#30475e"
-      value={val}
-      onChangeText={setVal}
-      mode="outlined"
-      outlineColor={showError ? '#EB455F' : '#B7C4CF'}
-      activeOutlineColor={showError ? '#EB455F' : '#1942D8'}
-      outlineStyle={{
-        borderWidth: 0.9,
-        borderRadius: 4,
-        // borderColor: showError ? '#EB455F' : '#B7C4CF',
-      }}
-      placeholderTextColor="#B7C4CF"
-      style={styles.input}
-      numberOfLines={nLines}
-      multiline={nLines ? true : false}
-      {...props}
-    />
-  );
-};
+import Input from '../components/Input';
+import { PERMISSIONS, request } from 'react-native-permissions';
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -125,14 +86,8 @@ const mapGenders = {
 
 const PersonalInformation = ({ navigation, route }) => {
   const { user } = useSelector(state => state.auth);
-  const { data, isLoading } = useGetAllProductsCategories(user.merchant);
-  const { data: outlets, isLoading: isOutletLoading } = useGetStoreOutlets(
-    user.merchant,
-  );
-  const [toggleMoreInput, setToggleMoreInput] = React.useState(false);
+
   const [personalStatus, setPersonalStatus] = React.useState();
-  const [applyTaxes, setApplyTaxes] = React.useState(true);
-  const [saved, setSaved] = React.useState();
   const [openMenu, setOpenMenu] = React.useState(false);
   const [showError, setShowError] = React.useState(false);
   const toast = useToast();
@@ -172,6 +127,8 @@ const PersonalInformation = ({ navigation, route }) => {
   );
 
   const pData = personal && personal.data && personal.data.data;
+
+  const cacheBust = new Date().toString();
 
   React.useEffect(() => {
     if (pData) {
@@ -263,10 +220,16 @@ const PersonalInformation = ({ navigation, route }) => {
       };
     });
 
+  console.log(state.IdType.label);
+
   return (
     <View>
       <View style={{ height: '100%', backgroundColor: '#fff' }}>
-        <ScrollView style={styles.main}>
+        <ScrollView
+          style={styles.main}
+          contentContainerStyle={{
+            paddingBottom: Dimensions.get('window').height * 0.2,
+          }}>
           <Input
             placeholder="Full Name"
             showError={showError && state.name.length === 0}
@@ -278,6 +241,16 @@ const PersonalInformation = ({ navigation, route }) => {
               })
             }
           />
+          {showError && state.name.length === 0 && (
+            <Text
+              style={{
+                fontFamily: 'SFProDisplay-Regular',
+                fontSize: 13.5,
+                color: '#EB455F',
+              }}>
+              Please provide full name
+            </Text>
+          )}
           <Input
             placeholder="Phone Number"
             val={state.phone}
@@ -290,6 +263,16 @@ const PersonalInformation = ({ navigation, route }) => {
             }
             keyboardType="phone-pad"
           />
+          {showError && state.phone.length === 0 && (
+            <Text
+              style={{
+                fontFamily: 'SFProDisplay-Regular',
+                fontSize: 13.5,
+                color: '#EB455F',
+              }}>
+              Please provide your contact number
+            </Text>
+          )}
           <Input
             placeholder="Email Address"
             val={state.email}
@@ -315,6 +298,17 @@ const PersonalInformation = ({ navigation, route }) => {
             }}
             style={{ marginTop: 16 }}
           />
+          {showError && state.dob.length === 0 && (
+            <Text
+              style={{
+                fontFamily: 'SFProDisplay-Regular',
+                fontSize: 13.5,
+                color: '#EB455F',
+                marginTop: -25,
+              }}>
+              Please provide your date of birth
+            </Text>
+          )}
           <Picker
             showError={
               (!state.gender ||
@@ -334,6 +328,21 @@ const PersonalInformation = ({ navigation, route }) => {
               <RNPicker.Item key={i.key} label={i.label} value={i.value} />
             ))}
           </Picker>
+          {(!state.gender ||
+            (state.gender &&
+              (!state.gender.label || state.gender.label.length === 0))) &&
+            showError && (
+              <Text
+                style={{
+                  fontFamily: 'SFProDisplay-Regular',
+                  fontSize: 13.5,
+                  color: '#EB455F',
+                  marginTop: -10,
+                  marginBottom: 12,
+                }}>
+                Please select your gender
+              </Text>
+            )}
           <Input
             val={state.residential}
             placeholder="Residential Address or GhanaPost GPS Address of Residence"
@@ -355,6 +364,18 @@ const PersonalInformation = ({ navigation, route }) => {
               })
             }
           />
+          {showError && state.job.length === 0 && (
+            <Text
+              style={{
+                fontFamily: 'SFProDisplay-Regular',
+                fontSize: 13.5,
+                color: '#EB455F',
+                marginTop: -4,
+              }}>
+              Please provide your current occupation
+            </Text>
+          )}
+          <View style={{ marginVertical: 10 }} />
           <Picker
             showError={state.IdType.label.length === 0 && showError}
             placeholder="Type of Photo ID"
@@ -369,6 +390,37 @@ const PersonalInformation = ({ navigation, route }) => {
               <RNPicker.Item key={i.key} label={i.label} value={i.value} />
             ))}
           </Picker>
+          {state &&
+            state.IdType &&
+            state.IdType.label &&
+            state.IdType.label.length === 0 &&
+            showError && (
+              <Text
+                style={{
+                  fontFamily: 'SFProDisplay-Regular',
+                  fontSize: 13.5,
+                  color: '#EB455F',
+                  marginBottom: 26,
+                  marginTop: -10,
+                }}>
+                Please select type of photo ID
+              </Text>
+            )}
+          {state &&
+            state.IdType &&
+            state.IdType.label &&
+            state.IdType.label.length === 0 &&
+            showError && (
+              <Text
+                style={{
+                  fontFamily: 'SFProDisplay-Regular',
+                  fontSize: 15,
+                  color: '#EB455F',
+                  marginBottom: 10,
+                }}>
+                Please provide the type of ID you want to upload
+              </Text>
+            )}
           <View style={{ alignItems: 'center' }}>
             <Menu opened={openMenu} onBackdropPress={() => setOpenMenu(false)}>
               <MenuTrigger
@@ -384,7 +436,9 @@ const PersonalInformation = ({ navigation, route }) => {
                         source={{
                           uri:
                             'https://manage.ipaygh.com/xportal/content/resources/upload/doc/' +
-                            state.image,
+                            state.image +
+                            '?' +
+                            cacheBust,
                         }}
                       />
                     )}
@@ -409,36 +463,59 @@ const PersonalInformation = ({ navigation, route }) => {
                   style={{ marginVertical: 10 }}
                   onSelect={async () => {
                     setOpenMenu(false);
-                    try {
-                      const granted = await PermissionsAndroid.request(
-                        PermissionsAndroid.PERMISSIONS.CAMERA,
-                        {
-                          title: 'App Camera Permission',
-                          message: 'App needs access to your camera',
-                          buttonNeutral: 'Ask Me Later',
-                          buttonNegative: 'Cancel',
-                          buttonPositive: 'OK',
-                        },
-                      );
-                      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-                        const result = await launchCamera({
-                          includeBase64: false,
-                          includeExtra: false,
-                          mediaType: 'photo',
-                        });
-                        if (result) {
-                          dispatch({
-                            type: 'image',
-                            payload: result.assets[0],
+                    if (Platform.OS === 'android') {
+                      try {
+                        const granted = await PermissionsAndroid.request(
+                          PermissionsAndroid.PERMISSIONS.CAMERA,
+                          {
+                            title: 'App Camera Permission',
+                            message: 'App needs access to your camera',
+                            buttonNeutral: 'Ask Me Later',
+                            buttonNegative: 'Cancel',
+                            buttonPositive: 'OK',
+                          },
+                        );
+                        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                          const result = await launchCamera({
+                            includeBase64: false,
+                            includeExtra: false,
+                            mediaType: 'photo',
+                          });
+                          if (result) {
+                            dispatch({
+                              type: 'image',
+                              payload: result.assets[0],
+                            });
+                          }
+                        } else {
+                          toast.show('Camera permission denied', {
+                            placement: 'top',
                           });
                         }
-                      } else {
-                        toast.show('Camera permission denied', {
-                          placement: 'top',
-                        });
+                      } catch (error) {}
+                    } else if (Platform.OS === 'ios') {
+                      try {
+                        const granted = await request(PERMISSIONS.IOS.CAMERA);
+
+                        if (granted === 'granted') {
+                          const result = await launchCamera({
+                            includeBase64: false,
+                            includeExtra: false,
+                            mediaType: 'photo',
+                          });
+                          console.log('grrrr', result);
+                          if (result) {
+                            dispatch({
+                              type: 'image',
+                              payload: result.assets[0],
+                            });
+                          }
+                        } else {
+                          // request(PERMISSIONS.IOS.CAMERA);
+                        }
+                      } catch (error) {
+                        console.log('=>>>>>>>>>>>>>>>>,', error);
                       }
-                    } catch (error) {
-                      console.error('=>>>>>>>>>>>>>>>>,', error);
                     }
                   }}>
                   <Text
@@ -501,8 +578,13 @@ const PersonalInformation = ({ navigation, route }) => {
               </Pressable>
             )}
           </View>
+          <Text style={{ fontFamily: 'SFProDisplay-Regular', color: '#ccc' }}>
+            {state.IdType.label === 'National Identification (Ghana Card)'
+              ? 'GHA-XXXXXXXXX-X'
+              : ''}
+          </Text>
           <Input
-            placeholder="ID Number"
+            placeholder={'ID Number '}
             val={state.IdNumber}
             showError={showError && state.IdNumber.length === 0}
             setVal={text =>
@@ -513,6 +595,16 @@ const PersonalInformation = ({ navigation, route }) => {
             }
             style={{ flex: 1, backgroundColor: '#fff' }}
           />
+          {showError && state.IdNumber.length === 0 && (
+            <Text
+              style={{
+                fontFamily: 'SFProDisplay-Regular',
+                fontSize: 13.5,
+                color: '#EB455F',
+              }}>
+              Please provide ID number of provided ID
+            </Text>
+          )}
         </ScrollView>
       </View>
       <View style={styles.btnWrapper}>
@@ -520,31 +612,31 @@ const PersonalInformation = ({ navigation, route }) => {
           style={styles.btn}
           disabled={mutating}
           handlePress={() => {
-            console.log(
-              'statetetet---==',
-
-              state.IdType.label.length === 0 && showError,
-            );
             if (
               state.name.length === 0 ||
               state.phone.length === 0 ||
-              // state.email ||
-              // state.dob.length === 0 ||
               state.gender.length === 0 ||
-              // state.residential ||
               state.job.length === 0 ||
               state.IdNumber.length === 0 ||
               state.IdType.label.length === 0 ||
               !state.image
             ) {
               setShowError(true);
-              if (state.dob.length === 0) {
-                toast.show('Please Enter Date of Birth', { placement: 'top' });
-              }
+              toast.show('Please provide the required details', {
+                placement: 'top',
+                type: 'danger',
+              });
+
               return;
             }
-
-            mutate({
+            if (state.dob.length === 0) {
+              toast.show('Please Enter Date of Birth', {
+                placement: 'top',
+                type: 'danger',
+              });
+              return;
+            }
+            const payload = {
               merchant_id: user.merchant,
               contact_person: state.name,
               contact_mobile: state.phone,
@@ -554,19 +646,37 @@ const PersonalInformation = ({ navigation, route }) => {
               contact_position: state.job,
               contact_id_type: state.IdType.value,
               contact_id_number: state.IdNumber,
-              image_photo: state.image
-                ? {
-                    name: state.image.fileName,
-                    type: state.image.type,
-                    uri:
-                      Platform.OS === 'android'
-                        ? state.image.uri
-                        : state.image.uri.replace('file://', ''),
-                  }
-                : null,
+              // image_photo:
+              //   state.image && typeof state.image === 'object'
+              //     ? {
+              //         name: state.image.fileName,
+              //         type: state.image.type,
+              //         uri:
+              //           Platform.OS === 'android'
+              //             ? state.image.uri
+              //             : state.image.uri.replace('file://', ''),
+              //       }
+              //     : state.image && typeof state.image === 'string'
+              //     ? state.image
+              //     : '',
               mod_by: user.login,
               source: 'MOBILE',
-            });
+            };
+            if (state.image && typeof state.image === 'object') {
+              payload.image_photo = {
+                name: state.image.fileName,
+                type: state.image.type,
+                uri:
+                  Platform.OS === 'android'
+                    ? state.image.uri
+                    : state.image.uri.replace('file://', ''),
+              };
+            } else if (state.image && typeof state.image === 'string') {
+              payload.contact_photo_id = state.image;
+            } else {
+              payload.image_photo = '';
+            }
+            mutate(payload);
           }}>
           {mutating ? 'Processing' : 'Save'}
         </PrimaryButton>

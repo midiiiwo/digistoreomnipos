@@ -1,7 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import { Text, StyleSheet, Pressable } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const ButtonLargeBottom = ({
   children,
@@ -13,7 +12,6 @@ const ButtonLargeBottom = ({
   disabled = false,
   disabledColor,
 }) => {
-  const { bottom } = useSafeAreaInsets();
   return (
     <Pressable
       disabled={disabled}
@@ -43,9 +41,8 @@ const styles = StyleSheet.create({
   },
   text: {
     color: '#fff',
-    fontFamily: 'SFProDisplay-Medium',
-    fontSize: 21,
-    letterSpacing: 0.3,
+    fontFamily: 'ReadexPro-Medium',
+    fontSize: 20,
   },
 });
 

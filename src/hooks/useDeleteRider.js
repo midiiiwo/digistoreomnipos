@@ -4,16 +4,19 @@ import { deleteRider } from '../api/merchant';
 export function useDeleteRider(handleSuccess) {
     const client = useQueryClient();
     const queryResult = useMutation(
-        ['delete-product'],
-        payload => {
+        ['delete-rider'],
+        async (payload) => {
             try {
-                return deleteRider(payload);
-            } catch (error) { }
+                return await deleteRider(payload);
+            } catch (error) {
+                console.error('Delete rider error:', error);
+                throw error;
+            }
         },
         {
             onSuccess(data) {
-                console.log(data.data);
-                handleSuccess(data.data);
+                console.log(data?.data?.message);
+                handleSuccess(data?.data);
             },
         },
     );

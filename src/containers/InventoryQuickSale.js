@@ -192,7 +192,7 @@ const InventoryQuickSale = ({ navigation, route }) => {
                   quantity: 1,
                   type: 'non-inventory-item',
                 });
-                navigation.navigate('Dashboard');
+                navigation.navigate('Inventory');
                 return;
               }}>
               GHS {subTotal}

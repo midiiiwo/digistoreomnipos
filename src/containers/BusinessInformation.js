@@ -11,7 +11,6 @@ import {
   PermissionsAndroid,
 } from 'react-native';
 import React from 'react';
-import { useGetOutletCategories } from '../hooks/useGetOutletCategories';
 import { useSelector } from 'react-redux';
 
 import {
@@ -19,10 +18,8 @@ import {
   RadioButton,
   RadioGroup,
 } from 'react-native-ui-lib';
-import { SheetManager } from 'react-native-actions-sheet';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 // import { IndexPath, Menu, MenuItem } from '@ui-kitten/components';
-import Scanner from '../../assets/icons/barscanner';
 import {
   Menu,
   MenuOptions,
@@ -32,7 +29,6 @@ import {
 
 import Loading from '../components/Loading';
 
-import { TextInput } from 'react-native-paper';
 import DocumentPicker from 'react-native-document-picker';
 // import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 navigator.geolocation = require('@react-native-community/geolocation');
@@ -43,47 +39,15 @@ import PrimaryButton from '../components/PrimaryButton';
 // import { useAddCategoryProduct } from '../hooks/useAddCategoryProduct';
 import Picker from '../components/Picker';
 import AddImage from '../../assets/icons/add-image.svg';
-import { useGetStoreOutlets } from '../hooks/useGetStoreOutlets';
 import { useToast } from 'react-native-toast-notifications';
 import { useQueryClient } from 'react-query';
 // import { Switch } from '@rneui/themed';
-import { useGetAllProductsCategories } from '../hooks/useGetAllProductsCategories';
 // import { DateTimePicker } from 'react-native-ui-lib';
-import Check from '../../assets/icons/verified.svg';
 import { useGetOnboardingRequirements } from '../hooks/useGetOnboardingRequirements';
 import { useGetPreactiveState } from '../hooks/useGetPreactiveState';
 import { useAddBusinessInformation } from '../hooks/useAddBusinessInformation';
-
-export const Input = ({
-  placeholder,
-  val,
-  setVal,
-  nLines,
-  showError,
-  ...props
-}) => {
-  return (
-    <TextInput
-      label={placeholder}
-      textColor="#30475e"
-      value={val}
-      onChangeText={setVal}
-      mode="outlined"
-      outlineColor={showError ? '#EB455F' : '#B7C4CF'}
-      activeOutlineColor={showError ? '#EB455F' : '#1942D8'}
-      outlineStyle={{
-        borderWidth: 0.9,
-        borderRadius: 4,
-        // borderColor: showError ? '#EB455F' : '#B7C4CF',
-      }}
-      placeholderTextColor="#B7C4CF"
-      style={styles.input}
-      numberOfLines={nLines}
-      multiline={nLines ? true : false}
-      {...props}
-    />
-  );
-};
+import Input from '../components/Input';
+import { PERMISSIONS, request } from 'react-native-permissions';
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -128,11 +92,6 @@ const bTypes = [
 
 const BusinessInformation = ({ navigation, route }) => {
   const { user } = useSelector(state => state.auth);
-  const { data, isLoading } = useGetAllProductsCategories(user.merchant);
-  const { data: outlets, isLoading: isOutletLoading } = useGetStoreOutlets(
-    user.merchant,
-  );
-  const [saved, setSaved] = React.useState();
   const [openMenu, setOpenMenu] = React.useState(false);
   const [showError, setShowError] = React.useState(false);
   const toast = useToast();
@@ -142,6 +101,7 @@ const BusinessInformation = ({ navigation, route }) => {
 
   const [businessStatus, setBusinessStatus] = React.useState();
   const [hasLocation, setHasLocation] = React.useState(true);
+  const cacheBust = new Date().toString();
   const [state, dispatch] = React.useReducer(reducer, {
     businessType: { label: '' },
     BusinessName: '',
@@ -196,8 +156,18 @@ const BusinessInformation = ({ navigation, route }) => {
           type: 'danger',
         });
       }
+      setBusinessStatus(null);
     }
   }, [navigation, businessStatus, toast]);
+
+  React.useEffect(() => {
+    if (businessRegistered === 'YES') {
+      dispatch({
+        type: 'bType',
+        payload: null,
+      });
+    }
+  }, [businessRegistered]);
 
   React.useEffect(() => {
     if (pData) {
@@ -207,6 +177,18 @@ const BusinessInformation = ({ navigation, route }) => {
         requirements.data.data.business_category.find(
           i => i.category_id === pData.merchant_category,
         )) || { category_name: '' };
+      setDocRes(pData && pData.merchant_reg_cert);
+      const isBusinessRegistered =
+        pData &&
+        pData.merchant_reg_number.length > 0 &&
+        pData.merchant_reg_cert.length > 0;
+      setBusinessRegistered(isBusinessRegistered ? 'YES' : 'NO');
+      const businessHasLocation =
+        pData &&
+        typeof pData.merchant_location === 'string' &&
+        pData.merchant_location.length > 0;
+
+      setHasLocation(businessHasLocation);
       dispatch({
         type: 'update_all',
         payload: {
@@ -226,7 +208,21 @@ const BusinessInformation = ({ navigation, route }) => {
           description: pData.merchant_business_desc,
           businessContact: pData.merchant_phone,
           businessEmail: pData.merchant_email,
-          location: pData.merchant_address,
+          location: {
+            delivery_location: pData.merchant_location,
+            delivery_gps: {
+              location: {
+                lat:
+                  pData &&
+                  pData.merchant_address_gps &&
+                  pData.merchant_address_gps.split(',')[0],
+                lng:
+                  pData &&
+                  pData.merchant_address_gps &&
+                  pData.merchant_address_gps.split(',')[1],
+              },
+            },
+          },
           businessDocumentNumber: pData.merchant_reg_number,
           businessDocumentType: {
             label: (
@@ -287,7 +283,12 @@ const BusinessInformation = ({ navigation, route }) => {
       };
     });
 
-  console.log('===============---->>>>', state.location);
+  console.log(
+    'statetatta',
+    state.location &&
+      typeof state.location.delivery_location === 'string' &&
+      state.location.delivery_location.length == 0,
+  );
 
   return (
     <View>
@@ -310,8 +311,10 @@ const BusinessInformation = ({ navigation, route }) => {
                           style={{ height: 100, width: 100, borderRadius: 5 }}
                           source={{
                             uri:
-                              'https://payments.ipaygh.com/app/webroot/img/logo' +
-                              state.BusinessLogo,
+                              'https://payments.ipaygh.com/app/webroot/img/logo/' +
+                              state.BusinessLogo +
+                              '?' +
+                              cacheBust,
                           }}
                         />
                       )}
@@ -337,37 +340,57 @@ const BusinessInformation = ({ navigation, route }) => {
                   style={{ marginVertical: 10 }}
                   onSelect={async () => {
                     setOpenMenu(false);
-                    try {
-                      const granted = await PermissionsAndroid.request(
-                        PermissionsAndroid.PERMISSIONS.CAMERA,
-                        {
-                          title: 'App Camera Permission',
-                          message: 'App needs access to your camera',
-                          buttonNeutral: 'Ask Me Later',
-                          buttonNegative: 'Cancel',
-                          buttonPositive: 'OK',
-                        },
-                      );
-                      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-                        const result = await launchCamera({
-                          includeBase64: false,
-                          includeExtra: false,
-                          mediaType: 'photo',
-                          quality: 0.6,
-                        });
-                        if (result) {
-                          dispatch({
-                            type: 'bLogo',
-                            payload: result.assets[0],
+                    if (Platform.OS === 'android') {
+                      try {
+                        const granted = await PermissionsAndroid.request(
+                          PermissionsAndroid.PERMISSIONS.CAMERA,
+                          {
+                            title: 'App Camera Permission',
+                            message: 'App needs access to your camera',
+                            buttonNeutral: 'Ask Me Later',
+                            buttonNegative: 'Cancel',
+                            buttonPositive: 'OK',
+                          },
+                        );
+                        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                          const result = await launchCamera({
+                            includeBase64: false,
+                            includeExtra: false,
+                            mediaType: 'photo',
+                          });
+                          if (result) {
+                            dispatch({
+                              type: 'image',
+                              payload: result.assets[0],
+                            });
+                          }
+                        } else {
+                          toast.show('Camera permission denied', {
+                            placement: 'top',
                           });
                         }
-                      } else {
-                        toast.show('Camera permission denied', {
-                          placement: 'top',
-                        });
-                      }
-                    } catch (error) {
-                      console.error('=>>>>>>>>>>>>>>>>,', error);
+                      } catch (error) {}
+                    } else if (Platform.OS === 'ios') {
+                      try {
+                        const granted = await request(PERMISSIONS.IOS.CAMERA);
+
+                        if (granted === 'granted') {
+                          const result = await launchCamera({
+                            includeBase64: false,
+                            includeExtra: false,
+                            mediaType: 'photo',
+                          });
+                          console.log('grrrr', result);
+                          if (result) {
+                            dispatch({
+                              type: 'image',
+                              payload: result.assets[0],
+                            });
+                          }
+                        } else {
+                          // request(PERMISSIONS.IOS.CAMERA);
+                        }
+                      } catch (error) {}
                     }
                   }}>
                   <Text
@@ -412,7 +435,7 @@ const BusinessInformation = ({ navigation, route }) => {
               }}>
               <Text
                 style={{
-                  fontFamily: 'Inter-Medium',
+                  fontFamily: 'SFProDisplay-Medium',
                   color: '#567189',
                 }}>
                 Upload Business Logo
@@ -425,7 +448,11 @@ const BusinessInformation = ({ navigation, route }) => {
                 onPress={() => {
                   dispatch({ type: 'bLogo', payload: null });
                 }}>
-                <Text style={{ fontFamily: 'Inter-Medium', color: '#E0144C' }}>
+                <Text
+                  style={{
+                    fontFamily: 'SFProDisplay-Medium',
+                    color: '#E0144C',
+                  }}>
                   Clear Image
                 </Text>
               </Pressable>
@@ -443,6 +470,17 @@ const BusinessInformation = ({ navigation, route }) => {
               })
             }
           />
+          {showError && state.BusinessName.length === 0 && (
+            <Text
+              style={{
+                fontFamily: 'SFProDisplay-Regular',
+                fontSize: 15,
+                color: '#EB455F',
+                marginBottom: 10,
+              }}>
+              Please provide your business name
+            </Text>
+          )}
           <Input
             placeholder="Business Contact Number"
             val={state.businessContact}
@@ -454,7 +492,17 @@ const BusinessInformation = ({ navigation, route }) => {
               })
             }
           />
-
+          {showError && state.businessContact.length === 0 && (
+            <Text
+              style={{
+                fontFamily: 'SFProDisplay-Regular',
+                fontSize: 15,
+                color: '#EB455F',
+                marginBottom: 10,
+              }}>
+              Please provide your business contact phone
+            </Text>
+          )}
           <Input
             placeholder="Business Email"
             val={state.businessEmail}
@@ -478,6 +526,18 @@ const BusinessInformation = ({ navigation, route }) => {
             }
             nLines={3}
           />
+          {showError && state.description.length === 0 && (
+            <Text
+              style={{
+                fontFamily: 'SFProDisplay-Regular',
+                fontSize: 13.5,
+                color: '#EB455F',
+                marginBottom: 10,
+                marginTop: -3,
+              }}>
+              Please provide a short description about your business
+            </Text>
+          )}
           <Input
             placeholder="Business Website, Social Media Page or URL to App"
             val={state.BusinessSocial}
@@ -489,6 +549,7 @@ const BusinessInformation = ({ navigation, route }) => {
               })
             }
           />
+          <View style={{ marginVertical: 6 }} />
           <Picker
             showSearch
             searchPlaceholder="Search Business Category"
@@ -511,12 +572,26 @@ const BusinessInformation = ({ navigation, route }) => {
                 <RNPicker.Item key={i.key} label={i.label} value={i.value} />
               ))}
           </Picker>
+          {(!state.businessCategory ||
+            state.businessCategory.label.length === 0) &&
+            showError && (
+              <Text
+                style={{
+                  fontFamily: 'SFProDisplay-Regular',
+                  fontSize: 13.5,
+                  color: '#EB455F',
+                  marginBottom: 10,
+                  marginTop: -8,
+                }}>
+                Please select your business category
+              </Text>
+            )}
 
           <View style={{ marginVertical: 14 }} row>
             <Text
               style={{
                 fontFamily: 'SFProDisplay-Medium',
-                color: '#567189',
+                color: '#30475e',
                 justifyContent: 'center',
                 marginBottom: 10,
                 fontSize: 14,
@@ -573,6 +648,21 @@ const BusinessInformation = ({ navigation, route }) => {
                   return <RNPicker.Item key={i} label={i} value={i} />;
                 })}
               </Picker>
+              {showError &&
+                businessRegistered === 'YES' &&
+                (!state.businessType ||
+                  state.businessType.label.length === 0) && (
+                  <Text
+                    style={{
+                      fontFamily: 'SFProDisplay-Regular',
+                      fontSize: 13.5,
+                      color: '#EB455F',
+                      marginBottom: 14,
+                      marginTop: -8,
+                    }}>
+                    Please select your business type
+                  </Text>
+                )}
               <Picker
                 placeholder="Business Document Type"
                 value={state.businessDocumentType}
@@ -592,6 +682,21 @@ const BusinessInformation = ({ navigation, route }) => {
                   <RNPicker.Item key={i.key} label={i.label} value={i.value} />
                 ))}
               </Picker>
+              {showError &&
+                businessRegistered === 'YES' &&
+                (!state.businessDocumentType ||
+                  state.businessDocumentType.label.length === 0) && (
+                  <Text
+                    style={{
+                      fontFamily: 'SFProDisplay-Regular',
+                      fontSize: 13.5,
+                      color: '#EB455F',
+                      marginBottom: 14,
+                      marginTop: -8,
+                    }}>
+                    Please select your business document type
+                  </Text>
+                )}
               <View
                 style={{
                   flexDirection: 'row',
@@ -600,8 +705,8 @@ const BusinessInformation = ({ navigation, route }) => {
                 }}>
                 <Text
                   style={{
-                    fontFamily: 'SFProDisplay-Medium',
-                    color: '#567189',
+                    fontFamily: 'SFProDisplay-Semibold',
+                    color: '#30475e',
                     justifyContent: 'center',
                   }}>
                   Upload Scanned PDF or Business Document
@@ -623,7 +728,7 @@ const BusinessInformation = ({ navigation, route }) => {
                   paddingVertical: 12,
                   alignItems: 'center',
                   borderColor:
-                    showError && businessRegistered && !docRes
+                    showError && businessRegistered === 'YES' && !docRes
                       ? '#EB455F'
                       : '#B7C4CF',
                   borderWidth: 1.3,
@@ -637,12 +742,18 @@ const BusinessInformation = ({ navigation, route }) => {
                   style={{
                     fontFamily: 'SFProDisplay-Medium',
                     color:
-                      showError && businessRegistered && !docRes
+                      showError && businessRegistered === 'YES' && !docRes
                         ? '#EB455F'
                         : 'rgba(25, 66, 216, 0.87)',
                     fontSize: 15,
                   }}>
-                  {docRes && docRes.name ? docRes.name : 'Upload'}
+                  {docRes && typeof docRes === 'object' && docRes.name
+                    ? docRes.name
+                    : docRes && typeof docRes === 'string' && docRes.length > 0
+                    ? docRes
+                    : docRes && typeof docRes === 'string' && docRes.length == 0
+                    ? 'Upload'
+                    : 'Upload'}
                 </Text>
               </Pressable>
               {docRes && (
@@ -669,7 +780,7 @@ const BusinessInformation = ({ navigation, route }) => {
                   </Text>
                 </Pressable>
               )}
-
+              <View style={{ marginVertical: 10 }} />
               <Input
                 val={state.businessDocumentNumber}
                 placeholder="Selected Business Document Number"
@@ -685,13 +796,27 @@ const BusinessInformation = ({ navigation, route }) => {
                   })
                 }
               />
+              {showError &&
+                businessRegistered === 'YES' &&
+                state.businessDocumentNumber.length === 0 && (
+                  <Text
+                    style={{
+                      fontFamily: 'SFProDisplay-Regular',
+                      fontSize: 13.5,
+                      color: '#EB455F',
+                      marginBottom: 10,
+                      marginTop: -3,
+                    }}>
+                    Please provide your business document number
+                  </Text>
+                )}
             </>
           )}
           <View style={{ marginVertical: 14 }} row>
             <Text
               style={{
                 fontFamily: 'SFProDisplay-Medium',
-                color: '#567189',
+                color: '#30475e',
                 justifyContent: 'center',
                 marginBottom: 10,
                 fontSize: 14,
@@ -738,6 +863,7 @@ const BusinessInformation = ({ navigation, route }) => {
                 // borderStyle: 'dashed',
                 marginBottom: 8,
                 borderRadius: 4,
+                paddingHorizontal: 10,
               }}>
               <Text
                 style={{
@@ -745,19 +871,21 @@ const BusinessInformation = ({ navigation, route }) => {
                   color:
                     showError &&
                     hasLocation &&
-                    (!state.location ||
-                      (state.location &&
-                        typeof state.location === 'string' &&
-                        state.location.length === 0))
+                    state.location &&
+                    typeof state.location.delivery_location === 'string' &&
+                    state.location.delivery_location.length == 0
                       ? '#EB455F'
                       : 'rgba(25, 66, 216, 0.87)',
                   fontSize: 15,
+                  textAlign: 'center',
                 }}>
-                {!state.location
+                {state.location &&
+                typeof state.location.delivery_location === 'string' &&
+                state.location.delivery_location.length == 0
                   ? 'Physical Location of Business'
-                  : typeof state.location === 'string'
-                  ? state.location
-                  : state.location.delivery_location}
+                  : state.location &&
+                    state.location.delivery_location &&
+                    state.location.delivery_location}
               </Text>
             </Pressable>
           )}
@@ -768,15 +896,20 @@ const BusinessInformation = ({ navigation, route }) => {
           style={styles.btn}
           disabled={isMutating}
           handlePress={() => {
-            console.log(state);
+            console.log('has locationssss', hasLocation);
+            console.log('has locationssss', businessRegistered);
             if (
-              !state.businessType ||
+              // !state.businessType ||
               state.BusinessName.length === 0 ||
               state.description.length === 0 ||
-              state.businessContact.length === 0
-              // state.businessEmail.length === 0
-              // !state.BusinessLogo
+              state.businessContact.length === 0 ||
+              !state.businessCategory ||
+              state.businessCategory.label.length === 0
             ) {
+              toast.show('Please provide the required details', {
+                placement: 'top',
+                type: 'danger',
+              });
               setShowError(true);
               return;
             }
@@ -789,6 +922,10 @@ const BusinessInformation = ({ navigation, route }) => {
                 !docRes ||
                 state.businessDocumentNumber.length === 0
               ) {
+                toast.show('Please provide the required details', {
+                  placement: 'top',
+                  type: 'danger',
+                });
                 setShowError(true);
                 return;
               }
@@ -796,17 +933,19 @@ const BusinessInformation = ({ navigation, route }) => {
 
             if (hasLocation) {
               if (
-                !state.location ||
-                (state.location &&
-                  typeof state.location === 'string' &&
-                  state.location.length === 0)
+                state.location &&
+                typeof state.location.delivery_location === 'string' &&
+                state.location.delivery_location.length == 0
               ) {
+                toast.show('Please provide the required details', {
+                  placement: 'top',
+                  type: 'danger',
+                });
                 setShowError(true);
                 return;
               }
             }
-            console.log(state);
-            mutate({
+            const payload = {
               buss_name: state.BusinessName,
               buss_type: state.businessType && state.businessType.value,
               buss_category:
@@ -822,6 +961,7 @@ const BusinessInformation = ({ navigation, route }) => {
               buss_description: state.description,
               buss_phone: state.businessContact,
               buss_email: state.businessEmail,
+              buss_website_url: state.BusinessSocial,
               buss_reg_no: state.businessDocumentNumber,
               buss_registered: businessRegistered,
               account_no: user.user_merchant_account,
@@ -835,31 +975,69 @@ const BusinessInformation = ({ navigation, route }) => {
                     ',' +
                     state.location.delivery_gps.location.lng) ||
                 '',
-              image_logo: state.BusinessLogo
-                ? {
-                    name: state.BusinessLogo.fileName,
-                    type: state.BusinessLogo.type,
-                    uri:
-                      Platform.OS === 'android'
-                        ? state.BusinessLogo.uri
-                        : state.BusinessLogo.uri.replace('file://', ''),
-                  }
-                : '',
-              image_cert: docRes
-                ? {
-                    name: docRes.name,
-                    type: docRes.type,
-                    uri:
-                      Platform.OS === 'android'
-                        ? docRes.uri
-                        : docRes.uri.replace('file://', ''),
-                  }
-                : null,
+              // image_logo:
+              //   state.BusinessLogo && typeof state.BusinessLogo === 'object'
+              //     ? {
+              //         name: state.BusinessLogo.fileName,
+              //         type: state.BusinessLogo.type,
+              //         uri:
+              //           Platform.OS === 'android'
+              //             ? state.BusinessLogo.uri
+              //             : state.BusinessLogo.uri.replace('file://', ''),
+              //       }
+              //     : state.BusinessLogo && typeof state.BusinessLogo === 'string'
+              //     ? state.BusinessLogo
+              //     : '',
+              // image_cert:
+              //   docRes && typeof docRes === 'object'
+              //     ? {
+              //         name: docRes.name,
+              //         type: docRes.type,
+              //         uri:
+              //           Platform.OS === 'android'
+              //             ? docRes.uri
+              //             : docRes.uri.replace('file://', ''),
+              //       }
+              //     : docRes && typeof docRes === 'string'
+              //     ? docRes
+              //     : '',
               // image_cert: docRes,
               source: 'MOBILE',
               mod_by: user.login,
               merchant_id: user.merchant,
-            });
+            };
+            if (state.BusinessLogo && typeof state.BusinessLogo === 'object') {
+              payload.image_logo = {
+                name: state.BusinessLogo.fileName,
+                type: state.BusinessLogo.type,
+                uri:
+                  Platform.OS === 'android'
+                    ? state.BusinessLogo.uri
+                    : state.BusinessLogo.uri.replace('file://', ''),
+              };
+            } else if (
+              state.BusinessLogo &&
+              typeof state.BusinessLogo === 'string'
+            ) {
+              payload.buss_brand_logo = state.BusinessLogo;
+            } else {
+              payload.image_logo = '';
+            }
+            if (docRes && typeof docRes === 'object') {
+              payload.image_cert = {
+                name: docRes.name,
+                type: docRes.type,
+                uri:
+                  Platform.OS === 'android'
+                    ? docRes.uri
+                    : docRes.uri.replace('file://', ''),
+              };
+            } else if (docRes && typeof docRes === 'string') {
+              payload.buss_reg_cert = docRes;
+            } else {
+              payload.image_cert = '';
+            }
+            mutate(payload);
           }}>
           {isMutating ? 'Processing' : 'Save'}
         </PrimaryButton>

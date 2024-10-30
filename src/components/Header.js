@@ -2,17 +2,14 @@
 import React from 'react';
 import { View, StyleSheet, Pressable, AppState } from 'react-native';
 import ProfileIcon from '../../assets/icons/profile-circle.svg';
+// import QrIcon from '../../assets/icons/qr.svg';
 import Alert from '../../assets/icons/notifications-icon.svg';
 import PushNotification from 'react-native-push-notification';
 import { useSelector } from 'react-redux';
 import { Dimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-const Header = ({
-  navigation,
-  backgroundColor,
-  showNotificationIcon = false,
-}) => {
+const Header = ({ navigation }) => {
   const { notification } = useSelector(state => state.merchant);
   const [notifsAvailable, setNotifsAvailable] = React.useState([]);
   const appState = React.useRef(AppState.currentState);
@@ -50,24 +47,20 @@ const Header = ({
     };
   }, []);
   return (
-    <View
-      style={[
-        styles.headerMain,
-        {
-          paddingTop: 12 + top,
-          backgroundColor: backgroundColor ? backgroundColor : '#fff',
-        },
-      ]}>
+    <View style={[styles.headerMain, { paddingTop: top + 12 }]}>
       <Pressable
         onPress={() => {
           navigation.openDrawer();
         }}>
-        <ProfileIcon height={38} width={38} stroke="#30475e" />
+        <ProfileIcon height={34} width={34} stroke="#091D60" />
       </Pressable>
 
       {/* <Image source={require('../../assets/images/logo.png')} /> */}
 
       <View style={styles.rightIcons}>
+        {/* <Pressable style={{ marginRight: 8 }}>
+          <QrIcon height={35} width={35} />
+        </Pressable> */}
         <Pressable
           style={{ marginRight: 4 }}
           onPress={() => navigation.navigate('Notification')}>
@@ -85,9 +78,7 @@ const Header = ({
                 }}
               />
             )}
-            {showNotificationIcon && (
-              <Alert height={38} width={38} stroke="#30475e" />
-            )}
+            <Alert height={34} width={34} stroke="#091D60" />
           </View>
         </Pressable>
       </View>
@@ -105,7 +96,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 12,
 
-    paddingVertical: Dimensions.get('window').width * 0.01,
+    paddingVertical: Dimensions.get('window').width * 0.013,
   },
   rightIcons: {
     marginLeft: 'auto',

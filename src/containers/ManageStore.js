@@ -13,10 +13,7 @@ import {
   Platform,
 } from 'react-native';
 import { Checkbox } from 'react-native-ui-lib';
-
 import Share from 'react-native-share';
-
-import { TextInput } from 'react-native-paper';
 
 import { useSelector } from 'react-redux';
 import PrimaryButton from '../components/PrimaryButton';
@@ -193,10 +190,10 @@ const SocialCheck = ({
         <Checkbox value={check} onValueChange={setCheck} />
         <Text
           style={{
-            fontFamily: 'SFProDisplay-Regular',
+            fontFamily: 'ReadexPro-Regular',
             color: '#091D60',
             marginLeft: 8,
-            fontSize: 17,
+            fontSize: 15,
           }}>
           {placeholder}
         </Text>
@@ -218,7 +215,7 @@ const ManageStore = ({ navigation }) => {
   const [showError, setShowError] = React.useState(false);
   const [verifyAlias, setVerifyAlias] = React.useState();
   const [verify, setVerify] = React.useState(true);
-  const [deleteStatus, setDeleteStatus] = React.useState();
+
   const imageUrlRef = React.useRef(new Date());
 
   const [state, dispatch] = React.useReducer(reducer, {
@@ -262,22 +259,20 @@ const ManageStore = ({ navigation }) => {
       },
     },
   });
-  const [landing, setLanding] = React.useState(true);
-  const [openMenu, setOpenMenu] = React.useState(false);
   const toast = useToast();
   const [color, setColor] = React.useState('#dddddd');
   const [deleteStoreStatus, setDeleteStoreStatus] = React.useState();
   const [visible, setVisible] = React.useState(false);
   const client = useQueryClient();
-  const [status, setStatus] = React.useState();
   const [colorModal, setColorModal] = React.useState(false);
   const { data, isLoading } = useGetOnlineStoreDetails(user.merchant);
-  console.log(user);
 
   const { refetch } = useVerifyStoreAlias(state.url, i => setVerifyAlias(i));
   const deleteImage = useRemoveStoreOrLandingBanner(i => {
     if (i) {
-      setDeleteStatus(i);
+      if (i.status == 0) {
+        toast.show(i.message, { placement: 'top' });
+      }
       client.invalidateQueries('online-store');
     }
   });
@@ -302,9 +297,10 @@ const ManageStore = ({ navigation }) => {
 
   const deleteStore = useDeleteMerchantStore(i => {
     if (i) {
-      setDeleteStoreStatus(i);
+      // setDeleteStoreStatus(i);
       if (i.status == 0) {
         client.invalidateQueries('online-store');
+        navigation.goBack();
       }
       toast.show(i.message, { placement: 'top' });
     }
@@ -342,9 +338,6 @@ const ManageStore = ({ navigation }) => {
   });
 
   const changeStoreStatus = useChangeStoreStatus(i => {
-    if (i) {
-      setStatus(i);
-    }
     if (i.status == 0) {
       toast.show(i.message, { placement: 'top' });
       client.invalidateQueries('shortcode');
@@ -395,16 +388,35 @@ const ManageStore = ({ navigation }) => {
   );
 
   // console.log('stateatta', user);
+  const storeDetails = data && data.data && data.data.data;
 
   React.useEffect(() => {
-    const storeDetails = data && data.data && data.data.data;
+    if (
+      state.url.length > 0 &&
+      storeDetails &&
+      storeDetails.store_code &&
+      storeDetails.store_code.length > 0 &&
+      storeDetails.store_code.toLowerCase() !== state.url
+    ) {
+      setTimeout(() => {
+        refetch();
+      }, 400);
+    }
+  }, [refetch, state.url, storeDetails]);
+
+  const isCustomDomain =
+    storeDetails &&
+    !((storeDetails && storeDetails.store_domain) || '').includes(
+      'https://buy.digistoreafrica.com',
+    );
+  React.useEffect(() => {
     if (storeDetails && data && data.data && data.data.status == 0) {
       const storeSocials = {};
       for (let [key, value] of Object.entries(
         storeDetails.store_social_media || {},
       )) {
         storeSocials[key] = {
-          check: value.length > 0,
+          check: value && value.length > 0,
           handle: value,
         };
       }
@@ -412,20 +424,27 @@ const ManageStore = ({ navigation }) => {
       dispatch({
         type: 'update_all',
         payload: {
-          name: storeDetails.store_name,
-          description: storeDetails.store_desc,
-          url: storeDetails.store_code && storeDetails.store_code.toLowerCase(),
-          landingName: storeDetails.store_landing_tag_line,
-          aboutUsTagline: storeDetails.store_landing_about_tag,
-          aboutUsDescription: storeDetails.store_landing_about_desc,
-          color: storeDetails.store_landing_color_code,
-          activateLanding: storeDetails.store_has_landing_page === 'YES',
-          menuTagline: storeDetails.store_landing_product_tag,
-          banners: storeDetails.store_logos,
+          name: storeDetails && storeDetails.store_name,
+          description: storeDetails && storeDetails.store_desc,
+          url: isCustomDomain
+            ? storeDetails && storeDetails.store_domain
+            : storeDetails &&
+              storeDetails.store_code &&
+              storeDetails.store_code.toLowerCase(),
+
+          landingName: storeDetails && storeDetails.store_landing_tag_line,
+          aboutUsTagline: storeDetails && storeDetails.store_landing_about_tag,
+          aboutUsDescription:
+            storeDetails && storeDetails.store_landing_about_desc,
+          color: storeDetails && storeDetails.store_landing_color_code,
+          activateLanding:
+            storeDetails && storeDetails.store_has_landing_page === 'YES',
+          menuTagline: storeDetails && storeDetails.store_landing_product_tag,
+          banners: storeDetails && storeDetails.store_logos,
           socials: Object.assign({}, state.socials, storeSocials),
-          id: storeDetails.store_id,
-          status: storeDetails.store_status,
-          storeDomain: storeDetails.store_domain,
+          id: storeDetails && storeDetails.store_id,
+          status: storeDetails && storeDetails.store_status,
+          storeDomain: storeDetails && storeDetails.store_domain,
         },
       });
     }
@@ -449,8 +468,6 @@ const ManageStore = ({ navigation }) => {
     return <Loading />;
   }
 
-  console.log('statataatatt', state.status);
-
   return (
     <View style={{ flex: 1, backgroundColor: '#fff' }}>
       <View style={{ height: '100%' }}>
@@ -463,8 +480,8 @@ const ManageStore = ({ navigation }) => {
           }}>
           <Text
             style={{
-              fontFamily: 'SFProDisplay-Semibold',
-              fontSize: 24,
+              fontFamily: 'ReadexPro-Medium',
+              fontSize: 20,
               color: '#002',
             }}>
             Setup Online Store
@@ -514,8 +531,8 @@ const ManageStore = ({ navigation }) => {
                   flexDirection: 'row',
                   justifyContent: 'center',
                   alignItems: 'center',
-                  backgroundColor: 'rgba(231, 241, 255, 0.7)',
-                  paddingVertical: 12,
+                  backgroundColor: 'rgba(231, 241, 255, 0.5)',
+                  paddingVertical: 6,
                   paddingHorizontal: Dimensions.get('window').width * 0.035,
                   borderRadius: 24,
                   marginHorizontal: 4,
@@ -523,15 +540,15 @@ const ManageStore = ({ navigation }) => {
                 }}>
                 <ShareIcon
                   stroke="#1D73FF"
-                  height={26}
-                  width={26}
+                  height={22}
+                  width={22}
                   style={{ marginRight: 4 }}
                 />
                 <Text
                   style={{
-                    fontFamily: 'SFProDisplay-Medium',
+                    fontFamily: 'ReadexPro-Medium',
                     color: '#1D73FF',
-                    fontSize: 16.5,
+                    fontSize: 13,
                   }}>
                   Share Link
                 </Text>
@@ -545,7 +562,7 @@ const ManageStore = ({ navigation }) => {
                   flexDirection: 'row',
                   justifyContent: 'center',
                   alignItems: 'center',
-                  backgroundColor: 'rgba(231, 241, 255, 0.7)',
+                  backgroundColor: 'rgba(231, 241, 255, 0.5)',
                   paddingVertical: 6,
                   paddingHorizontal: Dimensions.get('window').width * 0.035,
                   borderRadius: 24,
@@ -559,9 +576,9 @@ const ManageStore = ({ navigation }) => {
                 />
                 <Text
                   style={{
-                    fontFamily: 'SFProDisplay-Medium',
+                    fontFamily: 'ReadexPro-Medium',
                     color: '#1D73FF',
-                    fontSize: 16.5,
+                    fontSize: 13,
                   }}>
                   Copy Link
                 </Text>
@@ -601,74 +618,79 @@ const ManageStore = ({ navigation }) => {
             showError={state.description.length === 0 && showError}
           />
           <View style={{ marginTop: 12 }}>
-            <Text
-              style={{
-                fontFamily: 'SFProDisplay-Medium',
-                fontSize: 16,
-                color: '#091D60',
-              }}>
-              Store URL
-            </Text>
             <View
               style={{
                 flexDirection: 'row',
-                height: 60,
+                alignItems: 'center',
+              }}>
+              <Text
+                style={{
+                  fontFamily: 'ReadexPro-Medium',
+                  fontSize: 13.6,
+                  color: '#091D60',
+                }}>
+                Store URL
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                height: 48,
                 borderColor:
                   state.url.length === 0 && showError ? '#EB455F' : '#B7C4CF',
-                borderWidth: 1.6,
+                borderWidth: 0.8,
                 borderRadius: 5,
                 marginTop: 6,
               }}>
-              <View
-                style={{
-                  backgroundColor: 'rgba(236, 242, 255, 0.8)',
-                  justifyContent: 'center',
-                  paddingHorizontal: 8,
-                  borderTopLeftRadius: 5,
-                  borderBottomLeftRadius: 5,
-                  // borderRightColor: '#30475e',
-                  // borderRightWidth: 0.8,
-                }}>
-                <Text
+              {(!isCustomDomain || !storeDetails) && (
+                <View
                   style={{
-                    fontFamily: 'SFProDisplay-Medium',
-                    fontSize: 17,
-                    color: '#091D60',
+                    backgroundColor: 'rgba(231, 241, 255, 0.5)',
+                    justifyContent: 'center',
+                    paddingHorizontal: 8,
+                    borderTopLeftRadius: 5,
+                    borderBottomLeftRadius: 5,
+                    // borderRightColor: '#30475e',
+                    // borderRightWidth: 0.8,
                   }}>
-                  https://buy.digistoreafrica.com/
-                </Text>
-              </View>
+                  <Text
+                    style={{
+                      fontFamily: 'ReadexPro-Medium',
+                      fontSize: 13.6,
+                      color: '#1D73FF',
+                      letterSpacing: 0.3,
+                    }}>
+                    https://buy.digistoreafrica.com/
+                  </Text>
+                </View>
+              )}
               <RNTextInput
                 value={state.url}
                 style={{
                   flex: 1,
                   color: '#30475e',
-                  fontFamily: 'SFProDisplay-Medium',
-                  fontSize: 17,
+                  fontFamily: 'ReadexPro-Regular',
+                  fontSize: 14,
                   // paddingTop: 15,
                   paddingLeft: 8,
                 }}
                 autoCapitalize="none"
                 cursorColor="#6DA9E4"
-                onEndEditing={e => {
-                  if (e.nativeEvent.text.length > 0) {
-                    refetch();
-                  }
-                }}
                 onChangeText={val =>
                   handleTextChange({
                     type: 'url',
                     payload: val.replace(/ /g, '').toLowerCase(),
                   })
                 }
+                editable={!storeDetails || !isCustomDomain}
               />
             </View>
             {verifyAlias && (
               <Text
                 style={{
-                  fontFamily: 'SFProDisplay-Medium',
+                  fontFamily: 'ReadexPro-Medium',
                   fontSize: 13,
-                  color: verifyAlias.status == 0 ? '#47B749' : '#FD8A8A',
+                  color: verifyAlias.status == 0 ? '#47B749' : '#EB455F',
                   marginTop: 6,
                 }}>
                 {verifyAlias.message}
@@ -678,22 +700,14 @@ const ManageStore = ({ navigation }) => {
           <View style={{ marginTop: 22 }}>
             <Text
               style={{
-                fontFamily: 'SFProDisplay-Medium',
-                fontSize: 16,
+                fontFamily: 'ReadexPro-Medium',
+                fontSize: 13.5,
                 color: '#091D60',
                 marginBottom: 6,
               }}>
               Store Banners (Optional) - Max 1 image (1080 x 300)
             </Text>
-            {/* <Text
-              style={{
-                fontFamily: 'SFPro Display-Regular',
-                fontSize: 13,
-                color: '#091D60',
-                marginBottom: 6,
-              }}>
-              Minimum Size: 1080 x 300
-            </Text> */}
+
             <Pressable
               onPress={async () => {
                 // const response = await openPicker({
@@ -714,7 +728,7 @@ const ManageStore = ({ navigation }) => {
                 <View
                   style={{
                     width: '100%',
-                    height: Dimensions.get('window').height * 0.3,
+                    height: Dimensions.get('window').height * 0.18,
                     flex: 1,
                     borderRadius: 6,
                     borderColor: '#ACB1D6',
@@ -740,7 +754,7 @@ const ManageStore = ({ navigation }) => {
                   <View
                     style={{
                       width: '100%',
-                      height: Dimensions.get('window').height * 0.3,
+                      height: Dimensions.get('window').height * 0.18,
                       flex: 1,
                       borderRadius: 6,
                       borderColor: '#ACB1D6',
@@ -778,7 +792,7 @@ const ManageStore = ({ navigation }) => {
                   <View
                     style={{
                       flexDirection: 'row',
-                      height: Dimensions.get('window').height * 0.3,
+                      height: Dimensions.get('window').height * 0.18,
                     }}>
                     {state.banners &&
                       state.banners.map((i, idx) => {
@@ -792,7 +806,7 @@ const ManageStore = ({ navigation }) => {
                             '?' +
                             imageUrlRef.current;
                         return (
-                          <View style={{ flex: 1 }}>
+                          <View style={{ flex: 1 }} key={i.path}>
                             {!i.path && (
                               <Pressable
                                 style={{
@@ -843,7 +857,8 @@ const ManageStore = ({ navigation }) => {
                 onPress={() => {
                   dispatch({ type: 'banners', payload: null });
                 }}>
-                <Text style={{ fontFamily: 'Inter-Medium', color: '#E0144C' }}>
+                <Text
+                  style={{ fontFamily: 'ReadexPro-Medium', color: '#E0144C' }}>
                   Clear Image
                 </Text>
               </Pressable>
@@ -915,8 +930,8 @@ const ManageStore = ({ navigation }) => {
                   <View style={{ marginTop: 12 }}>
                     <Text
                       style={{
-                        fontFamily: 'SFProDisplay-Medium',
-                        fontSize: 16,
+                        fontFamily: 'ReadexPro-Medium',
+                        fontSize: 13,
                         color: '#30475e',
                       }}>
                       Define Color Code for your Landing Page
@@ -925,8 +940,8 @@ const ManageStore = ({ navigation }) => {
                       style={{
                         flexDirection: 'row',
                         height: 48,
-                        borderColor: '#B7C4CF',
-                        borderWidth: 1.6,
+                        borderColor: '#30475e',
+                        borderWidth: 0.8,
                         borderRadius: 5,
                         marginTop: 6,
                       }}>
@@ -945,7 +960,7 @@ const ManageStore = ({ navigation }) => {
                         }}>
                         <Text
                           style={{
-                            fontFamily: 'SFProDisplay-Medium',
+                            fontFamily: 'ReadexPro-Medium',
                             fontSize: 13,
                             color: '#30475e',
                           }}>
@@ -956,7 +971,7 @@ const ManageStore = ({ navigation }) => {
                         style={{
                           flex: 1,
                           color: '#30475e',
-                          fontFamily: 'SFProDisplay-Medium',
+                          fontFamily: 'ReadexPro-Medium',
                           fontSize: 14,
                           // paddingTop: 15,
                           paddingLeft: 14,
@@ -970,8 +985,8 @@ const ManageStore = ({ navigation }) => {
                   <View style={{ marginTop: 18 }}>
                     <Text
                       style={{
-                        fontFamily: 'SFProDisplay-Medium',
-                        fontSize: 16,
+                        fontFamily: 'ReadexPro-Medium',
+                        fontSize: 13,
                         color: '#30475e',
                         marginBottom: 6,
                       }}>
@@ -984,7 +999,7 @@ const ManageStore = ({ navigation }) => {
                         <View
                           style={{
                             width: '100%',
-                            height: Dimensions.get('window').height * 0.3,
+                            height: Dimensions.get('window').height * 0.18,
                             flex: 1,
                             borderRadius: 6,
                             borderColor: '#ACB1D6',
@@ -1020,7 +1035,7 @@ const ManageStore = ({ navigation }) => {
                         }}>
                         <Text
                           style={{
-                            fontFamily: 'Inter-Medium',
+                            fontFamily: 'ReadexPro-Medium',
                             color: '#E0144C',
                           }}>
                           Clear Image
@@ -1044,115 +1059,117 @@ const ManageStore = ({ navigation }) => {
             </>
           )}
 
-          <View>
-            <Text
-              style={{
-                fontFamily: 'SFProDisplay-Medium',
-                color: '#091D60',
-                paddingVertical: 8,
-                marginTop: 12,
-                fontSize: 16,
-              }}>
-              Add your Social Media Handles
-            </Text>
-            <SocialCheck
-              check={state.socials.facebook.check}
-              setCheck={() =>
-                handleTextChange({
-                  type: 'facebook_check',
-                })
-              }
-              textInput={state.socials.facebook.handle}
-              onChangeText={val =>
-                handleTextChange({
-                  type: 'facebook_handle',
-                  payload: val,
-                })
-              }
-              placeholder="Facebook"
-            />
-            <SocialCheck
-              check={state.socials.instagram.check}
-              setCheck={() =>
-                handleTextChange({
-                  type: 'instagram_check',
-                })
-              }
-              textInput={state.socials.instagram.handle}
-              onChangeText={val =>
-                handleTextChange({
-                  type: 'instagram_handle',
-                  payload: val,
-                })
-              }
-              placeholder="Instagram"
-            />
-            <SocialCheck
-              check={state.socials.linkedIn.check}
-              setCheck={() =>
-                handleTextChange({
-                  type: 'linkedin_check',
-                })
-              }
-              textInput={state.socials.linkedIn.handle}
-              onChangeText={val =>
-                handleTextChange({
-                  type: 'linkedin_handle',
-                  payload: val,
-                })
-              }
-              placeholder="LinkedIn"
-            />
-            <SocialCheck
-              check={state.socials.twitter.check}
-              setCheck={() =>
-                handleTextChange({
-                  type: 'twitter_check',
-                })
-              }
-              textInput={state.socials.twitter.handle}
-              onChangeText={val =>
-                handleTextChange({
-                  type: 'twitter_handle',
-                  payload: val,
-                })
-              }
-              placeholder="Twitter"
-            />
-            <SocialCheck
-              check={state.socials.whatsapp.check}
-              setCheck={() =>
-                handleTextChange({
-                  type: 'whatsapp_check',
-                })
-              }
-              textInput={state.socials.whatsapp.handle}
-              onChangeText={val =>
-                handleTextChange({
-                  type: 'whatsapp_handle',
-                  payload: val,
-                })
-              }
-              placeholder="WhatsApp"
-            />
-            <SocialCheck
-              check={state.socials.youtube.check}
-              setCheck={() =>
-                handleTextChange({
-                  type: 'youtube_check',
-                })
-              }
-              textInput={state.socials.youtube.handle}
-              onChangeText={val =>
-                handleTextChange({
-                  type: 'youtube_handle',
-                  payload: val,
-                })
-              }
-              placeholder="YouTube"
-            />
-          </View>
-          {state.id && state.id.length > 0 && (
+          {user && user.user_permissions.includes('SOCIALMEDIA') && (
+            <View>
+              <Text
+                style={{
+                  fontFamily: 'ReadexPro-Medium',
+                  color: '#091D60',
+                  paddingVertical: 8,
+                  marginTop: 12,
+                  fontSize: 15,
+                }}>
+                Add your Social Media Handles
+              </Text>
+              <SocialCheck
+                check={state.socials.facebook.check}
+                setCheck={() =>
+                  handleTextChange({
+                    type: 'facebook_check',
+                  })
+                }
+                textInput={state.socials.facebook.handle}
+                onChangeText={val =>
+                  handleTextChange({
+                    type: 'facebook_handle',
+                    payload: val,
+                  })
+                }
+                placeholder="Facebook"
+              />
+              <SocialCheck
+                check={state.socials.instagram.check}
+                setCheck={() =>
+                  handleTextChange({
+                    type: 'instagram_check',
+                  })
+                }
+                textInput={state.socials.instagram.handle}
+                onChangeText={val =>
+                  handleTextChange({
+                    type: 'instagram_handle',
+                    payload: val,
+                  })
+                }
+                placeholder="Instagram"
+              />
+              <SocialCheck
+                check={state.socials.linkedIn.check}
+                setCheck={() =>
+                  handleTextChange({
+                    type: 'linkedin_check',
+                  })
+                }
+                textInput={state.socials.linkedIn.handle}
+                onChangeText={val =>
+                  handleTextChange({
+                    type: 'linkedin_handle',
+                    payload: val,
+                  })
+                }
+                placeholder="LinkedIn"
+              />
+              <SocialCheck
+                check={state.socials.twitter.check}
+                setCheck={() =>
+                  handleTextChange({
+                    type: 'twitter_check',
+                  })
+                }
+                textInput={state.socials.twitter.handle}
+                onChangeText={val =>
+                  handleTextChange({
+                    type: 'twitter_handle',
+                    payload: val,
+                  })
+                }
+                placeholder="Twitter"
+              />
+              <SocialCheck
+                check={state.socials.whatsapp.check}
+                setCheck={() =>
+                  handleTextChange({
+                    type: 'whatsapp_check',
+                  })
+                }
+                textInput={state.socials.whatsapp.handle}
+                onChangeText={val =>
+                  handleTextChange({
+                    type: 'whatsapp_handle',
+                    payload: val,
+                  })
+                }
+                placeholder="WhatsApp"
+              />
+              <SocialCheck
+                check={state.socials.youtube.check}
+                setCheck={() =>
+                  handleTextChange({
+                    type: 'youtube_check',
+                  })
+                }
+                textInput={state.socials.youtube.handle}
+                onChangeText={val =>
+                  handleTextChange({
+                    type: 'youtube_handle',
+                    payload: val,
+                  })
+                }
+                placeholder="YouTube"
+              />
+            </View>
+          )}
+          {state && state.id && state.id.length > 0 && (
             <View style={{ marginTop: 14 }}>
               <PrimaryButton
                 style={[
@@ -1176,7 +1193,11 @@ const ManageStore = ({ navigation }) => {
           )}
         </ScrollView>
       </View>
-      <View style={[styles.btnWrapper, { flexDirection: 'row' }]}>
+      <View
+        style={[
+          styles.btnWrapper,
+          { flexDirection: 'row', paddingHorizontal: 12 },
+        ]}>
         <PrimaryButton
           style={styles.btn}
           disabled={setupStore.isLoading || updateStore.isLoading}
@@ -1187,7 +1208,7 @@ const ManageStore = ({ navigation }) => {
               state.url.length === 0
             ) {
               setShowError(true);
-              toast.show('Some details missing', {
+              toast.show('Please provide all required details', {
                 placement: 'top',
                 type: 'danger',
               });
@@ -1196,8 +1217,10 @@ const ManageStore = ({ navigation }) => {
 
             const socialMedia = {};
             for (let [key, value] of Object.entries(state.socials)) {
-              if (value.check) {
+              if (value && value.check) {
                 socialMedia[key] = value.handle;
+              } else {
+                socialMedia[key] = '';
               }
             }
             // const bannerFiles = (state.banners || []).map(i => {
@@ -1253,7 +1276,10 @@ const ManageStore = ({ navigation }) => {
                 name: state.name,
                 desc: state.description,
                 type: 'ONLINE',
-                code: state.url,
+                code:
+                  isCustomDomain && storeDetails
+                    ? storeDetails.store_code
+                    : state.url,
                 store_source: user.user_merchant_type,
                 mod_by: user.login,
                 merchant: user.merchant,
@@ -1279,7 +1305,6 @@ const ManageStore = ({ navigation }) => {
                 payload.lpage_abt_desc = state.aboutUsDescription;
               }
 
-              console.log('payyyyyyyyyy', payload);
               setupStore.mutate(payload);
             }
           }}>
@@ -1287,7 +1312,7 @@ const ManageStore = ({ navigation }) => {
             ? 'Processing'
             : data && data.data && data.data.status == 0
             ? 'Update Store'
-            : 'Save Store'}
+            : 'Create Store'}
         </PrimaryButton>
         <View style={{ marginHorizontal: 3 }} />
         {state.status && state.status.length > 0 && (
@@ -1296,13 +1321,13 @@ const ManageStore = ({ navigation }) => {
               styles.btn,
               {
                 backgroundColor:
-                  state.status === 'ACTIVE' ? '#FF6464' : '#47B749',
+                  state.status === 'ACTIVE' ? '#cf222e' : '#47B749',
               },
             ]}
             disabled={changeStoreStatus.isLoading}
             handlePress={() => {
               changeStoreStatus.mutate({
-                id: state.id,
+                id: state && state.id,
                 status: state.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE',
                 mod_by: user.login,
               });
@@ -1318,7 +1343,7 @@ const ManageStore = ({ navigation }) => {
       <DeleteDialog
         handleCancel={() => setVisible(false)}
         handleSuccess={() => {
-          if (!state.id && state.id.length === 0) {
+          if (state && !state.id && state.id.length === 0) {
             toast.show('Store not setup yet', {
               placement: 'top',
               type: 'danger',
@@ -1327,7 +1352,7 @@ const ManageStore = ({ navigation }) => {
             return;
           }
           deleteStore.mutate({
-            id: state.id,
+            id: state && state.id,
           });
         }}
         visible={visible}
@@ -1354,7 +1379,7 @@ const styles = StyleSheet.create({
   input: {
     marginVertical: 8,
     justifyContent: 'center',
-    fontFamily: 'SFProDisplay-Medium',
+    fontFamily: 'ReadexPro-Medium',
     fontSize: 14.6,
     backgroundColor: '#fff',
     color: '#091D60',
@@ -1373,7 +1398,8 @@ const styles = StyleSheet.create({
   },
   btn: {
     borderRadius: 4,
-    flex: 1,
+    // flex: 1,
+    width: '46%',
   },
   dWrapper: {
     paddingTop: 12,
@@ -1396,8 +1422,8 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   orderStatus: {
-    fontFamily: 'SFProDisplay-Medium',
+    fontFamily: 'ReadexPro-Medium',
     color: '#30475e',
-    fontSize: 18.5,
+    fontSize: 13.2,
   },
 });

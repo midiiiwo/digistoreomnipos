@@ -9,6 +9,7 @@ import {
   RefreshControl,
   Dimensions,
 } from 'react-native';
+
 import { useSelector } from 'react-redux';
 import { useGetMerchantOutlets } from '../hooks/useGetMerchantOutlets';
 import PrimaryButton from '../components/PrimaryButton';
@@ -28,8 +29,8 @@ function ManageOutlets(props) {
       <View style={{ paddingHorizontal: 22, marginBottom: 13 }}>
         <Text
           style={{
-            fontFamily: 'SFProDisplay-Medium',
-            fontSize: 26,
+            fontFamily: 'ReadexPro-Medium',
+            fontSize: 22,
             color: '#002',
           }}>
           Outlets
@@ -118,14 +119,15 @@ const styles = StyleSheet.create({
   },
 
   channelText: {
-    fontFamily: 'SFProDisplay-Regular',
-    fontSize: 19,
+    fontFamily: 'ReadexPro-Regular',
+    fontSize: 16,
     color: '#002',
     marginBottom: 2,
+    letterSpacing: -0.2,
   },
   address: {
-    fontFamily: 'SFProDisplay-Regular',
-    fontSize: 16,
+    fontFamily: 'ReadexPro-Regular',
+    fontSize: 13.5,
     color: '#7B8FA1',
   },
   caret: {

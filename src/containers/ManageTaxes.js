@@ -24,8 +24,8 @@ function ManageTaxes(props) {
       <View style={{ paddingHorizontal: 22, marginBottom: 13 }}>
         <Text
           style={{
-            fontFamily: 'SFProDisplay-Medium',
-            fontSize: 26,
+            fontFamily: 'ReadexPro-Medium',
+            fontSize: 22,
             color: '#002',
           }}>
           Configure Taxes
@@ -57,7 +57,7 @@ function ManageTaxes(props) {
                 paddingHorizontal: 20,
                 flexDirection: 'row',
               }}>
-              <View style={{}}>
+              <View style={{ maxWidth: '88%' }}>
                 <Text style={styles.channelText}>{item && item.tax_name}</Text>
                 <Text style={styles.address}>
                   {item && item.tax_value_desc}%
@@ -81,8 +81,7 @@ function ManageTaxes(props) {
                 ]}>
                 <Text
                   style={{
-                    fontFamily: 'SFProDisplay-Medium',
-                    fontSize: 17,
+                    fontFamily: 'ReadexPro-Medium',
                     color:
                       item.tax_status.toLowerCase() === 'inactive'
                         ? '#D61355'
@@ -134,14 +133,14 @@ const styles = StyleSheet.create({
   },
 
   channelText: {
-    fontFamily: 'SFProDisplay-Regular',
-    fontSize: 19,
+    fontFamily: 'ReadexPro-Regular',
+    fontSize: 15,
     color: '#002',
     marginBottom: 2,
   },
   address: {
-    fontFamily: 'SFProDisplay-Regular',
-    fontSize: 16,
+    fontFamily: 'ReadexPro-Regular',
+    fontSize: 13,
     color: '#7B8FA1',
   },
   caret: {

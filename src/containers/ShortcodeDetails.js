@@ -2,7 +2,7 @@
 /* eslint-disable eqeqeq */
 import React from 'react';
 import { StyleSheet, View, Text, ScrollView } from 'react-native';
-import { TextInput } from 'react-native-paper';
+
 import { useSelector } from 'react-redux';
 import PrimaryButton from '../components/PrimaryButton';
 import { useToast } from 'react-native-toast-notifications';
@@ -128,8 +128,8 @@ const ShortcodeDetails = ({ navigation }) => {
         }}>
         <Text
           style={{
-            fontFamily: 'SFProDisplay-Medium',
-            fontSize: 26,
+            fontFamily: 'ReadexPro-Medium',
+            fontSize: 22,
             color: '#002',
           }}>
           Shortcode
@@ -180,18 +180,38 @@ const ShortcodeDetails = ({ navigation }) => {
             })
           }
         />
-        <Input
-          placeholder="Shop code"
-          showError={showError && state.code.length === 0}
-          val={state.code}
-          setVal={text =>
-            handleTextChange({
-              type: 'code',
-              payload: text,
-            })
-          }
-          keyboardType="number-pad"
-        />
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginBottom: 14,
+          }}>
+          <Input
+            placeholder="Shop code"
+            showError={showError && state.code.length === 0}
+            val={state.code}
+            setVal={text =>
+              handleTextChange({
+                type: 'code',
+                payload: text,
+              })
+            }
+            style={{ flex: 1, backgroundColor: '#fff' }}
+            keyboardType="number-pad"
+          />
+          <View style={{ marginHorizontal: 8 }} />
+          {data && data.data && data.data.status == 0 && (
+            <Text
+              style={{
+                fontFamily: 'ReadexPro-Medium',
+                fontSize: 15,
+                color: '#2B2A4C',
+              }}>
+              *725*{state.code}#
+            </Text>
+          )}
+        </View>
+
         <View style={{ paddingBottom: 14 }}>
           <PrimaryButton
             style={[styles.btn, { width: '100%' }]}
@@ -209,16 +229,7 @@ const ShortcodeDetails = ({ navigation }) => {
 
         {data && data.data && data.data.status == 0 && (
           <View>
-            <Text
-              style={{
-                fontFamily: 'SFProDisplay-Medium',
-                fontSize: 18,
-                color: '#526D82',
-                marginVertical: 12,
-              }}>
-              YOUR BUSNESS SHORT CODE *725*{state.code}#
-            </Text>
-            <View style={{ marginTop: 10, paddingVertical: 4 }}>
+            <View style={{ marginVertical: 14 }}>
               <PrimaryButton
                 disabled={changeStoreStatus.isLoading}
                 style={[
@@ -226,7 +237,7 @@ const ShortcodeDetails = ({ navigation }) => {
                   {
                     width: '100%',
                     backgroundColor:
-                      state.status === 'ACTIVE' ? '#FF6464' : '#47B749',
+                      state.status === 'ACTIVE' ? '#F31559' : '#47B749',
                   },
                 ]}
                 handlePress={() => {
@@ -260,6 +271,10 @@ const ShortcodeDetails = ({ navigation }) => {
               state.code.length === 0
             ) {
               setShowError(true);
+              toast.show('Please provide all required details', {
+                type: 'danger',
+                placement: 'top',
+              });
               return;
             }
             if (data && data.data && data.data.status != 0) {
@@ -353,8 +368,8 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   orderStatus: {
-    fontFamily: 'SFProDisplay-Semibold',
+    fontFamily: 'ReadexPro-Medium',
     color: '#30475e',
-    fontSize: 17.5,
+    fontSize: 13.5,
   },
 });

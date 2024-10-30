@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import PrimaryButton from '../PrimaryButton';
 import { StyleSheet, Text, View } from 'react-native';
@@ -15,10 +16,10 @@ const PaymentInstructionsModal = ({
   togglePaymentInstructions,
   togglePaymentConfirmed,
   navigation,
-  cashAmount,
 }) => {
   const { invoice } = useSelector(state => state.sale);
 
+  console.log('invoice: ', invoice);
   const next = React.useRef(false);
   // const { refetch } = useGetPaymentStatus(
   //   user.merchant,
@@ -47,12 +48,13 @@ const PaymentInstructionsModal = ({
             togglePaymentInstructions(false);
             setInvoice(null);
           }}
+          newSale={invoice && invoice.payment === 'CARD'}
         />
         {(mutation.isLoading || !invoice) && <LoadingModal />}
         {!mutation.isLoading && invoice && (
           <View>
             <View style={{ alignItems: 'center', paddingVertical: 14 }}>
-              <Info height={55} width={55} />
+              <Info height={40} width={40} />
             </View>
             <Text style={styles.invoice}>{invoice.message}</Text>
           </View>
@@ -67,10 +69,9 @@ const PaymentInstructionsModal = ({
                 return;
               }
               if (
-                (invoice &&
-                  invoice.status == 0 &&
-                  invoice.payment === 'CASH') ||
-                invoice?.payment === 'CARD'
+                invoice &&
+                invoice.status == 0 &&
+                (invoice.payment === 'CASH' || invoice.payment === 'CARD')
               ) {
                 navigation.navigate('Receipts', {
                   invoice: invoice && (invoice.invoice || invoice.id),
@@ -86,8 +87,8 @@ const PaymentInstructionsModal = ({
               togglePaymentInstructions(false);
             }}>
             {!invoice || (invoice && invoice.status == 0)
-              ? (invoice && invoice.payment === 'CASH') ||
-                invoice.payment === 'CARD'
+              ? invoice &&
+                (invoice.payment === 'CASH' || invoice.payment === 'CARD')
                 ? 'Receipt'
                 : 'Confirm Payment'
               : 'Restart Payment'}
@@ -124,7 +125,7 @@ const styles = StyleSheet.create({
   },
   modal: { alignItems: 'center' },
   modalView: {
-    width: '50%',
+    width: '96%',
     backgroundColor: '#fff',
     paddingHorizontal: 12,
     paddingVertical: 26,
@@ -135,7 +136,7 @@ const styles = StyleSheet.create({
   primaryButton: {
     marginTop: 19,
     borderRadius: 5,
-    paddingVertical: 20,
+    paddingVertical: 16,
   },
 
   margin: {
@@ -178,8 +179,8 @@ const styles = StyleSheet.create({
     color: '#30475E',
     textAlign: 'center',
     marginHorizontal: 14,
-    fontFamily: 'SFProDisplay-Regular',
-    fontSize: 19,
+    fontFamily: 'ReadexPro-Regular',
+    fontSize: 14.8,
   },
   status: {
     fontFamily: 'Inter-Medium',

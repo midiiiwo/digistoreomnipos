@@ -1,11 +1,10 @@
 /* eslint-disable react-native/no-inline-styles */
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import { PaymentReviewItem } from './CustomerDetails';
 import { useSelector } from 'react-redux';
 import ModalCancel from '../ModalCancel';
 import { useNavigation } from '@react-navigation/native';
-import LoadingModal from '../LoadingModal';
 import Modal from '../Modal';
 import PrimaryButton from '../PrimaryButton';
 import { useRaiseOrder } from '../../hooks/useRaiseOrder';
@@ -103,10 +102,11 @@ const StoreCredit = ({
     orderItems[idx] = {
       order_item_no:
         item.type && item.type === 'non-inventory-item' ? '' : item.id,
-      order_item_qty: item.quantity,
-      order_item: item.itemName,
-      order_item_amt: item.amount,
-      order_item_prop: item.order_item_props || {},
+      order_item_qty: item && item.quantity,
+      order_item: item && item.itemName,
+      order_item_amt: item && item.amount,
+      order_item_prop: (item && item.order_item_props) || {},
+      order_item_prop_id: item && item.order_item_prop_id,
     };
   });
   taxData &&
@@ -118,6 +118,13 @@ const StoreCredit = ({
         tax_value: item.tax_value,
       };
     });
+
+  const orderAmount = (cart || []).reduce((prev, curr) => {
+    if (curr) {
+      return prev + curr.quantity * curr.amount;
+    }
+    return prev;
+  }, 0);
 
   return (
     <Modal
@@ -224,10 +231,8 @@ const StoreCredit = ({
                   amount: amount || 0,
                   quantity: 1,
                   channel: 'CREDIT',
-                  notify_source:
-                    Platform.OS === 'android' ? 'ANDROID POS V2' : 'IOS V2',
-                  notify_device:
-                    Platform.OS === 'android' ? 'ANDROID POS V2' : 'IOS V2',
+                  notify_source: 'Digistore Business',
+                  notify_device: 'Digistore Business',
                   name: (customer && customer.customer_name) || '',
                   mod_by: user.login,
                   pay_date: moment().format('YYYY-mm-dd HH:MM:SS'),
@@ -253,22 +258,19 @@ const StoreCredit = ({
                     (discountPayload && discountPayload.discountCode) || '',
                   order_discount:
                     (discountPayload && discountPayload.discount) || 0,
-                  order_amount: amount - ((delivery && delivery.price) || 0),
+                  order_amount: orderAmount,
                   // total + (data && data.data && data.data.charge && data.data.charge),
-                  total_amount: amount - (delivery && delivery.price) || 0,
+                  total_amount: amount,
 
                   // total + (data && data.data && data.data.charge && data.data.charge),
                   payment_type: 'STORECREDIT',
-                  payment_network: 'CREDIT',
+                  payment_network: 'CREDITBAL',
                   merchant: user.merchant,
                   source: channel,
-                  notify_source:
-                    Platform.OS === 'android' ? 'ANDROID POS V2' : 'IOS V2',
+                  notify_source: 'Digistore Business',
                   mod_by: (customer && customer.customer_phone) || '',
                   payment_number: (customer && customer.customer_phone) || '',
                   order_notes: orderNotes,
-                  // order_taxes: (addTaxes && JSON.stringify(orderTaxes)) || '',
-                  customer: (customer && customer.customer_id) || '',
                   delivery_notes:
                     user &&
                     user.user_permissions &&
@@ -279,10 +281,14 @@ const StoreCredit = ({
                         ? moment(deliveryDueDate).format('YYYY-MM-DD')
                         : ''
                       : deliveryNote,
+                  // order_taxes: (addTaxes && JSON.stringify(orderTaxes)) || '',
+                  customer: (customer && customer.customer_id) || '',
                   payment_due_date: moment().format('YYYY-MM-DD'),
                   order_date:
-                    orderDate && orderDate.toString().length > 0
-                      ? moment(orderDate).format('YYYY-MM-DD H:mm:ss')
+                    orderDate?.toString()?.length > 0
+                      ? moment(orderDate?.setTime(Date.now())).format(
+                          'YYYY-MM-DD H:mm:ss',
+                        )
                       : pay_date,
                   mod_date:
                     orderDate && orderDate.toString().length > 0
@@ -321,7 +327,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   modalView: {
-    width: '56%',
+    width: '96%',
     backgroundColor: '#fff',
     paddingHorizontal: 12,
     paddingVertical: 26,
@@ -329,7 +335,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   name: {
-    fontFamily: 'SFProDisplay-Regular',
+    fontFamily: 'ReadexPro-Regular',
     fontSize: 18,
     color: '#6096B4',
   },
