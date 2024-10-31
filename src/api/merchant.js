@@ -118,9 +118,16 @@ export function getTransactionDetails(user_merchant_receivable, id) {
   );
 }
 
+// api/merchant.js
 export function getStoreDeliveryConfig(merchant) {
-  return Api.get(`orders/merchant/options/${merchant}`);
+  return deliveryApi.get(`/admin/company/${merchant}/settings`);
 }
+
+export function changeStoreDeliveryConfig(merchant, payload) {
+  return deliveryApi.post(`/admin/company/${merchant}/deliveryType`, payload);
+}
+
+
 
 export function getCustomerDetails(merchant, customerId) {
   return Api.get(`customers/merchant/${merchant}/customer/${customerId}`);

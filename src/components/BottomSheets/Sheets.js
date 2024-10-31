@@ -58,6 +58,8 @@ import DeliveryDueDate from './DeliveryDueDate';
 import InvoiceVariantSheet from './InvoiceVariantSheet';
 import ReceivedPayLater from './ReceivePayLater';
 import ExpenseCategoryActions from './ExpenseCategoryActions';
+import RouteFilterSheet from './RouteFilterSheet';
+
 
 console.log('waaaaa', AddWalletSheet);
 
@@ -121,5 +123,7 @@ registerSheet('deliveryNote', DeliveryNote);
 registerSheet('result', ResultSheet);
 registerSheet('Invoice variant', InvoiceVariantSheet);
 registerSheet('ExpenseCategoryAction', ExpenseCategoryActions);
-export {};
+registerSheet('routeFIlter', RouteFilterSheet);
+
+export { };
 

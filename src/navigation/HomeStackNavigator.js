@@ -108,7 +108,8 @@ import AddOutlet from '../containers/AddOutlet';
 import OutletLocation from '../containers/OutletLocation';
 import ManageOutlets from '../containers/ManageOutlets';
 import EditOutlet from '../containers/EditOutlet';
-import ManageDeliveries from '../containers/ManageDeliveries';
+import ManageRoutes from '../containers/ManageRoutes';
+import ManageDeliveries from '../containers/ManageDeliveries1';
 import AddDelivery from '../containers/AddDelivery';
 import AddRider from '../containers/AddRider';
 import ManageStore from '../containers/ManageStore';
@@ -176,6 +177,9 @@ import Invoices from '../containers/Invoices';
 import InvoicesHeader from '../components/InvoicesHeader';
 import HeaderInventory from '../components/HeaderInventory';
 import InventoryQuickSale from '../containers/InventoryQuickSale';
+import ManageDeliveriesHeader from '../components/ManageDeliveriesHeader';
+import Riders from '../components/Riders';
+// import ManageRoutes from '../containers/ManageRoutes';
 
 const Stack = createNativeStackNavigator();
 
@@ -723,15 +727,56 @@ function HomeStackNavigator() {
                   ),
                 }}
               />
-
               <Stack.Screen
                 name="Manage Deliveries"
                 component={ManageDeliveries}
                 options={{
                   header: props => (
-                    <HeaderInventory
+                    <ManageDeliveriesHeader navigation={props.navigation} />
+                  ),
+                }}
+              />
+              <Stack.Screen
+                name="Riders"
+                component={Riders}
+                options={{
+                  header: props => (
+                    <ManageDeliveriesHeader
                       // prevScreen={props.back.title}
-                      showCustomerOutlet={true}
+                      navigation={props.navigation}
+                      addCustomer={false}
+                      mainHeader={{
+                        justifyContent: 'center',
+                      }}
+                      title="Riders"
+                    />
+                  ),
+                }}
+              />
+              <Stack.Screen
+                name="Delivery Routes"
+                component={ManageRoutes}
+                options={{
+                  header: props => (
+                    <ManageDeliveriesHeader
+                      // prevScreen={props.back.title}
+                      navigation={props.navigation}
+                      addCustomer={false}
+                      mainHeader={{
+                        justifyContent: 'center',
+                      }}
+                      title="Delivery Routes"
+                    />
+                  ),
+                }}
+              />
+              {/* <Stack.Screen
+                name="Manage Deliveries"
+                component={ManageDeliveries}
+                options={{
+                  header: props => (
+                    <ManageDeliveriesHeader
+                      // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}
                       mainHeader={{
@@ -741,7 +786,8 @@ function HomeStackNavigator() {
                     />
                   ),
                 }}
-              />
+              /> */}
+
 
               <Stack.Screen
                 name="Edit Outlet"

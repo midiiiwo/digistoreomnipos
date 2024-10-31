@@ -5,5 +5,9 @@ export function useGetStoreDeliveryConfig(merchant) {
   const queryResult = useQuery(['store-delivery-config', merchant], () =>
     getStoreDeliveryConfig(merchant),
   );
-  return queryResult;
+
+  return {
+    ...queryResult,
+    deliveryType: queryResult.data?.message?.delivery_type,
+  };
 }
