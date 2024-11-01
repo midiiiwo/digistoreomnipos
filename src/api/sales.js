@@ -1,4 +1,4 @@
-import { Api } from './axiosInstance';
+import { Api, deliveryApi } from './axiosInstance';
 
 // const BASE_URL = 'https://manage.ipaygh.com/apidev/v1/gateway';
 
@@ -60,8 +60,18 @@ export function getAllOutlets(merchant) {
   return Api.get(`/outlets/merchant/${merchant}`);
 }
 
+
 export function getMerchantDelivery(merchant) {
   return Api.get(`orders/delivery/route/${merchant}/list`);
+}
+
+
+export function getMerchantLocationDelivery(merchant, outlet_id) {
+  return deliveryApi.get(`admin/locationRoutes/${merchant}/${outlet_id}`);
+}
+
+export function getMerchantDistanceDelivery(merchant, outlet_id) {
+  return deliveryApi.get(`admin/distanceRoutes/${merchant}/${outlet_id}`);
 }
 
 /***************** mutations *****************/

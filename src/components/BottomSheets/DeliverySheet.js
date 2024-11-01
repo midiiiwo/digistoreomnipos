@@ -172,187 +172,187 @@ export function LocationSheet(props) {
         isMerchantDeliveryLoading ||
         merchantDistDelivery.isLoading
       ) && (
-        <View style={locationStyles.locationMain}>
-          <GooglePlacesAutocomplete
-            placeholder="Enter delivery address here"
-            placeholderTextColor="#ff0000"
-            fetchDetails={true}
-            textInputHide={mutation.isLoading || deliveryOptions !== null}
-            onPress={(id, details) => {
-              deliveryInfo.current = {
-                delivery_gps: details && details.geometry,
-                delivery_location: details && details.formatted_address,
-              };
-              calculateDelivery(
-                outlet_,
-                {
-                  formatted_address: details.formatted_address,
-                  geometry:
-                    details &&
-                    details.geometry &&
-                    details.geometry.location &&
-                    details.geometry.location.lat + ',' + details &&
-                    details.geometry &&
-                    details.geometry.location &&
-                    details.geometry.location.lng,
+          <View style={locationStyles.locationMain}>
+            <GooglePlacesAutocomplete
+              placeholder="Enter delivery address here"
+              placeholderTextColor="#ff0000"
+              fetchDetails={true}
+              textInputHide={mutation.isLoading || deliveryOptions !== null}
+              onPress={(id, details) => {
+                deliveryInfo.current = {
+                  delivery_gps: details && details.geometry,
+                  delivery_location: details && details.formatted_address,
+                };
+                calculateDelivery(
+                  outlet_,
+                  {
+                    formatted_address: details.formatted_address,
+                    geometry:
+                      details &&
+                      details.geometry &&
+                      details.geometry.location &&
+                      details.geometry.location.lat + ',' + details &&
+                      details.geometry &&
+                      details.geometry.location &&
+                      details.geometry.location.lng,
+                  },
+                  config_ && config_.data && config_.data.data,
+                );
+              }}
+              query={{
+                key: 'AIzaSyCEhoYQkAxqs75nVsS_xUWg2w5DVFZ_p_4',
+                language: 'en',
+                components: 'country:gh',
+              }}
+              textInputProps={{
+                placeholderTextColor: '#ccc',
+              }}
+              styles={{
+                textInput: {
+                  borderRadius: 4,
+                  paddingHorizontal: 18,
+                  fontSize: 16,
+                  flex: 1,
+                  color: '#30475e',
+                  fontFamily: 'Inter-Medium',
+                  backgroundColor: '#F5F7F9',
+                  marginTop: 12,
+                  height: 52,
                 },
-                config_ && config_.data && config_.data.data,
-              );
-            }}
-            query={{
-              key: 'AIzaSyCEhoYQkAxqs75nVsS_xUWg2w5DVFZ_p_4',
-              language: 'en',
-              components: 'country:gh',
-            }}
-            textInputProps={{
-              placeholderTextColor: '#ccc',
-            }}
-            styles={{
-              textInput: {
-                borderRadius: 4,
-                paddingHorizontal: 18,
-                fontSize: 16,
-                flex: 1,
-                color: '#30475e',
-                fontFamily: 'Inter-Medium',
-                backgroundColor: '#F5F7F9',
-                marginTop: 12,
-                height: 52,
-              },
-              listView: {
-                // flexGrow: 0,
-              },
-              container: {
-                zIndex: 10,
-                overflow: 'visible',
-                height: 48,
-                flexGrow: mutation.isLoading || deliveryOptions ? 0 : 1,
-                // flexGrow: 0,
-                flexShrink: mutation.isLoading || deliveryOptions ? 0 : 1,
-              },
-            }}
-            renderRow={i => (
-              <View>
-                <Text
-                  style={{
-                    color: '#30475e',
-                    fontSize: 14,
-                    fontFamily: 'Inter-Medium',
-                  }}>
-                  {i.description}
-                </Text>
+                listView: {
+                  // flexGrow: 0,
+                },
+                container: {
+                  zIndex: 10,
+                  overflow: 'visible',
+                  height: 48,
+                  flexGrow: mutation.isLoading || deliveryOptions ? 0 : 1,
+                  // flexGrow: 0,
+                  flexShrink: mutation.isLoading || deliveryOptions ? 0 : 1,
+                },
+              }}
+              renderRow={i => (
+                <View>
+                  <Text
+                    style={{
+                      color: '#30475e',
+                      fontSize: 14,
+                      fontFamily: 'Inter-Medium',
+                    }}>
+                    {i.description}
+                  </Text>
+                </View>
+              )}
+            />
+            {mutation.isLoading && <Loading />}
+            {deliveryOptions && (
+              <View style={{ flex: 1, marginTop: 25 }}>
+                {deliveryOptions.distance && (
+                  <Text style={locationStyles.distance}>
+                    Estimated distance: {deliveryOptions.distance}
+                  </Text>
+                )}
+                {config_ &&
+                  config_.data &&
+                  config_.data.data &&
+                  config_.data.data.option_delivery === 'IPAY' && (
+                    <FlatList
+                      style={locationStyles.list}
+                      data={deliveryOptions}
+                      keyExtractor={item => item.estimateId}
+                      renderItem={({ item, index }) => {
+                        if (!item) {
+                          return;
+                        }
+                        let item_;
+                        try {
+                          item_ = JSON.parse(item.value);
+                        } catch (error) { }
+                        return (
+                          <TouchableOpacity
+                            onPress={() => {
+                              setDelivery({
+                                value: 'DELIVERY',
+                                meta: item_.delivery_location,
+                                price: Number(item_.delivery_price),
+                                label: 'Delivery',
+                                delivery_gps: deliveryInfo.current.delivery_gps,
+                                delivery_location:
+                                  deliveryInfo.current.delivery_location,
+                                delivery_id: item.delivery_id,
+                              });
+                              SheetManager.hide('location');
+                              SheetManager.hide('delivery');
+                            }}
+                            style={locationStyles.optionsWrapper}>
+                            <Text style={locationStyles.name}>
+                              {index + 1}. {item_.delivery_location}
+                            </Text>
+                            <Text style={locationStyles.price}>
+                              GHS {item_.delivery_price}
+                            </Text>
+                          </TouchableOpacity>
+                        );
+                      }}
+                      ItemSeparatorComponent={() => (
+                        <View style={locationStyles.separator} />
+                      )}
+                    />
+                  )}
+                {config_ &&
+                  config_.data &&
+                  config_.data.data &&
+                  (config_.data.data.option_delivery === 'MERCHANT' ||
+                    config_.data.data.option_delivery === 'MERCHANT-DIST') && (
+                    <FlatList
+                      style={locationStyles.list}
+                      data={deliveryOptions}
+                      keyExtractor={item => item.delivery_id}
+                      renderItem={({ item, index }) => {
+                        if (!item) {
+                          return;
+                        }
+                        return (
+                          <TouchableOpacity
+                            onPress={() => {
+                              setDelivery({
+                                value: 'DELIVERY',
+                                // meta: JSON.parse(item.value).delivery_location,
+                                price: Number(
+                                  JSON.parse(item.value).delivery_price,
+                                ),
+                                label: 'Delivery',
+                                delivery_gps: '',
+                                delivery_location: JSON.parse(item.value)
+                                  .delivery_location,
+                                delivery_id: JSON.parse(item.value).delivery_id,
+                              });
+                              SheetManager.hide('location');
+                              SheetManager.hide('delivery');
+                            }}
+                            style={locationStyles.optionsWrapper}>
+                            <Text style={locationStyles.name}>
+                              {index + 1}.{' '}
+                              {JSON.parse(item.value).delivery_location}
+                            </Text>
+                            <Text style={locationStyles.price}>
+                              GHS {JSON.parse(item.value).delivery_price}
+                            </Text>
+                          </TouchableOpacity>
+                        );
+                      }}
+                      ItemSeparatorComponent={() => (
+                        <View style={locationStyles.separator} />
+                      )}
+                    />
+                  )}
               </View>
             )}
-          />
-          {mutation.isLoading && <Loading />}
-          {deliveryOptions && (
-            <View style={{ flex: 1, marginTop: 25 }}>
-              {deliveryOptions.distance && (
-                <Text style={locationStyles.distance}>
-                  Estimated distance: {deliveryOptions.distance}
-                </Text>
-              )}
-              {config_ &&
-                config_.data &&
-                config_.data.data &&
-                config_.data.data.option_delivery === 'IPAY' && (
-                  <FlatList
-                    style={locationStyles.list}
-                    data={deliveryOptions}
-                    keyExtractor={item => item.estimateId}
-                    renderItem={({ item, index }) => {
-                      if (!item) {
-                        return;
-                      }
-                      let item_;
-                      try {
-                        item_ = JSON.parse(item.value);
-                      } catch (error) {}
-                      return (
-                        <TouchableOpacity
-                          onPress={() => {
-                            setDelivery({
-                              value: 'DELIVERY',
-                              meta: item_.delivery_location,
-                              price: Number(item_.delivery_price),
-                              label: 'Delivery',
-                              delivery_gps: deliveryInfo.current.delivery_gps,
-                              delivery_location:
-                                deliveryInfo.current.delivery_location,
-                              delivery_id: item.delivery_id,
-                            });
-                            SheetManager.hide('location');
-                            SheetManager.hide('delivery');
-                          }}
-                          style={locationStyles.optionsWrapper}>
-                          <Text style={locationStyles.name}>
-                            {index + 1}. {item_.delivery_location}
-                          </Text>
-                          <Text style={locationStyles.price}>
-                            GHS {item_.delivery_price}
-                          </Text>
-                        </TouchableOpacity>
-                      );
-                    }}
-                    ItemSeparatorComponent={() => (
-                      <View style={locationStyles.separator} />
-                    )}
-                  />
-                )}
-              {config_ &&
-                config_.data &&
-                config_.data.data &&
-                (config_.data.data.option_delivery === 'MERCHANT' ||
-                  config_.data.data.option_delivery === 'MERCHANT-DIST') && (
-                  <FlatList
-                    style={locationStyles.list}
-                    data={deliveryOptions}
-                    keyExtractor={item => item.delivery_id}
-                    renderItem={({ item, index }) => {
-                      if (!item) {
-                        return;
-                      }
-                      return (
-                        <TouchableOpacity
-                          onPress={() => {
-                            setDelivery({
-                              value: 'DELIVERY',
-                              // meta: JSON.parse(item.value).delivery_location,
-                              price: Number(
-                                JSON.parse(item.value).delivery_price,
-                              ),
-                              label: 'Delivery',
-                              delivery_gps: '',
-                              delivery_location: JSON.parse(item.value)
-                                .delivery_location,
-                              delivery_id: JSON.parse(item.value).delivery_id,
-                            });
-                            SheetManager.hide('location');
-                            SheetManager.hide('delivery');
-                          }}
-                          style={locationStyles.optionsWrapper}>
-                          <Text style={locationStyles.name}>
-                            {index + 1}.{' '}
-                            {JSON.parse(item.value).delivery_location}
-                          </Text>
-                          <Text style={locationStyles.price}>
-                            GHS {JSON.parse(item.value).delivery_price}
-                          </Text>
-                        </TouchableOpacity>
-                      );
-                    }}
-                    ItemSeparatorComponent={() => (
-                      <View style={locationStyles.separator} />
-                    )}
-                  />
-                )}
-            </View>
-          )}
-          {/* <PrimaryButton style={locationStyles.btn}>
+            {/* <PrimaryButton style={locationStyles.btn}>
             Confirm location
           </PrimaryButton> */}
-        </View>
-      )}
+          </View>
+        )}
     </ActionSheet>
   );
 }
