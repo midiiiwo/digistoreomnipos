@@ -17,6 +17,7 @@ import DeleteDialog from '../components/DeleteDialog';
 import { useDeleteRider } from '../hooks/useDeleteRider';
 import { useToast } from 'react-native-toast-notifications';
 import { useQueryClient } from 'react-query';
+import { FloatingButton } from 'react-native-ui-lib';
 
 function Riders() {
     const { user, outlet } = useSelector(state => state.auth);
@@ -74,10 +75,32 @@ function Riders() {
                 }}
             />
 
-            <View style={styles.btnWrapper}>
-                <PrimaryButton style={styles.btn} handlePress={() => navigation.navigate('Add Rider')}>
+            <View style={{ justifyContent: 'center', alignItems: 'center', width: '100%', }}>
+                {/* <PrimaryButton style={styles.btn} handlePress={() => navigation.navigate('Add Rider')}>
                     Add Rider
-                </PrimaryButton>
+                </PrimaryButton> */}
+                <FloatingButton
+                    visible={true}
+                    hideBackgroundOverlay
+                    // bottomMargin={Dimensions.get('window').width * 0.18}
+
+                    button={{
+                        label: 'Add Rider',
+                        onPress: () => {
+                            navigation.navigate('Add Rider');
+                        },
+
+                        style: {
+                            // marginLeft: 'auto',
+                            // marginRight: 14,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            width: '50%',
+                            backgroundColor: 'rgba(60, 121, 245, 1.0)',
+                            marginBottom: Dimensions.get('window').width * 0.05,
+                        },
+                    }}
+                />
             </View>
 
             <DeleteDialog
@@ -96,7 +119,7 @@ const styles = StyleSheet.create({
     countText: { fontSize: 18, fontWeight: 'bold', color: '#1b2b34', marginBottom: 10 },
     channelText: { fontSize: 16, color: '#1b2b34', fontFamily: 'ReadexPro-Medium' },
     address: { color: '#304753', fontSize: 14 },
-    btn: { backgroundColor: '#2F66F6' },
+    btn: { backgroundColor: rgb(47, 102, 246, 0.5), width: 500, borderRadius: 30 },
     itemContainer: {
         borderBottomColor: 'rgba(146, 169, 189, 0.3)',
         borderBottomWidth: 0.3,

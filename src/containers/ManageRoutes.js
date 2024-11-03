@@ -15,6 +15,7 @@ import { useDeleteMerchantRoute } from '../hooks/useDeleteMerchantRoute';
 import { useToast } from 'react-native-toast-notifications';
 import { useQueryClient } from 'react-query';
 import { useGetMerchantDistanceDelivery } from '../hooks/useGetMerchantDistanceDelivery';
+import { FloatingButton } from 'react-native-ui-lib';
 
 const ManageRoutes = () => {
   const [filterType, setFilterType] = useState(null);
@@ -178,7 +179,7 @@ const ManageRoutes = () => {
               keyExtractor={(item) => item?.user_id?.toString()}
               ListHeaderComponent={() => (
                 <View style={styles.headerRow}>
-                  <Text style={[styles.headerText, { flex: 0.5, textAlign: 'left' }]}>#hello world</Text>
+                  <Text style={[styles.headerText, { flex: 0.5, textAlign: 'left' }]}>#</Text>
                   <Text style={[styles.headerText, { flex: 2, textAlign: 'center' }]}>Distance</Text>
                   <Text style={[styles.headerText, { flex: 1, textAlign: 'center' }]}>Rate (GHS)</Text>
                   <Text style={[styles.headerText, { flex: 0.5, textAlign: 'right' }]}>Actions</Text>
@@ -236,12 +237,34 @@ const ManageRoutes = () => {
 
       {filterType !== 'DIGISTORE' ? (
         <View style={styles.btnWrapper}>
-          <PrimaryButton
+          {/* <PrimaryButton
             style={styles.btn}
             handlePress={() => navigation.navigate('Add Delivery')}
           >
             Add Delivery Route
-          </PrimaryButton>
+          </PrimaryButton> */}
+          <FloatingButton
+            visible={true}
+            hideBackgroundOverlay
+            // bottomMargin={Dimensions.get('window').width * 0.18}
+
+            button={{
+              label: 'Add Rider',
+              onPress: () => {
+                navigation.navigate('Add Delivery');
+              },
+
+              style: {
+                // marginLeft: 'auto',
+                // marginRight: 14,
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: '50%',
+                backgroundColor: 'rgba(60, 121, 245, 1.0)',
+                marginBottom: Dimensions.get('window').width * 0.05,
+              },
+            }}
+          />
         </View>
       ) : null}
 

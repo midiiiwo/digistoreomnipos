@@ -6,6 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import PagerView from 'react-native-pager-view';
 import ManageRoutes from './ManageRoutes';
 import Riders from '../components/Riders';
+import DeliveryWindow from '../components/DeliveryWindow';
 import { useActionCreator } from '../hooks/useActionCreator';
 
 const ManageDeliveries = () => {
@@ -37,6 +38,9 @@ const ManageDeliveries = () => {
                 </View>
                 <View key={2} collapsable={false}>
                     <ManageRoutes navigation={navigation} />
+                </View>
+                <View key={3} collapsable={false}>
+                    <DeliveryWindow navigation={navigation} />
                 </View>
             </PagerView>
         </>

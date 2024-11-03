@@ -179,6 +179,7 @@ import HeaderInventory from '../components/HeaderInventory';
 import InventoryQuickSale from '../containers/InventoryQuickSale';
 import ManageDeliveriesHeader from '../components/ManageDeliveriesHeader';
 import Riders from '../components/Riders';
+import DeliveryWindow from '../components/DeliveryWindow';
 // import ManageRoutes from '../containers/ManageRoutes';
 
 const Stack = createNativeStackNavigator();
@@ -766,6 +767,23 @@ function HomeStackNavigator() {
                         justifyContent: 'center',
                       }}
                       title="Delivery Routes"
+                    />
+                  ),
+                }}
+              />
+              <Stack.Screen
+                name="Delivery Window"
+                component={DeliveryWindow}
+                options={{
+                  header: props => (
+                    <ManageDeliveriesHeader
+                      // prevScreen={props.back.title}
+                      navigation={props.navigation}
+                      addCustomer={false}
+                      mainHeader={{
+                        justifyContent: 'center',
+                      }}
+                      title="Delivery Window"
                     />
                   ),
                 }}
@@ -2152,7 +2170,7 @@ function HomeStackNavigator() {
                 component={Users}
                 options={{
                   header: props => (
-                    <InventoryHeader
+                    <HeaderInventory
                       // prevScreen={props.back.title}
                       navigation={props.navigation}
                       addCustomer={false}

@@ -8,7 +8,7 @@
     <!-- Value from build type: debug -->
     <integer name="react_native_inspector_proxy_port">8081</integer>
     <!-- Value from build type: debug -->
-    <string name="CODE_PUSH_APK_BUILD_TIME" translatable="false">"1730453439520"</string>
+    <string name="CODE_PUSH_APK_BUILD_TIME" translatable="false">"1730628717534"</string>
     <!-- Value from build type: debug -->
     <string name="CodePushDeploymentKey" translatable="false">""</string>
 

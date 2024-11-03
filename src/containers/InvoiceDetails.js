@@ -40,7 +40,7 @@ function useUpdateEstimate(handleSuccess) {
     payload => {
       try {
         return updateEstimate(payload);
-      } catch (error) {}
+      } catch (error) { }
     },
     {
       onSuccess(data) {
@@ -198,14 +198,14 @@ function InvoiceDetails(props) {
                   : isEstimate &&
                     PAYMENT_STATUS === 'COMPLETED' &&
                     !isInvoicePaid
-                  ? '#eee'
-                  : isInvoicePaid
-                  ? 'rgba(135, 196, 201, 0.2)'
-                  : dueDate.diff(currentDate, 'days') < 0
-                  ? 'rgba(238, 211, 217, 0.2)'
-                  : item.PAYMENT_STATUS === 'Pending'
-                  ? '#rgba(255, 219, 137, 0.2)'
-                  : 'rgba(238, 211, 217, 0.2)',
+                    ? '#eee'
+                    : isInvoicePaid
+                      ? 'rgba(135, 196, 201, 0.2)'
+                      : dueDate.diff(currentDate, 'days') < 0
+                        ? 'rgba(238, 211, 217, 0.2)'
+                        : item.PAYMENT_STATUS === 'Pending'
+                          ? '#rgba(255, 219, 137, 0.2)'
+                          : 'rgba(238, 211, 217, 0.2)',
               paddingVertical: 14,
               paddingHorizontal: 16,
               paddingBottom: 6,
@@ -222,14 +222,14 @@ function InvoiceDetails(props) {
                           : isEstimate &&
                             PAYMENT_STATUS === 'COMPLETED' &&
                             !isInvoicePaid
-                          ? '#87C4C9'
-                          : isInvoicePaid
-                          ? '#87C4C9'
-                          : dueDate.diff(currentDate, 'days') < 0
-                          ? '#D24545'
-                          : item.PAYMENT_STATUS === 'Pending'
-                          ? '#FFDB89'
-                          : '#FD8A8A',
+                            ? '#87C4C9'
+                            : isInvoicePaid
+                              ? '#87C4C9'
+                              : dueDate.diff(currentDate, 'days') < 0
+                                ? '#D24545'
+                                : item.PAYMENT_STATUS === 'Pending'
+                                  ? '#FFDB89'
+                                  : '#FD8A8A',
                     },
                   ]}
                 />
@@ -237,8 +237,8 @@ function InvoiceDetails(props) {
                   {isInvoicePaid
                     ? 'Paid'
                     : dueDate.diff(currentDate, 'days') < 0
-                    ? 'Overdue'
-                    : item.PAYMENT_STATUS}
+                      ? 'Overdue'
+                      : item.PAYMENT_STATUS}
                 </Text>
               </View>
             </View>
@@ -265,14 +265,14 @@ function InvoiceDetails(props) {
                       : isEstimate &&
                         PAYMENT_STATUS === 'COMPLETED' &&
                         !isInvoicePaid
-                      ? '#ddd'
-                      : isInvoicePaid
-                      ? '#408E91'
-                      : dueDate.diff(currentDate, 'days') < 0
-                      ? '#D24545'
-                      : item.PAYMENT_STATUS === 'Pending'
-                      ? '#F5A25D'
-                      : '#FD8A8A',
+                        ? '#ddd'
+                        : isInvoicePaid
+                          ? '#408E91'
+                          : dueDate.diff(currentDate, 'days') < 0
+                            ? '#D24545'
+                            : item.PAYMENT_STATUS === 'Pending'
+                              ? '#F5A25D'
+                              : '#FD8A8A',
                 },
               ]}>
               {!isEstimate &&
@@ -320,8 +320,8 @@ function InvoiceDetails(props) {
                 <Text style={styles.channel}>
                   {(dueDate.diff(currentDate, 'days') < 0 &&
                     PAYMENT_STATUS !== 'Successful') ||
-                  PAYMENT_STATUS === 'Pending' ||
-                  isEstimate
+                    PAYMENT_STATUS === 'Pending' ||
+                    isEstimate
                     ? 'Send Reminder'
                     : 'Send Receipt'}
                 </Text>
@@ -421,9 +421,9 @@ function InvoiceDetails(props) {
                       {i?.order_item}
                       {i?.order_item_properties?.length > 0
                         ? ` (${i.order_item_properties
-                            .split(',')
-                            .map(prop => prop.trim().split(':')[1])
-                            .toString()})`
+                          .split(',')
+                          .map(prop => prop.trim().split(':')[1])
+                          .toString()})`
                         : ''}
                     </Text>
                     <Text style={styles.taxAmount}>
