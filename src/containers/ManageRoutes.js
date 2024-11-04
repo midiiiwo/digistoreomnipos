@@ -16,6 +16,7 @@ import { useToast } from 'react-native-toast-notifications';
 import { useQueryClient } from 'react-query';
 import { useGetMerchantDistanceDelivery } from '../hooks/useGetMerchantDistanceDelivery';
 import { FloatingButton } from 'react-native-ui-lib';
+import { useFocusEffect } from '@react-navigation/native';
 
 const ManageRoutes = () => {
   const [filterType, setFilterType] = useState(null);
@@ -81,10 +82,17 @@ const ManageRoutes = () => {
       idToDelete.current = null;
     }
   }, [toast, deleteStatus, client]);
+  useFocusEffect(
+    useCallback(() => {
+      handleRefresh();
+    }, [filterType])
+  );
 
-  useEffect(() => {
-    handleRefresh();
-  }, [filterType]);
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     handleRefresh();
+  //   }, [handleRefresh])
+  // );
 
   const renderContent = () => {
     if (filterType === 'LOCATION_BASED') {
@@ -249,7 +257,7 @@ const ManageRoutes = () => {
             // bottomMargin={Dimensions.get('window').width * 0.18}
 
             button={{
-              label: 'Add Rider',
+              label: 'Add Route',
               onPress: () => {
                 navigation.navigate('Add Delivery');
               },
@@ -280,7 +288,7 @@ const ManageRoutes = () => {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16, backgroundColor: '#fff' },
+  container: { flex: 1, padding: 16, },
   contentContainer: { marginTop: 20, alignItems: 'center' },
   headerRow: {
     flexDirection: 'row',

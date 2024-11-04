@@ -109,6 +109,7 @@ function OutletLogin() {
 
 const styles = StyleSheet.create({
   main: {
+    marginTop: 10,
     paddingBottom: 12,
     flex: 1,
     backgroundColor: '#fff',

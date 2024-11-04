@@ -314,13 +314,13 @@ const InventoryQuickSale = ({ navigation, route }) => {
                 val={discountCode}
                 setVal={text => setDiscountCode(text)}
                 style={{ height: 55, backgroundColor: '#fff' }}
-                editable={false}
+                editable={true}
               />
             </View>
 
             <View style={[styles.bottomWrapper, { marginTop: 14 }]}>
               <ButtonLargeBottom
-                disabled={true}
+                disabled={discountCode.length === 0}
                 disabledColor="rgba(48, 71, 94, 0.5)"
                 width="100%"
                 backgroundColor={

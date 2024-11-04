@@ -123,8 +123,13 @@ export function getStoreDeliveryConfig(merchant) {
   return deliveryApi.get(`/admin/company/${merchant}/settings`);
 }
 
+
 export function changeStoreDeliveryConfig(merchant, payload) {
   return deliveryApi.post(`/admin/company/${merchant}/deliveryType`, payload);
+}
+
+export function changeStoreDeliveryWindowConfig(merchant, payload) {
+  return deliveryApi.post(`/admin/company/${merchant}/useWindows`, payload);
 }
 
 
@@ -232,6 +237,13 @@ export function getMerchantRidersAll(merchant, outlet) {
     `admin/company/${merchant}/riders/${outlet}`,
   );
 }
+
+export function getMerchantDeliveryWindow(merchant, outlet) {
+  return deliveryApi.get(
+    `admin/deliveryWindows/${merchant}/${outlet}`,
+  );
+}
+
 
 export function getOnlineStoreDetails(merchant) {
   return Api.get(`stores/merchant/${merchant}/store/online`);

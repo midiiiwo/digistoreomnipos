@@ -28,12 +28,18 @@ import { SheetManager } from 'react-native-actions-sheet';
 import { useGetMerchantOutlets } from '../hooks/useGetMerchantOutlets';
 import { isArray, upperCase } from 'lodash';
 import { handleSearch } from '../utils/shared';
+import CheckBox from 'react-native-check-box'
+import { SwipeListView } from 'react-native-swipe-list-view';
+import { justifyContent } from 'react-native-wind/dist/styles/flex/justify-content';
 
 const Orders = ({ navigation }) => {
   const { user } = useSelector(state => state.auth);
   const { startDate, endDate, orderOutlet } = useSelector(
     state => state.orders,
   );
+
+  const [isChecked, setIsChecked] = React.useState(false);
+  const toggleCheckbox = () => setIsChecked(!isChecked);
 
   const { data, isLoading } = useGetMerchantOutlets(user.merchant);
   const [searchTerm, setSearchTerm] = React.useState('');
@@ -107,7 +113,7 @@ const Orders = ({ navigation }) => {
     if (typeof outlet === 'object' && isArray(outlet)) {
       try {
         outlet = outlet.toString();
-      } catch (error) {}
+      } catch (error) { }
     }
 
     ordersHistory.mutate({
@@ -218,7 +224,7 @@ const Orders = ({ navigation }) => {
         return upperCase(orderStatus) === 'ALL'
           ? true
           : upperCase(orderStatus) === 'CONFIRMED'
-          ? [
+            ? [
               'PAID',
               'COMPLETED',
               'PICKUP_READY',
@@ -227,47 +233,47 @@ const Orders = ({ navigation }) => {
               'DISPATCHED',
               'PAYMENT_DEFERRED',
             ].includes(o?.order_status)
-          : upperCase(orderStatus) === 'PENDING'
-          ? ![
-              'PAID',
-              'COMPLETED',
-              'PICKUP_READY',
-              'BACKOFF_PROCCESSING',
-              'BACKOFF_PROCCESSED',
-              'DISPATCHED',
-            ].includes(o?.order_status)
-          : upperCase(orderStatus) === 'COMPLETED'
-          ? ['COMPLETED'].includes(o?.order_status)
-          : upperCase(orderStatus) === 'READY FOR PICKUP'
-          ? ['PICKUP_READY'].includes(o?.order_status) &&
-            o?.delivery_type === 'PICKUP'
-          : upperCase(orderStatus) === 'READY FOR DELIVERY'
-          ? ['PENDING'].includes(o?.delivery_status) &&
-            o?.delivery_rider === null &&
-            o?.delivery_type === 'DELIVERY' &&
-            [
-              'PAID',
-              'COMPLETED',
-              'PICKUP_READY',
-              'BACKOFF_PROCCESSING',
-              'BACKOFF_PROCCESSED',
-              'DISPATCHED',
-              'PAYMENT_DEFERRED',
-            ].includes(o?.order_status)
-          : upperCase(orderStatus) === 'DELIVERIES ONGOING'
-          ? ['PENDING', 'PICKED_UP_ITEM'].includes(o?.delivery_status) &&
-            o?.delivery_rider !== null &&
-            o?.delivery_type === 'DELIVERY' &&
-            [
-              'PAID',
-              'COMPLETED',
-              'PICKUP_READY',
-              'PICKED_UP_ITEM',
-              'BACKOFF_PROCCESSING',
-              'BACKOFF_PROCCESSED',
-              'DISPATCHED',
-            ].includes(o?.order_status)
-          : upperCase(orderStatus) === o?.order_status;
+            : upperCase(orderStatus) === 'PENDING'
+              ? ![
+                'PAID',
+                'COMPLETED',
+                'PICKUP_READY',
+                'BACKOFF_PROCCESSING',
+                'BACKOFF_PROCCESSED',
+                'DISPATCHED',
+              ].includes(o?.order_status)
+              : upperCase(orderStatus) === 'COMPLETED'
+                ? ['COMPLETED'].includes(o?.order_status)
+                : upperCase(orderStatus) === 'READY FOR PICKUP'
+                  ? ['PICKUP_READY'].includes(o?.order_status) &&
+                  o?.delivery_type === 'PICKUP'
+                  : upperCase(orderStatus) === 'READY FOR DELIVERY'
+                    ? ['PENDING'].includes(o?.delivery_status) &&
+                    o?.delivery_rider === null &&
+                    o?.delivery_type === 'DELIVERY' &&
+                    [
+                      'PAID',
+                      'COMPLETED',
+                      'PICKUP_READY',
+                      'BACKOFF_PROCCESSING',
+                      'BACKOFF_PROCCESSED',
+                      'DISPATCHED',
+                      'PAYMENT_DEFERRED',
+                    ].includes(o?.order_status)
+                    : upperCase(orderStatus) === 'DELIVERIES ONGOING'
+                      ? ['PENDING', 'PICKED_UP_ITEM'].includes(o?.delivery_status) &&
+                      o?.delivery_rider !== null &&
+                      o?.delivery_type === 'DELIVERY' &&
+                      [
+                        'PAID',
+                        'COMPLETED',
+                        'PICKUP_READY',
+                        'PICKED_UP_ITEM',
+                        'BACKOFF_PROCCESSING',
+                        'BACKOFF_PROCCESSED',
+                        'DISPATCHED',
+                      ].includes(o?.order_status)
+                      : upperCase(orderStatus) === o?.order_status;
       }),
     [orders?.data, orderStatus],
   );
@@ -293,7 +299,13 @@ const Orders = ({ navigation }) => {
         />
       </View>
       <View style={styles.segmentedControlWrapper}>
-        <View style={{ marginRight: 16 }}>
+        <View style={{ marginRight: 16, flexDirection: 'row' }}>
+          <View style={{ justifyContent: 'center', alignItems: 'center', marginLeft: 4 }}>
+            <CheckBox
+              onClick={toggleCheckbox}
+              isChecked={isChecked}
+
+            /></View>
           <Menu opened={openMenu} onBackdropPress={() => setOpenMenu(false)}>
             <MenuTrigger
               onPress={() => setOpenMenu(!openMenu)}
@@ -376,7 +388,25 @@ const Orders = ({ navigation }) => {
       {(ordersHistory.isLoading || isLoading) && <Loading />}
       {!ordersHistory.isLoading && !isLoading && (
         <View style={styles.listWrapper}>
-          <FlatList
+          <SwipeListView
+            renderHiddenItem={() => (
+              <View
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'flex-start',
+                  backgroundColor: '#f9f9f9',
+                  height: '100%',
+                  flexDirection: 'row',
+                  paddingLeft: 20,
+                }}
+              >
+                <CheckBox
+                  onClick={toggleCheckbox}
+                  isChecked={isChecked}
+                />
+              </View>
+            )}
+            leftOpenValue={75}
             estimatedItemSize={130}
             style={{ flex: 1 }}
             ListEmptyComponent={() => {

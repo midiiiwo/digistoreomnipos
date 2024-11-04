@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		00E356F31AD99517003FC87E /* ipayghposTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* ipayghposTests.m */; };
+		00E356F31AD99517003FC87E /* digistoreomniposTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* digistoreomniposTests.m */; };
 		010A2D8A57BC4740883E6997 /* IBMPlexMono-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3E53AEA00E224CC2BAF6B3E9 /* IBMPlexMono-ThinItalic.ttf */; };
 		052BDC24B606498680F77D22 /* ReadexPro-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3EF9188C26CB4F0484BC3CCE /* ReadexPro-Regular.ttf */; };
 		06511A9778C8453291EFFFF9 /* OFL.txt in Resources */ = {isa = PBXBuildFile; fileRef = 36DD1F1D9BC044909C0B7E90 /* OFL.txt */; };
@@ -114,10 +114,8 @@
 		E75DFC61630D455E8619DE90 /* ProximaNova-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C44F6A961BDF4797A003D9CE /* ProximaNova-Semibold.ttf */; };
 		E78A503863A04477B206A41B /* IBMPlexMono-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3BA0D8DAA30E472FBC7BE778 /* IBMPlexMono-Medium.ttf */; };
 		EA3ED21F99D74C12948BF488 /* SFProDisplay-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 545E28A366D148F98A660AD3 /* SFProDisplay-Regular.ttf */; };
-		EBC48DA42CC2831800D11C80 /* Launch Screen1.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EBC48DA32CC2831800D11C80 /* Launch Screen1.storyboard */; };
-		EBC48DA52CC2831800D11C80 /* Launch Screen1.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EBC48DA32CC2831800D11C80 /* Launch Screen1.storyboard */; };
-		EBC48DA72CC286B100D11C80 /* UILaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EBC48DA62CC286B100D11C80 /* UILaunchScreen.storyboard */; };
-		EBC48DA82CC286B100D11C80 /* UILaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EBC48DA62CC286B100D11C80 /* UILaunchScreen.storyboard */; };
+		EBF4E4362CD7912600FFF7B3 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EBF4E4352CD7912600FFF7B3 /* Launch Screen.storyboard */; };
+		EBF4E4372CD7912600FFF7B3 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EBF4E4352CD7912600FFF7B3 /* Launch Screen.storyboard */; };
 		EF140C3102A94C76830FE356 /* Proxima-Nova-Extra-Condensed (2).zip in Resources */ = {isa = PBXBuildFile; fileRef = 707CC10B995B47B9AFA158F3 /* Proxima-Nova-Extra-Condensed (2).zip */; };
 		EF6E1C7620284D35ACFBBCCE /* IBMPlexMono-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8BA82AF1E3044273B4C62D75 /* IBMPlexMono-SemiBoldItalic.ttf */; };
 		F2C44D30F81C4F5086A5A180 /* IBMPlexMono-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD6FCEB00F7F43F2B009BB7A /* IBMPlexMono-MediumItalic.ttf */; };
@@ -141,7 +139,7 @@
 		00B8F4F2CF3B4C30B250A4D8 /* SourceSansPro-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SourceSansPro-Bold.ttf"; path = "../assets/fonts/SourceSansPro-Bold.ttf"; sourceTree = "<group>"; };
 		00E356EE1AD99517003FC87E /* digistoreominiposTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = digistoreominiposTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		00E356F21AD99517003FC87E /* ipayghposTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ipayghposTests.m; sourceTree = "<group>"; };
+		00E356F21AD99517003FC87E /* digistoreomniposTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = digistoreomniposTests.m; sourceTree = "<group>"; };
 		03A3A2C0D9A64F378DD4446D /* IBMPlexMono-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "IBMPlexMono-SemiBold.ttf"; path = "../assets/fonts/IBMPlexMono-SemiBold.ttf"; sourceTree = "<group>"; };
 		0B6D2D71BA4D4C2FAB0D5918 /* IBMPlexMono-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "IBMPlexMono-Light.ttf"; path = "../assets/fonts/IBMPlexMono-Light.ttf"; sourceTree = "<group>"; };
 		0DD35EA4925A4BFDBB0ACFB3 /* DroidSerif-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "DroidSerif-Italic.ttf"; path = "../assets/fonts/DroidSerif-Italic.ttf"; sourceTree = "<group>"; };
@@ -255,8 +253,7 @@
 		E369FE40C5DB4061878E2AE6 /* Inter-V.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-V.ttf"; path = "../assets/fonts/Inter-V.ttf"; sourceTree = "<group>"; };
 		E3DF3B9BEEBEDEE94183EC64 /* Pods_ipayghpos.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ipayghpos.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6D0575203854853B05AB961 /* StardosStencil-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "StardosStencil-Regular.ttf"; path = "../assets/fonts/StardosStencil-Regular.ttf"; sourceTree = "<group>"; };
-		EBC48DA32CC2831800D11C80 /* Launch Screen1.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen1.storyboard"; sourceTree = "<group>"; };
-		EBC48DA62CC286B100D11C80 /* UILaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = UILaunchScreen.storyboard; sourceTree = "<group>"; };
+		EBF4E4352CD7912600FFF7B3 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		EE907F14DB5B4A2CA7974BBC /* JetBrainsMono-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "JetBrainsMono-Medium.ttf"; path = "../assets/fonts/JetBrainsMono-Medium.ttf"; sourceTree = "<group>"; };
 		EF0A03BAD9034EF19DB7F030 /* IBMPlexMono-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "IBMPlexMono-BoldItalic.ttf"; path = "../assets/fonts/IBMPlexMono-BoldItalic.ttf"; sourceTree = "<group>"; };
@@ -293,7 +290,7 @@
 		00E356EF1AD99517003FC87E /* digistoreomniposTests */ = {
 			isa = PBXGroup;
 			children = (
-				00E356F21AD99517003FC87E /* ipayghposTests.m */,
+				00E356F21AD99517003FC87E /* digistoreomniposTests.m */,
 				00E356F01AD99517003FC87E /* Supporting Files */,
 			);
 			path = digistoreomniposTests;
@@ -430,8 +427,7 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB71A68108700A75B9A /* main.m */,
 				89D69EC22A2F35D900379869 /* AppCenter-Config.plist */,
-				EBC48DA32CC2831800D11C80 /* Launch Screen1.storyboard */,
-				EBC48DA62CC286B100D11C80 /* UILaunchScreen.storyboard */,
+				EBF4E4352CD7912600FFF7B3 /* Launch Screen.storyboard */,
 			);
 			name = digistoreominipos;
 			sourceTree = "<group>";
@@ -580,8 +576,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EBC48DA82CC286B100D11C80 /* UILaunchScreen.storyboard in Resources */,
-				EBC48DA52CC2831800D11C80 /* Launch Screen1.storyboard in Resources */,
+				EBF4E4372CD7912600FFF7B3 /* Launch Screen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -617,8 +612,6 @@
 				88982CA9DDDD4E868127A958 /* SourceSansPro-Bold.ttf in Resources */,
 				3C5DE25E8A1B4151BF058FFA /* SourceSansPro-Regular.ttf in Resources */,
 				E4CA9A5EB2224109A08C7CAF /* SourceSansPro-SemiBold.ttf in Resources */,
-				EBC48DA72CC286B100D11C80 /* UILaunchScreen.storyboard in Resources */,
-				EBC48DA42CC2831800D11C80 /* Launch Screen1.storyboard in Resources */,
 				23039AE58FB74530BC715CAA /* Source_Sans_Pro.zip in Resources */,
 				6FD54454F5B047F78BB857D1 /* DroidSerif-Bold.ttf in Resources */,
 				B7DEA6B1876D4A6380D22BBC /* DroidSerif-BoldItalic.ttf in Resources */,
@@ -681,6 +674,7 @@
 				843DB41A4B054AFDA6CF1FCF /* OpenSans-ExtraBold.ttf in Resources */,
 				44A29F666A3C4C43B9E29F6A /* OpenSans-Medium.ttf in Resources */,
 				34AD560E00B74636AD90DF35 /* OpenSans-Regular.ttf in Resources */,
+				EBF4E4362CD7912600FFF7B3 /* Launch Screen.storyboard in Resources */,
 				3907107F1ED14B139C9E2B94 /* OpenSans-SemiBold.ttf in Resources */,
 				9A5AB5FBA8A84D41B3FAE9D1 /* ProximaNova-Extrabld.ttf in Resources */,
 				F78725CFFA4B45E9844F6D3F /* ProximaNova-Regular.ttf in Resources */,
@@ -838,7 +832,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				00E356F31AD99517003FC87E /* ipayghposTests.m in Sources */,
+				00E356F31AD99517003FC87E /* digistoreomniposTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1018,7 +1012,7 @@
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -1090,7 +1084,7 @@
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;

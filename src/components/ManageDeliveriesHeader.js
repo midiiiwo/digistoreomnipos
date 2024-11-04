@@ -13,20 +13,23 @@ const ManageDeliveriesHeader = ({ navigation }) => {
     const { setActiveInvoiceTab } = useActionCreator();
     const { top } = useSafeAreaInsets();
 
+    const handleTabChange = (index) => {
+        setActiveInvoiceTab(index);
+
+        // Navigate based on selected tab index
+        if (index === 0) {
+            navigation.navigate('Riders');
+        } else if (index === 1) {
+            navigation.navigate('Delivery Routes');
+        } else if (index === 2) {
+            navigation.navigate('Delivery Window');
+        }
+    };
+
     return (
         <View style={[styles.headerMain, { paddingTop: top + 10 }]}>
-            {/* <Pressable style={styles.back} onPress={() => navigation.goBack()}>
-        <BackIcon height={23} width={23} stroke="#21438F" />
-      </Pressable> */}
             <Pressable
-                onPress={() => {
-                    navigation.openDrawer();
-                }}
-                // style={{
-                //   backgroundColor: '#fff',
-                //   borderRadius: 60,
-                //   padding: 10,
-                // }}
+                onPress={() => navigation.openDrawer()}
                 style={styles.back}
             >
                 <ProfileIcon height={28} width={27} stroke="#30475e" />
@@ -36,16 +39,13 @@ const ManageDeliveriesHeader = ({ navigation }) => {
                 <SegmentedControl
                     values={tabValues}
                     selectedIndex={invoicingTab}
-                    onChange={event => {
-                        setActiveInvoiceTab(event.nativeEvent.selectedSegmentIndex);
-                    }}
+                    onChange={event => handleTabChange(event.nativeEvent.selectedSegmentIndex)}
                     backgroundColor="rgba(96, 126, 170, 0.05)"
                     tintColor="rgba(25, 66, 216, 0.9)"
                     activeFontStyle={styles.activeText}
                     fontStyle={styles.inactiveText}
                     style={styles.arbitrary}
                     sliderStyle={{ borderRadius: 40 }}
-                // enabled={false}
                 />
             </View>
         </View>
@@ -92,7 +92,6 @@ const styles = StyleSheet.create({
         color: '#1942D8',
         fontFamily: 'ReadexPro-Medium',
     },
-
     back: {
         flexDirection: 'row',
         alignItems: 'center',

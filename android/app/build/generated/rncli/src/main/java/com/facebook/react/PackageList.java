@@ -17,6 +17,8 @@ import com.reactnativemultipleimagepicker.MultipleImagePickerPackage;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 // @react-native-community/art
 import com.reactnativecommunity.art.ARTPackage;
+// @react-native-community/checkbox
+import com.reactnativecommunity.checkbox.ReactCheckBoxPackage;
 // @react-native-community/clipboard
 import com.reactnativecommunity.clipboard.ClipboardPackage;
 // @react-native-community/datetimepicker
@@ -112,6 +114,8 @@ import com.wix.reactnativeuilib.highlighterview.HighlighterViewPackage;
 import com.wix.reactnativeuilib.keyboardinput.KeyboardInputPackage;
 import com.wix.reactnativeuilib.textinput.TextInputDelKeyHandlerPackage;
 import com.wix.reactnativeuilib.wheelpicker.WheelPickerPackage;
+// react-native-vector-icons
+import com.oblador.vectoricons.VectorIconsPackage;
 // react-native-version-check
 import io.xogus.reactnative.versioncheck.RNVersionCheckPackage;
 // react-native-view-shot
@@ -168,6 +172,7 @@ public class PackageList {
       new MultipleImagePickerPackage(),
       new AsyncStoragePackage(),
       new ARTPackage(),
+      new ReactCheckBoxPackage(),
       new ClipboardPackage(),
       new RNDateTimePickerPackage(),
       new GeolocationPackage(),
@@ -217,6 +222,7 @@ public class PackageList {
       new WheelPickerPackage(),
       new TextInputDelKeyHandlerPackage(),
       new KeyboardInputPackage(getApplication()),
+      new VectorIconsPackage(),
       new RNVersionCheckPackage(),
       new RNViewShotPackage(),
       new RNCWebViewPackage(),

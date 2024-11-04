@@ -104,7 +104,8 @@ com.ipayghpostablet.app-packaged_res-102 /Users/wedamanewenah/Downloads/IPAY/dig
 com.ipayghpostablet.app-packaged_res-103 /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-splash-screen/android/build/intermediates/packaged_res/debug
 com.ipayghpostablet.app-packaged_res-104 /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-svg/android/build/intermediates/packaged_res/debug
 com.ipayghpostablet.app-packaged_res-105 /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-ui-lib/lib/android/build/intermediates/packaged_res/debug
-com.ipayghpostablet.app-packaged_res-106 /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-version-check/android/build/intermediates/packaged_res/debug
-com.ipayghpostablet.app-packaged_res-107 /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-view-shot/android/build/intermediates/packaged_res/debug
-com.ipayghpostablet.app-packaged_res-108 /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-webview/android/build/intermediates/packaged_res/debug
-com.ipayghpostablet.app-packaged_res-109 /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/sp-react-native-in-app-updates/android/build/intermediates/packaged_res/debug
+com.ipayghpostablet.app-packaged_res-106 /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-vector-icons/android/build/intermediates/packaged_res/debug
+com.ipayghpostablet.app-packaged_res-107 /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-version-check/android/build/intermediates/packaged_res/debug
+com.ipayghpostablet.app-packaged_res-108 /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-view-shot/android/build/intermediates/packaged_res/debug
+com.ipayghpostablet.app-packaged_res-109 /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/react-native-webview/android/build/intermediates/packaged_res/debug
+com.ipayghpostablet.app-packaged_res-110 /Users/wedamanewenah/Downloads/IPAY/digistoreomnipos/node_modules/sp-react-native-in-app-updates/android/build/intermediates/packaged_res/debug
