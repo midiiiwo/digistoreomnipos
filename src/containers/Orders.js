@@ -28,9 +28,8 @@ import { SheetManager } from 'react-native-actions-sheet';
 import { useGetMerchantOutlets } from '../hooks/useGetMerchantOutlets';
 import { isArray, upperCase } from 'lodash';
 import { handleSearch } from '../utils/shared';
-import CheckBox from 'react-native-check-box'
-import { SwipeListView } from 'react-native-swipe-list-view';
-import { justifyContent } from 'react-native-wind/dist/styles/flex/justify-content';
+import CheckBox from 'react-native-check-box';
+import { Swipeable } from 'react-native-gesture-handler';
 
 const Orders = ({ navigation }) => {
   const { user } = useSelector(state => state.auth);
@@ -71,6 +70,7 @@ const Orders = ({ navigation }) => {
   //   });
   //   return unsubscribe;
   // }, [navigation, refetch]);
+
 
   React.useEffect(() => {
     let outlets = data?.data?.data || [];
@@ -301,11 +301,8 @@ const Orders = ({ navigation }) => {
       <View style={styles.segmentedControlWrapper}>
         <View style={{ marginRight: 16, flexDirection: 'row' }}>
           <View style={{ justifyContent: 'center', alignItems: 'center', marginLeft: 4 }}>
-            <CheckBox
-              onClick={toggleCheckbox}
-              isChecked={isChecked}
-
-            /></View>
+            <CheckBox onClick={toggleCheckbox} isChecked={isChecked} />
+          </View>
           <Menu opened={openMenu} onBackdropPress={() => setOpenMenu(false)}>
             <MenuTrigger
               onPress={() => setOpenMenu(!openMenu)}
@@ -388,76 +385,7 @@ const Orders = ({ navigation }) => {
       {(ordersHistory.isLoading || isLoading) && <Loading />}
       {!ordersHistory.isLoading && !isLoading && (
         <View style={styles.listWrapper}>
-          <SwipeListView
-            renderHiddenItem={() => (
-              <View
-                style={{
-                  alignItems: 'center',
-                  justifyContent: 'flex-start',
-                  backgroundColor: '#f9f9f9',
-                  height: '100%',
-                  flexDirection: 'row',
-                  paddingLeft: 20,
-                }}
-              >
-                <CheckBox
-                  onClick={toggleCheckbox}
-                  isChecked={isChecked}
-                />
-              </View>
-            )}
-            leftOpenValue={75}
-            estimatedItemSize={130}
-            style={{ flex: 1 }}
-            ListEmptyComponent={() => {
-              return (
-                <View
-                  style={{
-                    flex: 1,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    height: '100%',
-                    paddingTop: Dimensions.get('window').height * 0.1,
-                    backgroundColor: '#fff',
-                  }}>
-                  <Text
-                    style={{
-                      fontFamily: 'ReadexPro-Medium',
-                      fontSize: 16,
-                      color: '#30475e',
-                    }}>
-                    You have no orders recorded
-                  </Text>
-
-                  <Pressable
-                    style={[
-                      styles.btn,
-                      {
-                        marginTop: 14,
-                        backgroundColor: 'rgba(25, 66, 216, 0.9)',
-                      },
-                    ]}
-                    onPress={() => {
-                      navigation.navigate('Inventory');
-                    }}>
-                    <Text style={styles.signin}>Create Order</Text>
-                  </Pressable>
-                  <Pressable
-                    style={[
-                      styles.btn,
-                      {
-                        marginTop: 14,
-                        backgroundColor: '#35A29F',
-                      },
-                    ]}
-                    onPress={() => {
-                      SheetManager.show('orderDate');
-                    }}>
-                    <Text style={styles.signin}>Change Filter</Text>
-                  </Pressable>
-                </View>
-              );
-            }}
+          <FlatList
             refreshControl={
               <RefreshControl
                 refreshing={ordersHistory.isLoading}
@@ -473,7 +401,6 @@ const Orders = ({ navigation }) => {
                 }}
               />
             }
-            // contentContainerStyle={{ flex: 1 }}
             data={handleSearch(searchTerm, filteredOrdersByUser)}
             keyExtractor={(item, index) => {
               if (!item) {
@@ -487,11 +414,29 @@ const Orders = ({ navigation }) => {
               }
 
               return (
-                <OrderItem
-                  item={item}
-                  navigation={navigation}
-                  key={item.order_no}
-                />
+                <Swipeable
+                  renderLeftActions={() => (
+                    <View
+                      style={{
+                        alignItems: 'center',
+                        justifyContent: 'flex-start',
+                        backgroundColor: '#f9f9f9',
+                        height: '100%',
+                        flexDirection: 'row',
+                        paddingLeft: 20,
+                      }}
+                    >
+                      <CheckBox onClick={toggleCheckbox} isChecked={isChecked} />
+                    </View>
+                  )}
+                  onSwipeableOpen={() => { }}
+                >
+                  <OrderItem
+                    item={item}
+                    navigation={navigation}
+                    key={item.order_no}
+                  />
+                </Swipeable>
               );
             }}
             scrollEnabled
@@ -656,6 +601,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
     borderBottomColor: '#ddd',
   },
+  listWrapper: {
+    height: Dimensions.get('window').height - 300,
+  }
 });
-
 export default Orders;

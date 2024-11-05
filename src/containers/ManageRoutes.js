@@ -6,7 +6,7 @@ import PrimaryButton from '../components/PrimaryButton';
 import Filter from '../../assets/icons/filter.svg';
 import RouteFilterSheet from '../components/BottomSheets/RouteFilterSheet';
 import { useSelector } from 'react-redux';
-import { useGetStoreDeliveryConfig } from '../hooks/useGetStoreDeliveryConfig';
+import { useGetRiderDeliveryConfig } from '../hooks/useGetRiderDeliveryConfig';
 import { useGetMerchantLocationDelivery } from '../hooks/useGetMerchantLocationDelivery';
 import DeleteDialog from '../components/DeleteDialog';
 import Bin from '../../assets/icons/delcross';
@@ -26,7 +26,7 @@ const ManageRoutes = () => {
   const navigation = useNavigation();
   const { user } = useSelector(state => state.auth);
   const { outlet } = useSelector(state => state.auth);
-  const { data: deliveryConfig, refetch } = useGetStoreDeliveryConfig(user.user_merchant_id);
+  const { data: deliveryConfig, refetch } = useGetRiderDeliveryConfig(user.user_merchant_id);
   const { data: dataLocation, refetch: refetchLocationDelivery, isFetchingLocation } = useGetMerchantLocationDelivery(user.user_merchant_id, outlet?.outlet_id);
   const { data: dataDistance, refetch: refetchDeliveryDistance, isFetchingDistance } = useGetMerchantDistanceDelivery(user.user_merchant_id, outlet?.outlet_id);
   const toast = useToast();
@@ -259,7 +259,7 @@ const ManageRoutes = () => {
             button={{
               label: 'Add Route',
               onPress: () => {
-                navigation.navigate('Add Delivery');
+                navigation.navigate('Add Routes', { filterType });
               },
 
               style: {

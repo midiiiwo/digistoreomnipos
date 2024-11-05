@@ -180,6 +180,7 @@ import InventoryQuickSale from '../containers/InventoryQuickSale';
 import ManageDeliveriesHeader from '../components/ManageDeliveriesHeader';
 import Riders from '../components/Riders';
 import DeliveryWindow from '../components/DeliveryWindow';
+import AddRoutes from '../containers/AddRoute';
 // import ManageRoutes from '../containers/ManageRoutes';
 
 const Stack = createNativeStackNavigator();
@@ -2110,6 +2111,23 @@ function HomeStackNavigator() {
                         justifyContent: 'center',
                       }}
                       title="Add Rider"
+                    />
+                  ),
+                }}
+              />
+              <Stack.Screen
+                name="Add Routes"
+                component={AddRoutes}
+                options={{
+                  header: props => (
+                    <InventoryHeader
+                      // prevScreen={props.back.title}
+                      navigation={props.navigation}
+                      addCustomer={false}
+                      mainHeader={{
+                        justifyContent: 'center',
+                      }}
+                      title="Configure your Delivery Route"
                     />
                   ),
                 }}

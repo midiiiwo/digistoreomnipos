@@ -120,6 +120,10 @@ export function getTransactionDetails(user_merchant_receivable, id) {
 
 // api/merchant.js
 export function getStoreDeliveryConfig(merchant) {
+  return Api.get(`orders/merchant/options/${merchant}`);
+}
+
+export function getRiderDeliveryConfig(merchant) {
   return deliveryApi.get(`/admin/company/${merchant}/settings`);
 }
 
@@ -408,6 +412,16 @@ export function createMerchantDeliveryConfigOption(payload) {
 export function addMerchantRider(payload) {
   return deliveryApi.post('admin/rider/fromPOS', payload);
 }
+
+export function addMerchantRouteLocation(payload) {
+  return deliveryApi.post('/admin/locationRoute/fromPOS', payload);
+}
+
+export function addMerchantMerchantRouteDistance(payload) {
+  return deliveryApi.post('/admin/distanceRoute/fromPOS', payload);
+}
+
+
 
 export function deleteMerchantDeliveryRoute(id) {
   return Api.delete(`/orders/delivery/route/${id}`);

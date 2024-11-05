@@ -5,7 +5,7 @@ import { useGetMerchantDeliveryWindow } from '../hooks/useGetMerchantDeliveryWin
 import { useSelector } from 'react-redux';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import { useQueryClient } from 'react-query';
-import { useGetStoreDeliveryConfig } from '../hooks/useGetStoreDeliveryConfig';
+import { useGetRiderDeliveryConfig } from '../hooks/useGetRiderDeliveryConfig';
 import { useChangeStoreDeliveryWindowConfig } from '../hooks/useChangeStoreDeliveryWindowConfig';
 import Bin from '../../assets/icons/delcross';
 import { FloatingButton } from 'react-native-ui-lib';
@@ -18,7 +18,7 @@ const DeliveryWindow = () => {
     const merchantId = user?.user_merchant_id;
 
     // Fetch delivery configuration
-    const { data: deliveryConfig } = useGetStoreDeliveryConfig(merchantId);
+    const { data: deliveryConfig } = useGetRiderDeliveryConfig(merchantId);
     const {
         data: dataDeliveryWindow,
         refetch: refetchDeliveryWindow,
@@ -75,7 +75,7 @@ const DeliveryWindow = () => {
                 <Switch
                     value={isEnabled}
                     onValueChange={toggleSwitch}
-                    onColor="green"
+                    onColor="blue"
                 />
                 <Text style={{ marginLeft: 10 }}>Enable Delivery Windows</Text>
             </View>
@@ -131,28 +131,31 @@ const DeliveryWindow = () => {
                 {/* <PrimaryButton style={styles.btn} handlePress={() => navigation.navigate('Add Rider')}>
                     Add Rider
                 </PrimaryButton> */}
-                <FloatingButton
-                    visible={true}
-                    hideBackgroundOverlay
-                    // bottomMargin={Dimensions.get('window').width * 0.18}
+                {isEnabled ? (
+                    <FloatingButton
+                        visible={true}
+                        hideBackgroundOverlay
+                        // bottomMargin={Dimensions.get('window').width * 0.18}
 
-                    button={{
-                        label: 'Add Delivery Window',
-                        onPress: () => {
-                            navigation.navigate('Add Rider');
-                        },
+                        button={{
+                            label: 'Add Delivery Window',
+                            onPress: () => {
+                                navigation.navigate('Add Rider');
+                            },
 
-                        style: {
-                            // marginLeft: 'auto',
-                            // marginRight: 14,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            width: '50%',
-                            backgroundColor: 'rgba(60, 121, 245, 1.0)',
-                            marginBottom: Dimensions.get('window').width * 0.05,
-                        },
-                    }}
-                />
+                            style: {
+                                // marginLeft: 'auto',
+                                // marginRight: 14,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                width: '50%',
+                                backgroundColor: 'rgba(60, 121, 245, 1.0)',
+                                marginBottom: Dimensions.get('window').width * 0.05,
+                            },
+                        }}
+                    />) : (
+                    <></>
+                )}
             </View>
         </View>
     );

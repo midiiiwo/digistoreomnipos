@@ -114,6 +114,8 @@
 		E75DFC61630D455E8619DE90 /* ProximaNova-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C44F6A961BDF4797A003D9CE /* ProximaNova-Semibold.ttf */; };
 		E78A503863A04477B206A41B /* IBMPlexMono-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3BA0D8DAA30E472FBC7BE778 /* IBMPlexMono-Medium.ttf */; };
 		EA3ED21F99D74C12948BF488 /* SFProDisplay-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 545E28A366D148F98A660AD3 /* SFProDisplay-Regular.ttf */; };
+		EB01CCEB2CDA5A090067CFDD /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EB01CCEA2CDA5A090067CFDD /* Storyboard.storyboard */; };
+		EB01CCEC2CDA5A090067CFDD /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EB01CCEA2CDA5A090067CFDD /* Storyboard.storyboard */; };
 		EBF4E4362CD7912600FFF7B3 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EBF4E4352CD7912600FFF7B3 /* Launch Screen.storyboard */; };
 		EBF4E4372CD7912600FFF7B3 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EBF4E4352CD7912600FFF7B3 /* Launch Screen.storyboard */; };
 		EF140C3102A94C76830FE356 /* Proxima-Nova-Extra-Condensed (2).zip in Resources */ = {isa = PBXBuildFile; fileRef = 707CC10B995B47B9AFA158F3 /* Proxima-Nova-Extra-Condensed (2).zip */; };
@@ -253,6 +255,7 @@
 		E369FE40C5DB4061878E2AE6 /* Inter-V.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-V.ttf"; path = "../assets/fonts/Inter-V.ttf"; sourceTree = "<group>"; };
 		E3DF3B9BEEBEDEE94183EC64 /* Pods_ipayghpos.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ipayghpos.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6D0575203854853B05AB961 /* StardosStencil-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "StardosStencil-Regular.ttf"; path = "../assets/fonts/StardosStencil-Regular.ttf"; sourceTree = "<group>"; };
+		EB01CCEA2CDA5A090067CFDD /* Storyboard.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
 		EBF4E4352CD7912600FFF7B3 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		EE907F14DB5B4A2CA7974BBC /* JetBrainsMono-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "JetBrainsMono-Medium.ttf"; path = "../assets/fonts/JetBrainsMono-Medium.ttf"; sourceTree = "<group>"; };
@@ -428,6 +431,7 @@
 				13B07FB71A68108700A75B9A /* main.m */,
 				89D69EC22A2F35D900379869 /* AppCenter-Config.plist */,
 				EBF4E4352CD7912600FFF7B3 /* Launch Screen.storyboard */,
+				EB01CCEA2CDA5A090067CFDD /* Storyboard.storyboard */,
 			);
 			name = digistoreominipos;
 			sourceTree = "<group>";
@@ -577,6 +581,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EBF4E4372CD7912600FFF7B3 /* Launch Screen.storyboard in Resources */,
+				EB01CCEC2CDA5A090067CFDD /* Storyboard.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -673,6 +678,7 @@
 				9A2E9D1B12894275AFC702FA /* OpenSans-Bold.ttf in Resources */,
 				843DB41A4B054AFDA6CF1FCF /* OpenSans-ExtraBold.ttf in Resources */,
 				44A29F666A3C4C43B9E29F6A /* OpenSans-Medium.ttf in Resources */,
+				EB01CCEB2CDA5A090067CFDD /* Storyboard.storyboard in Resources */,
 				34AD560E00B74636AD90DF35 /* OpenSans-Regular.ttf in Resources */,
 				EBF4E4362CD7912600FFF7B3 /* Launch Screen.storyboard in Resources */,
 				3907107F1ED14B139C9E2B94 /* OpenSans-SemiBold.ttf in Resources */,

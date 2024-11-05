@@ -1,15 +1,10 @@
-/* eslint-disable react-native/no-inline-styles */
-/* eslint-disable eqeqeq */
 import React from 'react';
 import { StyleSheet, View, ScrollView } from 'react-native';
-import { Picker as RNPicker } from 'react-native-ui-lib';
-
 import { useAddMerchantRider } from '../hooks/useAddMerchantRider';
 import { useSelector } from 'react-redux';
 import PrimaryButton from '../components/PrimaryButton';
 import { useToast } from 'react-native-toast-notifications';
 import { useQueryClient } from 'react-query';
-import Picker from '../components/Picker';
 import Input from '../components/Input';
 
 const reducer = (state, action) => {
@@ -27,27 +22,19 @@ const reducer = (state, action) => {
   }
 };
 
-const networks = [
-  { name: 'MTN Mobile Money', code: 'MTNMM' },
-  { name: 'Vodafone Cash', code: 'VODAC' },
-  { name: 'AirtelTigo Money', code: 'TIGOC' },
-];
-
 const AddRider = ({ navigation }) => {
   const { user, outlet } = useSelector(state => state.auth);
   const outlet_id = outlet.outlet_id;
-
   const [saved, setSaved] = React.useState();
   const [showError, setShowError] = React.useState(false);
   const [state, dispatch] = React.useReducer(reducer, {
     name: '',
-    telephone: '',
+    contact: '',
     outlet: outlet_id,
     license: '',
     vehicle: '',
     merchant_id: user,
   });
-  console.log(state);
   const toast = useToast();
   const client = useQueryClient();
 
@@ -62,13 +49,12 @@ const AddRider = ({ navigation }) => {
 
   React.useEffect(() => {
     if (saved) {
-      if (saved.status == 0) {
-        toast.show(saved.message, { placement: 'top', type: 'success' });
-        navigation.navigate('Manage Deliveries');
-        setSaved(null);
-        return;
+      console.log('Saved response:', saved);
+      const toastType = saved.code === 200 ? 'success' : 'danger';
+      toast.show(saved.message, { placement: 'top', type: toastType });
+      if (saved.code === 200) {
+        navigation.goBack();
       }
-      toast.show(saved.message, { placement: 'top', type: 'danger' });
       setSaved(null);
     }
   }, [saved, toast, navigation]);
@@ -80,15 +66,16 @@ const AddRider = ({ navigation }) => {
         payload,
       });
     },
-    [dispatch],
+    [dispatch]
   );
+
   return (
     <View style={{ flex: 1, backgroundColor: '#fff' }}>
       <View style={{ height: '100%' }}>
         <ScrollView style={styles.main}>
           <Input
             placeholder="Enter rider name"
-            showError={showError && state.name.length === 0}
+            showError={showError && state.name?.length === 0}
             val={state.name}
             setVal={text =>
               handleTextChange({
@@ -99,7 +86,7 @@ const AddRider = ({ navigation }) => {
           />
           <Input
             placeholder="Enter contact number of rider"
-            showError={showError && state.contact.length === 0}
+            showError={showError && state.contact?.length === 0}
             val={state.contact}
             setVal={text =>
               handleTextChange({
@@ -109,24 +96,6 @@ const AddRider = ({ navigation }) => {
             }
             keyboardType="phone-pad"
           />
-          {/* <Picker
-            // extraStyleOuter={{ flex: 2, marginRight: 6 }}
-            showError={showError && !state.network}
-            extraStyleOuter={{ marginVertical: 6, paddingTop: 0 }}
-            placeholder="Contact Phone Network"
-            value={state.network}
-            setValue={item => {
-              handleTextChange({
-                type: 'network',
-                payload: item,
-              });
-            }}>
-            {networks.map(i => {
-              return (
-                <RNPicker.Item key={i.code} label={i.name} value={i.code} />
-              );
-            })}
-          </Picker> */}
           <Input
             placeholder="Enter motor bike or vehicle registration number"
             val={state.licence}
@@ -155,8 +124,8 @@ const AddRider = ({ navigation }) => {
           disabled={addRider.isLoading}
           handlePress={() => {
             if (
-              state.name.length === 0 ||
-              state.contact.length === 0
+              state.name?.length === 0 ||
+              state.contact?.length === 0
             ) {
               setShowError(true);
               toast.show('Please provide all required details.', {
@@ -165,7 +134,6 @@ const AddRider = ({ navigation }) => {
               });
               return;
             }
-            console.log(state);
             addRider.mutate({
               name: state.name,
               vehicle: state.vehicle || '',
@@ -178,30 +146,19 @@ const AddRider = ({ navigation }) => {
         >
           {addRider.isLoading ? 'Processing' : 'Save Rider'}
         </PrimaryButton>
-
       </View>
     </View>
   );
 };
 
 export default AddRider;
+
 const styles = StyleSheet.create({
   main: {
     height: '100%',
     paddingHorizontal: 26,
     marginBottom: 78,
     marginTop: 26,
-    backgroundColor: '#fff',
-  },
-  indicatorStyle: {
-    display: 'none',
-  },
-  containerStyle: { borderRadius: 0 },
-  input: {
-    marginVertical: 8,
-    justifyContent: 'center',
-    fontFamily: 'Inter-Regular',
-    fontSize: 14,
     backgroundColor: '#fff',
   },
   btnWrapper: {
@@ -217,28 +174,5 @@ const styles = StyleSheet.create({
   btn: {
     borderRadius: 4,
     width: '90%',
-  },
-  dWrapper: {
-    paddingTop: 12,
-  },
-});
-
-const dd = StyleSheet.create({
-  placeholder: {
-    fontFamily: 'Inter-Medium',
-    fontSize: 14,
-    paddingHorizontal: 14,
-    height: '100%',
-    zIndex: 100,
-  },
-  main: {
-    borderWidth: 1.2,
-    borderStyle: 'dashed',
-    borderColor: '#B7D9F8',
-    paddingHorizontal: 14,
-    height: 54,
-    borderRadius: 5,
-    justifyContent: 'center',
-    backgroundColor: '#F5FAFF',
   },
 });

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import {
     StyleSheet,
     View,
@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { useSelector } from 'react-redux';
 import PrimaryButton from '../components/PrimaryButton';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useGetMerchantRidersAll } from '../hooks/useGetMerchantRidersAll';
 import Bin from '../../assets/icons/delcross';
 import DeleteDialog from '../components/DeleteDialog';
@@ -30,11 +30,18 @@ function Riders() {
     const client = useQueryClient();
     const idToDelete = useRef();
 
+    useFocusEffect(
+        useCallback(() => {
+            refetch();
+        }, [refetch])
+    );
+
     useEffect(() => {
         if (deleteStatus) {
-            if (deleteStatus.status === 0) {
+            if (deleteStatus.code === 200) {
                 toast.show(deleteStatus.message, { placement: 'top', type: 'success' });
                 client.invalidateQueries('merchant-riders');
+                refetch();
             } else {
                 toast.show(deleteStatus.message, { placement: 'top', type: 'danger' });
             }

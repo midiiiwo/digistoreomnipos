@@ -27,6 +27,7 @@ function OutletList(props) {
   );
   const navigation = useNavigation();
   const { outlet } = useSelector(state => state.auth);
+  console.log(user, "uers")
   const { setCurrentUser, setCurrentOutlet, setInventoryOutlet } =
     useActionCreator();
   return (
@@ -43,6 +44,7 @@ function OutletList(props) {
           paddingBottom: Dimensions.get('window').height * 0.1,
         }}
         data={(data && data.data && data.data.data) || []}
+
         renderItem={({ item }) => {
           if (!item) {
             return;

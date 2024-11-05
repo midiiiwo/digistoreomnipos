@@ -23,6 +23,7 @@ function OutletLogin() {
   const { setCurrentUser, setCurrentOutlet, setAuth } = useActionCreator();
   const navigation = useNavigation();
 
+
   // Check for an existing outlet on component mount
   useEffect(() => {
     const checkSelectedOutlet = async () => {
