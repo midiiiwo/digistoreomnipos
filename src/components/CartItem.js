@@ -11,7 +11,7 @@ import Bin from '../../assets/icons/bin.svg';
 import _ from 'lodash';
 
 const CartItem = ({ item }) => {
-  const { itemName, amount, quantity, id, product_image } = item;
+  const { itemName, amount, quantity, id, product_image, discount } = item;
   const { subTotal } = useSelector(state => state.sale);
   const { updateSubTotalFromCart, updateCartItemQuantity, deleteItemFromCart } =
     useActionCreator();
@@ -47,7 +47,15 @@ const CartItem = ({ item }) => {
               .replaceAll(',', ', ')}
           </Text>
         )}
-        <Text style={styles.amount}>GHS {amount}</Text>
+        {discount && (<View style={styles.row}>
+          <Text style={[styles.amount, styles.originalAmount]}>
+            GHS {amount}
+          </Text>
+          <Text style={styles.amountDisc}>
+            GHS {(discount.value).toFixed(2)}
+          </Text>
+        </View>)}
+        {!discount && (<Text style={styles.amount}>GHS {amount}</Text>)}
       </View>
       <View style={styles.mainWrapper}>
         <View style={styles.quantChangeWrapper}>
@@ -70,6 +78,7 @@ const CartItem = ({ item }) => {
           )}
           {quantity > 0 && (
             <Pressable
+              // disabled={!!discount}
               onPress={() => {
                 if (quantity === 0) {
                   return;
@@ -79,19 +88,20 @@ const CartItem = ({ item }) => {
                   subTotal - (quantity + 1) * amount + quantity * amount;
                 updateSubTotalFromCart(updatedSubTotal);
               }}
-              style={styles.btn1}>
+              style={[styles.btn1]}>
               <Subtract height={16} width={16} stroke="#fff" />
             </Pressable>
           )}
           <Text style={styles.quant}>{quantity}</Text>
           <Pressable
+            // disabled={!!discount}
             onPress={() => {
               updateCartItemQuantity({ id, by: 1 });
               const updatedSubTotal =
                 subTotal - (quantity - 1) * amount + quantity * amount;
               updateSubTotalFromCart(updatedSubTotal);
             }}
-            style={styles.btn}>
+            style={[styles.btn]}>
             <AddIcon height={18} width={18} />
           </Pressable>
         </View>
@@ -170,6 +180,25 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: 'SourceSansPro-Bold',
   },
+  originalAmount: {
+    textDecorationLine: 'line-through',
+    // color: '#888',
+    marginRight: 6,
+  },
+  amountDisc: {
+    fontFamily: 'ReadexPro-Medium',
+    color: 'red',
+    fontSize: 14,
+    // marginTop: 2,
+    letterSpacing: -0.5,
+  },
+  row: {
+    flexDirection: 'row',
+  },
+  // disabledBtn: {
+  //   backgroundColor: '#f0f0f0', // Light gray for disabled state
+  //   borderColor: '#d3d3d3', // Light gray border for disabled state
+  // },
 });
 
 export default CartItem;

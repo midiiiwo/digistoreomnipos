@@ -46,6 +46,73 @@ const Cart = ({ navigation }) => {
     deliveryDueDate,
     orderDate,
   } = useSelector(state => state.sale);
+
+  const { applyDiscount } = useActionCreator();
+
+
+
+  const calculateDiscount = () => {
+    return cart.reduce((acc, item) => {
+      const originalAmount = item.amount * item.quantity;
+      let discountedAmount = originalAmount;
+
+      if (item.discount) {
+        if (item.discount.type === "PERCENTAGE") {
+          discountedAmount -= originalAmount * parseFloat(item.discount.disc);
+        } else {
+          discountedAmount -= parseFloat(item.discount.disc) * item.quantity;
+        }
+        discountedAmount = Math.max(discountedAmount, 0);
+      }
+
+      return acc + (originalAmount - discountedAmount);
+    }, 0);
+  };
+
+  const discountAmount = calculateDiscount();
+  const totalAmount = subTotal - discountAmount;
+
+
+
+  const [hasAppliedDiscount, setHasAppliedDiscount] = React.useState(false);
+
+  React.useEffect(() => {
+    if (!hasAppliedDiscount) {
+      // Calculate the total discount amount using the discount values from the cart items
+      const totalDiscount = cart.reduce((acc, item) => {
+        if (item.discount) {
+          return acc + parseFloat(item.discount.disc) * item.quantity; // Use item.discount.disc as quantity
+        }
+        return acc;
+      }, 0);
+
+      if (totalDiscount > 0) {
+        // Update discountPayload using applyDiscount if discount amount is greater than 0
+        applyDiscount({
+          discountType: 'GHS', // or '%', depending on your logic
+          quantity: discountAmount, // Set the total discount amount here
+          discountCode: undefined, // Replace with your actual discount code logic
+        });
+        setHasAppliedDiscount(true); // Mark as applied
+      } else {
+        // If total discount amount is 0, you can also clear the discount if needed
+        applyDiscount({
+          discountType: 'GHS', // or '%', depending on your logic
+          quantity: 0, // Set quantity to 0 to clear discount
+          discountCode: undefined,
+        });
+        setHasAppliedDiscount(true); // Mark as applied
+      }
+    }
+  }, [cart, applyDiscount, hasAppliedDiscount]);
+
+
+
+
+
+
+
+
   const { user } = useSelector(state => state.auth);
 
   const { data, isLoading } = useGetApplicableTaxes(user.merchant);
@@ -93,6 +160,12 @@ const Cart = ({ navigation }) => {
   const totalOtherAmount =
     totalTaxesApplied +
     Number((delivery && delivery.price && delivery.price.toFixed(2)) || 0);
+
+  console.log("hi", cart);
+
+
+
+  console.log(discountPayload, " discountpayloader")
 
   return (
     <View style={styles.main}>
@@ -187,6 +260,12 @@ const Cart = ({ navigation }) => {
                         </Text>
                       </View>
                     </View>
+                    {/* {discountAmount > 0 && (
+                      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                        <Text style={styles.discountText}>Discount:</Text>
+                        <Text> - GHS {discountAmount.toFixed(2)}</Text>
+                      </View>
+                    )} */}
                     {discountPayload && discountPayload.discount > 0 && (
                       <View style={[styles.taxMain, { marginTop: 0 }]}>
                         <Text style={styles.taxLabel}>
@@ -294,7 +373,32 @@ const Cart = ({ navigation }) => {
                         Total
                       </Text>
                       <View style={[styles.amountWrapper]}>
-                        {discountPayload && discountPayload.newAmount > 0 && (
+                        {/* {discountAmount > 0 && (
+                          <Text style={[styles.oldText]}>
+                            GHS{' '}
+                            {(
+                              subTotal + totalOtherAmount
+                            ).toFixed(2)}
+                          </Text>
+
+                        )} */}
+                        {/* {discountAmount > 0 && (
+                          <Text
+                            style={[
+                              styles.taxAmount,
+                              {
+                                fontSize: 14.5,
+                                fontFamily: 'ReadexPro-bold',
+                              },
+                            ]}>
+                            GHS{' '}
+                            {new Intl.NumberFormat('en-US', {
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 2,
+                            }).format(totalAmount + totalOtherAmount)}
+                          </Text>
+                        )} */}
+                        {discountPayload && discountPayload.newAmount > 0 && discountAmount > 0 && (
                           <Text style={[styles.oldText]}>
                             GHS{' '}
                             {(
@@ -316,6 +420,7 @@ const Cart = ({ navigation }) => {
                             maximumFractionDigits: 2,
                           }).format(subTotal + totalOtherAmount)}
                         </Text>
+
                       </View>
                     </View>
                     {addTaxes && (
@@ -370,6 +475,7 @@ const Cart = ({ navigation }) => {
                             type: 'inventory',
                           });
                         }}
+                        disabled={discountAmount > 0}
                         style={{
                           padding: 12,
                           paddingHorizontal: 1,
@@ -379,7 +485,7 @@ const Cart = ({ navigation }) => {
                           style={{
                             fontFamily: 'SFProDisplay-Regular',
                             fontSize: 16,
-                            color: '#59C1BD',
+                            color: discountAmount > 0 ? 'gray' : '#59C1BD',
                           }}>
                           Add discount
                         </Text>
@@ -482,11 +588,12 @@ const Cart = ({ navigation }) => {
 
                       {discountPayload && (
                         <Pressable
+                          disabled={discountAmount > 0}
                           onPress={() =>
                             clearDiscount(
                               subTotal +
-                                (discountPayload && discountPayload.discount) ||
-                                0,
+                              (discountPayload && discountPayload.discount) ||
+                              0,
                             )
                           }
                           style={{
@@ -498,7 +605,8 @@ const Cart = ({ navigation }) => {
                             style={{
                               fontFamily: 'SFProDisplay-Regular',
                               fontSize: 16,
-                              color: '#E0144C',
+                              color: discountAmount > 0 ? 'gray' : '#E0144C',
+                              // color: '#E0144C',
                             }}>
                             Clear discount
                           </Text>
@@ -529,7 +637,13 @@ const Cart = ({ navigation }) => {
 
             setQuickSaleInAction(false);
 
+            // if (discountAmount > 0) {
+            //   setTotalAmount(Number((totalAmount + totalOtherAmount).toFixed(2)));
+            // } else {
+            //   setTotalAmount(Number((subTotal + totalOtherAmount).toFixed(2)));
+            // }
             setTotalAmount(Number((subTotal + totalOtherAmount).toFixed(2)));
+            // setTotalAmount(Number((orderAmount + totalOtherAmount).toFixed(2)));
             if (addTaxes) {
               setOrderTaxes(taxes_);
             }
@@ -537,7 +651,11 @@ const Cart = ({ navigation }) => {
           }}
           disabled={cart.length === 0}>
           {totalItems} items - GHS{' '}
+          {/* {discountAmount > 0
+            ? Number(totalAmount + totalOtherAmount).toFixed(2)
+            : Number(subTotal + totalOtherAmount).toFixed(2)} */}
           {Number(subTotal + totalOtherAmount).toFixed(2)}
+          {/* {Number(orderAmount + totalOtherAmount).toFixed(2)} */}
         </ButtonLargeBottom>
         <ButtonCancelBottom
           Icon={ArrowUp}

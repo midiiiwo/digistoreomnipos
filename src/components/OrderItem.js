@@ -168,6 +168,8 @@ const ImageItem = ({ order_source }) => {
 };
 
 const OrderItem = ({ item, navigation }) => {
+  const partialPayOwing =
+    item?.payment_type === 'PARTIALPAY' && Number(item?.outstanding_amount) > 0;
   return (
     <Pressable
       style={styles.wrapper}
@@ -277,31 +279,34 @@ const OrderItem = ({ item, navigation }) => {
               styles.statusIndicator,
               {
                 backgroundColor:
-                  item.order_status !== 'NEW' &&
-                  item.order_status !== 'PENDING' &&
-                  item.order_status !== 'FAILED' &&
-                  item.order_status !== 'PAYMENT_CANCELLED' &&
-                  item.order_status !== 'DECLINED' &&
-                  item.order_status !== 'PAYMENT_FAILED' &&
-                  item.order_status !== 'VOID' &&
-                  item.order_status !== 'PAYMENT_DEFERRED' &&
-                  item?.payment_status !== 'Deferred'
+                  partialPayOwing && item?.order_status !== 'VOID'
+                    ? 'rgba(255, 191, 97, 1)'
+                    : item.order_status !== 'NEW' &&
+                      item.order_status !== 'PENDING' &&
+                      item.order_status !== 'FAILED' &&
+                      item.order_status !== 'PAYMENT_CANCELLED' &&
+                      item.order_status !== 'DECLINED' &&
+                      item.order_status !== 'PAYMENT_FAILED' &&
+                      item.order_status !== 'VOID' &&
+                      item.order_status !== 'PAYMENT_DEFERRED' &&
+                      item?.payment_status !== 'Deferred'
                     ? '#87C4C9'
                     : '#FD8A8A',
               },
             ]}
           />
           <Text style={styles.orderStatus}>
-            {item &&
-            item.order_status !== 'NEW' &&
-            item.order_status !== 'PENDING' &&
-            item.order_status !== 'FAILED' &&
-            item.order_status !== 'PAYMENT_CANCELLED' &&
-            item.order_status !== 'DECLINED' &&
-            item.order_status !== 'PAYMENT_FAILED' &&
-            item.order_status !== 'CANCELLED' &&
-            item.order_status !== 'PAYMENT_DEFERRED' &&
-            item?.payment_status !== 'Deferred'
+            {item && partialPayOwing && item?.order_status !== 'VOID'
+              ? 'Partially Paid'
+              : item.order_status !== 'NEW' &&
+                item.order_status !== 'PENDING' &&
+                item.order_status !== 'FAILED' &&
+                item.order_status !== 'PAYMENT_CANCELLED' &&
+                item.order_status !== 'DECLINED' &&
+                item.order_status !== 'PAYMENT_FAILED' &&
+                item.order_status !== 'CANCELLED' &&
+                item.order_status !== 'PAYMENT_DEFERRED' &&
+                item?.payment_status !== 'Deferred'
               ? item.order_status === 'VOID'
                 ? 'Void'
                 : 'Paid'

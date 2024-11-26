@@ -3,8 +3,9 @@ import { Text, View, Pressable, ScrollView } from 'react-native';
 import Store from '../../assets/icons/store.svg';
 import Taxes from '../../assets/icons/tax.svg';
 import Caret from '../../assets/icons/cart-right.svg';
+import Discount from '../../assets/icons/Discount.svg'
 import Users_ from '../../assets/icons/users_';
-import Delivery from '../../assets/icons/delivery-icon';
+// import Delivery from '../../assets/icons/delivery-icon.svg';
 import SalesChannel from '../../assets/icons/saleschannel';
 import UserSingle from '../../assets/icons/user-single';
 import React from 'react';
@@ -115,7 +116,26 @@ const Settings = () => {
                 }
                 navigation.navigate('Manage Deliveries');
               }}
+            />
+            <View
+              style={{ borderBottomColor: '#eee', borderBottomWidth: 0.5 }}
             /> */}
+            <SettingsItem
+              title="Discounts"
+              Icon={Discount}
+              handlePress={() => {
+                if (!user.user_permissions.includes('MGUSSD')) {
+                  Toast.show({
+                    type: ALERT_TYPE.WARNING,
+                    title: 'Upgrade needed',
+                    textBody:
+                      "You don't have access to this feature. Please upgrade your account",
+                  });
+                  return;
+                }
+                navigation.navigate('Manage Discounts');
+              }}
+            />
             <View
               style={{ borderBottomColor: '#eee', borderBottomWidth: 0.5 }}
             />

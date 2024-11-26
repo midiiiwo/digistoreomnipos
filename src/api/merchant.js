@@ -190,6 +190,30 @@ export function getCurrentActivationStep(merchant) {
   return Api.get(`/merchants/${merchant}/setup/activation/step`);
 }
 
+export function getMerchantDiscountDetails(merchant) {
+  return Api.get(`/discounts/discount/${merchant}/list`);
+}
+
+export function getMerchantSelectedDiscountDetails(discount_id) {
+  return Api.get(`/discounts/discount/${discount_id}`);
+}
+
+export function getMerchantSelectedDiscountOutletDetails(merchant, discount_id) {
+
+  return Api.get(`/discounts/discount/${merchant}/${discount_id}/outlets/ids/list`);
+}
+
+export function getMerchantSelectedDiscountProductApply(merchant, discount_id) {
+
+  return Api.get(`/discounts/discount/${merchant}/${discount_id}/product/ids/list`);
+}
+
+
+export function getMerchantSelectedDiscountProductDetails(merchant) {
+
+  return Api.get(`/products/product/${merchant}/list`);
+}
+
 export function getReceiptDetails(merchant) {
   return Api.get(`/merchants/receipt/${merchant}`);
 }
@@ -285,6 +309,19 @@ export function changeTaxStatus(payload) {
 
 export function mapMerchantOutletsToUser(payload) {
   return Api.post('/outlets/merchant/user/outlets/mapping', payload);
+}
+
+
+export function addMerchantDiscount(payload) {
+  return Api.post('/discounts/discount', payload);
+}
+
+export function editMerchantDiscount(payload) {
+  return Api.put('/discounts/discount', payload);
+}
+
+export function deleteMerchantDiscount(discount_id, mod_by) {
+  return Api.delete(`/discounts/discount/${discount_id}/${mod_by}`);
 }
 
 export function createMerchantUser(payload) {
@@ -417,22 +454,38 @@ export function addMerchantRouteLocation(payload) {
   return deliveryApi.post('/admin/locationRoute/fromPOS', payload);
 }
 
-export function addMerchantMerchantRouteDistance(payload) {
+export function addMerchantRouteDistance(payload) {
   return deliveryApi.post('/admin/distanceRoute/fromPOS', payload);
 }
 
 
 
-export function deleteMerchantDeliveryRoute(id) {
-  return Api.delete(`/orders/delivery/route/${id}`);
-}
+// export function deleteMerchantDeliveryRoute({ id }) {
+//   return deliveryApi.delete(`/admin/deliveryRoute/${id}`, { id });
+// }
+
+// export function deleteMerchantDeliveryRouteNew(id) {
+//   return deliveryApi.delete(`admin/deliveryRoute/${id}`);
+// }
 
 export function deleteRider({ user_id }) {
   return deliveryApi.delete(`/admin/rider/${user_id}`, { user_id });
 }
 
+export function deleteRoute({ id }) {
+  return deliveryApi.delete(`admin/distanceRoute/${id}`);
+}
+
+export function deleteRouteLocation({ id }) {
+  return deliveryApi.delete(`admin/locationRoute/${id}`);
+}
+
 export function setupStoreOrShortcode(payload) {
   return productApi.post('/stores/merchant/store', payload);
+}
+
+export function addMerchantCompany(payload) {
+  return deliveryApi.post('/admin/company', payload);
 }
 
 export function updateStoreOrShortcode(payload) {

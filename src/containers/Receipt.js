@@ -48,7 +48,7 @@ const mapPaymentChannelToName = {
   QRPAY: 'GHQR',
   CREDITBAL: 'Store Credit',
   DEBITBAL: 'Pay Later',
-  PATPAY: 'Partial Pay',
+  PATPAY: 'Partial Payment',
   OFFUSSD: 'Offline Ussd',
 };
 
@@ -133,7 +133,7 @@ const Receipt = ({ route, navigation }) => {
     receiptDetailsData.data &&
     receiptDetailsData.data.data;
 
-  const storeDetails = onlineStore?.data?.data;
+  // const storeDetails = onlineStore?.data?.data;
 
   const renderItems = i => {
     return i.map(item => {
@@ -156,9 +156,7 @@ const Receipt = ({ route, navigation }) => {
       return (
         <ReceiptItem
           itemName={
-            item && item.itemName && item.itemName.length > 0
-              ? item.itemName
-              : 'No description'
+            item?.itemName?.length > 0 ? item.itemName : 'No description'
           }
           quantity={item.quantity}
           amount={Number(item.amount).toFixed(2)}
@@ -168,8 +166,7 @@ const Receipt = ({ route, navigation }) => {
     });
   };
 
-  let item =
-    (orderDetails && orderDetails.data && orderDetails.data.data) || {};
+  let item = orderDetails?.data?.data || {};
 
   if (item?.payment_type === 'PAYLATER') {
     item.payment_status = 'Unpaid';
@@ -316,7 +313,14 @@ const Receipt = ({ route, navigation }) => {
           </CornerLabel> */}
           <View collapsable={false} ref={viewRef} style={{ marginTop: 12 }}>
             <View style={{ position: 'absolute', top: -10, right: -10 }}>
-              <CornerRibbon color={'red'} status={item.payment_status} />
+              <CornerRibbon
+                color={'red'}
+                status={item?.payment_status}
+                payment_type={item?.payment_type}
+                outstanding_amount={
+                  Number(item?.total_amount) - Number(cashEntered)
+                }
+              />
             </View>
             <Text style={[styles.receipt, { textAlign: 'center' }]}>
               {receiptItem && receiptItem.receipt_header}
@@ -498,7 +502,7 @@ const Receipt = ({ route, navigation }) => {
                       fontSize: 15,
                     },
                   ]}>
-                  Amount Due: GHS{' '}
+                  Outstanding Balance: GHS{' '}
                   {new Intl.NumberFormat('en-US', {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,

@@ -21,6 +21,8 @@ import BarScanner from '../../assets/icons/barscanner.svg';
 import Search from '../../assets/icons/search.svg';
 import Date from '../../assets/icons/date.svg';
 import ProductCard from '../components/ProductCard';
+import { useGetMerchantDiscountDetails } from '../hooks/useGetMerchantDiscountDetails';
+import { useMerchantSelectedDiscountProductApply } from '../hooks/useGetMerchantSelectedDiscountProductApply';
 import Flash from '../../assets/icons/flash.svg';
 import { BackHandler, Alert } from 'react-native';
 // import ButtonLargeBottom from '../components/ButtonLargeBottom';
@@ -52,6 +54,20 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ShadowedView, shadowStyle } from 'react-native-fast-shadow';
 import InventoryLoading from '../components/InventoryLoading';
 
+
+const fetchActiveAutomaticDiscount = () => {
+  const { user } = useSelector(state => state.auth);
+  const { data, isLoading } = useGetMerchantDiscountDetails(user.merchant);
+
+  if (isLoading) return null;
+
+  return data?.data?.data?.find(
+    (discount) =>
+      discount?.discount_mode === 'AUTOMATIC' &&
+      discount?.discount_state === 'Active'
+  );
+};
+
 const Viewer = ({
   refetchCategories,
   //isCategoryFetching,
@@ -77,10 +93,40 @@ const Viewer = ({
     isFetching: isOutletProductsFetching,
     refetch: refetchOutletProducts,
   } = useGetOutletProducts(user.merchant, user.outlet);
+
+
+
+  // Fetch discount details
+  const activeDiscount = fetchActiveAutomaticDiscount();
+  const discount_id = activeDiscount?.discount_id;
+
+  const { data: discountProducts } = useMerchantSelectedDiscountProductApply(
+    user.merchant,
+    discount_id
+  );
+
+  const discountProductIds = discountProducts?.data?.data || []; // Use optional chaining to avoid errors
+
+  // Filter and map to get an array of product IDs, excluding null values
+  const filteredProductIds = discountProductIds
+    .filter(product => product !== null) // Remove null values
+    .map(product => product.product_id); // Extract product IDs
+
+  // Log the filtered product IDs
+  console.log(filteredProductIds);
+
+
+
   const renderAllItems = React.useCallback(({ item }) => {
     if (!item) {
       return;
     }
+
+
+    const discountAppliesToAll = activeDiscount?.discount_apply === 'ALL';
+    const hasDiscount = discountAppliesToAll || filteredProductIds.includes(item.product_id);
+
+
 
     return (
       <ProductCard
@@ -89,15 +135,23 @@ const Viewer = ({
         hasPropertyVariants={item.product_has_property_variants}
         properties={item.product_properties}
         variants={item.product_properties_variants}
+        hasDiscount={hasDiscount}
+        discountType={activeDiscount?.discount_type || ''}
+        discountDescription={activeDiscount?.discount_description || ''}
+        discountValue={activeDiscount?.discount_value || '0'}
       />
     );
-  }, []);
+  }, [activeDiscount, filteredProductIds]);
 
   const renderCategoryItems = React.useCallback(({ item, index }) => {
     if (!item) {
       return;
     }
 
+    const discountAppliesToAll = activeDiscount?.discount_apply === 'ALL';
+    const hasDiscount = discountAppliesToAll || filteredProductIds.includes(item.product_id);
+
+
     return (
       <ProductCard
         item={item}
@@ -107,7 +161,7 @@ const Viewer = ({
         variants={item.product_properties_variants}
       />
     );
-  }, []);
+  }, [activeDiscount, filteredProductIds]);
 
   React.useEffect(() => {
     if (category.name !== 'All') {
@@ -272,6 +326,9 @@ const Inventory = ({ navigation }) => {
     useActionCreator();
   const { discountPayload, delivery, addTaxes, orderDate, deliveryDueDate } =
     useSelector(state => state.sale);
+
+
+
   const dupNotif = React.useRef();
   const { data: taxes, isLoading: istaxesLoading } = useGetApplicableTaxes(
     user.merchant,
@@ -797,6 +854,65 @@ const Inventory = ({ navigation }) => {
       </View>
     );
   }
+
+  // const { applyDiscount } = useActionCreator();
+
+  // const calculateDiscount = () => {
+  //   return cart.reduce((acc, item) => {
+  //     const originalAmount = item.amount * item.quantity;
+  //     let discountedAmount = originalAmount;
+
+  //     if (item.discount) {
+  //       if (item.discount.type === "PERCENTAGE") {
+  //         discountedAmount -= originalAmount * parseFloat(item.discount.disc);
+  //       } else {
+  //         discountedAmount -= parseFloat(item.discount.disc) * item.quantity;
+  //       }
+  //       discountedAmount = Math.max(discountedAmount, 0);
+  //     }
+
+  //     return acc + (originalAmount - discountedAmount);
+  //   }, 0);
+  // };
+
+  // const discountAmount = calculateDiscount();
+  // const totalAmount = subTotal - discountAmount;
+
+
+
+  // const [hasAppliedDiscount, setHasAppliedDiscount] = React.useState(false);
+
+  // React.useEffect(() => {
+  //   if (!hasAppliedDiscount) {
+  //     // Calculate the total discount amount using the discount values from the cart items
+  //     const totalDiscount = cart.reduce((acc, item) => {
+  //       if (item.discount) {
+  //         return acc + parseFloat(item.discount.disc) * item.quantity; // Use item.discount.disc as quantity
+  //       }
+  //       return acc;
+  //     }, 0);
+
+  //     if (totalDiscount > 0) {
+  //       // Update discountPayload using applyDiscount if discount amount is greater than 0
+  //       applyDiscount({
+  //         discountType: 'GHS', // or '%', depending on your logic
+  //         quantity: discountAmount, // Set the total discount amount here
+  //         discountCode: undefined, // Replace with your actual discount code logic
+  //       });
+  //       setHasAppliedDiscount(true); // Mark as applied
+  //     } else {
+  //       // If total discount amount is 0, you can also clear the discount if needed
+  //       applyDiscount({
+  //         discountType: 'GHS', // or '%', depending on your logic
+  //         quantity: 0, // Set quantity to 0 to clear discount
+  //         discountCode: undefined,
+  //       });
+  //       setHasAppliedDiscount(true); // Mark as applied
+  //     }
+  //   }
+  // }, [cart, applyDiscount, hasAppliedDiscount]);
+
+
 
   const orderAmount = (cart || []).reduce((acc, curr) => {
     if (!curr) {

@@ -30,17 +30,19 @@ import { isArray, upperCase } from 'lodash';
 import { handleSearch } from '../utils/shared';
 import CheckBox from 'react-native-check-box';
 import { Swipeable } from 'react-native-gesture-handler';
+import { useNavigation } from '@react-navigation/native';
 
-const Orders = ({ navigation }) => {
+const Orders = ({}) => {
   const { user } = useSelector(state => state.auth);
   const { startDate, endDate, orderOutlet } = useSelector(
     state => state.orders,
   );
-
+  
   const [isChecked, setIsChecked] = React.useState(false);
   const toggleCheckbox = () => setIsChecked(!isChecked);
 
   const { data, isLoading } = useGetMerchantOutlets(user.merchant);
+  const navigation = useNavigation();
   const [searchTerm, setSearchTerm] = React.useState('');
   // const { data, isLoading, isFetching, refetch } = useGetAllOrders(
   //   moment(startDate).format('DD-MM-YYYY'),
@@ -71,58 +73,44 @@ const Orders = ({ navigation }) => {
   //   return unsubscribe;
   // }, [navigation, refetch]);
 
-
   React.useEffect(() => {
-    let outlets = data?.data?.data || [];
-    outlets = outlets.filter(i => {
-      if (i) {
-        return (
-          (user.user_assigned_outlets &&
-            user.user_assigned_outlets.includes(i.outlet_id)) ||
-          user.user_merchant_group === 'Administrators'
-        );
-      }
-      return false;
-    });
-    // if (user.user_merchant_group === 'Administrators') {
-    //   refetch();
-    //   return;
-    // }
-    // let outletList = '';
-    // for (let outlet of user.user_assigned_outlets) {
-    //   outletList = outlet;
-    // }
-
-    // ordersNonAdmin_.mutate({
-    //   merchant: user.merchant,
-    //   outlet: user.outlet,
-    //   end_date: moment(endDate).format('DD-MM-YYYY'),
-    //   start_date: moment(startDate).format('DD-MM-YYYY'),
-    // });
-
-    let outlet = orderOutlet && orderOutlet.value;
-    if (!outlet || outlet === 'ALL') {
-      outlet = outlets?.map(i => {
-        if (!i) {
-          return;
+    navigation.addListener('focus', () => {
+      let outlets = data?.data?.data || [];
+      outlets = outlets.filter(i => {
+        if (i) {
+          return (
+            (user.user_assigned_outlets &&
+              user.user_assigned_outlets.includes(i.outlet_id)) ||
+            user.user_merchant_group === 'Administrators'
+          );
         }
-        return i.outlet_id;
+        return false;
       });
-    }
 
-    if (typeof outlet === 'object' && isArray(outlet)) {
-      try {
-        outlet = outlet.toString();
-      } catch (error) { }
-    }
+      let outlet = orderOutlet && orderOutlet.value;
+      if (!outlet || outlet === 'ALL') {
+        outlet = outlets?.map(i => {
+          if (!i) {
+            return;
+          }
+          return i.outlet_id;
+        });
+      }
 
-    ordersHistory.mutate({
-      merchant: user.merchant,
-      outlet: outlet,
-      user: user.login,
-      start_date: moment(startDate).format('DD-MM-YYYY'),
-      end_date: moment(endDate).format('DD-MM-YYYY'),
-      isAdmin: user.user_merchant_group === 'Administrators',
+      if (typeof outlet === 'object' && isArray(outlet)) {
+        try {
+          outlet = outlet.toString();
+        } catch (error) {}
+      }
+
+      ordersHistory.mutate({
+        merchant: user.merchant,
+        outlet: outlet,
+        user: user.login,
+        start_date: moment(startDate).format('DD-MM-YYYY'),
+        end_date: moment(endDate).format('DD-MM-YYYY'),
+        isAdmin: user.user_merchant_group === 'Administrators',
+      });
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [startDate, endDate, orderStatus, orderOutlet]);
@@ -224,7 +212,35 @@ const Orders = ({ navigation }) => {
         return upperCase(orderStatus) === 'ALL'
           ? true
           : upperCase(orderStatus) === 'CONFIRMED'
-            ? [
+          ? [
+              'PAID',
+              'COMPLETED',
+              'PICKUP_READY',
+              'BACKOFF_PROCCESSING',
+              'BACKOFF_PROCCESSED',
+              'DISPATCHED',
+              'PAYMENT_DEFERRED',
+              'PAYMENT_PARTIAL',
+            ].includes(o?.order_status)
+          : upperCase(orderStatus) === 'PENDING'
+          ? ![
+              'PAID',
+              'COMPLETED',
+              'PICKUP_READY',
+              'BACKOFF_PROCCESSING',
+              'BACKOFF_PROCCESSED',
+              'DISPATCHED',
+            ].includes(o?.order_status)
+          : upperCase(orderStatus) === 'COMPLETED'
+          ? ['COMPLETED'].includes(o?.order_status)
+          : upperCase(orderStatus) === 'READY FOR PICKUP'
+          ? ['PICKUP_READY'].includes(o?.order_status) &&
+            o?.delivery_type === 'PICKUP'
+          : upperCase(orderStatus) === 'READY FOR DELIVERY'
+          ? ['PENDING'].includes(o?.delivery_status) &&
+            o?.delivery_rider === null &&
+            o?.delivery_type === 'DELIVERY' &&
+            [
               'PAID',
               'COMPLETED',
               'PICKUP_READY',
@@ -233,47 +249,20 @@ const Orders = ({ navigation }) => {
               'DISPATCHED',
               'PAYMENT_DEFERRED',
             ].includes(o?.order_status)
-            : upperCase(orderStatus) === 'PENDING'
-              ? ![
-                'PAID',
-                'COMPLETED',
-                'PICKUP_READY',
-                'BACKOFF_PROCCESSING',
-                'BACKOFF_PROCCESSED',
-                'DISPATCHED',
-              ].includes(o?.order_status)
-              : upperCase(orderStatus) === 'COMPLETED'
-                ? ['COMPLETED'].includes(o?.order_status)
-                : upperCase(orderStatus) === 'READY FOR PICKUP'
-                  ? ['PICKUP_READY'].includes(o?.order_status) &&
-                  o?.delivery_type === 'PICKUP'
-                  : upperCase(orderStatus) === 'READY FOR DELIVERY'
-                    ? ['PENDING'].includes(o?.delivery_status) &&
-                    o?.delivery_rider === null &&
-                    o?.delivery_type === 'DELIVERY' &&
-                    [
-                      'PAID',
-                      'COMPLETED',
-                      'PICKUP_READY',
-                      'BACKOFF_PROCCESSING',
-                      'BACKOFF_PROCCESSED',
-                      'DISPATCHED',
-                      'PAYMENT_DEFERRED',
-                    ].includes(o?.order_status)
-                    : upperCase(orderStatus) === 'DELIVERIES ONGOING'
-                      ? ['PENDING', 'PICKED_UP_ITEM'].includes(o?.delivery_status) &&
-                      o?.delivery_rider !== null &&
-                      o?.delivery_type === 'DELIVERY' &&
-                      [
-                        'PAID',
-                        'COMPLETED',
-                        'PICKUP_READY',
-                        'PICKED_UP_ITEM',
-                        'BACKOFF_PROCCESSING',
-                        'BACKOFF_PROCCESSED',
-                        'DISPATCHED',
-                      ].includes(o?.order_status)
-                      : upperCase(orderStatus) === o?.order_status;
+          : upperCase(orderStatus) === 'DELIVERIES ONGOING'
+          ? ['PENDING', 'PICKED_UP_ITEM'].includes(o?.delivery_status) &&
+            o?.delivery_rider !== null &&
+            o?.delivery_type === 'DELIVERY' &&
+            [
+              'PAID',
+              'COMPLETED',
+              'PICKUP_READY',
+              'PICKED_UP_ITEM',
+              'BACKOFF_PROCCESSING',
+              'BACKOFF_PROCCESSED',
+              'DISPATCHED',
+            ].includes(o?.order_status)
+          : upperCase(orderStatus) === o?.order_status;
       }),
     [orders?.data, orderStatus],
   );
@@ -299,7 +288,7 @@ const Orders = ({ navigation }) => {
         />
       </View>
       <View style={styles.segmentedControlWrapper}>
-        <View style={{ marginRight: 16, flexDirection: 'row' }}>
+        <View style={{ marginRight: 16 ,flexDirection: 'row' }}>
           <View style={{ justifyContent: 'center', alignItems: 'center', marginLeft: 4 }}>
             <CheckBox onClick={toggleCheckbox} isChecked={isChecked} />
           </View>
@@ -386,6 +375,57 @@ const Orders = ({ navigation }) => {
       {!ordersHistory.isLoading && !isLoading && (
         <View style={styles.listWrapper}>
           <FlatList
+            estimatedItemSize={130}
+            style={{ flex: 1 }}
+            ListEmptyComponent={() => {
+              return (
+                <View
+                  style={{
+                    flex: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: '100%',
+                    paddingTop: Dimensions.get('window').height * 0.1,
+                    backgroundColor: '#fff',
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: 'ReadexPro-Medium',
+                      fontSize: 16,
+                      color: '#30475e',
+                    }}>
+                    You have no orders recorded
+                  </Text>
+
+                  <Pressable
+                    style={[
+                      styles.btn,
+                      {
+                        marginTop: 14,
+                        backgroundColor: 'rgba(25, 66, 216, 0.9)',
+                      },
+                    ]}
+                    onPress={() => {
+                      navigation.navigate('Inventory');
+                    }}>
+                    <Text style={styles.signin}>Create Order</Text>
+                  </Pressable>
+                  <Pressable
+                    style={[
+                      styles.btn,
+                      {
+                        marginTop: 14,
+                        backgroundColor: '#35A29F',
+                      },
+                    ]}
+                    onPress={() => {
+                      SheetManager.show('orderDate');
+                    }}>
+                    <Text style={styles.signin}>Change Filter</Text>
+                  </Pressable>
+                </View>
+              );
+            }}
             refreshControl={
               <RefreshControl
                 refreshing={ordersHistory.isLoading}
@@ -401,6 +441,7 @@ const Orders = ({ navigation }) => {
                 }}
               />
             }
+            // contentContainerStyle={{ flex: 1 }}
             data={handleSearch(searchTerm, filteredOrdersByUser)}
             keyExtractor={(item, index) => {
               if (!item) {
@@ -431,12 +472,12 @@ const Orders = ({ navigation }) => {
                   )}
                   onSwipeableOpen={() => { }}
                 >
-                  <OrderItem
-                    item={item}
-                    navigation={navigation}
-                    key={item.order_no}
+                <OrderItem
+                  item={item}
+                  navigation={navigation}
+                  key={item.order_no}
                   />
-                </Swipeable>
+                  </Swipeable>
               );
             }}
             scrollEnabled
@@ -605,4 +646,5 @@ const styles = StyleSheet.create({
     height: Dimensions.get('window').height - 300,
   }
 });
+
 export default Orders;

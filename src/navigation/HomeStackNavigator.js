@@ -181,7 +181,13 @@ import ManageDeliveriesHeader from '../components/ManageDeliveriesHeader';
 import Riders from '../components/Riders';
 import DeliveryWindow from '../components/DeliveryWindow';
 import AddRoutes from '../containers/AddRoute';
-// import ManageRoutes from '../containers/ManageRoutes';
+import ManageDiscounts from '../containers/ManageDiscounts';
+import AddDiscount from '../components/AddDiscount';
+import ProductList from '../components/Productlist';
+import DeliveryList from '../components/DeliveryList';
+import AddCoupon from '../components/AddCoupon';
+import ProductListCoupon from '../components/ProductListCoupon';
+import DeliveryListCoupon from '../components/DeliveryListCoupon';
 
 const Stack = createNativeStackNavigator();
 
@@ -406,20 +412,6 @@ function HomeStackNavigator() {
                   ),
                 }}
               />
-              {/* <Stack.Screen
-                name="Outlets Login"
-                component={Inventory}
-                options={{
-                  header: ({ navigation }) => (
-                    <InventoryHeader
-                      CustomerSelect={true}
-                      navigation={navigation}
-                      addCustomer={false}
-                      mainHeader={{ paddingVertical: 36 }}
-                    />
-                  ),
-                }}
-              /> */}
               <Stack.Screen
                 name="ChangePass"
                 component={ChangePass}
@@ -729,6 +721,7 @@ function HomeStackNavigator() {
                   ),
                 }}
               />
+
               <Stack.Screen
                 name="Manage Deliveries"
                 component={ManageDeliveries}
@@ -806,7 +799,6 @@ function HomeStackNavigator() {
                   ),
                 }}
               /> */}
-
 
               <Stack.Screen
                 name="Edit Outlet"
@@ -2201,6 +2193,24 @@ function HomeStackNavigator() {
                 }}
               />
               <Stack.Screen
+                name="Manage Discounts"
+                component={ManageDiscounts}
+                options={{
+                  // header: props => (
+                  //   <InventoryHeader
+                  //     // prevScreen={props.back.title}
+                  //     navigation={props.navigation}
+                  //     addCustomer={false}
+                  //     mainHeader={{
+                  //       justifyContent: 'center',
+                  //     }}
+                  //   // title="Manage Discounts"
+                  //   />
+                  // ),
+                  headerShown: false
+                }}
+              />
+              <Stack.Screen
                 name="Manage Taxes"
                 component={ManageTaxes}
                 options={{
@@ -2235,6 +2245,57 @@ function HomeStackNavigator() {
                 }}
               />
               <Stack.Screen
+                name="Create Discount"
+                component={AddDiscount}
+                options={{
+                  header: props => (
+                    <InventoryHeader
+                      // prevScreen={props.back.title}
+                      navigation={props.navigation}
+                      addCustomer={false}
+                      mainHeader={{
+                        justifyContent: 'center',
+                      }}
+                      title="Create Discount"
+                    />
+                  ),
+                }}
+              />
+              <Stack.Screen
+                name="Productlist"
+                component={ProductList}
+                options={{
+                  header: props => (
+                    <InventoryHeader
+                      // prevScreen={props.back.title}
+                      navigation={props.navigation}
+                      addCustomer={false}
+                      mainHeader={{
+                        justifyContent: 'center',
+                      }}
+                      title="Select Product"
+                    />
+                  ),
+                }}
+              />
+              <Stack.Screen
+                name="Create Coupon"
+                component={AddCoupon}
+                options={{
+                  header: props => (
+                    <InventoryHeader
+                      // prevScreen={props.back.title}
+                      navigation={props.navigation}
+                      addCustomer={false}
+                      mainHeader={{
+                        justifyContent: 'center',
+                      }}
+                      title="Create Coupon"
+                    />
+                  ),
+                }}
+              />
+              <Stack.Screen
                 name="Edit User"
                 component={EditUser}
                 options={{
@@ -2247,6 +2308,58 @@ function HomeStackNavigator() {
                         justifyContent: 'center',
                       }}
                       title="Edit User"
+                    />
+                  ),
+                }}
+              />
+
+              <Stack.Screen
+                name="ProductlistCoupon"
+                component={ProductListCoupon}
+                options={{
+                  header: props => (
+                    <InventoryHeader
+                      // prevScreen={props.back.title}
+                      navigation={props.navigation}
+                      addCustomer={false}
+                      mainHeader={{
+                        justifyContent: 'center',
+                      }}
+                      title="Select Product"
+                    />
+                  ),
+                }}
+              />
+              <Stack.Screen
+                name="Deliverylist"
+                component={DeliveryList}
+                options={{
+                  header: props => (
+                    <InventoryHeader
+                      // prevScreen={props.back.title}
+                      navigation={props.navigation}
+                      addCustomer={false}
+                      mainHeader={{
+                        justifyContent: 'center',
+                      }}
+                      title="Select Route"
+                    />
+                  ),
+                }}
+              />
+              <Stack.Screen
+                name="DeliverylistCoupon"
+                component={DeliveryListCoupon}
+                options={{
+                  header: props => (
+                    <InventoryHeader
+                      // prevScreen={props.back.title}
+                      navigation={props.navigation}
+                      addCustomer={false}
+                      mainHeader={{
+                        justifyContent: 'center',
+                      }}
+                      title="Select Route"
                     />
                   ),
                 }}

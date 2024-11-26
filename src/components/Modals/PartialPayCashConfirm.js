@@ -99,6 +99,8 @@ const PartialPayCashConfirm = ({
       order_item_amt: item && item.amount,
       order_item_prop: (item && item.order_item_props) || {},
       order_item_prop_id: item && item.order_item_prop_id,
+      order_item_removables: [],
+      order_item_extras: [],
     };
   });
   const orderTaxes_ = {};
@@ -149,7 +151,7 @@ const PartialPayCashConfirm = ({
           amount={Number(amount).toFixed(2)}
         />
         <PaymentReviewItem
-          name="Payment due"
+          name="Outstanding balance"
           amount={(
             Number(quickSaleInAction ? orderSubTotal : totalAmount) -
             Number(amount)

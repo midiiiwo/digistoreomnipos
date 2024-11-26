@@ -49,7 +49,7 @@ const ReceivedPayLater = props => {
   const [paymentType, setPaymentType] = React.useState();
   const [number, setNumber] = React.useState('');
   const [showError, setShowError] = React.useState(false);
-  // const [amount, setAmout] = React.useState('');
+
   const client = useQueryClient();
   const next = React.useRef(false);
 
@@ -59,10 +59,20 @@ const ReceivedPayLater = props => {
   const { user } = useSelector(state => state.auth);
   const { data } = useGetTransactionFee(
     paymentType?.value,
-    orderDetails?.total_amount,
+    amount,
     user.merchant,
     paymentType !== null,
   );
+
+  const [amount, setAmount] = React.useState(() =>
+    Number(orderDetails?.outstanding_amount) > 0
+      ? orderDetails?.outstanding_amount?.toString()
+      : orderDetails?.total_amount?.toString(),
+  );
+
+  // console.log('outstanding_amount', orderDetails?.outstanding_amount);
+  // console.log('total_amount', orderDetails?.total_amount);
+  // console.log('amount', amount);
 
   const toast = useToast();
 
@@ -83,7 +93,7 @@ const ReceivedPayLater = props => {
 
   const transactionFee = data?.data;
 
-  console.log('feeeeeee', transactionFee);
+  console.log('mmmmm', amount);
 
   return (
     <ActionSheet
@@ -112,19 +122,6 @@ const ReceivedPayLater = props => {
             paddingHorizontal: 26,
             flexDirection: 'row',
           }}>
-          {/* <Text
-            style={{
-              color: '#30475e',
-              fontFamily: 'ReadexPro-Medium',
-              fontSize: 15,
-              textAlign: 'center',
-              alignSelf: 'center',
-              position: 'absolute',
-              left: 0,
-              right: 0,
-            }}>
-            Pay Balance
-          </Text> */}
           <Pressable
             onPress={() => SheetManager.hide('Receive PayLater')}
             style={{ marginLeft: 'auto', paddingVertical: 12 }}>
@@ -140,7 +137,16 @@ const ReceivedPayLater = props => {
               textAlign: 'center',
               alignSelf: 'center',
             }}>
-            GHS {orderDetails?.total_amount}
+            Amount Due: GHS{' '}
+            {Number(orderDetails?.outstanding_amount) > 0
+              ? new Intl.NumberFormat('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              }).format(orderDetails?.outstanding_amount)
+              : new Intl.NumberFormat('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              }).format(orderDetails?.total_amount)}
           </Text>
         </View>
         <View style={styles.dropdownWrapper}>
@@ -182,19 +188,28 @@ const ReceivedPayLater = props => {
               keyboardType="phone-pad"
             />
           )}
-          {/* <Input
-            placeholder="Enter Amount"
-            showError={
-              showError &&
-              paymentType &&
-              paymentType.value !== 'CASH' &&
-              amount.length === 0
-            }
-            val={amount}
-            keyboardType="number-pad"
-            setVal={setAmount}
-          /> */}
         </View>
+        {orderDetails?.payment_type === 'PARTIALPAY' && (
+          <View
+            style={{
+              paddingHorizontal: 18,
+              marginBottom: Dimensions.get('window').height * 0.05,
+            }}>
+            <Input
+              placeholder="Enter Amount"
+              showError={
+                showError &&
+                paymentType &&
+                paymentType.value !== 'CASH' &&
+                amount.length === 0
+              }
+              val={amount}
+              keyboardType="number-pad"
+              setVal={setAmount}
+            />
+          </View>
+        )}
+
         <View style={styles.btnWrapper}>
           <Text
             style={{
@@ -237,10 +252,10 @@ const ReceivedPayLater = props => {
                 return;
               }
               const payload = {
-                total_amount: orderDetails?.total_amount,
+                total_amount: amount,
                 service_charge: transactionFee?.charge || 0,
                 payment_invoice: orderDetails?.payment_invoice,
-                payment_number: number.length > 0 ? number : '0000000000',
+                payment_number: number?.length > 0 ? number : '0000000000',
                 payment_network: paymentType?.value,
                 payment_receipt: '',
                 secret: '',
@@ -248,6 +263,9 @@ const ReceivedPayLater = props => {
                 merchant: user?.merchant,
                 mod_by: user?.login,
               };
+              if (orderDetails?.payment_type === 'PARTIALPAY') {
+                payload.payment_type = 'PARTIALPAY';
+              }
               mutate(payload);
             }}>
             {isLoading ? 'Processing' : 'Proceed'}

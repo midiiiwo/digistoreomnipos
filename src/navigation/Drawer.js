@@ -506,13 +506,13 @@ const Drawer = props => {
                 });
                 return;
               }
-              setActiveItem('Online Store');
+              setActiveItem('Manage Deliveries');
 
               props.navigation.navigate('Manage Deliveries');
             }}
           />
         )}
-        {isAdmin && (
+        {/* {isAdmin && (
           <DrawerItem
             labelStyle={[
               styles.label, // Keep your existing label styles
@@ -542,7 +542,7 @@ const Drawer = props => {
               props.navigation.navigate('Manage Users')
             }}
           />
-        )}
+        )} */}
         {/* <DrawerItem
           labelStyle={styles.label}
           style={{

@@ -24,7 +24,6 @@ import { useGetMerchantDetails } from '../hooks/useGetMerchantDetails';
 import CornerRibbon from '../components/CornerRibbon';
 import { isDateValid } from './Receipt';
 import moment from 'moment';
-import { useGetOnlineStoreDetails } from '../hooks/useGetOnlineStoreDetails';
 
 const mapPaymentChannelToName = {
   MTNMM: 'MTN Mobile Money',
@@ -61,9 +60,6 @@ const OrderReceipt = ({ route, navigation }) => {
   const { setCustomerPayment } = useActionCreator();
 
   const { data, isLoading } = useGetReceiptDetails(user.merchant);
-
-  const { data: onlineStore, isLoading: isStoreLoading } =
-    useGetOnlineStoreDetails(user.merchant);
 
   // const { quickSaleInAction } = useSelector(state => state.quickSale);
   // const { data, isLoading } = useGetApplicableTaxes(user.merchant);
@@ -157,7 +153,7 @@ const OrderReceipt = ({ route, navigation }) => {
     });
   };
 
-  if (isLoading || isDetailsLoading || isStoreLoading) {
+  if (isLoading || isDetailsLoading) {
     return <Loading />;
   }
 
@@ -194,6 +190,8 @@ const OrderReceipt = ({ route, navigation }) => {
                     ? 'Unpaid'
                     : item?.payment_status
                 }
+                payment_type={item?.payment_type}
+                outstanding_amount={item?.outstanding_amount}
               />
             </View>
             <Text style={[styles.receipt, { textAlign: 'center' }]}>
@@ -339,19 +337,51 @@ const OrderReceipt = ({ route, navigation }) => {
               <Text style={styles.totalAmount}>
                 Total: GHS {item.total_amount}
               </Text>
-              <Text
-                style={[
-                  styles.totalAmount,
-                  {
-                    marginTop: 0,
-                    fontFamily: 'SFProDisplay-Medium',
-                    fontSize: 16,
-                  },
-                ]}>
-                {item.payment_type === 'INVOICE' ? 'Invoice - ' : ''}
-                {mapPaymentChannelToName[item?.payment_channel]}: GHS{' '}
-                {item.total_amount}
-              </Text>
+              {item.payment_type !== 'PARTIALPAY' && (
+                <Text
+                  style={[
+                    styles.totalAmount,
+                    {
+                      marginTop: 0,
+                      fontFamily: 'SFProDisplay-Medium',
+                      fontSize: 16,
+                    },
+                  ]}>
+                  {item.payment_type === 'INVOICE' ? 'Invoice - ' : ''}
+                  {mapPaymentChannelToName[item?.payment_channel]}: GHS{' '}
+                  {item.total_amount}
+                </Text>
+              )}
+              {item.payment_type === 'PARTIALPAY' && (
+                <Text
+                  style={[
+                    styles.totalAmount,
+                    {
+                      marginTop: 0,
+                      fontFamily: 'SFProDisplay-Medium',
+                      fontSize: 16,
+                    },
+                  ]}>
+                  {'Partial Payment'}: GHS{' '}
+                  {new Intl.NumberFormat('en-US', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  }).format(item.total_amount - item.outstanding_amount)}
+                </Text>
+              )}
+              {item.payment_type === 'PARTIALPAY' && (
+                <Text
+                  style={[
+                    styles.totalAmount,
+                    {
+                      marginTop: 0,
+                      fontFamily: 'SFProDisplay-Medium',
+                      fontSize: 16,
+                    },
+                  ]}>
+                  {'Outstanding Amount'}: GHS {item.outstanding_amount}
+                </Text>
+              )}
               {inclusveTaxes?.map(tax => {
                 if (tax) {
                   return (

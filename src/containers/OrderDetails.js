@@ -9,13 +9,9 @@ import {
   Dimensions,
   Alert,
   RefreshControl,
-  TouchableOpacity,
-  Clipboard,
-
 } from 'react-native';
 import { SheetManager } from 'react-native-actions-sheet';
 import { captureRef } from 'react-native-view-shot';
-import Copyicon from '../../assets/icons/copyIcon.svg';
 
 import { useSelector } from 'react-redux';
 import { useGetSelectedOrderDetails } from '../hooks/useGetSelectedOrderDetails';
@@ -84,7 +80,7 @@ const OrderDetails = props => {
     useGetMerchantDetails(user.merchant);
 
   const [kitchenStaffItems, setKitchenStaffItems] = React.useState();
-  const ordersNonAdmin_ = useGetOrdersNonAdmin(() => { });
+  const ordersNonAdmin_ = useGetOrdersNonAdmin(() => {});
 
   const navigation = useNavigation();
 
@@ -94,13 +90,6 @@ const OrderDetails = props => {
 
   const isKitchenStaff = user.user_permissions.includes('BCKRMORDER');
   const { startDate, endDate } = useSelector(state => state.orders);
-  const copyToClipboard = () => {
-    if (item && item.delivery_location) {
-      Clipboard.setString(item.delivery_location);
-      // Optionally, show a message indicating the location was copied
-      alert('Location copied to clipboard!');
-    }
-  };
 
   // console.log('iddddd', props.route.params.id);
 
@@ -166,6 +155,9 @@ const OrderDetails = props => {
     item?.order_status === 'PAYMENT_CANCELLED';
 
   const merchantDetails = merchantDetails_?.data?.data || {};
+
+  const partialPayOwing =
+    item?.payment_type === 'PARTIALPAY' && Number(item?.outstanding_amount) > 0;
 
   if (!item) {
     return (
@@ -240,25 +232,60 @@ const OrderDetails = props => {
                 Order #{(item && item.order_no) || ''}
               </Text>
               {!isKitchenStaff && (
-                <Text
-                  style={[
-                    styles.orderNo,
-                    {
-                      marginLeft: 'auto',
-                      fontFamily: 'ReadexPro-Medium',
-                    },
-                    // {
-                    //   fontFamily: 'SFProDisplay-Semibold',
-                    //   fontSize: 16,
-                    //   color: '#30475e',
-                    //   marginVertical: 'auto',
-                    // },
-                  ]}>
-                  GHS{' '}
-                  {new Intl.NumberFormat().format(
-                    Number((item && item.total_amount) || 0),
+                <View style={{ marginLeft: 'auto' }}>
+                  <Text
+                    style={[
+                      styles.orderNo,
+                      {
+                        fontFamily: 'ReadexPro-Medium',
+                        textAlign: 'right',
+                      },
+                    ]}>
+                    GHS{' '}
+                    {new Intl.NumberFormat().format(
+                      Number(item?.total_amount || 0),
+                    )}
+                  </Text>
+                  {partialPayOwing && item?.order_status !== 'VOID' && (
+                    <View>
+                      <Text
+                        style={[
+                          styles.orderNo,
+                          {
+                            fontFamily: 'ReadexPro-Regular',
+                            fontSize: 12.5,
+                            textAlign: 'right',
+                            color: '#229799',
+                          },
+                        ]}>
+                        Amount Paid: GHS{' '}
+                        {new Intl.NumberFormat('en-US', {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        }).format(
+                          Number(item?.total_amount) -
+                            Number(item?.outstanding_amount || 0),
+                        )}
+                      </Text>
+                      <Text
+                        style={[
+                          styles.orderNo,
+                          {
+                            fontFamily: 'ReadexPro-Regular',
+                            fontSize: 12.5,
+                            textAlign: 'right',
+                            color: '#F31559',
+                          },
+                        ]}>
+                        Outstanding Bal: GHS{' '}
+                        {new Intl.NumberFormat('en-US', {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        }).format(Number(item?.outstanding_amount || 0))}
+                      </Text>
+                    </View>
                   )}
-                </Text>
+                </View>
               )}
             </View>
             <Text
@@ -293,28 +320,27 @@ const OrderDetails = props => {
                       styles.statusIndicator,
                       {
                         backgroundColor:
-                          item &&
-                            item.order_status &&
-                            item.order_status !== 'NEW' &&
-                            item.order_status !== 'PENDING' &&
-                            item.order_status !== 'FAILED' &&
-                            item.order_status !== 'PAYMENT_CANCELLED' &&
-                            item.order_status !== 'DECLINED' &&
-                            item.order_status !== 'PAYMENT_FAILED' &&
-                            item.order_status !== 'VOID' &&
-                            item.order_status !== 'PAYMENT_DEFERRED'
+                          partialPayOwing && item?.order_status !== 'VOID'
+                            ? 'rgba(255, 191, 97, 1)'
+                            : item?.order_status !== 'NEW' &&
+                              item?.order_status !== 'PENDING' &&
+                              item?.order_status !== 'FAILED' &&
+                              item?.order_status !== 'PAYMENT_CANCELLED' &&
+                              item?.order_status !== 'DECLINED' &&
+                              item?.order_status !== 'PAYMENT_FAILED' &&
+                              item?.order_status !== 'VOID' &&
+                              item?.order_status !== 'PAYMENT_DEFERRED'
                             ? '#87C4C9'
                             : '#FD8A8A',
                       },
                     ]}
                   />
                   <Text style={styles.orderStatus}>
-                    {/* {item.order_status !== 'NEW' &&
-                  item.order_status !== 'PENDING' &&
-                  item.order_status !== 'FAILED'
-                    ? 'Paid'
-                    : 'Unpaid'} */}
-                    {((item && item.order_status) || '').replace('_', ' ')}
+                    {(item?.payment_type === 'PARTIALPAY' &&
+                    Number(item?.outstanding_amount) === 0
+                      ? 'Paid'
+                      : item?.order_status || ''
+                    ).replace('_', ' ')}
                   </Text>
                 </View>
                 <View style={[styles.statusWrapper]}>
@@ -324,12 +350,12 @@ const OrderDetails = props => {
                       {
                         backgroundColor:
                           item &&
-                            item.delivery_status &&
-                            item.delivery_status === 'DELIVERED'
+                          item.delivery_status &&
+                          item.delivery_status === 'DELIVERED'
                             ? '#87C4C9'
                             : item && item.delivery_status === 'PENDING'
-                              ? '#FD8A8A'
-                              : '#FD8A8A',
+                            ? '#FD8A8A'
+                            : '#FD8A8A',
                       },
                     ]}
                   />
@@ -340,9 +366,9 @@ const OrderDetails = props => {
                     ? 'Undelivered'
                     : 'Undelivered'} */}
                     {item &&
-                      item.delivery_status &&
-                      (item.delivery_status === 'PENDING' ||
-                        item.delivery_status === 'CANCELLED')
+                    item.delivery_status &&
+                    (item.delivery_status === 'PENDING' ||
+                      item.delivery_status === 'CANCELLED')
                       ? 'UNDELIVERED'
                       : 'DELIVERED'}
                   </Text>
@@ -430,26 +456,29 @@ const OrderDetails = props => {
                   </View>
                 )}
             </View>
-            {item?.payment_type === 'PAYLATER' &&
-              item?.payment_status === 'Deferred' && (
-                <View style={{ alignItems: 'center' }}>
-                  <Pressable
-                    style={[styles.channelWrapper, { borderColor: '#615EFC' }]}
-                    onPress={() => {
-                      SheetManager.show('Receive PayLater', {
-                        payload: {
-                          item,
-                          setInvoice: $setInvoice,
-                          setBalanceInstructions,
-                        },
-                      });
-                    }}>
-                    <Text style={[styles.channel, { color: '#615EFC' }]}>
-                      Receive Payment
-                    </Text>
-                  </Pressable>
-                </View>
-              )}
+            {((item?.payment_type === 'PAYLATER' &&
+              item?.payment_status === 'Deferred') ||
+              (item?.payment_type === 'PARTIALPAY' &&
+                Number(item.outstanding_amount) > 0 &&
+                item?.order_status !== 'VOID')) && (
+              <View style={{ alignItems: 'center' }}>
+                <Pressable
+                  style={[styles.channelWrapper, { borderColor: '#615EFC' }]}
+                  onPress={() => {
+                    SheetManager.show('Receive PayLater', {
+                      payload: {
+                        item,
+                        setInvoice: $setInvoice,
+                        setBalanceInstructions,
+                      },
+                    });
+                  }}>
+                  <Text style={[styles.channel, { color: '#615EFC' }]}>
+                    Receive Payment
+                  </Text>
+                </Pressable>
+              </View>
+            )}
 
             <View style={styles.summary}>
               <Text style={styles.summaryLabel}>ORDER SUMMARY</Text>
@@ -526,7 +555,7 @@ const OrderDetails = props => {
                     try {
                       extras = JSON.parse(extras);
                       removables = JSON.parse(removables);
-                    } catch (error) { }
+                    } catch (error) {}
 
                     console.log('extras', extras);
                     return (
@@ -542,11 +571,11 @@ const OrderDetails = props => {
                             ]}>
                             {i?.order_item}
                             {i?.order_item_properties &&
-                              i?.order_item_properties.length > 0
+                            i?.order_item_properties.length > 0
                               ? ` (${i.order_item_properties
-                                .split(',')
-                                .map(prop => prop.trim().split(':')[1])
-                                .toString()})`
+                                  .split(',')
+                                  .map(prop => prop.trim().split(':')[1])
+                                  .toString()})`
                               : ''}
                           </Text>
                           {Object.values(extras).length > 0 && (
@@ -796,19 +825,14 @@ const OrderDetails = props => {
                 </View>
 
                 <View style={styles.taxMain}>
-
                   <Text style={styles.taxLabel}>Delivery Location</Text>
                   <Text
-                    onPress={copyToClipboard}
                     style={[
                       styles.taxAmount,
-                      { width: '40%', textAlign: 'right', color: 'blue' },
+                      { width: '40%', textAlign: 'right' },
                     ]}>
                     {item && item.delivery_location}
                   </Text>
-                  <Pressable onPress={copyToClipboard} style={{ marginLeft: 8 }}>
-                    <Copyicon height={30} width={30} />
-                  </Pressable>
                 </View>
                 <View style={styles.taxMain}>
                   <Text style={[styles.taxLabel, { color: '#6528F7' }]}>
@@ -841,8 +865,8 @@ const OrderDetails = props => {
                   style={[styles.taxMain, { justifyContent: 'flex-start' }]}>
                   <Text style={styles.taxLabel}>
                     {item &&
-                      item.customer_contact &&
-                      item.customer_contact.length > 0
+                    item.customer_contact &&
+                    item.customer_contact.length > 0
                       ? item.customer_contact
                       : 'No contact'}
                   </Text>
@@ -852,8 +876,8 @@ const OrderDetails = props => {
                   style={[styles.taxMain, { justifyContent: 'flex-start' }]}>
                   <Text style={styles.taxLabel}>
                     {item &&
-                      item.customer_email &&
-                      item.customer_email.length > 0
+                    item.customer_email &&
+                    item.customer_email.length > 0
                       ? item.customer_email
                       : 'No email'}
                   </Text>
@@ -866,62 +890,62 @@ const OrderDetails = props => {
       </ScrollView>
       {(item?.payment_type === 'INVOICE' ||
         (item?.payment_type !== 'INVOICE' && !orderNotSuccessful)) && (
-          <View style={styles.btnWrapper}>
-            <PrimaryButton
-              style={[styles.btn, { flex: 1 }]}
-              handlePress={() => {
-                if (
-                  item?.payment_type === 'INVOICE' &&
-                  item?.order_status !== 'PAID' &&
-                  item?.order_status !== 'COMPLETED'
-                ) {
-                  props.navigation.navigate('Invoice Order', {
-                    data: item,
-                    cart: orderItems || [],
-                    merchantDetails,
-                    invoiceId: item?.external_invoice,
-                  });
-                } else {
-                  props.navigation.navigate('Order Receipt', {
-                    item,
-                    itemList: orderItems || [],
-                  });
-                }
-              }}>
-              {item?.payment_type === 'INVOICE' &&
+        <View style={styles.btnWrapper}>
+          <PrimaryButton
+            style={[styles.btn, { flex: 1 }]}
+            handlePress={() => {
+              if (
+                item?.payment_type === 'INVOICE' &&
                 item?.order_status !== 'PAID' &&
                 item?.order_status !== 'COMPLETED'
-                ? 'Send Invoice'
-                : 'Send Receipt'}
-            </PrimaryButton>
-            <View style={{ marginHorizontal: 3 }} />
-            <PrimaryButton
-              style={[styles.btn, { flex: 1, backgroundColor: '#30475e' }]}
-              handlePress={() => {
-                captureRef(ref, {
-                  format: 'png',
-                  result: 'base64',
-                }).then(async uri => {
-                  try {
-                    const res = await Share.open(
-                      {
-                        title: 'Share receipt',
-                        url: 'data:image/png;base64,' + uri,
-                      },
-                      {},
-                    );
-                    if (res.success) {
-                      toast.show('Share success');
-                    }
-                  } catch (error) {
-                    // toast.show('Share unsuccessfu');
-                  }
+              ) {
+                props.navigation.navigate('Invoice Order', {
+                  data: item,
+                  cart: orderItems || [],
+                  merchantDetails,
+                  invoiceId: item?.external_invoice,
                 });
-              }}>
-              Share Order
-            </PrimaryButton>
-          </View>
-        )}
+              } else {
+                props.navigation.navigate('Order Receipt', {
+                  item,
+                  itemList: orderItems || [],
+                });
+              }
+            }}>
+            {item?.payment_type === 'INVOICE' &&
+            item?.order_status !== 'PAID' &&
+            item?.order_status !== 'COMPLETED'
+              ? 'Send Invoice'
+              : 'Send Receipt'}
+          </PrimaryButton>
+          <View style={{ marginHorizontal: 3 }} />
+          <PrimaryButton
+            style={[styles.btn, { flex: 1, backgroundColor: '#30475e' }]}
+            handlePress={() => {
+              captureRef(ref, {
+                format: 'png',
+                result: 'base64',
+              }).then(async uri => {
+                try {
+                  const res = await Share.open(
+                    {
+                      title: 'Share receipt',
+                      url: 'data:image/png;base64,' + uri,
+                    },
+                    {},
+                  );
+                  if (res.success) {
+                    toast.show('Share success');
+                  }
+                } catch (error) {
+                  // toast.show('Share unsuccessfu');
+                }
+              });
+            }}>
+            Share Order
+          </PrimaryButton>
+        </View>
+      )}
       <AddBalanceInstructions
         invoice={$invoice}
         paymentInstructions={balanceInstructions}
