@@ -68,6 +68,8 @@ const fetchActiveAutomaticDiscount = () => {
   );
 };
 
+
+
 const Viewer = ({
   refetchCategories,
   //isCategoryFetching,
@@ -159,6 +161,10 @@ const Viewer = ({
         hasPropertyVariants={item.product_has_property_variants}
         properties={item.product_properties}
         variants={item.product_properties_variants}
+        hasDiscount={hasDiscount}
+        discountType={activeDiscount?.discount_type || ''}
+        discountDescription={activeDiscount?.discount_description || ''}
+        discountValue={activeDiscount?.discount_value || '0'}
       />
     );
   }, [activeDiscount, filteredProductIds]);
@@ -326,6 +332,137 @@ const Inventory = ({ navigation }) => {
     useActionCreator();
   const { discountPayload, delivery, addTaxes, orderDate, deliveryDueDate } =
     useSelector(state => state.sale);
+  
+  const { applyDiscount } = useActionCreator();
+  
+  const [hasAppliedDiscount, setHasAppliedDiscount] = React.useState(false);
+
+  
+  
+
+
+  React.useEffect(() => {
+  if (!hasAppliedDiscount) {
+    // Calculate the total discount amount using the discount values from the cart items
+    const totalDiscount = cart.reduce((acc, item) => {
+      if (item.discount) {
+        // Assuming item.discount.disc is the discount value (either fixed or percentage)
+        if (item.discount.type === "PERCENTAGE") {
+          // If discount type is percentage, calculate discount based on item amount
+          return acc + (item.amount * (parseFloat(item.discount.disc) / 100)) * item.quantity;
+        } else {
+          // If it's a fixed discount, just add it
+          return acc + parseFloat(item.discount.disc) * item.quantity;
+        }
+      }
+      return acc;
+    }, 0);
+
+    // Set the discount amount to the calculated total discount
+    const discountAmount = totalDiscount;
+
+
+    if (discountAmount > 0) {
+      applyDiscount({
+        discountType: 'GHS', // or '%', depending on your logic
+        quantity: discountAmount, // Set the total discount amount here
+        discountCode: undefined, // Replace with your actual discount code logic
+      });
+      setHasAppliedDiscount(true); // Mark as applied
+    } else {
+      // Optionally, handle cases where no discount is applied (e.g., show a message or reset a state).
+      setHasAppliedDiscount(false); // Mark as not applied
+    }
+    
+
+    // if (discountAmount > 0) {
+    //   // Update discountPayload using applyDiscount if discount amount is greater than 0
+    //   applyDiscount({
+    //     discountType: 'GHS', // or '%', depending on your logic
+    //     quantity: discountAmount, // Set the total discount amount here
+    //     discountCode: undefined, // Replace with your actual discount code logic
+    //   });
+    //   setHasAppliedDiscount(true); // Mark as applied
+    // } else {
+    //   // If total discount amount is 0, you can also clear the discount if needed
+    //   applyDiscount({
+    //     discountType: 'GHS', // or '%', depending on your logic
+    //     quantity: 0, // Set quantity to 0 to clear discount
+    //     discountCode: undefined,
+    //   });
+    //   setHasAppliedDiscount(true); // Mark as applied
+    // }
+  }
+  }, [cart, applyDiscount, hasAppliedDiscount]);
+  
+
+
+
+  // React.useEffect(() => {
+  //   if (!hasAppliedDiscount) {
+  //     // Calculate the total discount amount using the discount values from the cart items
+  //     const totalDiscount = cart.reduce((acc, item) => {
+  //       if (item.discount) {
+  //         return acc + parseFloat(item.discount.disc) * item.quantity; // Use item.discount.disc as quantity
+  //       }
+        
+  //       return acc;
+  //     },
+  //       0);
+
+  //     if (totalDiscount > 0) {
+  //       // Update discountPayload using applyDiscount if discount amount is greater than 0
+  //       applyDiscount({
+  //         discountType: 'GHS', // or '%', depending on your logic
+  //         quantity: discountAmount, // Set the total discount amount here
+  //         discountCode: undefined, // Replace with your actual discount code logic
+  //       });
+  //       setHasAppliedDiscount(true); // Mark as applied
+  //     } else {
+  //       // If total discount amount is 0, you can also clear the discount if needed
+  //       applyDiscount({
+  //         discountType: 'GHS', // or '%', depending on your logic
+  //         quantity: 0, // Set quantity to 0 to clear discount
+  //         discountCode: undefined,
+  //       });
+  //       setHasAppliedDiscount(true); // Mark as applied
+  //     }
+  //   }
+  // }, [cart, applyDiscount, hasAppliedDiscount]);
+
+  const calculateDiscount = () => {
+    return cart.reduce((acc, item) => {
+      const originalAmount = item.amount * item.quantity;
+      let discountedAmount = originalAmount;
+
+      if (item.discount) {
+        if (item.discount.type === "PERCENTAGE") {
+          discountedAmount -= originalAmount * parseFloat(item.discount.disc);
+        } else {
+          discountedAmount -= parseFloat(item.discount.disc) * item.quantity;
+        }
+        discountedAmount = Math.max(discountedAmount, 0);
+      }
+
+      return acc + (originalAmount - discountedAmount);
+    }, 0);
+  };
+
+  const discountAmount = calculateDiscount();
+  const totalAmount = subTotal - discountAmount;
+
+
+
+
+
+
+
+
+
+
+  console.log(discountPayload, "mic check one 2 ")
+  console.log(discountAmount, "dreamer")
+  // console.log(hasAppliedDiscount, "dreammm")
 
 
 
@@ -833,6 +970,7 @@ const Inventory = ({ navigation }) => {
   // }, [cart]);
 
   const cartListRef = React.useRef();
+  
   React.useEffect(() => {
     if (quickSaleInAction) {
       setQuickSaleInAction(false);
@@ -854,64 +992,6 @@ const Inventory = ({ navigation }) => {
       </View>
     );
   }
-
-  // const { applyDiscount } = useActionCreator();
-
-  // const calculateDiscount = () => {
-  //   return cart.reduce((acc, item) => {
-  //     const originalAmount = item.amount * item.quantity;
-  //     let discountedAmount = originalAmount;
-
-  //     if (item.discount) {
-  //       if (item.discount.type === "PERCENTAGE") {
-  //         discountedAmount -= originalAmount * parseFloat(item.discount.disc);
-  //       } else {
-  //         discountedAmount -= parseFloat(item.discount.disc) * item.quantity;
-  //       }
-  //       discountedAmount = Math.max(discountedAmount, 0);
-  //     }
-
-  //     return acc + (originalAmount - discountedAmount);
-  //   }, 0);
-  // };
-
-  // const discountAmount = calculateDiscount();
-  // const totalAmount = subTotal - discountAmount;
-
-
-
-  // const [hasAppliedDiscount, setHasAppliedDiscount] = React.useState(false);
-
-  // React.useEffect(() => {
-  //   if (!hasAppliedDiscount) {
-  //     // Calculate the total discount amount using the discount values from the cart items
-  //     const totalDiscount = cart.reduce((acc, item) => {
-  //       if (item.discount) {
-  //         return acc + parseFloat(item.discount.disc) * item.quantity; // Use item.discount.disc as quantity
-  //       }
-  //       return acc;
-  //     }, 0);
-
-  //     if (totalDiscount > 0) {
-  //       // Update discountPayload using applyDiscount if discount amount is greater than 0
-  //       applyDiscount({
-  //         discountType: 'GHS', // or '%', depending on your logic
-  //         quantity: discountAmount, // Set the total discount amount here
-  //         discountCode: undefined, // Replace with your actual discount code logic
-  //       });
-  //       setHasAppliedDiscount(true); // Mark as applied
-  //     } else {
-  //       // If total discount amount is 0, you can also clear the discount if needed
-  //       applyDiscount({
-  //         discountType: 'GHS', // or '%', depending on your logic
-  //         quantity: 0, // Set quantity to 0 to clear discount
-  //         discountCode: undefined,
-  //       });
-  //       setHasAppliedDiscount(true); // Mark as applied
-  //     }
-  //   }
-  // }, [cart, applyDiscount, hasAppliedDiscount]);
-
 
 
   const orderAmount = (cart || []).reduce((acc, curr) => {

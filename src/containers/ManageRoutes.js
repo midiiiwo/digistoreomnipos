@@ -17,12 +17,14 @@ import { useQueryClient } from 'react-query';
 import { useGetMerchantDistanceDelivery } from '../hooks/useGetMerchantDistanceDelivery';
 import { FloatingButton } from 'react-native-ui-lib';
 import { useFocusEffect } from '@react-navigation/native';
+import { useChangeStoreDeliveryConfig } from '../hooks/useChangeStoreDeliveryConfig';
 
 const ManageRoutes = () => {
   const [filterType, setFilterType] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
   const [visible, setVisible] = useState(false);
   const [deleteStatus, setDeleteStatus] = useState();
+  const [activeFilter, setActiveFilter] = useState(filterType); 
   const navigation = useNavigation();
   const { user } = useSelector(state => state.auth);
   const { outlet } = useSelector(state => state.auth);
@@ -33,6 +35,7 @@ const ManageRoutes = () => {
   const client = useQueryClient();
   const idToDelete = useRef();
   const { mutate } = useDeleteMerchantRoute(setDeleteStatus);
+  const changeDeliveryConfig = useChangeStoreDeliveryConfig();
 
 
 
@@ -58,6 +61,28 @@ const ManageRoutes = () => {
 
     setRefreshing(false);
   }, [filterType, refetch, refetchLocationDelivery, refetchDeliveryDistance]);
+
+  useEffect(() => {
+    if (deliveryConfig?.data?.code === 200) {
+      const deliveryType = deliveryConfig.data.message.delivery_type;
+      setFilterType(deliveryType);
+      const filterName =
+        deliveryType === 'LOCATION_BASED' ? 'LOCATION BASED' :
+          deliveryType === 'DISTANCE_BASED' ? 'DISTANCE BASED' :
+            'DIGISTORE';
+      // Update the global filter state
+      setActiveFilter(filterName);
+    } else {
+      console.error("Error fetching delivery config:", deliveryConfig?.data?.code);
+    }
+  }, [deliveryConfig, setFilterType]);
+
+
+   useFocusEffect(
+    useCallback(() => {
+      handleRefresh();
+    }, [setFilterType])
+  );
 
   useEffect(() => {
     // console.log("location based", dataLocation?.data?.message)
@@ -87,6 +112,46 @@ const ManageRoutes = () => {
       handleRefresh();
     }, [filterType])
   );
+  const handleSetFilterType = async (type) => {
+    const merchantId = user?.user_merchant_id;
+
+    if (!merchantId) {
+      toast.show('Merchant ID is required.', { type: 'danger' });
+      return;
+    }
+
+    const payload = {
+      merchant: merchantId,
+      delivery_type:
+        type === 'LOCATION BASED' ? 'LOCATION_BASED' :
+          type === 'DISTANCE BASED' ? 'DISTANCE_BASED' :
+            'DIGISTORE',
+    };
+
+    try {
+      const response = await changeDeliveryConfig.mutateAsync(payload);
+      if (response?.code === 200) {
+        setFilterType(type); // Update filter
+        setActiveFilter(type); // Update active filter
+        toast.show(`Delivery type changed to: ${type}`, { type: 'success' });
+        handleRefresh(); // Refresh the data
+      } else {
+        setFilterType(type); // Update filter
+        setActiveFilter(type);
+        handleRefresh();
+        toast.show('Failed to change delivery type.', { type: 'danger' });
+      }
+    } catch (error) {
+      setFilterType(type); // Update filter
+      setActiveFilter(type);
+      handleRefresh();
+      // console.error("Error changing delivery type:", error);
+      // toast.show('Failed to change delivery type.', { type: 'danger' });
+    }
+  };
+
+
+
 
   // useFocusEffect(
   //   useCallback(() => {
@@ -232,58 +297,66 @@ const ManageRoutes = () => {
 
   return (
     <View style={styles.container}>
-      <Pressable style={s`mr-3 items-end`} onPress={() => SheetManager.show('routeFilter')}>
-        <Filter stroke="#30475e" height={33} width={33} />
-      </Pressable>
-      <View style={styles.contentContainer}>{renderContent()}</View>
-
-      <RouteFilterSheet
-        sheetId="routeFilter"
-        setFilterType={setFilterType}
-        currentFilterType={filterType}
-      />
-
-      {filterType !== 'DIGISTORE' ? (
-        <View style={styles.btnWrapper}>
-          {/* <PrimaryButton
-            style={styles.btn}
-            handlePress={() => navigation.navigate('Add Delivery')}
+    {/* Filter Buttons */}
+    <View style={styles.filterButtonContainer}>
+      {['LOCATION BASED', 'DISTANCE BASED', 'DIGISTORE'].map((type) => (
+        <Pressable
+          key={type}
+          style={[
+            styles.filterButton,
+            activeFilter === type && styles.activeFilterButton,
+          ]}
+          onPress={() => {
+            if (deliveryConfig?.data?.code === 400) {
+              handleActivateDeliveries();
+            } else {
+              handleSetFilterType(type);
+            }
+          }}
+        >
+          <Text
+            style={[
+              styles.filterButtonText,
+              activeFilter === type && styles.activeFilterButtonText,
+            ]}
           >
-            Add Delivery Route
-          </PrimaryButton> */}
-          <FloatingButton
-            visible={true}
-            hideBackgroundOverlay
-            // bottomMargin={Dimensions.get('window').width * 0.18}
-
-            button={{
-              label: 'Add Route',
-              onPress: () => {
-                navigation.navigate('Add Routes', { filterType });
-              },
-
-              style: {
-                // marginLeft: 'auto',
-                // marginRight: 14,
-                justifyContent: 'center',
-                alignItems: 'center',
-                width: '50%',
-                backgroundColor: 'rgba(60, 121, 245, 1.0)',
-                marginBottom: Dimensions.get('window').width * 0.05,
-              },
-            }}
-          />
-        </View>
-      ) : null}
-
-      <DeleteDialog
-        visible={visible}
-        handleCancel={() => setVisible(false)}
-        handleSuccess={() => mutate({ id: idToDelete.current })}
-        title="Do you want to delete this route?"
-        prompt="This process is irreversible"
-      />
+            {type}
+          </Text>
+        </Pressable>
+      ))}
     </View>
+    <View style={styles.contentContainer}>{renderContent()}</View>
+    {(filterType === 'LOCATION_BASED' && !isFetchingLocation && dataLocation?.data?.message?.length > 0) ||
+      (filterType === 'DISTANCE_BASED' && deliveryConfig?.data?.message?.delivery_type === 'DISTANCE_BASED') ? (
+      <View style={styles.btnWrapper}>
+        <FloatingButton
+          visible={true}
+          hideBackgroundOverlay
+          button={{
+            label: 'Add Route',
+            onPress: () => {
+              navigation.navigate('Add Routes', { filterType });
+            },
+            style: {
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: '50%',
+              backgroundColor: 'rgba(60, 121, 245, 1.0)',
+              marginBottom: Dimensions.get('window').width * 0.05,
+            },
+          }}
+        />
+      </View>
+    ) : null}
+
+    <DeleteDialog
+      visible={visible}
+      handleCancel={() => setVisible(false)}
+      handleSuccess={() => mutate({ id: idToDelete.current })}
+      title="Do you want to delete this route?"
+      prompt="This process is irreversible"
+    />
+  </View>
   );
 }
 
@@ -337,6 +410,33 @@ const styles = StyleSheet.create({
     marginHorizontal: 8,
   },
   btn: { backgroundColor: '#2F66F6' },
+  filterButtonContainer: {
+    marginTop: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 16,
+    paddingHorizontal: 10,
+  },
+  filterButton: {
+    flex: 1,
+    paddingVertical: 10,
+    marginHorizontal: 5,
+    backgroundColor: '#e0e0e0',
+    borderRadius: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  filterButtonText: {
+    fontSize: 14,
+    color: '#333',
+    fontWeight: '500',
+  },
+  activeFilterButton: {
+    backgroundColor: 'rgba(25, 66, 216, 0.9)',
+  },
+  activeFilterButtonText: {
+    color: '#fff',
+  },
 });
 
 export default ManageRoutes;

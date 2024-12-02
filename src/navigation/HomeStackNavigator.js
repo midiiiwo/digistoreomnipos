@@ -188,6 +188,7 @@ import DeliveryList from '../components/DeliveryList';
 import AddCoupon from '../components/AddCoupon';
 import ProductListCoupon from '../components/ProductListCoupon';
 import DeliveryListCoupon from '../components/DeliveryListCoupon';
+import AddWindow from '../components/AddWindow';
 
 const Stack = createNativeStackNavigator();
 
@@ -2120,6 +2121,23 @@ function HomeStackNavigator() {
                         justifyContent: 'center',
                       }}
                       title="Configure your Delivery Route"
+                    />
+                  ),
+                }}
+              />
+               <Stack.Screen
+                name="Add Window"
+                component={AddWindow}
+                options={{
+                  header: props => (
+                    <InventoryHeader
+                      // prevScreen={props.back.title}
+                      navigation={props.navigation}
+                      addCustomer={false}
+                      mainHeader={{
+                        justifyContent: 'center',
+                      }}
+                      title="Configure your Delivery Window"
                     />
                   ),
                 }}

@@ -179,7 +179,7 @@ function Discount(props) {
                 quantity: Number(discount),
               });
               toast.show('Discount applied', { placement: 'top' });
-              navigation.navigate('Cart');
+              navigation.navigate('Inventory');
               setDiscount('');
               return;
             }

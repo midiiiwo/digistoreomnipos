@@ -1,4 +1,4 @@
-package com.ipayghpos.Printer;
+package com.ipayghpostablet.Printer;
 
 import android.content.Context;
 import android.content.res.AssetManager;
@@ -14,7 +14,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
 
-public class ReceiptGeneratorTrans implements com.ipayghpos.Printer.IReceiptGenerator {
+public class ReceiptGeneratorTrans implements com.ipayghpostablet.Printer.IReceiptGenerator {
     Context context;
 
     public PaxGLPage iPaxGLPage;

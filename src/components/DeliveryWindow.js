@@ -9,12 +9,14 @@ import { useGetRiderDeliveryConfig } from '../hooks/useGetRiderDeliveryConfig';
 import { useChangeStoreDeliveryWindowConfig } from '../hooks/useChangeStoreDeliveryWindowConfig';
 import Bin from '../../assets/icons/delcross';
 import { FloatingButton } from 'react-native-ui-lib';
+import { useNavigation } from '@react-navigation/native';
 import { useFocusEffect } from '@react-navigation/native'; // Import useFocusEffect
 
 const DeliveryWindow = () => {
     const { user, outlet } = useSelector(state => state.auth);
     const [refreshing, setRefreshing] = useState(false);
     const queryClient = useQueryClient();
+    const navigation = useNavigation();
     const merchantId = user?.user_merchant_id;
 
     // Fetch delivery configuration
@@ -140,7 +142,7 @@ const DeliveryWindow = () => {
                         button={{
                             label: 'Add Delivery Window',
                             onPress: () => {
-                                navigation.navigate('Add Rider');
+                                navigation.navigate('Add Window');
                             },
 
                             style: {
