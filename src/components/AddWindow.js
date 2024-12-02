@@ -1,57 +1,29 @@
 import React, { useState, useReducer, useEffect } from 'react';
-import { StyleSheet, View, ScrollView, Text } from 'react-native';
-import { useAddMerchantRouteLocation } from '../hooks/useAddMerchantRouteLocation';
-import { useAddMerchantRouteDistance } from '../hooks/useAddMerchantRouteDistance';
 import { useSelector } from 'react-redux';
-import PrimaryButton from '../components/PrimaryButton';
 import { useToast } from 'react-native-toast-notifications';
 import { useQueryClient } from 'react-query';
 import { useGetMerchantOutlets } from '../hooks/useGetMerchantOutlets';
-import Input from '../components/Input';
-import { s } from 'react-native-wind';
-import Icon from 'react-native-vector-icons/AntDesign';
+import { useAddMerchantDeliveryWindow } from '../hooks/useAddMerchantDeliveryWindow';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { SelectList } from 'react-native-dropdown-select-list';
+import Icon from 'react-native-vector-icons/AntDesign';
+import PrimaryButton from '../components/PrimaryButton';
 
-const reducer = (state, action) => {
-    switch (action.type) {
-        case 'location':
-        case 'price':
-        case 'start':
-        case 'end':
-            return { ...state, [action.type]: action.payload };
-        default:
-            return state;
-    }
-};
-
-const AddRoutes = ({ route, navigation }) => {
-    const { filterType } = route.params;
+const AddWindow = () => {
     const { user } = useSelector(state => state.auth);
     const { data, refetch, isFetching } = useGetMerchantOutlets(user.user_merchant_id);
     const [saved, setSaved] = useState();
     const [showError, setShowError] = useState(false);
-    const [routes, setRoutes] = useState([{ location: '', price: '' }]);
-    const [routesDistance, setRoutesDistance] = useState([{ start: '', end: '', price: '' }]);
     const [selectedOutlet, setSelectedOutlet] = useState(null);
     const toast = useToast();
     const client = useQueryClient();
-
-    const addRoutesLocation = useAddMerchantRouteLocation((response) => {
-        if (response?.status === 0) {
-            client.invalidateQueries('add-route-location');
-        }
-        setSaved(response);
-    });
-
-    const addRoutesDistance = useAddMerchantRouteDistance((response) => {
-        console.log('Response from addRoutesDistance:', response);
-        if (response?.status === 0) {
-            client.invalidateQueries('add-route-distance');
-        }
-        setSaved(response);
-    });
-
-
     const outletData = data?.data?.data || [];
     const dataOutlet = [
         { value: "Select All", key: "all" },
@@ -59,214 +31,196 @@ const AddRoutes = ({ route, navigation }) => {
             .filter(outlet => outlet !== null)
             .map(outlet => ({ value: outlet.outlet_name, key: outlet.outlet_id })),
     ];
+    const [routes, setRoutes] = useState([
+    { day: '', start_time: '', end_time: '', cut_off_time: '' },
+  ]);
+  const [timePicker, setTimePicker] = useState({
+    visible: false,
+    routeIndex: null,
+    field: '',
+  });
 
-    useEffect(() => {
-        if (saved) {
-            toast.show(saved.message, { placement: 'top', type: saved.code === 200 ? 'success' : 'danger' });
-            if (saved.code === 200) navigation.goBack();
-            setSaved(null);
-        }
-    }, [saved, toast, navigation]);
+  const openTimePicker = (routeIndex, field) => {
+      setTimePicker({ visible: true, routeIndex, field });
+      
+  };
 
-    const handleAddRoute = () => {
-        setRoutes([...routes, { location: '', price: '' }]);
-    };
+  const closeTimePicker = () => {
+    setTimePicker({ visible: false, routeIndex: null, field: '' });
+  };
 
-    const handleAddRouteDistance = () => {
-        setRoutesDistance([...routesDistance, { start: '', end: '', price: '' }]);
-    };
+  const handleTimeConfirm = (selectedTime) => {
+    if (timePicker.routeIndex !== null && timePicker.field) {
+      const updatedRoutes = [...routes];
+      updatedRoutes[timePicker.routeIndex][timePicker.field] =
+        selectedTime.toISOString();
+      setRoutes(updatedRoutes);
+    }
+    closeTimePicker();
+  };
 
-    const handleRemoveRoute = (index, isDistanceBased) => {
-        if (isDistanceBased) {
-            setRoutesDistance(routesDistance.filter((_, i) => i !== index));
-        } else {
-            setRoutes(routes.filter((_, i) => i !== index));
-        }
-    };
+  const handleRouteChange = (index, field, value) => {
+    const updatedRoutes = [...routes];
+    updatedRoutes[index][field] = value;
+    setRoutes(updatedRoutes);
+  };
 
-    const handleRouteChange = (index, field, value, isDistanceBased) => {
-        const newRoutes = isDistanceBased ? [...routesDistance] : [...routes];
-        newRoutes[index][field] = value;
-        isDistanceBased ? setRoutesDistance(newRoutes) : setRoutes(newRoutes);
-    };
+  const handleAddRoute = () => {
+    setRoutes([...routes, { day: '', start_time: '', end_time: '', cut_off_time: '' }]);
+  };
 
-    const validateRoutes = (routesArray, fields) => {
-        return routesArray.every(route => fields.every(field => route[field]));
-    };
+  const handleRemoveRoute = (index) => {
+    setRoutes(routes.filter((_, i) => i !== index));
+  };
 
-    const handleSaveRoutes = async (isDistanceBased) => {
-        if (!selectedOutlet) {
-            setShowError(true);
-            toast.show('Please select an outlet.', { placement: 'top', type: 'danger' });
-            return;
-        }
-
-        const outletIds = selectedOutlet.key === "all"
-            ? dataOutlet.filter(outlet => outlet.key !== "all").map(outlet => outlet.key)
-            : [selectedOutlet.key];
-
-        const routesArray = isDistanceBased ? routesDistance : routes;
-        const requiredFields = isDistanceBased ? ['start', 'end', 'price'] : ['location', 'price'];
-
-        if (!validateRoutes(routesArray, requiredFields)) {
-            setShowError(true);
-            toast.show('Please fill out all fields for each route.', { placement: 'top', type: 'danger' });
-            return;
-        }
-
-        const formatDistance = (value) => {
-            if (!value.endsWith(' Km')) {
-                return `${value.trim()} Km`;
-            }
-            return value.trim();
-        };
-
-        // To avoid multiple toasts, set a flag to track when routes have been added
-        let success = true;
-        let errorMessage = '';
-
-        try {
-            // If "Select All" is selected, iterate over each outlet and add routes
-            if (selectedOutlet.key === "all") {
-                for (const outletId of outletIds) {
-                    for (const route of routesArray) {
-                        const payload = isDistanceBased
-                            ? { start_distance: formatDistance(route.start), end_distance: formatDistance(route.end), price: route.price, outlet_id: outletId, merchant_id: user.user_merchant_id }
-                            : { location: route.location, price: route.price, outlet_id: outletId, merchant_id: user.user_merchant_id };
-
-                        const response = await (isDistanceBased ? addRoutesDistance : addRoutesLocation).mutateAsync(payload);
-                        if (response?.status !== 0) {
-                            success = false;
-                            errorMessage = `Error adding route for outlet ${outletId}: ${response?.message}`;
-                            break; // Exit loop if error occurs
-                        }
-                    }
-                    if (!success) break; // Exit outer loop if error occurred
-                }
-            } else {
-                // For single outlet selection, add route directly
-                for (const route of routesArray) {
-                    const payload = isDistanceBased
-                        ? { start_distance: formatDistance(route.start), end_distance: formatDistance(route.end), price: route.price, outlet_id: outletIds, merchant_id: user.user_merchant_id }
-                        : { location: route.location, price: route.price, outlet_id: outletIds, merchant_id: user.user_merchant_id };
-
-                    const response = await (isDistanceBased ? addRoutesDistance : addRoutesLocation).mutateAsync(payload);
-                    if (response?.status !== 0) {
-                        success = false;
-                        errorMessage = `Error adding route: ${response?.message}`;
-                        break;
-                    }
-                }
-            }
-
-            if (success) {
-                toast.show('Routes added successfully.', { placement: 'top', type: 'success' });
-                navigation.goBack();
-            } else {
-                toast.show(errorMessage, { placement: 'top', type: 'danger' });
-            }
-
-        } catch (err) {
-            toast.show(`Error adding route: ${err.message}`, { placement: 'top', type: 'danger' });
-        }
-    };
-
-
-    return (
-        <View style={{ flex: 1, backgroundColor: '#fff' }}>
-            <ScrollView style={styles.main}>
-                <SelectList
+  return (
+    <View style={{ flex: 1, backgroundColor: '#fff' }}>
+          <ScrollView style={styles.main}>
+          <SelectList
                     setSelected={(key) => setSelectedOutlet(dataOutlet.find(outlet => outlet.key === key))}
                     data={dataOutlet}
                     save="key"
-                />
-
-                {(filterType === 'DISTANCE_BASED' ? routesDistance : routes).map((route, index) => (
-                    <View key={index} style={s`flex-row items-center justify-between mt-4`}>
-                        {filterType === 'DISTANCE_BASED' ? (
-                            <>
-                                <Input
-                                    style={s`flex-1 mr-2`}
-                                    placeholder="Enter Start (km)"
-                                    showError={showError && !route.start}
-                                    val={route.start}
-                                    setVal={text => handleRouteChange(index, 'start', text, true)}
-                                />
-                                <Input
-                                    style={s`flex-1 mr-2`}
-                                    placeholder="Enter End (km)"
-                                    showError={showError && !route.end}
-                                    val={route.end}
-                                    setVal={text => handleRouteChange(index, 'end', text, true)}
-                                />
-                            </>
-                        ) : (
-                            <Input
-                                style={s`flex-1 mr-2`}
-                                placeholder="Enter Location"
-                                showError={showError && !route.location}
-                                val={route.location}
-                                setVal={text => handleRouteChange(index, 'location', text, false)}
-                            />
-                        )}
-                        <Input
-                            style={s`flex-1 ml-2`}
-                            placeholder="Price"
-                            showError={showError && !route.price}
-                            val={route.price}
-                            setVal={text => handleRouteChange(index, 'price', text, filterType === 'DISTANCE_BASED')}
-                            keyboardType="numeric"
-                        />
-                        <View style={s`flex-row ml-2`}>
-                            <Icon
-                                name="delete"
-                                size={40}
-                                color="#900"
-                                onPress={() => handleRemoveRoute(index, filterType === 'DISTANCE_BASED')}
-                                style={s`mr-2`}
-                            />
-                            <Icon
-                                name="pluscircleo"
-                                size={40}
-                                color="rgba(25, 66, 216, 0.9)"
-                                onPress={filterType === 'DISTANCE_BASED' ? handleAddRouteDistance : handleAddRoute}
-                            />
-                        </View>
-                    </View>
-                ))}
-            </ScrollView>
-            <View style={styles.btnWrapper}>
-                <PrimaryButton
-                    style={styles.btn}
-                    handlePress={() => handleSaveRoutes(filterType === 'DISTANCE_BASED')}
-                >
-                    <Text>Save Routes</Text>
-                </PrimaryButton>
+              />
+              <View style={{ marginBottom:10} } />
+        {routes.map((route, index) => (
+          <View key={index} style={styles.routeRow}>
+            <View style={styles.field}>
+              <SelectList
+                setSelected={(value) => handleRouteChange(index, 'day', value)}
+                data={[
+                  { value: 'Monday', key: 'monday' },
+                  { value: 'Tuesday', key: 'tuesday' },
+                  { value: 'Wednesday', key: 'wednesday' },
+                  { value: 'Thursday', key: 'thursday' },
+                  { value: 'Friday', key: 'friday' },
+                  { value: 'Saturday', key: 'saturday' },
+                  { value: 'Sunday', key: 'sunday' },
+                ]}
+                placeholder="Select Day"
+                boxStyles={styles.dropdown} // Custom styles
+              />
             </View>
-        </View>
-    );
+
+            {['start_time', 'end_time', 'cut_off_time'].map((field, fieldIndex) => (
+              <TouchableOpacity
+                key={fieldIndex}
+                style={styles.timeField}
+                onPress={() => openTimePicker(index, field)}
+              >
+                <Text style={styles.timeLabel}>
+                  {field.replace('_', ' ').toUpperCase()}
+                </Text>
+                <Text style={styles.timeText}>
+                  {route[field]
+                    ? new Date(route[field]).toLocaleTimeString([], {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })
+                    : 'Select Time'}
+                </Text>
+              </TouchableOpacity>
+            ))}
+
+            <View style={styles.actions}>
+              <Icon
+                name="delete"
+                size={32}
+                color="#900"
+                onPress={() => handleRemoveRoute(index)}
+                style={styles.icon}
+              />
+              <Icon
+                name="pluscircleo"
+                size={32}
+                color="rgba(25, 66, 216, 0.9)"
+                onPress={handleAddRoute}
+              />
+            </View>
+          </View>
+        ))}
+      </ScrollView>
+
+      <DateTimePickerModal
+        isVisible={timePicker.visible}
+        mode="time"
+        is24Hour={true}
+        onConfirm={handleTimeConfirm}
+        onCancel={closeTimePicker}
+      />
+
+      <View style={styles.btnWrapper}>
+        <PrimaryButton style={styles.btn}>
+          <Text>Save Routes</Text>
+        </PrimaryButton>
+      </View>
+    </View>
+  );
 };
 
-export default AddRoutes;
+export default AddWindow;
 
 const styles = StyleSheet.create({
-    main: {
-        paddingHorizontal: 26,
-        marginBottom: 78,
-        marginTop: 26,
-    },
-    btnWrapper: {
-        position: 'absolute',
-        bottom: 0,
-        alignItems: 'center',
-        width: '100%',
-        backgroundColor: '#fff',
-        paddingVertical: 12,
-        borderTopColor: '#ddd',
-        borderTopWidth: 0.6,
-    },
-    btn: {
-        borderRadius: 4,
-        width: '90%',
-    },
+  main: {
+    paddingHorizontal: 16,
+    marginBottom: 20,
+    marginTop: 10,
+  },
+  routeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  field: {
+    flex: 1,
+    marginHorizontal: 4,
+  },
+  dropdown: {
+    height: 50, // Match the height of time fields
+    justifyContent: 'center',
+  },
+  timeField: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    padding: 10,
+    marginHorizontal: 4,
+    height: 50, // Ensure consistent height
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  timeLabel: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    textAlign: 'center', // Center align the label
+    marginBottom: 4,
+    color: '#333',
+  },
+  timeText: {
+    fontSize: 14,
+    color: '#333',
+    textAlign: 'center', // Center align the time text
+  },
+  actions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: 8,
+  },
+  icon: {
+    marginHorizontal: 8,
+  },
+  btnWrapper: {
+    position: 'absolute',
+    bottom: 0,
+    alignItems: 'center',
+    width: '100%',
+    backgroundColor: '#fff',
+    paddingVertical: 12,
+    borderTopColor: '#ddd',
+    borderTopWidth: 0.6,
+  },
+  btn: {
+    borderRadius: 4,
+    width: '90%',
+  },
 });

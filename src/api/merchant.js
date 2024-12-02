@@ -458,6 +458,10 @@ export function addMerchantRouteDistance(payload) {
   return deliveryApi.post('/admin/distanceRoute/fromPOS', payload);
 }
 
+export function addMerchantDeliveryWindow(payload) {
+  return deliveryApi.post('/admin/deliveryWindow/fromPOS', payload);
+}
+
 
 
 // export function deleteMerchantDeliveryRoute({ id }) {
