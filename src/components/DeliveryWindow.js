@@ -1,23 +1,32 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback,  useRef  } from 'react';
 import { StyleSheet, View, Text, FlatList, Pressable, Dimensions, Image, RefreshControl } from 'react-native';
 import { Switch } from 'react-native-ui-lib';
 import { useGetMerchantDeliveryWindow } from '../hooks/useGetMerchantDeliveryWindow';
 import { useSelector } from 'react-redux';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import { useQueryClient } from 'react-query';
+import { useToast } from 'react-native-toast-notifications';
 import { useGetRiderDeliveryConfig } from '../hooks/useGetRiderDeliveryConfig';
 import { useChangeStoreDeliveryWindowConfig } from '../hooks/useChangeStoreDeliveryWindowConfig';
 import Bin from '../../assets/icons/delcross';
 import { FloatingButton } from 'react-native-ui-lib';
 import { useNavigation } from '@react-navigation/native';
+import DeleteDialog from '../components/DeleteDialog';
 import { useFocusEffect } from '@react-navigation/native'; // Import useFocusEffect
+import { useDeleteMerchantWindow } from '../hooks/useDeleteMerchantWindow';
 
 const DeliveryWindow = () => {
     const { user, outlet } = useSelector(state => state.auth);
     const [refreshing, setRefreshing] = useState(false);
     const queryClient = useQueryClient();
+    const [visible, setVisible] = useState(false);
+    const [deleteStatus, setDeleteStatus] = useState();
+    const idToDelete = useRef();
+    const toast = useToast();
+    const client = useQueryClient();
     const navigation = useNavigation();
     const merchantId = user?.user_merchant_id;
+    const { mutate } = useDeleteMerchantWindow(setDeleteStatus);
 
     // Fetch delivery configuration
     const { data: deliveryConfig } = useGetRiderDeliveryConfig(merchantId);
@@ -66,6 +75,20 @@ const DeliveryWindow = () => {
 
 
     useEffect(() => {
+        if (deleteStatus) {
+          if (deleteStatus.code === 200) {
+            toast.show(deleteStatus.message, { placement: 'top', type: 'success' });
+            client.invalidateQueries('merchant-delivery');
+          } else {
+            toast.show(deleteStatus.message, { placement: 'top', type: 'danger' });
+          }
+          setDeleteStatus(null);
+          idToDelete.current = null;
+        }
+      }, [toast, deleteStatus, client]);
+
+
+    useEffect(() => {
         // Refetch delivery window whenever the screen comes into focus
         refetchDeliveryWindow();
     }, [refetchDeliveryWindow])
@@ -111,6 +134,9 @@ const DeliveryWindow = () => {
                                 <Pressable
                                     style={[styles.deleteButton, { flex: 0.5, alignItems: 'flex-end' }]}
                                     onPress={() => {
+                                            setVisible(true);
+                                            idToDelete.current = item.id;
+                                        
                                         // Handle delete action here
                                     }}
                                 >
@@ -159,7 +185,16 @@ const DeliveryWindow = () => {
                     <></>
                 )}
             </View>
+
+            <DeleteDialog
+      visible={visible}
+      handleCancel={() => setVisible(false)}
+      handleSuccess={() => mutate({ id: idToDelete.current })}
+      title="Do you want to delete this route?"
+      prompt="This process is irreversible"
+    />
         </View>
+
     );
 }
 

@@ -324,6 +324,10 @@ export function deleteMerchantDiscount(discount_id, mod_by) {
   return Api.delete(`/discounts/discount/${discount_id}/${mod_by}`);
 }
 
+export function deleteMerchantWindow({id}) {
+  return deliveryApi.delete(`admin/deliveryWindow/${id}`);
+}
+
 export function createMerchantUser(payload) {
   return Api.post('/users', payload);
 }
@@ -461,8 +465,6 @@ export function addMerchantRouteDistance(payload) {
 export function addMerchantDeliveryWindow(payload) {
   return deliveryApi.post('/admin/deliveryWindow/fromPOS', payload);
 }
-
-
 
 // export function deleteMerchantDeliveryRoute({ id }) {
 //   return deliveryApi.delete(`/admin/deliveryRoute/${id}`, { id });
