@@ -1,11 +1,11 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
-import { StyleSheet, Text, View, Pressable } from 'react-native';
-import BackIcon from '../../assets/icons/arrow-back.svg';
-import { useSelector } from 'react-redux';
+import React from "react";
+import { StyleSheet, Text, View, Pressable } from "react-native";
+import BackIcon from "../../assets/icons/arrow-back.svg";
+import { useSelector } from "react-redux";
 
-import User from '../../assets/icons/draweruser.svg';
-import CustomStatusBar from './StatusBar';
+import User from "../../assets/icons/draweruser.svg";
+import CustomStatusBar from "./StatusBar";
 
 const InventoryHeader = ({
   navigation,
@@ -16,7 +16,7 @@ const InventoryHeader = ({
   rightComponentText,
   rightComponentFunction,
 }) => {
-  const { customer } = useSelector(state => state.sale);
+  const { customer } = useSelector((state) => state.sale);
 
   // React.useEffect(() => {
   //   StatusBar.setTranslucent(true);
@@ -28,7 +28,10 @@ const InventoryHeader = ({
       <CustomStatusBar backgroundColor="transparent" barStyle="dark-content" />
       {/* <StatusBar translucent={true} backgroundColor={'translucent'} /> */}
       <View style={[styles.headerMain, { paddingVertical: 14 }]}>
-        <Pressable style={styles.back} onPress={() => navigation.goBack()}>
+        <Pressable
+          style={styles.back}
+          onPress={() => navigation.navigate("Inventory")}
+        >
           <BackIcon height={23} width={23} stroke="#000" />
         </Pressable>
         <View style={styles.titleWrapper}>
@@ -40,33 +43,37 @@ const InventoryHeader = ({
               style={[
                 styles.headerTextWrapper,
                 {
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'flex-end',
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "flex-end",
                 },
               ]}
-              onPress={() => navigation.navigate('Customer Select')}>
+              onPress={() => navigation.navigate("Customer Select")}
+            >
               <User height={20} width={20} fill="#1942D8" />
               <Text
                 numberOfLines={1}
                 style={[
                   styles.headerText,
-                  { marginLeft: 3, maxWidth: '84%', textAlign: 'right' },
-                ]}>
+                  { marginLeft: 3, maxWidth: "84%", textAlign: "right" },
+                ]}
+              >
                 {customer.customer_name}
               </Text>
             </Pressable>
           ) : (
             <Pressable
               style={styles.headerTextWrapper}
-              onPress={() => navigation.navigate('Customer Select')}>
+              onPress={() => navigation.navigate("Customer Select")}
+            >
               <Text style={styles.headerText}>Add Customer</Text>
             </Pressable>
           ))}
         {rightComponentText && rightComponentText.length > 0 ? (
           <Pressable
             style={styles.headerTextWrapper}
-            onPress={() => rightComponentFunction()}>
+            onPress={() => rightComponentFunction()}
+          >
             <Text style={styles.headerText}>{rightComponentText}</Text>
           </Pressable>
         ) : null}
@@ -79,12 +86,12 @@ const styles = StyleSheet.create({
   main: {
     paddingTop: 12,
     // justifyContent: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   headerMain: {
-    width: '100%',
-    flexDirection: 'row',
-    alignItems: 'center',
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
     // paddingVertical: 22,
     // paddingTop: 30,
     // paddingBottom: 8,
@@ -94,35 +101,35 @@ const styles = StyleSheet.create({
   },
 
   headerText: {
-    marginLeft: 'auto',
+    marginLeft: "auto",
     marginRight: 14,
-    color: '#1942D8',
-    fontFamily: 'Inter-Medium',
+    color: "#1942D8",
+    fontFamily: "Inter-Medium",
     fontSize: 15,
   },
   headerTextWrapper: {
-    marginLeft: 'auto',
+    marginLeft: "auto",
     padding: 6,
-    position: 'absolute',
+    position: "absolute",
     right: 7,
   },
   titleWrapper: {
-    flexDirection: 'row',
-    textAlign: 'center',
-    marginRight: 'auto',
-    marginLeft: 'auto',
+    flexDirection: "row",
+    textAlign: "center",
+    marginRight: "auto",
+    marginLeft: "auto",
     // right: 'auto',
   },
   prev: {
-    fontFamily: 'ReadexPro-Medium',
+    fontFamily: "ReadexPro-Medium",
     fontSize: 17.5,
-    color: '#000',
+    color: "#000",
   },
   back: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     // marginRight: 'auto',
-    position: 'absolute',
+    position: "absolute",
     padding: 12,
     left: 15,
   },
