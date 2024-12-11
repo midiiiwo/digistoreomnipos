@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
+import React from "react";
 import {
   StyleSheet,
   View,
@@ -7,22 +7,22 @@ import {
   Pressable,
   ScrollView,
   Image,
-} from 'react-native';
-import ActionSheet from 'react-native-actions-sheet';
-import { SheetManager } from 'react-native-actions-sheet';
-import { useSelector } from 'react-redux';
-import CaretRight from '../../../assets/icons/cart-right.svg';
+} from "react-native";
+import ActionSheet from "react-native-actions-sheet";
+import { SheetManager } from "react-native-actions-sheet";
+import { useSelector } from "react-redux";
+import CaretRight from "../../../assets/icons/cart-right.svg";
 
-import { useActionCreator } from '../../hooks/useActionCreator';
-import { useGetSaleChannelList } from '../../hooks/useGetSaleChannelList';
+import { useActionCreator } from "../../hooks/useActionCreator";
+import { useGetSaleChannelList } from "../../hooks/useGetSaleChannelList";
 
 function ChannelSheet(props) {
   const { selectChannel } = useActionCreator();
   function handleSelect(channel) {
     selectChannel(channel);
-    SheetManager.hide('channels');
+    SheetManager.hide("channels");
   }
-  const { user } = useSelector(state => state.auth);
+  const { user } = useSelector((state) => state.auth);
   const { data } = useGetSaleChannelList(user.merchant);
   return (
     <ActionSheet
@@ -33,21 +33,23 @@ function ChannelSheet(props) {
       containerStyle={styles.containerStyle}
       // indicatorStyle={styles.indicatorStyle}
       springOffset={50}
-      defaultOverlayOpacity={0.3}>
+      defaultOverlayOpacity={0.3}
+    >
       <View style={styles.main}>
         <View style={styles.header}>
           <Text style={styles.mainText}>Sale Source</Text>
         </View>
         <ScrollView>
-          {((data && data.data && data.data.data) || []).map(channel => {
+          {((data && data.data && data.data.data) || []).map((channel) => {
             return (
               <Pressable
                 key={channel}
                 style={styles.channelType}
-                onPress={() => handleSelect(channel)}>
-                {channel === 'Inshop' && (
+                onPress={() => handleSelect(channel)}
+              >
+                {channel === "Inshop" && (
                   <Image
-                    source={require('../../../assets/images/online-store.png')}
+                    source={require("../../../assets/images/online-store.png")}
                     style={styles.img}
                   />
                 )}
@@ -64,57 +66,57 @@ function ChannelSheet(props) {
                       style={styles.img}
                     />
                   )} */}
-                {channel === 'Snapchat' && (
+                {channel === "Snapchat" && (
                   <Image
-                    source={require('../../../assets/images/snapchat.webp')}
+                    source={require("../../../assets/images/snapchat.webp")}
                     style={[styles.img, { borderRadius: 100 }]}
                   />
                 )}
-                {channel === 'Instagram' && (
+                {channel === "Instagram" && (
                   <Image
-                    source={require('../../../assets/images/instagram.png')}
+                    source={require("../../../assets/images/instagram.png")}
                     style={[styles.img, { borderRadius: 100 }]}
                   />
                 )}
-                {channel === 'Twitter' && (
+                {channel === "Twitter" && (
                   <Image
-                    source={require('../../../assets/images/twitter.png')}
+                    source={require("../../../assets/images/twitter.png")}
                     style={styles.img}
                   />
                 )}
-                {channel === 'Whatsapp' && (
+                {channel === "Whatsapp" && (
                   <Image
-                    source={require('../../../assets/images/whatsapp.webp')}
+                    source={require("../../../assets/images/whatsapp.png")}
                     style={[styles.img, { borderRadius: 100 }]}
                   />
                 )}
-                {channel === 'Tiktok' && (
+                {channel === "Tiktok" && (
                   <Image
-                    source={require('../../../assets/images/tik-tok.png')}
+                    source={require("../../../assets/images/tik-tok.png")}
                     style={[styles.img, { borderRadius: 100 }]}
                   />
                 )}
-                {channel === 'Facebook' && (
+                {channel === "Facebook" && (
                   <Image
-                    source={require('../../../assets/images/facebook.png')}
+                    source={require("../../../assets/images/facebook.png")}
                     style={[styles.img, { borderRadius: 100 }]}
                   />
                 )}
-                {channel === 'Others' && (
+                {channel === "Others" && (
                   <Image
-                    source={require('../../../assets/images/sale.png')}
+                    source={require("../../../assets/images/sale.png")}
                     style={styles.img}
                   />
                 )}
-                {channel === 'Glovo' && (
+                {channel === "Glovo" && (
                   <Image
-                    source={require('../../../assets/images/glovo2.png')}
+                    source={require("../../../assets/images/glovo2.png")}
                     style={[styles.img, { borderRadius: 100 }]}
                   />
                 )}
-                {channel === 'Bolt' && (
+                {channel === "Bolt" && (
                   <Image
-                    source={require('../../../assets/images/bolt.png')}
+                    source={require("../../../assets/images/bolt.png")}
                     style={styles.img}
                   />
                 )}
@@ -143,19 +145,19 @@ const styles = StyleSheet.create({
   //   display: 'none',
   // },
   caret: {
-    marginLeft: 'auto',
+    marginLeft: "auto",
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
     paddingVertical: 12,
-    borderBottomColor: 'rgba(146, 169, 189, 0.5)',
+    borderBottomColor: "rgba(146, 169, 189, 0.5)",
     borderBottomWidth: 0.3,
   },
   mainText: {
-    fontFamily: 'ReadexPro-Medium',
+    fontFamily: "ReadexPro-Medium",
     fontSize: 16,
-    color: '#30475E',
+    color: "#30475E",
   },
   img: {
     height: 24,
@@ -169,30 +171,30 @@ const styles = StyleSheet.create({
     // backgroundColor: 'green',
   },
   done: {
-    fontFamily: 'ReadexPro-Medium',
-    color: '#1942D8',
+    fontFamily: "ReadexPro-Medium",
+    color: "#1942D8",
     fontSize: 15,
     letterSpacing: -0.8,
   },
   doneWrapper: {
-    position: 'absolute',
+    position: "absolute",
     right: 22,
     top: 12,
   },
   channelType: {
     // alignItems: 'center',
     paddingVertical: 18,
-    borderBottomColor: 'rgba(146, 169, 189, 0.5)',
+    borderBottomColor: "rgba(146, 169, 189, 0.5)",
     borderBottomWidth: 0.3,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginHorizontal: 10,
     paddingHorizontal: 8,
   },
   channelText: {
-    fontFamily: 'ReadexPro-Medium',
+    fontFamily: "ReadexPro-Medium",
     fontSize: 15,
-    color: '#30475E',
+    color: "#30475E",
     letterSpacing: 0.2,
   },
 });

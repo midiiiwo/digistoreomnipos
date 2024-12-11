@@ -64,7 +64,7 @@
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Access to microphone is required when using camera</string>
 	<key>NSMotionUsageDescription</key>
-	<string>Access to motion is required when using camera</string>
+	<string></string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Access to Photos library is required to select photo for profile, outlet image, business identifications, and products </string>
 	<key>NSPhotoLibraryUsageDescription</key>
@@ -72,24 +72,24 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>
-  		<string>Entypo.ttf</string>
-  		<string>EvilIcons.ttf</string>
-  		<string>Feather.ttf</string>
-  		<string>FontAwesome.ttf</string>
-  		<string>FontAwesome5_Brands.ttf</string>
-  		<string>FontAwesome5_Regular.ttf</string>
-  		<string>FontAwesome5_Solid.ttf</string>
-  		<string>FontAwesome6_Brands.ttf</string>
-  		<string>FontAwesome6_Regular.ttf</string>
-  		<string>FontAwesome6_Solid.ttf</string>
-  		<string>Foundation.ttf</string>
-  		<string>Ionicons.ttf</string>
-  		<string>MaterialIcons.ttf</string>
-  		<string>MaterialCommunityIcons.ttf</string>
-  		<string>SimpleLineIcons.ttf</string>
-  		<string>Octicons.ttf</string>
-  		<string>Zocial.ttf</string>
-  		<string>Fontisto.ttf</string>
+		<string>Entypo.ttf</string>
+		<string>EvilIcons.ttf</string>
+		<string>Feather.ttf</string>
+		<string>FontAwesome.ttf</string>
+		<string>FontAwesome5_Brands.ttf</string>
+		<string>FontAwesome5_Regular.ttf</string>
+		<string>FontAwesome5_Solid.ttf</string>
+		<string>FontAwesome6_Brands.ttf</string>
+		<string>FontAwesome6_Regular.ttf</string>
+		<string>FontAwesome6_Solid.ttf</string>
+		<string>Foundation.ttf</string>
+		<string>Ionicons.ttf</string>
+		<string>MaterialIcons.ttf</string>
+		<string>MaterialCommunityIcons.ttf</string>
+		<string>SimpleLineIcons.ttf</string>
+		<string>Octicons.ttf</string>
+		<string>Zocial.ttf</string>
+		<string>Fontisto.ttf</string>
 		<string>Inter-Black.otf</string>
 		<string>Inter-Bold.otf</string>
 		<string>Inter-ExtraBold.otf</string>
@@ -191,7 +191,7 @@
 		<string>remote-notification</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
-	<string>Launch Screen1</string>
+	<string>Launch Screen</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
@@ -199,11 +199,6 @@
 	<key>UIStatusBarStyle</key>
 	<string></string>
 	<key>UISupportedInterfaceOrientations</key>
-	<array>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
-	</array>
-	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>

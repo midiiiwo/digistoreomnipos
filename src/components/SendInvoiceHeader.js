@@ -1,11 +1,11 @@
-import React from 'react';
-import { Pressable, StyleSheet, Text } from 'react-native';
-import { useActionCreator } from '../hooks/useActionCreator';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigation } from '@react-navigation/native';
+import React from "react";
+import { Pressable, StyleSheet, Text } from "react-native";
+import { useActionCreator } from "../hooks/useActionCreator";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useNavigation } from "@react-navigation/native";
 const SendInvoiceHeader = ({
-  text = 'New sale',
-  navigateTo = 'Home',
+  text = "New sale",
+  navigateTo = "Inventory",
   onNavigate,
 }) => {
   const { resetInvoiceCart } = useActionCreator();
@@ -22,7 +22,8 @@ const SendInvoiceHeader = ({
             return;
           }
           navigation.navigate(navigateTo);
-        }}>
+        }}
+      >
         <Text style={styles.prev}>{text}</Text>
       </Pressable>
     </SafeAreaView>
@@ -31,24 +32,24 @@ const SendInvoiceHeader = ({
 
 const styles = StyleSheet.create({
   headerMain: {
-    width: '100%',
-    backgroundColor: '#fff',
-    flexDirection: 'row',
-    alignItems: 'center',
+    width: "100%",
+    backgroundColor: "#fff",
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 18,
     paddingVertical: 14,
   },
   headerText: {
-    color: '#1942D8',
-    marginLeft: 'auto',
+    color: "#1942D8",
+    marginLeft: "auto",
     marginRight: 18,
     fontSize: 16,
     // fontFamily: 'Inter-Medium',
   },
   prev: {
-    fontFamily: 'Inter-Medium',
+    fontFamily: "Inter-Medium",
     fontSize: 16,
-    color: '#1942D8',
+    color: "#1942D8",
     marginLeft: 12,
   },
 });

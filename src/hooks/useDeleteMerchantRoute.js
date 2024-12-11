@@ -1,13 +1,13 @@
-import { useMutation, useQueryClient } from 'react-query';
-import { deleteMerchantDeliveryRoute } from '../api/merchant';
+import { useMutation, useQueryClient } from "react-query";
+import { deleteRouteLocation } from "../api/merchant";
 
 export function useDeleteMerchantRoute(handleSuccess) {
   const client = useQueryClient();
   const queryResult = useMutation(
-    ['delete-route'],
-    payload => {
+    ["delete-route-new"],
+    (payload) => {
       try {
-        return deleteMerchantDeliveryRoute(payload.id);
+        return deleteRouteLocation(payload);
       } catch (error) {}
     },
     {
@@ -15,7 +15,7 @@ export function useDeleteMerchantRoute(handleSuccess) {
         // client.invalidateQueries('global-products');
         handleSuccess(data.data);
       },
-    },
+    }
   );
   return queryResult;
 }
